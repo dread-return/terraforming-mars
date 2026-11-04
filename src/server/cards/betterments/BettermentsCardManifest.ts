@@ -40,6 +40,17 @@ import {BaseOnTitan} from './BaseOnTitan';
 import {VenusianEcology} from './VenusianEcology';
 import {AitkenDrillingOperations} from './AitkenDrillingOperations';
 import {MartianLizards} from './MartianLizards';
+import {IngegneriSpaziali} from './IngegneriSpaziali';
+import {MonopolyBreakup} from './MonopolyBreakup';
+import {CompanyIncentives} from './CompanyIncentives';
+import {JointVenture} from './JointVenture';
+import {NukeAnAsteroid} from './NukeAnAsteroid';
+import {FamilyAdvertising} from './FamilyAdvertising';
+import {CompanyRestructuring} from './CompanyRestructuring';
+import {MartianSamples} from './MartianSamples';
+import {CompanyCartel} from './CompanyCartel';
+import {SmugglingOperations} from './SmugglingOperations';
+import {CompanyMerger} from './CompanyMerger';
 
 /**
  * Corporate Betterments, a fan expansion, as reworked for the Terraforming Mars GIGA Expansion.
@@ -88,5 +99,16 @@ export const BETTERMENTS_CARD_MANIFEST = new ModuleManifest({
     [CardName.VENUSIAN_ECOLOGY]: {Factory: VenusianEcology, compatibility: 'venus'},
     [CardName.AITKEN_DRILLING_OPERATIONS]: {Factory: AitkenDrillingOperations},
     [CardName.MARTIAN_LIZARDS]: {Factory: MartianLizards},
+    [CardName.INGEGNERI_SPAZIALI]: {Factory: IngegneriSpaziali},
+    [CardName.MONOPOLY_BREAKUP]: {Factory: MonopolyBreakup},
+    [CardName.COMPANY_INCENTIVES]: {Factory: CompanyIncentives},
+    [CardName.JOINT_VENTURE]: {Factory: JointVenture},
+    [CardName.NUKE_AN_ASTEROID]: {Factory: NukeAnAsteroid},
+    [CardName.FAMILY_ADVERTISING]: {Factory: FamilyAdvertising},
+    [CardName.COMPANY_RESTRUCTURING]: {Factory: CompanyRestructuring},
+    [CardName.MARTIAN_SAMPLES]: {Factory: MartianSamples},
+    [CardName.COMPANY_CARTEL]: {Factory: CompanyCartel},
+    [CardName.SMUGGLING_OPERATIONS]: {Factory: SmugglingOperations, compatibility: 'colonies'},
+    [CardName.COMPANY_MERGER]: {Factory: CompanyMerger, compatibility: 'prelude'},
   },
 });

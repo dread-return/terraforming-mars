@@ -36,6 +36,9 @@ export enum SpaceBonus {
     TEMPERATURE_4MC, // 18 Vastitas Borealis and Vastitas Borealis Nova
     // Amazonis Planitia-specific
     STANDARD_RESOURCE, // 19 The player chooses any one standard resource.
+
+    // Corporate Betterments-specific (Company Incentives)
+    INCENTIVE_5MC, // 20 The player placing a tile here gains 5 M€.
 }
 
 const TO_STRING_MAP = {
@@ -59,6 +62,7 @@ const TO_STRING_MAP = {
   [SpaceBonus.COLONY]: 'Colony',
   [SpaceBonus.TEMPERATURE_4MC]: 'Temperature',
   [SpaceBonus.STANDARD_RESOURCE]: 'Standard resource',
+  [SpaceBonus.INCENTIVE_5MC]: '5 M€',
 } satisfies Record<SpaceBonus, string>;
 
 export namespace SpaceBonus {

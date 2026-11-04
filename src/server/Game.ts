@@ -1544,6 +1544,9 @@ export class Game implements IGame, Logger {
         {title: 'Select how to pay for building a colony'}))
         .andThen(() => this.defer(new BuildColony(player)));
       break;
+    case SpaceBonus.INCENTIVE_5MC:
+      player.stock.add(Resource.MEGACREDITS, 5 * count, {log: true});
+      break;
     case SpaceBonus.STANDARD_RESOURCE:
       // A space has this bonus at most once. If one ever has more, use SelectResources (see Philares).
       player.defer(new SelectResource('Select a standard resource to gain')

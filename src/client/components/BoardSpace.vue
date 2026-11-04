@@ -12,6 +12,7 @@
     </template>
     <template v-if="tileView === 'show'">
       <div :class="playerColorCss" v-if="space.color !== undefined"></div>
+      <div :class="coOwnerColorCss" v-if="space.coOwner !== undefined"></div>
       <template v-if="space.gagarin !== undefined">
         <div v-if="space.gagarin === 0" class="gagarin"></div>
         <div v-else class="gagarin visited"></div>
@@ -85,6 +86,13 @@ export default defineComponent({
         return '';
       }
       const css = 'board-cube board-cube--' + this.space.color;
+      return getPreferences().symbol_overlay ? css + ' overlay' : css;
+    },
+    coOwnerColorCss(): string {
+      if (this.space.coOwner === undefined) {
+        return '';
+      }
+      const css = 'board-cube board-cube-mars-coOwner board-cube--' + this.space.coOwner;
       return getPreferences().symbol_overlay ? css + ' overlay' : css;
     },
     claimedToken(): ClaimedToken | undefined {

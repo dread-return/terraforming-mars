@@ -6,6 +6,9 @@ import {IProjectCard} from '../cards/IProjectCard';
 import {IMarsBot} from './IMarsBot';
 import {Space} from '../boards/Space';
 
+// Several modules import IMarsBot from here; re-export it so they compile.
+export type {IMarsBot};
+
 /** How the bot picks a card in the research draft. Each corp names one priority. */
 export type MarsBotDraftPriority =
   | { type: 'tags'; tags: Array<Tag> }

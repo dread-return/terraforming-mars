@@ -69,6 +69,7 @@ describe('ApiGame', () => {
             'community': false,
             'corpera': true,
             'deltaProject': false,
+            'betterments': false,
             'moon': false,
             'pathfinders': false,
             'prelude': false,

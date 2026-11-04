@@ -170,6 +170,12 @@
               <div class="create-game-expansion-icon expansion-icon-deltaProject"></div>
               <span v-i18n>Delta Project</span>&nbsp;<span title="Alpha — work in progress">(&#945;)</span><span></span>&nbsp;<a :href="wikiUrls.deltaProject" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
             </label>
+
+            <input type="checkbox" name="betterments" id="betterments-checkbox" v-model="expansions.betterments">
+            <label for="betterments-checkbox" class="expansion-button">
+              <div class="create-game-expansion-icon expansion-icon-betterments"></div>
+              <span v-i18n>Corporate Betterments</span><span></span>&nbsp;<a :href="wikiUrls.betterments" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
+            </label>
           </div>
 
           <div class="create-game-page-column">

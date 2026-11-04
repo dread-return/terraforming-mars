@@ -363,6 +363,7 @@ describe('RoboticWorkforce', () => {
     CardName.SOLAR_FARM,  // Tough to test
     CardName.SMALL_OPEN_PIT_MINE, // Tough to test
     CardName.BEHEMOTH_EXCAVATOR, // False positive
+    CardName.GREAT_OCEAN_LABORATORY, // Production comes from its effect, not a production box
   ];
 
   describe('test all cards', () => {

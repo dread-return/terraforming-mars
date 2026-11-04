@@ -33,5 +33,10 @@ export const floaterCards: ReadonlySet<CardName> = new Set([
 
   // Underworld
   CardName.SOIL_EXPORT,
+
+  // Corporate Betterments
+  CardName.VENUSIAN_COLLABORATION,
+  CardName.VENUSIAN_HEAT_EXCHANGERS,
+  CardName.TWIN_PLANET_COMMERCE_NETWORK,
 ]);
 

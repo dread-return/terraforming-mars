@@ -38,6 +38,7 @@ function newGameConfig(overrides: Partial<NewGameConfig> = {}): NewGameConfig {
       starwars: false,
       underworld: false,
       deltaProject: false,
+      betterments: false,
     },
     boards: boardOptions(RandomBoardOption.OFFICIAL),
     seed: 0,

@@ -19,6 +19,7 @@ export const RULEBOOK_URLS: Record<GameModule, string> = {
   starwars: `${WIKI}/StarWars`,
   underworld: `${WIKI}/Underworld`,
   deltaProject: `${WIKI}/Delta-Project`,
+  betterments: 'https://boardgamegeek.com/thread/2293920/terraforming-mars-giga-expansion-ares-pathfinder-b',
 };
 
 export const WIKI_URLS = {

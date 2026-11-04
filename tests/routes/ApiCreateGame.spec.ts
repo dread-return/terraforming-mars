@@ -36,6 +36,7 @@ function newGameConfigForTest(): NewGameConfig {
       starwars: false,
       underworld: false,
       deltaProject: false,
+      betterments: false,
     },
     boards: [BoardName.THARSIS],
     seed: 0,

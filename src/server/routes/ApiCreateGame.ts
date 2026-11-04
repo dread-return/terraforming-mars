@@ -187,6 +187,7 @@ export class ApiCreateGame extends Handler {
         twoCorpsVariant: gameReq.twoCorpsVariant,
         underworldExpansion: gameReq.expansions.underworld,
         deltaProjectExpansion: gameReq.expansions.deltaProject,
+        bettermentsExpansion: gameReq.expansions.betterments,
         undoOption: gameReq.undoOption,
         venusNextExtension: gameReq.expansions.venus,
       };

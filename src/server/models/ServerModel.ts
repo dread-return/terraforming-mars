@@ -455,6 +455,7 @@ export class Server {
         underworld: options.underworldExpansion,
         deltaProject: options.deltaProjectExpansion,
         betterments: options.bettermentsExpansion,
+        robantilles: options.robAntillesExpansion,
       },
       fastModeOption: options.fastModeOption,
       includedCards: options.includedCards,

@@ -33,8 +33,12 @@ export class AresHandler {
     }
   }
 
-  public static earnAdjacencyBonuses(player: IPlayer, space: Space, options?: {giveAresTileOwnerBonus?: boolean}) {
+  public static earnAdjacencyBonuses(player: IPlayer, space: Space, options?: {giveAresTileOwnerBonus?: boolean, onlyTiles?: ReadonlySet<TileType>}) {
     for (const adjacentSpace of player.game.board.getAdjacentSpaces(space)) {
+      const tileType = adjacentSpace.tile?.tileType;
+      if (options?.onlyTiles !== undefined && (tileType === undefined || !options.onlyTiles.has(tileType))) {
+        continue;
+      }
       this.earnAdacencyBonus(space, adjacentSpace, player, options?.giveAresTileOwnerBonus);
     }
   }

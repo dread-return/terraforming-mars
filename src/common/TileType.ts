@@ -62,6 +62,15 @@ export enum TileType {
 
     // Automa
     NEURAL_INSTANCE, // 44
+
+    // Rob Antilles
+    SUBURBS, // 45
+    HARBOR, // 46
+    METROPOLIS, // 47
+    PARADISE_CITY, // 48
+    ANIMAL_DOME, // 49
+    PUMPING_HUB, // 50
+    SEDIMENT, // 51
   }
 
 export const tileTypeToString: Record<TileType, string> = {
@@ -111,11 +120,22 @@ export const tileTypeToString: Record<TileType, string> = {
   [TileType.MAN_MADE_VOLCANO]: CardName.MAN_MADE_VOLCANO,
   [TileType.NEW_HOLLAND]: CardName.NEW_HOLLAND,
   [TileType.NEURAL_INSTANCE]: 'Neural Instance',
+  [TileType.SUBURBS]: 'Suburbs',
+  [TileType.HARBOR]: 'Harbor',
+  [TileType.METROPOLIS]: 'Metropolis',
+  [TileType.PARADISE_CITY]: 'Paradise City',
+  [TileType.ANIMAL_DOME]: 'Animal Dome',
+  [TileType.PUMPING_HUB]: 'Pumping Hub',
+  [TileType.SEDIMENT]: 'Sediment',
 } as const;
 
 export const HAZARD_TILES = new Set([TileType.DUST_STORM_MILD, TileType.DUST_STORM_SEVERE, TileType.EROSION_MILD, TileType.EROSION_SEVERE]);
-export const OCEAN_UPGRADE_TILES = new Set([TileType.OCEAN_CITY, TileType.OCEAN_FARM, TileType.OCEAN_SANCTUARY, TileType.NEW_HOLLAND]);
-export const CITY_TILES = new Set([TileType.CITY, TileType.CAPITAL, TileType.OCEAN_CITY, TileType.RED_CITY, TileType.NEW_HOLLAND]);
-export const OCEAN_TILES = new Set([TileType.OCEAN, TileType.OCEAN_CITY, TileType.OCEAN_FARM, TileType.OCEAN_SANCTUARY, TileType.WETLANDS, TileType.NEW_HOLLAND]);
+export const OCEAN_UPGRADE_TILES = new Set([TileType.OCEAN_CITY, TileType.OCEAN_FARM, TileType.OCEAN_SANCTUARY, TileType.NEW_HOLLAND, TileType.HARBOR]);
+export const CITY_TILES = new Set([TileType.CITY, TileType.CAPITAL, TileType.OCEAN_CITY, TileType.RED_CITY, TileType.NEW_HOLLAND,
+  TileType.SUBURBS, TileType.METROPOLIS, TileType.PARADISE_CITY]);
+export const OCEAN_TILES = new Set([TileType.OCEAN, TileType.OCEAN_CITY, TileType.OCEAN_FARM, TileType.OCEAN_SANCTUARY, TileType.WETLANDS, TileType.NEW_HOLLAND, TileType.HARBOR]);
 export const BASE_OCEAN_TILES = new Set([TileType.OCEAN, TileType.WETLANDS]);
 export const GREENERY_TILES = new Set([TileType.GREENERY, TileType.WETLANDS]);
+
+/** Rob Antilles special tiles. */
+export const ROB_ANTILLES_TILES = new Set([TileType.SUBURBS, TileType.HARBOR, TileType.METROPOLIS, TileType.PARADISE_CITY, TileType.ANIMAL_DOME, TileType.PUMPING_HUB, TileType.SEDIMENT]);

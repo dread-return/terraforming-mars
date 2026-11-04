@@ -1,4 +1,5 @@
 import {Tag} from '../../../common/cards/Tag';
+import {CardName} from '../../../common/cards/CardName';
 import {IPlayer} from '../../IPlayer';
 import {InequalityRequirement} from './InequalityRequirement';
 import {Options} from './CardRequirement';
@@ -27,6 +28,11 @@ export class TagCardRequirement extends InequalityRequirement {
         tagCount += p.tags.count(this.tag, 'raw');
       });
     }
+    // Excavation Syria Planum (Rob Antilles): the next card's science tag requirement is reduced by 2.
+    if (this.tag === Tag.SCIENCE && this.max !== true && player.lastCardPlayed === CardName.EXCAVATION_SYRIA_PLANUM) {
+      tagCount += 2;
+    }
+
     // PoliticalAgendas Scientists P4 hook
     if (this.tag === Tag.SCIENCE && player.hasTurmoilScienceTagBonus) {
       tagCount += 1;

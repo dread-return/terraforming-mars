@@ -130,6 +130,7 @@ const CARD_TAGS: ReadonlyArray<IconEntry> = [
   {iconClass: 'tag-mars', label: 'Mars', official: false, expansions: ['pathfinders']},
   {iconClass: 'tag-clone', label: 'Clone', official: false, expansions: ['pathfinders']},
   {iconClass: 'tag-crime', label: 'Crime', official: false, expansions: ['underworld']},
+  {iconClass: 'card-resource-relic', label: 'Relic', official: false, expansions: ['robantilles']},
 ];
 
 const STANDARD_RESOURCES: ReadonlyArray<IconEntry> = [

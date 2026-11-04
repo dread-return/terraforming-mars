@@ -213,7 +213,7 @@ class StandardDraft extends Draft {
     if (LunaProjectOffice.isActive(player)) {
       return 5;
     }
-    if (player.tableau.has(CardName.MARS_MATHS)) {
+    if (player.tableau.has(CardName.MARS_MATHS) || player.tableau.has(CardName.GREAT_FACE_OF_CYDONIA)) {
       return 5;
     }
 
@@ -225,7 +225,7 @@ class StandardDraft extends Draft {
       if (LunaProjectOffice.isActive(player)) {
         return 2;
       }
-      if (player.tableau.has(CardName.MARS_MATHS)) {
+      if (player.tableau.has(CardName.MARS_MATHS) || player.tableau.has(CardName.GREAT_FACE_OF_CYDONIA)) {
         return 2;
       }
     }

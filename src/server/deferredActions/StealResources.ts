@@ -46,6 +46,9 @@ export class StealResources extends DeferredAction {
           return false;
         }
       }
+      if (resource === Resource.MEGACREDITS && p.isProtected(resource)) {
+        return false;
+      }
       return true;
     });
   }

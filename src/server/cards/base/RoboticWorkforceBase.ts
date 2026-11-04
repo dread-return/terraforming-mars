@@ -28,13 +28,18 @@ export abstract class RoboticWorkforceBase extends Card {
     return filtered;
   }
 
+  /** The tag a card must have to be copied. Space Robots (Rob Antilles) copies space cards. */
+  protected copyTag(): Tag {
+    return Tag.BUILDING;
+  }
+
   protected isCardApplicable(card: ICard, player: IPlayer, canAfford: boolean): boolean {
     // Exclude events unless Odyssey is in play.
     if (card.type === CardType.EVENT && !player.tableau.has(CardName.ODYSSEY)) {
       return false;
     }
 
-    if (!card.tags.includes(Tag.BUILDING) && !card.tags.includes(Tag.WILD)) {
+    if (!card.tags.includes(this.copyTag()) && !card.tags.includes(Tag.WILD)) {
       return false;
     }
 

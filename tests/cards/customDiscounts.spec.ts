@@ -27,6 +27,9 @@ const NOT_DISPLAYED: ReadonlyArray<CardName> = [
   CardName.ROGERS,
   // The discount belongs to the cards it holds.
   CardName.SELF_REPLICATING_ROBOTS,
+  CardName.ORGANIC_WASTE_RECYCLING,
+  // Only applies to cards that place a greenery tile.
+  CardName.ECOPLANTS,
 ];
 
 describe('customDiscounts', () => {

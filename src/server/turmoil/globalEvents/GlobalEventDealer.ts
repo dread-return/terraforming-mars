@@ -74,6 +74,7 @@ export class GlobalEventDealer {
       underworld: gameOptions.underworldExpansion,
       deltaProject: gameOptions.deltaProjectExpansion,
       betterments: gameOptions.bettermentsExpansion,
+      robantilles: gameOptions.robAntillesExpansion,
     };
 
     for (const manifest of ALL_MODULE_MANIFESTS) {

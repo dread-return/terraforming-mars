@@ -25,6 +25,7 @@ import {PRELUDE2_CARD_MANIFEST} from './cards/prelude2/Prelude2CardManifest';
 import {STAR_WARS_CARD_MANIFEST} from './cards/starwars/StarwarsCardManifest';
 import {UNDERWORLD_CARD_MANIFEST} from './cards/underworld/UnderworldCardManifest';
 import {BETTERMENTS_CARD_MANIFEST} from './cards/betterments/BettermentsCardManifest';
+import {ROB_ANTILLES_CARD_MANIFEST} from './cards/robantilles/RobAntillesCardManifest';
 
 /**
  * Returns the cards available to a game based on its `GameOptions`.
@@ -62,6 +63,7 @@ export class GameCards {
       [gameOptions.starWarsExpansion, STAR_WARS_CARD_MANIFEST],
       [gameOptions.underworldExpansion, UNDERWORLD_CARD_MANIFEST],
       [gameOptions.bettermentsExpansion, BETTERMENTS_CARD_MANIFEST],
+      [gameOptions.robAntillesExpansion, ROB_ANTILLES_CARD_MANIFEST],
     ];
 
     this.moduleManifests = manifests

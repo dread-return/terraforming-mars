@@ -41,6 +41,7 @@ export type GameOptions = {
   underworldExpansion: boolean;
   deltaProjectExpansion: boolean;
   bettermentsExpansion: boolean;
+  robAntillesExpansion: boolean;
 
   expansions: Record<Expansion, boolean>,
 
@@ -119,6 +120,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
     underworld: false,
     deltaProject: false,
     betterments: false,
+    robantilles: false,
   },
   fastModeOption: false,
   includeFanMA: false,
@@ -151,6 +153,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   underworldExpansion: false,
   deltaProjectExpansion: false,
   bettermentsExpansion: false,
+  robAntillesExpansion: false,
   automa: false,
   undoOption: false,
   venusNextExtension: false,

@@ -135,11 +135,15 @@ export class RemoveResourcesFromCard extends DeferredAction<Response> {
       } else {
         if (source !== 'self') {
           const hasProtetedHabitats = p.tableau.has(CardName.PROTECTED_HABITATS);
+          const hasMartianRangers = p.tableau.has(CardName.MARTIAN_RANGERS);
           for (const card of p.getCardsWithResources(resourceType)) {
             if (card.resourceCount < min) {
               continue;
             }
             if (card.protectedResources === true) {
+              continue;
+            }
+            if (hasMartianRangers && card.resourceType === CardResource.ANIMAL) {
               continue;
             }
             if (hasProtetedHabitats) {

@@ -176,6 +176,12 @@
               <div class="create-game-expansion-icon expansion-icon-betterments"></div>
               <span v-i18n>Corporate Betterments</span><span></span>&nbsp;<a :href="wikiUrls.betterments" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
             </label>
+
+            <input type="checkbox" name="robantilles" id="robantilles-checkbox" v-model="expansions.robantilles">
+            <label for="robantilles-checkbox" class="expansion-button">
+              <div class="create-game-expansion-icon expansion-icon-robantilles"></div>
+              <span v-i18n>Rob Antilles</span><span></span>&nbsp;<a :href="wikiUrls.robantilles" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
+            </label>
           </div>
 
           <div class="create-game-page-column">

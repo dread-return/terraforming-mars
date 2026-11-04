@@ -41,6 +41,7 @@ const MODULE_ABBREVIATIONS = {
   underworld: 'u',
   deltaProject: 'd',
   betterments: 'B',
+  robantilles: 'A',
 } satisfies Record<GameModule, string>;
 
 const TYPE_ABBREVIATIONS = {
@@ -102,6 +103,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       underworld: true,
       deltaProject: true,
       betterments: true,
+      robantilles: true,
     },
     types: {
       event: true,
@@ -167,6 +169,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       [CardResource.JOURNALISM]: true,
       [CardResource.ACTIVIST]: true,
       [CardResource.SUPPLY_CHAIN]: true,
+      [CardResource.RELIC]: true,
     },
     searchIndex: SearchIndex.create(),
     namesOnly: true,

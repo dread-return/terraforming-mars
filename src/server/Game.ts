@@ -38,7 +38,7 @@ import {RemoveColonyFromGame} from './deferredActions/RemoveColonyFromGame';
 import {GainResourcesDeferred} from './deferredActions/GainResourcesDeferred';
 import {SerializedGame} from './SerializedGame';
 import {SpaceBonus} from '../common/boards/SpaceBonus';
-import {TileType} from '../common/TileType';
+import {CITY_TILES, ROB_ANTILLES_TILES, TileType} from '../common/TileType';
 import {Turmoil} from './turmoil/Turmoil';
 import {AutomaGameSetup} from './automa/AutomaGameSetup';
 import {RandomMAOptionType} from '../common/ma/RandomMAOptionType';
@@ -295,6 +295,7 @@ export class Game implements IGame, Logger {
         underworld: partialOptions.underworldExpansion ?? false,
         deltaProject: partialOptions.deltaProjectExpansion ?? false,
         betterments: partialOptions.bettermentsExpansion ?? false,
+        robantilles: partialOptions.robAntillesExpansion ?? false,
       };
     }
     const gameOptions = {...DEFAULT_GAME_OPTIONS, ...partialOptions};
@@ -1346,7 +1347,7 @@ export class Game implements IGame, Logger {
     // Part 1, basic validation checks.
 
     // Land claim a player can claim land for themselves
-    if (space.player !== undefined && space.player !== player) {
+    if (space.player !== undefined && space.player !== player && space.tile?.tileType !== TileType.SEDIMENT) {
       throw new Error('This space is land claimed by ' + space.player.name);
     }
 
@@ -1400,6 +1401,11 @@ export class Game implements IGame, Logger {
 
     this.triggerForAllCards((p, c) => c.onTilePlaced?.(p, player, space, BoardType.MARS));
 
+    // Sedimentary Rocks (Rob Antilles): 3 M€ for placing a city on a Sediment tile.
+    if (initialTileType === TileType.SEDIMENT && CITY_TILES.has(tile.tileType)) {
+      player.stock.add(Resource.MEGACREDITS, 3, {log: true});
+    }
+
     if (initialTileType !== undefined) {
       AresHandler.ifAres(this, () => {
         AresHandler.grantBonusForRemovingHazard(player, initialTileType);
@@ -1437,9 +1443,12 @@ export class Game implements IGame, Logger {
   private grantTilePlacementBonuses(player: IPlayer, space: Space, arcadianCommunityBonus: boolean) {
     // TODO(kberg): these might not apply for some bonuses, e.g. Frontier Town.
     // https://boardgamegeek.com/thread/3344366/article/44658730#44658730
-    AresHandler.ifAres(this, () => {
+    if (this.gameOptions.aresExtension) {
       AresHandler.earnAdjacencyBonuses(player, space);
-    });
+    } else {
+      // Rob Antilles special tiles carry adjacency bonuses even without Ares.
+      AresHandler.earnAdjacencyBonuses(player, space, {onlyTiles: ROB_ANTILLES_TILES});
+    }
 
     TurmoilHandler.resolveTilePlacementBonuses(player, space.spaceType);
 

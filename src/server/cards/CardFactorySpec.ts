@@ -49,6 +49,8 @@ export function isCompatibleWith(cf: CardFactorySpec<any>, gameOptions: GameOpti
       return gameOptions.underworldExpansion;
     case 'betterments':
       return gameOptions.bettermentsExpansion;
+    case 'robantilles':
+      return gameOptions.robAntillesExpansion;
     }
     throw new Error(`Unhandled expansion type ${expansion}`);
   });

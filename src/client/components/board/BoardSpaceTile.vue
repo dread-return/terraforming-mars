@@ -59,6 +59,13 @@ const tileTypeToCssClass: Record<TileType, string> = {
   [TileType.MAN_MADE_VOLCANO]: 'man-made-volcano',
   [TileType.NEW_HOLLAND]: 'new-holland',
   [TileType.NEURAL_INSTANCE]: 'neural-instance',
+  [TileType.SUBURBS]: 'ra-suburbs',
+  [TileType.HARBOR]: 'ra-harbor',
+  [TileType.METROPOLIS]: 'ra-metropolis',
+  [TileType.PARADISE_CITY]: 'ra-paradise',
+  [TileType.ANIMAL_DOME]: 'ra-animal-dome',
+  [TileType.PUMPING_HUB]: 'ra-pumping-hub',
+  [TileType.SEDIMENT]: 'ra-sediment',
 };
 
 const tileTypeToCssClassAresOverride = new Map<TileType, string>([
@@ -99,6 +106,13 @@ const descriptions: Record<TileType, string> = {
   [TileType.RED_CITY]: 'Red City: 1 VP per empty adjacent area. No greeneries may be placed next to it.',
   [TileType.NEW_HOLLAND]: 'New Holland: counts as an ocean and a city',
   [TileType.NEURAL_INSTANCE]: 'Neural Instance: MarsBot gains VP for adjacent non-human spaces',
+  [TileType.SUBURBS]: 'Suburbs: counts as a city. Adjacency bonus: 1 M€.',
+  [TileType.HARBOR]: 'Harbor: counts as an ocean. Adjacency bonus: 1 steel.',
+  [TileType.METROPOLIS]: 'Metropolis: counts as a city. Adjacency bonus: 1 steel.',
+  [TileType.PARADISE_CITY]: 'Paradise City: counts as a city. Adjacency bonus: 1 M€.',
+  [TileType.ANIMAL_DOME]: 'Animal Dome. Adjacency bonus: 1 animal.',
+  [TileType.PUMPING_HUB]: 'Pumping Hub. Adjacency bonus: 2 energy.',
+  [TileType.SEDIMENT]: 'Sediment: any player may place a city here, ignoring placement rules, and gain 3 M€. Adjacency bonus: 1 titanium.',
 };
 
 export default defineComponent({

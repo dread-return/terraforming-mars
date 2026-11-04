@@ -1,4 +1,4 @@
-import {OCEAN_UPGRADE_TILES, TileType} from '../../common/TileType';
+import {CITY_TILES, OCEAN_UPGRADE_TILES, TileType} from '../../common/TileType';
 import {SpaceType} from '../../common/boards/SpaceType';
 import {CanAffordOptions, IPlayer} from '../IPlayer';
 import {Board} from './Board';
@@ -177,9 +177,15 @@ export class MarsBoard extends Board {
       return (spacesNextToMySpaces.length > 0) ? spacesNextToMySpaces : spacesOnLand;
     }
     // A city cannot be adjacent to another city
-    return spacesOnLand.filter(
+    const available = spacesOnLand.filter(
       (space) => this.getAdjacentSpaces(space).some((adjacentSpace) => Board.isCitySpace(adjacentSpace)) === false,
     );
+    // Sedimentary Rocks (Rob Antilles): a city may go on a Sediment tile, ignoring placement rules.
+    if (spaces === undefined) {
+      const sediments = this.spaces.filter((space) => space.tile?.tileType === TileType.SEDIMENT && space.cube === undefined);
+      return [...available, ...sediments];
+    }
+    return available;
   }
 
   /**
@@ -339,6 +345,16 @@ export class MarsBoard extends Board {
       return true;
     }
     if (space.tile.tileType === TileType.OCEAN && OCEAN_UPGRADE_TILES.has(newTile.tileType)) {
+      return true;
+    }
+    // Rob Antilles tiles that go on top of an existing tile.
+    if (space.tile.tileType === TileType.GREENERY && newTile.tileType === TileType.SUBURBS) {
+      return true;
+    }
+    if (space.tile.tileType === TileType.CITY && (newTile.tileType === TileType.METROPOLIS || newTile.tileType === TileType.PARADISE_CITY)) {
+      return true;
+    }
+    if (space.tile.tileType === TileType.SEDIMENT && CITY_TILES.has(newTile.tileType)) {
       return true;
     }
     return false;

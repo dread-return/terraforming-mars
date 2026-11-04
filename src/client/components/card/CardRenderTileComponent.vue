@@ -150,6 +150,27 @@ const TILE_CLASSES: Record<TileType, Classes> = {
   [TileType.NEURAL_INSTANCE]: {
     tile: 'card-tile-neural-instance',
   },
+  [TileType.SUBURBS]: {
+    tile: 'card-tile-ra-suburbs',
+  },
+  [TileType.HARBOR]: {
+    tile: 'card-tile-ra-harbor',
+  },
+  [TileType.METROPOLIS]: {
+    tile: 'card-tile-ra-metropolis',
+  },
+  [TileType.PARADISE_CITY]: {
+    tile: 'card-tile-ra-paradise',
+  },
+  [TileType.ANIMAL_DOME]: {
+    tile: 'card-tile-ra-animal-dome',
+  },
+  [TileType.PUMPING_HUB]: {
+    tile: 'card-tile-ra-pumping-hub',
+  },
+  [TileType.SEDIMENT]: {
+    tile: 'card-tile-ra-sediment',
+  },
 };
 
 export default defineComponent({

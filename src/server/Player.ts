@@ -1,4 +1,5 @@
 import * as constants from '../common/constants';
+import {energyStorageCapacity, onProductionWithEnergyStorage} from './cards/robantilles/EnergyStorage';
 import {PlayerId} from '../common/Types';
 import {MILESTONE_COST, PRODUCTION_MINIMUMS, REDS_RULING_POLICY_COST} from '../common/constants';
 import {cardsFromJSON, ceosFromJSON, corporationCardsFromJSON, newCorporationCard, preludesFromJSON} from './createCard';
@@ -30,6 +31,7 @@ import {SelectProjectCardToPlay} from './inputs/SelectProjectCardToPlay';
 import {SelectOption} from './inputs/SelectOption';
 import {SelectSpace} from './inputs/SelectSpace';
 import {SelfReplicatingRobots} from './cards/promo/SelfReplicatingRobots';
+import {OrganicWasteRecycling} from './cards/robantilles/OrganicWasteRecycling';
 import {SerializedPlayer} from './SerializedPlayer';
 import {StormCraftIncorporated} from './cards/colonies/StormCraftIncorporated';
 import {Tag} from '../common/cards/Tag';
@@ -302,11 +304,17 @@ export class Player implements IPlayer {
   }
 
   public getSelfReplicatingRobotsTargetCards(): Array<IProjectCard> {
+    const result: Array<IProjectCard> = [];
     const selfReplicatingRobots = this.tableau.get(CardName.SELF_REPLICATING_ROBOTS);
     if (selfReplicatingRobots instanceof SelfReplicatingRobots) {
-      return selfReplicatingRobots.targetCards;
+      result.push(...selfReplicatingRobots.targetCards);
     }
-    return [];
+    // Organic Waste Recycling (Rob Antilles) hosts cards the same way.
+    const organicWasteRecycling = this.tableau.get(CardName.ORGANIC_WASTE_RECYCLING);
+    if (organicWasteRecycling instanceof OrganicWasteRecycling) {
+      result.push(...organicWasteRecycling.targetCards);
+    }
+    return result;
   }
 
   public getSteelValue(): number {
@@ -392,7 +400,8 @@ export class Player implements IPlayer {
   }
 
   public alloysAreProtected(): boolean {
-    return this.playedCards.has(CardName.LUNAR_SECURITY_STATIONS);
+    return this.playedCards.has(CardName.LUNAR_SECURITY_STATIONS) ||
+      this.playedCards.has(CardName.MARTIAN_ARMED_FORCES);
   }
 
   public isProtected(resource: Resource) {
@@ -402,6 +411,8 @@ export class Player implements IPlayer {
     case Resource.STEEL:
     case Resource.TITANIUM:
       return this.alloysAreProtected();
+    case Resource.MEGACREDITS:
+      return this.playedCards.has(CardName.MARTIAN_ARMED_FORCES);
     }
     return false;
   }
@@ -547,7 +558,12 @@ export class Player implements IPlayer {
   }
 
   public addResourceTo(card: ICard, options: number | {qty?: number, log: boolean, logZero?: boolean, from?: From} = 1): void {
-    const count = typeof(options) === 'number' ? options : (options.qty ?? 1);
+    let count = typeof(options) === 'number' ? options : (options.qty ?? 1);
+
+    // Bioreactors (Rob Antilles): whenever you add microbes to a card, add one more.
+    if (count > 0 && card.resourceType === CardResource.MICROBE && this.tableau.has(CardName.BIOREACTORS)) {
+      count++;
+    }
 
     if (card.resourceCount !== undefined) {
       card.resourceCount += count;
@@ -616,6 +632,8 @@ export class Player implements IPlayer {
     this.politicalAgendasActionUsedCount = 0;
     if (this.playedCards.has(CardName.SUPERCAPACITORS)) {
       Supercapacitors.onProduction(this);
+    } else if (energyStorageCapacity(this) > 0) {
+      onProductionWithEnergyStorage(this);
     } else {
       this.heat += this.energy;
       this.energy = 0;
@@ -666,7 +684,7 @@ export class Player implements IPlayer {
     // If there are 4 cards to choose from, choose 4. If there are 5 because of Mars maths or Luna Project Office,
     // choose 4. If there are fewer cards because of an exhausted draw pile, draw whatever is available.
     let selectable = this.draftedCards.length;
-    if (this.playedCards.has(CardName.MARS_MATHS) && !this.playedCards.has(CardName.LUNA_PROJECT_OFFICE)) {
+    if ((this.playedCards.has(CardName.MARS_MATHS) || this.playedCards.has(CardName.GREAT_FACE_OF_CYDONIA)) && !this.playedCards.has(CardName.LUNA_PROJECT_OFFICE)) {
       selectable = Math.min(selectable, 4);
     }
 
@@ -850,6 +868,12 @@ export class Player implements IPlayer {
     const selfReplicatingRobots = this.tableau.get(CardName.SELF_REPLICATING_ROBOTS);
     if (selfReplicatingRobots instanceof SelfReplicatingRobots) {
       if (inplaceRemove(selfReplicatingRobots.targetCards, selectedCard)) {
+        selectedCard.resourceCount = 0;
+      }
+    }
+    const organicWasteRecycling = this.tableau.get(CardName.ORGANIC_WASTE_RECYCLING);
+    if (organicWasteRecycling instanceof OrganicWasteRecycling) {
+      if (inplaceRemove(organicWasteRecycling.targetCards, selectedCard)) {
         selectedCard.resourceCount = 0;
       }
     }
@@ -1227,6 +1251,10 @@ export class Player implements IPlayer {
     const card = this.tableau.get(CardName.SELF_REPLICATING_ROBOTS);
     if (card instanceof SelfReplicatingRobots) {
       candidateCards.push(...card.targetCards);
+    }
+    const organicWasteRecycling = this.tableau.get(CardName.ORGANIC_WASTE_RECYCLING);
+    if (organicWasteRecycling instanceof OrganicWasteRecycling) {
+      candidateCards.push(...organicWasteRecycling.targetCards);
     }
 
     const playableCards: Array<IProjectCard> = [];

@@ -17,7 +17,11 @@ export function calculateVictoryPoints(player: IPlayer) {
   let negativeVP = 0; // For Underworld.
   for (const playedCard of player.tableau) {
     if (playedCard.victoryPoints !== undefined) {
-      const vp = playedCard.getVictoryPoints(player);
+      let vp = playedCard.getVictoryPoints(player);
+      // Public Relations (Ides of Mars): negative VP cards don't count.
+      if (vp < 0 && player.tableau.has(CardName.PUBLIC_RELATIONS)) {
+        vp = 0;
+      }
       builder.setVictoryPoints('victoryPoints', vp, playedCard.name);
       if (vp < 0) {
         negativeVP += vp;

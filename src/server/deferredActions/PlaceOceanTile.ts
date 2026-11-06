@@ -30,6 +30,10 @@ export class PlaceOceanTile extends DeferredAction<Space | undefined> {
       if (whales !== undefined) {
         this.player.addResourceTo(whales, {qty: 1, log: true});
       }
+      // Blue Mars (Ides of Mars): raise TR instead of placing an ocean.
+      if (this.creditedPlayer.tableau.has(CardName.BLUE_MARS)) {
+        this.creditedPlayer.increaseTerraformRating(1, {log: true});
+      }
       const input = this.cb(undefined);
       this.player?.defer(input);
       return undefined;

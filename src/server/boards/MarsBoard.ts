@@ -348,7 +348,7 @@ export class MarsBoard extends Board {
       return true;
     }
     // Rob Antilles tiles that go on top of an existing tile.
-    if (space.tile.tileType === TileType.GREENERY && newTile.tileType === TileType.SUBURBS) {
+    if (space.tile.tileType === TileType.GREENERY && (newTile.tileType === TileType.SUBURBS || newTile.tileType === TileType.INVAK_CITY)) {
       return true;
     }
     if (space.tile.tileType === TileType.CITY && (newTile.tileType === TileType.METROPOLIS || newTile.tileType === TileType.PARADISE_CITY)) {

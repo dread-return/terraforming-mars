@@ -76,6 +76,7 @@ export class GlobalEventDealer {
       betterments: gameOptions.bettermentsExpansion,
       robantilles: gameOptions.robAntillesExpansion,
       solaris: gameOptions.solarisExpansion,
+      idesofmars: gameOptions.idesofmarsExpansion,
     };
 
     for (const manifest of ALL_MODULE_MANIFESTS) {

@@ -39,6 +39,7 @@ function newGameConfigForTest(): NewGameConfig {
       betterments: false,
       robantilles: false,
       solaris: false,
+      idesofmars: false,
     },
     boards: [BoardName.THARSIS],
     seed: 0,

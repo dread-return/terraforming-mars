@@ -43,6 +43,7 @@ export type GameOptions = {
   bettermentsExpansion: boolean;
   robAntillesExpansion: boolean;
   solarisExpansion: boolean;
+  idesofmarsExpansion: boolean;
 
   expansions: Record<Expansion, boolean>,
 
@@ -123,6 +124,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
     betterments: false,
     robantilles: false,
     solaris: false,
+    idesofmars: false,
   },
   fastModeOption: false,
   includeFanMA: false,
@@ -157,6 +159,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   bettermentsExpansion: false,
   robAntillesExpansion: false,
   solarisExpansion: false,
+  idesofmarsExpansion: false,
   automa: false,
   undoOption: false,
   venusNextExtension: false,

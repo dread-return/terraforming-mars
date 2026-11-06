@@ -30,6 +30,8 @@ const NOT_DISPLAYED: ReadonlyArray<CardName> = [
   CardName.ORGANIC_WASTE_RECYCLING,
   // Only applies to cards that place a greenery tile.
   CardName.ECOPLANTS,
+  // Only applies to cards that place a greenery or an ocean tile.
+  CardName.WATER_RETAINERS,
 ];
 
 describe('customDiscounts', () => {

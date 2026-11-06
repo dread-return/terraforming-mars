@@ -49,4 +49,9 @@ export enum CardResource {
 
   // Rob Antilles
   RELIC = 'Relic',
+
+  // Ides of Mars
+  BUDGET = 'Budget',
+  LOOT = 'Loot',
+  ORE = 'Ore',
 }

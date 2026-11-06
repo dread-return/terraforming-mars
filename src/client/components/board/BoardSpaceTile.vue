@@ -66,6 +66,7 @@ const tileTypeToCssClass: Record<TileType, string> = {
   [TileType.ANIMAL_DOME]: 'ra-animal-dome',
   [TileType.PUMPING_HUB]: 'ra-pumping-hub',
   [TileType.SEDIMENT]: 'ra-sediment',
+  [TileType.INVAK_CITY]: 'im-invak-city',
 };
 
 const tileTypeToCssClassAresOverride = new Map<TileType, string>([
@@ -112,6 +113,7 @@ const descriptions: Record<TileType, string> = {
   [TileType.PARADISE_CITY]: 'Paradise City: counts as a city. Adjacency bonus: 1 M€.',
   [TileType.ANIMAL_DOME]: 'Animal Dome. Adjacency bonus: 1 animal.',
   [TileType.PUMPING_HUB]: 'Pumping Hub. Adjacency bonus: 2 energy.',
+  [TileType.INVAK_CITY]: 'Invak City: counts as a city and as a greenery. Adjacency bonus: 2 M€.',
   [TileType.SEDIMENT]: 'Sediment: any player may place a city here, ignoring placement rules, and gain 3 M€. Adjacency bonus: 1 titanium.',
 };
 

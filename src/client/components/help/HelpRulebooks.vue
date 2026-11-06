@@ -54,6 +54,7 @@ const fanExpansions: ReadonlyArray<RulebookEntry> = [
   {module: 'betterments', name: 'Corporate Betterments', iconClass: 'betterments', url: RULEBOOK_URLS.betterments},
   {module: 'robantilles', name: 'Rob Antilles', iconClass: 'robantilles', url: RULEBOOK_URLS.robantilles},
   {module: 'solaris', name: 'Solaris', iconClass: 'solaris', url: RULEBOOK_URLS.solaris},
+  {module: 'idesofmars', name: 'Ides of Mars', iconClass: 'idesofmars', url: RULEBOOK_URLS.idesofmars},
 ];
 
 export default defineComponent({

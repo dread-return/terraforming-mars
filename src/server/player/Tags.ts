@@ -108,6 +108,10 @@ export class Tags {
       if (tag === Tag.SCIENCE && this.player.tableau.has(CardName.HABITAT_MARTE)) {
         tagCount += this.rawCount(Tag.MARS, includeEvents);
       }
+      // Galileo Institute (Ides of Mars): Jovian tags count as science tags.
+      if (tag === Tag.SCIENCE && this.player.tableau.has(CardName.GALILEO_INSTITUTE)) {
+        tagCount += this.rawCount(Tag.JOVIAN, includeEvents);
+      }
     }
 
     // Chimera hook
@@ -138,6 +142,11 @@ export class Tags {
         this.player.tableau.has(CardName.HABITAT_MARTE)) {
         return true;
       }
+      if (tag === Tag.JOVIAN &&
+        target === Tag.SCIENCE &&
+        this.player.tableau.has(CardName.GALILEO_INSTITUTE)) {
+        return true;
+      }
     }
     if (target === Tag.EVENT && card.type === CardType.EVENT) {
       return true;
@@ -158,6 +167,9 @@ export class Tags {
         count++;
       } else if (tag === Tag.MARS && target === Tag.SCIENCE &&
         this.player.tableau.has(CardName.HABITAT_MARTE)) {
+        count++;
+      } else if (tag === Tag.JOVIAN && target === Tag.SCIENCE &&
+        this.player.tableau.has(CardName.GALILEO_INSTITUTE)) {
         count++;
       }
     }

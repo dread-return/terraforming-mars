@@ -27,6 +27,7 @@ const NO_TAGS = {
   [Tag.CRIME]: 0,
   [Tag.GALACTIC]: 0,
   [Tag.RADIOACTIVE]: 0,
+  [Tag.MERCURY]: 0,
   [Tag.WILD]: 0,
   [Tag.EVENT]: 0,
   [Tag.CLONE]: 0,

@@ -43,6 +43,7 @@ const MODULE_ABBREVIATIONS = {
   betterments: 'B',
   robantilles: 'A',
   solaris: 'S',
+  idesofmars: 'I',
 } satisfies Record<GameModule, string>;
 
 const TYPE_ABBREVIATIONS = {
@@ -83,6 +84,7 @@ const TAG_ABBREVIATIONS = {
   [Tag.CRIME]: 'h',
   [Tag.GALACTIC]: 'i',
   [Tag.RADIOACTIVE]: 'j',
+  [Tag.MERCURY]: 'k',
 } satisfies Record<TagOption, string>;
 
 export function hashToModel(windowLocationHash: string): CardListModel {
@@ -108,6 +110,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       betterments: true,
       robantilles: true,
       solaris: true,
+      idesofmars: true,
     },
     types: {
       event: true,
@@ -142,6 +145,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       crime: true,
       galactic: true,
       radioactive: true,
+      mercury: true,
       wild: true,
       event: true,
       clone: true,
@@ -176,6 +180,9 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       [CardResource.ACTIVIST]: true,
       [CardResource.SUPPLY_CHAIN]: true,
       [CardResource.RELIC]: true,
+      [CardResource.BUDGET]: true,
+      [CardResource.LOOT]: true,
+      [CardResource.ORE]: true,
     },
     searchIndex: SearchIndex.create(),
     namesOnly: true,

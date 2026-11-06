@@ -5,6 +5,7 @@ import {IPlayer} from '../../../IPlayer';
 import {SelectSpace} from '../../../inputs/SelectSpace';
 import {Units} from '../../../../common/Units';
 import {message} from '../../../logs/MessageBuilder';
+import {IdesOfMars} from '../../idesofmars/IdesOfMars';
 
 
 export class ConvertPlants extends StandardActionCard {
@@ -23,10 +24,8 @@ export class ConvertPlants extends StandardActionCard {
   }
 
   public canAct(player: IPlayer): boolean {
-    if (player.plants < player.plantsNeededForGreenery) {
-      return false;
-    }
-    if (player.game.board.getAvailableSpacesForGreenery(player).length === 0) {
+    // Insect Pollinators (Ides of Mars) can make some spaces cheaper.
+    if (IdesOfMars.affordableGreenerySpaces(player).length === 0) {
       return false;
     }
     if (player.game.getOxygenLevel() === player.game.max.oxygen) {
@@ -37,18 +36,19 @@ export class ConvertPlants extends StandardActionCard {
     return player.canAfford({
       cost: 0,
       tr: {oxygen: 1},
-      reserveUnits: Units.of({plants: player.plantsNeededForGreenery}),
+      reserveUnits: Units.of({plants: IdesOfMars.minPlantsForGreenery(player)}),
     });
   }
 
   public action(player: IPlayer) {
     return new SelectSpace(
-      message('Convert ${0} plants into greenery', (b) => b.number(player.plantsNeededForGreenery)),
-      player.game.board.getAvailableSpacesForGreenery(player))
+      message('Convert ${0} plants into greenery', (b) => b.number(IdesOfMars.minPlantsForGreenery(player))),
+      IdesOfMars.affordableGreenerySpaces(player))
       .andThen((space) => {
+        const plants = IdesOfMars.plantsForGreeneryOn(player, space);
         this.actionUsed(player);
         player.game.addGreenery(player, space);
-        player.plants -= player.plantsNeededForGreenery;
+        player.plants -= plants;
         return undefined;
       });
   }

@@ -92,6 +92,7 @@ import {generateGameName} from './GameName';
 import {byKey} from '@/common/utils/Ordering';
 import {sanitizeEscapeVelocityOptions} from '@/common/game/escapeVelocity';
 import {ColoniesHandler} from './colonies/ColoniesHandler';
+import {IdesOfMars} from './cards/idesofmars/IdesOfMars';
 
 // Can be overridden by tests
 let createGameLog: () => Array<LogMessage> = () => [];
@@ -297,6 +298,7 @@ export class Game implements IGame, Logger {
         betterments: partialOptions.bettermentsExpansion ?? false,
         robantilles: partialOptions.robAntillesExpansion ?? false,
         solaris: partialOptions.solarisExpansion ?? false,
+        idesofmars: partialOptions.idesofmarsExpansion ?? false,
       };
     }
     const gameOptions = {...DEFAULT_GAME_OPTIONS, ...partialOptions};
@@ -1150,8 +1152,7 @@ export class Game implements IGame, Logger {
   // Part of final greenery placement.
   public canPlaceGreenery(player: IPlayer): boolean {
     return !this.donePlayers.has(player.id) &&
-            player.plants >= player.plantsNeededForGreenery &&
-            this.board.getAvailableSpacesForGreenery(player).length > 0;
+            IdesOfMars.affordableGreenerySpaces(player).length > 0;
   }
 
   // Called when a player cannot or chose not to place any more greeneries.
@@ -1189,6 +1190,10 @@ export class Game implements IGame, Logger {
       } else {
         this.donePlayers.add(player.id);
       }
+    }
+    // Hidden City (Ides of Mars): place its city after final greenery placement.
+    if (IdesOfMars.takeHiddenCityAction(this, () => this.takeNextFinalGreeneryAction())) {
+      return;
     }
     this.updatePlayerVPForTheGeneration();
     this.updateGlobalsForTheGeneration();

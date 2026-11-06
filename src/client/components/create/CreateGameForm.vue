@@ -188,6 +188,12 @@
               <div class="create-game-expansion-icon expansion-icon-solaris"></div>
               <span v-i18n>Solaris</span><span></span>&nbsp;<a :href="wikiUrls.solaris" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
             </label>
+
+            <input type="checkbox" name="idesofmars" id="idesofmars-checkbox" v-model="expansions.idesofmars">
+            <label for="idesofmars-checkbox" class="expansion-button">
+              <div class="create-game-expansion-icon expansion-icon-idesofmars"></div>
+              <span v-i18n>Ides of Mars</span><span></span>&nbsp;<a :href="wikiUrls.idesofmars" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
+            </label>
           </div>
 
           <div class="create-game-page-column">

@@ -27,6 +27,7 @@ import {UNDERWORLD_CARD_MANIFEST} from './cards/underworld/UnderworldCardManifes
 import {BETTERMENTS_CARD_MANIFEST} from './cards/betterments/BettermentsCardManifest';
 import {ROB_ANTILLES_CARD_MANIFEST} from './cards/robantilles/RobAntillesCardManifest';
 import {SOLARIS_CARD_MANIFEST} from './cards/solaris/SolarisCardManifest';
+import {IDES_OF_MARS_CARD_MANIFEST} from './cards/idesofmars/IdesOfMarsCardManifest';
 
 /**
  * Returns the cards available to a game based on its `GameOptions`.
@@ -66,6 +67,7 @@ export class GameCards {
       [gameOptions.bettermentsExpansion, BETTERMENTS_CARD_MANIFEST],
       [gameOptions.robAntillesExpansion, ROB_ANTILLES_CARD_MANIFEST],
       [gameOptions.solarisExpansion, SOLARIS_CARD_MANIFEST],
+      [gameOptions.idesofmarsExpansion, IDES_OF_MARS_CARD_MANIFEST],
     ];
 
     this.moduleManifests = manifests

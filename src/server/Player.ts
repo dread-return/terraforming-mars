@@ -81,6 +81,7 @@ import {PlayedCards} from './cards/PlayedCards';
 import {From} from './logs/From';
 import {SelectStandardProjectToPlay} from './inputs/SelectStandardProjectToPlay';
 import {Turmoil} from './turmoil/Turmoil';
+import {IdesOfMars} from './cards/idesofmars/IdesOfMars';
 
 const THROW_STATE_ERRORS = Boolean(process.env.THROW_STATE_ERRORS);
 const DEFAULT_GLOBAL_PARAMETER_STEPS = {
@@ -686,6 +687,10 @@ export class Player implements IPlayer {
     if ((this.playedCards.has(CardName.MARS_MATHS) || this.playedCards.has(CardName.GREAT_FACE_OF_CYDONIA)) && !this.playedCards.has(CardName.LUNA_PROJECT_OFFICE)) {
       selectable = Math.min(selectable, 4);
     }
+    // Budget Restrictions (Ides of Mars) hook
+    if (this.playedCards.has(CardName.BUDGET_RESTRICTIONS)) {
+      selectable = Math.min(selectable, 3);
+    }
 
     const cards = copyAndClear(this.draftedCards);
 
@@ -1216,11 +1221,13 @@ export class Player implements IPlayer {
         action.options.push(
           new SelectSpace(
             'Select space for greenery tile',
-            this.game.board.getAvailableSpacesForGreenery(this))
+            IdesOfMars.affordableGreenerySpaces(this))
             .andThen((space) => {
+              // Insect Pollinators (Ides of Mars) can make some spaces cheaper.
+              const plants = IdesOfMars.plantsForGreeneryOn(this, space);
               // Do not raise oxygen or award TR for final greenery placements
               this.game.addGreenery(this, space, false);
-              this.stock.deduct(Resource.PLANTS, this.plantsNeededForGreenery);
+              this.stock.deduct(Resource.PLANTS, plants);
 
               // Resolve Philares deferred actions and maybe place another greenery
               resolveFinalGreeneryDeferredActions();
@@ -1662,6 +1669,12 @@ export class Player implements IPlayer {
       !this.game.gameOptions.fastModeOption &&
       this.allOtherPlayersHavePassed() === false) {
       action.options.push(this.endTurnOption());
+    }
+
+    // Administrative Delay (Ides of Mars)
+    const skipTurn = IdesOfMars.skipTurnOption(this);
+    if (skipTurn !== undefined && this.game.players.length > 1 && this.allOtherPlayersHavePassed() === false) {
+      action.options.push(skipTurn);
     }
 
     // Fund award

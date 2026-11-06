@@ -22,6 +22,7 @@ import {IPolicy, policyDescription} from './Policy';
 import {PlayerId} from '../../common/Types';
 import {ChoosePolicyBonus} from '../deferredActions/ChoosePolicyBonus';
 import {toID} from '../../common/utils/utils';
+import {IdesOfMars} from '../cards/idesofmars/IdesOfMars';
 
 export type NeutralPlayer = 'NEUTRAL';
 export type Delegate = IPlayer | NeutralPlayer;
@@ -319,9 +320,23 @@ export class Turmoil {
       newChairman = this.chairman;
     }
 
+    // Backstabbing (Ides of Mars): a player with a delegate in the winning party becomes chairman instead.
+    let backstabber: IPlayer | undefined;
     if (game.beholdTheEmperor !== true) {
-      // Fill the delegate reserve with everyone except the party leader
-      if (this.rulingParty.partyLeader !== undefined) {
+      const rulingParty = this.rulingParty;
+      backstabber = IdesOfMars.backstabber(game, (player) => rulingParty.delegates.has(player));
+      if (backstabber !== undefined && backstabber !== newChairman) {
+        const player = backstabber;
+        game.log('${0} backstabbed the party leader and becomes chairman (${1})', (b) => b.player(player).cardName(CardName.BACKSTABBING));
+        newChairman = player;
+      }
+    }
+
+    if (game.beholdTheEmperor !== true) {
+      // Fill the delegate reserve with everyone except the new chairman (normally the party leader)
+      if (backstabber !== undefined) {
+        this.rulingParty.delegates.remove(backstabber);
+      } else if (this.rulingParty.partyLeader !== undefined) {
         this.rulingParty.delegates.remove(this.rulingParty.partyLeader);
       }
       this.rulingParty.delegates.forEachMultiplicity((count, playerId) => {

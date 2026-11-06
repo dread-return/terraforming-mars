@@ -132,7 +132,11 @@ const CARD_TAGS: ReadonlyArray<IconEntry> = [
   {iconClass: 'tag-crime', label: 'Crime', official: false, expansions: ['underworld']},
   {iconClass: 'tag-galactic', label: 'Galactic', official: false, expansions: ['solaris']},
   {iconClass: 'tag-radioactive', label: 'Radioactive', official: false, expansions: ['solaris']},
+  {iconClass: 'tag-mercury', label: 'Mercury', official: false, expansions: ['idesofmars']},
   {iconClass: 'card-resource-relic', label: 'Relic', official: false, expansions: ['robantilles']},
+  {iconClass: 'card-resource-budget', label: 'Budget', official: false, expansions: ['idesofmars']},
+  {iconClass: 'card-resource-loot', label: 'Loot', official: false, expansions: ['idesofmars']},
+  {iconClass: 'card-resource-ore', label: 'Ore', official: false, expansions: ['idesofmars']},
 ];
 
 const STANDARD_RESOURCES: ReadonlyArray<IconEntry> = [

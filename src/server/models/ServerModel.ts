@@ -457,6 +457,7 @@ export class Server {
         betterments: options.bettermentsExpansion,
         robantilles: options.robAntillesExpansion,
         solaris: options.solarisExpansion,
+        idesofmars: options.idesofmarsExpansion,
       },
       fastModeOption: options.fastModeOption,
       includedCards: options.includedCards,

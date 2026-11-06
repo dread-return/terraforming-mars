@@ -171,6 +171,9 @@ const TILE_CLASSES: Record<TileType, Classes> = {
   [TileType.SEDIMENT]: {
     tile: 'card-tile-ra-sediment',
   },
+  [TileType.INVAK_CITY]: {
+    tile: 'card-tile-im-invak-city',
+  },
 };
 
 export default defineComponent({

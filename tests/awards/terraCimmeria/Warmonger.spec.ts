@@ -105,6 +105,7 @@ describe('Warmonger', () => {
     CardName.METALLIC_ASTEROID, CardName.MINING_EXPEDITION, CardName.MONOPOLY, CardName.PUBLIC_SPONSORED_GRANT, CardName.PLANT_TAX,
     CardName.RECKLESS_DETONATION, CardName.REVOLTING_COLONISTS, CardName.ROAD_PIRACY, CardName.SABOTAGE,
     CardName.SMALL_ASTEROID, CardName.SMALL_COMET, CardName.SOLAR_STORM, CardName.SPECIAL_PERMIT, CardName.SUPERNOVA_EXPLOSION,
+    CardName.PRECIOUS_METAL_ASTEROID,
     CardName.VIRUS,
   ] as const;
   for (const manifest of ALL_MODULE_MANIFESTS) {

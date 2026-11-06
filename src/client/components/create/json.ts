@@ -23,3 +23,4 @@ export const UNDERWORLDEXPANSION = 'underworldExpansion';
 export const DELTA_PROJECT_EXPANSION = 'deltaProjectExpansion';
 export const BETTERMENTS_EXPANSION = 'bettermentsExpansion';
 export const ROB_ANTILLES_EXPANSION = 'robAntillesExpansion';
+export const SOLARIS_EXPANSION = 'solarisExpansion';

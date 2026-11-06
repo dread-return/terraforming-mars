@@ -182,6 +182,12 @@
               <div class="create-game-expansion-icon expansion-icon-robantilles"></div>
               <span v-i18n>Rob Antilles</span><span></span>&nbsp;<a :href="wikiUrls.robantilles" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
             </label>
+
+            <input type="checkbox" name="solaris" id="solaris-checkbox" v-model="expansions.solaris">
+            <label for="solaris-checkbox" class="expansion-button">
+              <div class="create-game-expansion-icon expansion-icon-solaris"></div>
+              <span v-i18n>Solaris</span><span></span>&nbsp;<a :href="wikiUrls.solaris" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
+            </label>
           </div>
 
           <div class="create-game-page-column">

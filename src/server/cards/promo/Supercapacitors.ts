@@ -1,3 +1,4 @@
+import {convertEnergyToHeat} from '../robantilles/EnergyStorage';
 import {IProjectCard} from '../IProjectCard';
 import {Tag} from '../../../common/cards/Tag';
 import {CardType} from '../../../common/cards/CardType';
@@ -39,9 +40,7 @@ export class Supercapacitors extends Card implements IProjectCard {
     player.defer(
       new SelectAmount('Select amount of energy to convert to heat', 'OK', 0, player.energy, true)
         .andThen((amount) => {
-          player.energy -= amount;
-          player.heat += amount;
-          player.game.log('${0} converted ${1}:r:energy: to :r:heat:', (b) => b.player(player).number(amount));
+          convertEnergyToHeat(player, amount, {log: true});
           player.finishProductionPhase();
           return undefined;
         },

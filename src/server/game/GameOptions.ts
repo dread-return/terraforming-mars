@@ -42,6 +42,7 @@ export type GameOptions = {
   deltaProjectExpansion: boolean;
   bettermentsExpansion: boolean;
   robAntillesExpansion: boolean;
+  solarisExpansion: boolean;
 
   expansions: Record<Expansion, boolean>,
 
@@ -121,6 +122,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
     deltaProject: false,
     betterments: false,
     robantilles: false,
+    solaris: false,
   },
   fastModeOption: false,
   includeFanMA: false,
@@ -154,6 +156,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   deltaProjectExpansion: false,
   bettermentsExpansion: false,
   robAntillesExpansion: false,
+  solarisExpansion: false,
   automa: false,
   undoOption: false,
   venusNextExtension: false,

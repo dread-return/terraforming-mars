@@ -130,6 +130,8 @@ const CARD_TAGS: ReadonlyArray<IconEntry> = [
   {iconClass: 'tag-mars', label: 'Mars', official: false, expansions: ['pathfinders']},
   {iconClass: 'tag-clone', label: 'Clone', official: false, expansions: ['pathfinders']},
   {iconClass: 'tag-crime', label: 'Crime', official: false, expansions: ['underworld']},
+  {iconClass: 'tag-galactic', label: 'Galactic', official: false, expansions: ['solaris']},
+  {iconClass: 'tag-radioactive', label: 'Radioactive', official: false, expansions: ['solaris']},
   {iconClass: 'card-resource-relic', label: 'Relic', official: false, expansions: ['robantilles']},
 ];
 

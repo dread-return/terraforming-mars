@@ -18,6 +18,7 @@ import {STAR_WARS_CARD_MANIFEST} from './starwars/StarwarsCardManifest';
 import {UNDERWORLD_CARD_MANIFEST} from './underworld/UnderworldCardManifest';
 import {BETTERMENTS_CARD_MANIFEST} from './betterments/BettermentsCardManifest';
 import {ROB_ANTILLES_CARD_MANIFEST} from './robantilles/RobAntillesCardManifest';
+import {SOLARIS_CARD_MANIFEST} from './solaris/SolarisCardManifest';
 import {DELTA_PROJECT_CARD_MANIFEST} from './delta/DeltaProjectCardManifest';
 
 export const ALL_MODULE_MANIFESTS: Array<ModuleManifest> = [
@@ -38,5 +39,6 @@ export const ALL_MODULE_MANIFESTS: Array<ModuleManifest> = [
   UNDERWORLD_CARD_MANIFEST,
   BETTERMENTS_CARD_MANIFEST,
   ROB_ANTILLES_CARD_MANIFEST,
+  SOLARIS_CARD_MANIFEST,
   DELTA_PROJECT_CARD_MANIFEST,
 ];

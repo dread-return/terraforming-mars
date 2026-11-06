@@ -18,4 +18,7 @@ export const SpaceName = {
   DYSON_SCREENS: 'c76',
   LUNAR_EMBASSY: 'c77',
   VENERA_BASE: 'c78',
+
+  // Solaris (GIGA)
+  SIDERALIS: 'c79',
 } as const;

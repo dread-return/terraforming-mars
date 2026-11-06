@@ -71,6 +71,7 @@ describe('ApiGame', () => {
             'deltaProject': false,
             'betterments': false,
             'robantilles': false,
+            'solaris': false,
             'moon': false,
             'pathfinders': false,
             'prelude': false,

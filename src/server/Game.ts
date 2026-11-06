@@ -296,6 +296,7 @@ export class Game implements IGame, Logger {
         deltaProject: partialOptions.deltaProjectExpansion ?? false,
         betterments: partialOptions.bettermentsExpansion ?? false,
         robantilles: partialOptions.robAntillesExpansion ?? false,
+        solaris: partialOptions.solarisExpansion ?? false,
       };
     }
     const gameOptions = {...DEFAULT_GAME_OPTIONS, ...partialOptions};

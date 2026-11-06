@@ -51,6 +51,11 @@ export abstract class StandardProjectCard extends Card implements IStandardProje
     for (const playedCard of player.tableau) {
       playedCard.onStandardProject?.(player, this);
     }
+    for (const p of player.game.players) {
+      for (const playedCard of p.tableau) {
+        playedCard.onStandardProjectByAnyPlayer?.(p, player, this);
+      }
+    }
   }
 
   protected canPlayOptions(player: IPlayer) {

@@ -1,5 +1,5 @@
 import * as constants from '../common/constants';
-import {energyStorageCapacity, onProductionWithEnergyStorage} from './cards/robantilles/EnergyStorage';
+import {convertEnergyToHeat, energyStorageCapacity, onProductionWithEnergyStorage} from './cards/robantilles/EnergyStorage';
 import {PlayerId} from '../common/Types';
 import {MILESTONE_COST, PRODUCTION_MINIMUMS, REDS_RULING_POLICY_COST} from '../common/constants';
 import {cardsFromJSON, ceosFromJSON, corporationCardsFromJSON, newCorporationCard, preludesFromJSON} from './createCard';
@@ -635,8 +635,7 @@ export class Player implements IPlayer {
     } else if (energyStorageCapacity(this) > 0) {
       onProductionWithEnergyStorage(this);
     } else {
-      this.heat += this.energy;
-      this.energy = 0;
+      convertEnergyToHeat(this, this.energy);
       this.finishProductionPhase();
     }
   }

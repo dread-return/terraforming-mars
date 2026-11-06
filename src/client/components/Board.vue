@@ -18,6 +18,7 @@
       <BoardSpace v-if="hasSpace(SpaceName.DYSON_SCREENS)" :space="getSpace(SpaceName.DYSON_SCREENS)" text="Dyson Screens" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.LUNAR_EMBASSY)" :space="getSpace(SpaceName.LUNAR_EMBASSY)" text="Lunar Embassy" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.VENERA_BASE)" :space="getSpace(SpaceName.VENERA_BASE)" text="Venera Base" :tileView="tileView" />
+      <BoardSpace v-if="hasSpace(SpaceName.SIDERALIS)" :space="getSpace(SpaceName.SIDERALIS)" text="Sideralis" :tileView="tileView" />
     </div>
 
     <div class="global-numbers" :class="{'global-numbers--large': isLargeBoard}">

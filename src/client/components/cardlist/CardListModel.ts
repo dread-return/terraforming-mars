@@ -42,6 +42,7 @@ const MODULE_ABBREVIATIONS = {
   deltaProject: 'd',
   betterments: 'B',
   robantilles: 'A',
+  solaris: 'S',
 } satisfies Record<GameModule, string>;
 
 const TYPE_ABBREVIATIONS = {
@@ -80,6 +81,8 @@ const TAG_ABBREVIATIONS = {
   [Tag.CLONE]: 'f',
   none: 'g',
   [Tag.CRIME]: 'h',
+  [Tag.GALACTIC]: 'i',
+  [Tag.RADIOACTIVE]: 'j',
 } satisfies Record<TagOption, string>;
 
 export function hashToModel(windowLocationHash: string): CardListModel {
@@ -104,6 +107,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       deltaProject: true,
       betterments: true,
       robantilles: true,
+      solaris: true,
     },
     types: {
       event: true,
@@ -136,6 +140,8 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       moon: true,
       mars: true,
       crime: true,
+      galactic: true,
+      radioactive: true,
       wild: true,
       event: true,
       clone: true,

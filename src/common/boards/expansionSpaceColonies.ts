@@ -11,4 +11,5 @@ export const expansionSpaceColonies = [
   {name: SpaceName.DYSON_SCREENS, expansion: 'pathfinders', card: CardName.DYSON_SCREENS},
   {name: SpaceName.LUNAR_EMBASSY, expansion: 'pathfinders', card: CardName.LUNAR_EMBASSY},
   {name: SpaceName.VENERA_BASE, expansion: 'pathfinders', card: CardName.VENERA_BASE},
+  {name: SpaceName.SIDERALIS, expansion: 'solaris', card: CardName.SIDERALIS},
 ] as const;

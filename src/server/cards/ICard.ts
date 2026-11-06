@@ -85,6 +85,8 @@ export interface ICard {
   onCardPlayedByAnyPlayer?(thisCardOwner: IPlayer, card: ICard, activePlayer: IPlayer): PlayerInput | undefined | void;
   onCardPlayedFromAnyPlayer?: never;
   onStandardProject?(player: IPlayer, project: IStandardProjectCard): void;
+  /** Called when any player (including the card owner) uses a standard project. */
+  onStandardProjectByAnyPlayer?(cardOwner: IPlayer, activePlayer: IPlayer, project: IStandardProjectCard): void;
   onTilePlaced?(cardOwner: IPlayer, activePlayer: IPlayer, space: Space, boardType: BoardType): void;
   /**
    * Called when `activePlayer` places a tile on `space` which rewards a standard resource bonus.

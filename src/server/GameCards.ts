@@ -26,6 +26,7 @@ import {STAR_WARS_CARD_MANIFEST} from './cards/starwars/StarwarsCardManifest';
 import {UNDERWORLD_CARD_MANIFEST} from './cards/underworld/UnderworldCardManifest';
 import {BETTERMENTS_CARD_MANIFEST} from './cards/betterments/BettermentsCardManifest';
 import {ROB_ANTILLES_CARD_MANIFEST} from './cards/robantilles/RobAntillesCardManifest';
+import {SOLARIS_CARD_MANIFEST} from './cards/solaris/SolarisCardManifest';
 
 /**
  * Returns the cards available to a game based on its `GameOptions`.
@@ -64,6 +65,7 @@ export class GameCards {
       [gameOptions.underworldExpansion, UNDERWORLD_CARD_MANIFEST],
       [gameOptions.bettermentsExpansion, BETTERMENTS_CARD_MANIFEST],
       [gameOptions.robAntillesExpansion, ROB_ANTILLES_CARD_MANIFEST],
+      [gameOptions.solarisExpansion, SOLARIS_CARD_MANIFEST],
     ];
 
     this.moduleManifests = manifests
@@ -81,6 +83,10 @@ export class GameCards {
   public getProjectCards() {
     const cards = this.getCards<IProjectCard>('projectCards');
     this.addCustomCards(cards, this.gameOptions.includedCards);
+    // Solaris (GIGA) reprints the promo Self-Replicating Robots, so it joins the deck when Solaris is on.
+    if (this.gameOptions.solarisExpansion && !this.gameOptions.bannedCards.includes(CardName.SELF_REPLICATING_ROBOTS)) {
+      this.addCustomCards(cards, [CardName.SELF_REPLICATING_ROBOTS]);
+    }
     return cards.filter(isIProjectCard);
   }
   public getStandardProjects() {

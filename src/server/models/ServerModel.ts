@@ -456,6 +456,7 @@ export class Server {
         deltaProject: options.deltaProjectExpansion,
         betterments: options.bettermentsExpansion,
         robantilles: options.robAntillesExpansion,
+        solaris: options.solarisExpansion,
       },
       fastModeOption: options.fastModeOption,
       includedCards: options.includedCards,

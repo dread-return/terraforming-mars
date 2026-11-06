@@ -19,6 +19,7 @@
         <a v-if="gameOptions.expansions.deltaProject" :href="rulebookUrls.deltaProject" class="tooltip" data-tooltip="Delta Project rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-deltaProject"></div></a>
         <a v-if="gameOptions.expansions.betterments" :href="rulebookUrls.betterments" class="tooltip" data-tooltip="Corporate Betterments rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-betterments"></div></a>
         <a v-if="gameOptions.expansions.robantilles" :href="rulebookUrls.robantilles" class="tooltip" data-tooltip="Rob Antilles rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-robantilles"></div></a>
+        <a v-if="gameOptions.expansions.solaris" :href="rulebookUrls.solaris" class="tooltip" data-tooltip="Solaris rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-solaris"></div></a>
       </li>
 
       <li><div class="setup-item" v-i18n>Board:</div>

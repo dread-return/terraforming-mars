@@ -400,6 +400,7 @@ const logos: Partial<Record<CardName, 'image' | 'css' | 'bespoke'>> = {
   [CardName.VIRON]: 'css',
   [CardName.VITOR]: 'bespoke',
   [CardName.VOLTAGON]: 'bespoke',
+  [CardName.OMEGALAXY]: 'css',
 };
 
 export default defineComponent({

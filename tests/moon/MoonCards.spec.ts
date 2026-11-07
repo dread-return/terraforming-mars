@@ -10,6 +10,7 @@ const OTHER_SCIENCE_CARDS: ReadonlySet<CardName> = new Set([
   CardName.PHYSICS_COMPLEX,
   CardName.SEARCH_FOR_LIFE,
   CardName.SEARCH_FOR_LIFE_UNDERGROUND,
+  CardName.H2O_MOLECULES_RESEARCH, // 3 VP like Search for Life
 ]);
 
 describe('MoonCards', () => {

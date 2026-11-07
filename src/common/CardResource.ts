@@ -54,4 +54,7 @@ export enum CardResource {
   BUDGET = 'Budget',
   LOOT = 'Loot',
   ORE = 'Ore',
+
+  // Nuclear
+  RADIATION = 'Radiation',
 }

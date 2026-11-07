@@ -124,6 +124,8 @@ export interface IGame extends Logger {
   nomadSpace: SpaceId | undefined;
   /** When true, players may not trade for the rest of this generation. */
   tradeEmbargo: boolean;
+  /** Nuclear (GIGA) contamination track, 0 to 19. */
+  contamination: number;
   /** True when Behold The Emperor is in effect this coming Turmoil phase */
   beholdTheEmperor: boolean;
   /** Double Down: tracking when an action is due to double down. Does not need to be serialized. */

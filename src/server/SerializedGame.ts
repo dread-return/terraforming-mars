@@ -67,6 +67,8 @@ export type SerializedGame = {
     tags: ReadonlyArray<Tag>
     temperature: number;
     tradeEmbargo?: boolean;
+    // Nuclear (GIGA) contamination track
+    contamination?: number;
     turmoil?: SerializedTurmoil;
     undoCount: number;
     underworldData: UnderworldData;

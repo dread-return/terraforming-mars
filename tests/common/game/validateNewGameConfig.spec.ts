@@ -42,6 +42,7 @@ function newGameConfig(overrides: Partial<NewGameConfig> = {}): NewGameConfig {
       robantilles: false,
       solaris: false,
       idesofmars: false,
+      nuclear: false,
     },
     boards: boardOptions(RandomBoardOption.OFFICIAL),
     seed: 0,

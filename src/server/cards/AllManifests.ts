@@ -20,6 +20,7 @@ import {BETTERMENTS_CARD_MANIFEST} from './betterments/BettermentsCardManifest';
 import {ROB_ANTILLES_CARD_MANIFEST} from './robantilles/RobAntillesCardManifest';
 import {SOLARIS_CARD_MANIFEST} from './solaris/SolarisCardManifest';
 import {IDES_OF_MARS_CARD_MANIFEST} from './idesofmars/IdesOfMarsCardManifest';
+import {NUCLEAR_CARD_MANIFEST} from './nuclear/NuclearCardManifest';
 import {DELTA_PROJECT_CARD_MANIFEST} from './delta/DeltaProjectCardManifest';
 
 export const ALL_MODULE_MANIFESTS: Array<ModuleManifest> = [
@@ -42,5 +43,6 @@ export const ALL_MODULE_MANIFESTS: Array<ModuleManifest> = [
   ROB_ANTILLES_CARD_MANIFEST,
   SOLARIS_CARD_MANIFEST,
   IDES_OF_MARS_CARD_MANIFEST,
+  NUCLEAR_CARD_MANIFEST,
   DELTA_PROJECT_CARD_MANIFEST,
 ];

@@ -18,6 +18,7 @@ export const EXPANSIONS = [
   'robantilles',
   'solaris',
   'idesofmars',
+  'nuclear',
 ] as const;
 
 export const GAME_MODULES = [
@@ -49,6 +50,7 @@ export const MODULE_NAMES = {
   robantilles: 'Rob Antilles',
   solaris: 'Solaris',
   idesofmars: 'Ides of Mars',
+  nuclear: 'Nuclear',
 } satisfies Record<GameModule, string>;
 
 export const DEFAULT_EXPANSIONS = {
@@ -71,4 +73,5 @@ export const DEFAULT_EXPANSIONS = {
   robantilles: false,
   solaris: false,
   idesofmars: false,
+  nuclear: false,
 } satisfies Record<Expansion, boolean>;

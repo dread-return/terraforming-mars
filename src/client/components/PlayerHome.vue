@@ -18,6 +18,7 @@
       :oxygen="game.oxygenLevel"
       :oceans="game.oceans"
       :venus="game.venusScaleLevel"
+      :contamination="game.contamination"
       :turmoil="game.turmoil"
       :moonData="game.moon"
       :gameOptions="game.gameOptions"

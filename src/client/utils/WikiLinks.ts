@@ -23,6 +23,7 @@ export const RULEBOOK_URLS: Record<GameModule, string> = {
   robantilles: 'https://boardgamegeek.com/thread/2293920/terraforming-mars-giga-expansion-ares-pathfinder-b',
   solaris: 'https://boardgamegeek.com/thread/2293920/terraforming-mars-giga-expansion-ares-pathfinder-b',
   idesofmars: 'https://boardgamegeek.com/thread/2293920/terraforming-mars-giga-expansion-ares-pathfinder-b',
+  nuclear: 'https://boardgamegeek.com/thread/2293920/terraforming-mars-giga-expansion-ares-pathfinder-b',
 };
 
 export const WIKI_URLS = {

@@ -44,6 +44,7 @@ const MODULE_ABBREVIATIONS = {
   robantilles: 'A',
   solaris: 'S',
   idesofmars: 'I',
+  nuclear: 'N',
 } satisfies Record<GameModule, string>;
 
 const TYPE_ABBREVIATIONS = {
@@ -111,6 +112,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       robantilles: true,
       solaris: true,
       idesofmars: true,
+      nuclear: true,
     },
     types: {
       event: true,
@@ -183,6 +185,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       [CardResource.BUDGET]: true,
       [CardResource.LOOT]: true,
       [CardResource.ORE]: true,
+      [CardResource.RADIATION]: true,
     },
     searchIndex: SearchIndex.create(),
     namesOnly: true,

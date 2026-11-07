@@ -32,6 +32,14 @@ const NOT_DISPLAYED: ReadonlyArray<CardName> = [
   CardName.ECOPLANTS,
   // Only applies to cards that place a greenery or an ocean tile.
   CardName.WATER_RETAINERS,
+  // Nuclear: depends on the temperature, or on the card's tags (and adds a penalty).
+  CardName.OCEANIC_ATOMIC_TESTS,
+  CardName.ENERGY_BUDGET_CUTOFFS,
+  // Nuclear: only the next card, only this generation, or only the card played right after it.
+  CardName.CEO_HEART_ATTACK,
+  CardName.NUCLEAR_MARTIAN_SUMMIT,
+  CardName.EMF_CONNECTION,
+  CardName.CALLISTO_FIELD_ARRAYS,
 ];
 
 describe('customDiscounts', () => {

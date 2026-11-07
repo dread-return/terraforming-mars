@@ -1,4 +1,5 @@
 import {CardName} from '../../common/cards/CardName';
+import {Nuclear} from '../cards/nuclear/Nuclear';
 import {IGame} from '../IGame';
 import {SelectCard} from '../inputs/SelectCard';
 import {Space} from '../boards/Space';
@@ -171,7 +172,7 @@ export class AresHandler {
     let megaCreditCost = 0;
     const productionCost: AresProductionCost = {...EMPTY_ARES_PRODUCTION_COST};
     board.getAdjacentSpaces(space).forEach((adjacentSpace) => {
-      megaCreditCost += adjacentSpace.adjacency?.cost || 0;
+      megaCreditCost += adjacentSpace.adjacency?.cost || Nuclear.defaultAdjacencyCost(player.game, adjacentSpace);
       // TODO(kberg): offset costs with heat and MC bonuses.
       // for (const bonus of adjacency.bonus) {
       //   case (bonus) {

@@ -82,6 +82,7 @@ import {From} from './logs/From';
 import {SelectStandardProjectToPlay} from './inputs/SelectStandardProjectToPlay';
 import {Turmoil} from './turmoil/Turmoil';
 import {IdesOfMars} from './cards/idesofmars/IdesOfMars';
+import {Nuclear} from './cards/nuclear/Nuclear';
 
 const THROW_STATE_ERRORS = Boolean(process.env.THROW_STATE_ERRORS);
 const DEFAULT_GLOBAL_PARAMETER_STEPS = {
@@ -319,7 +320,8 @@ export class Player implements IPlayer {
   }
 
   public getSteelValue(): number {
-    return this.steelValue;
+    // Radiation Shielding (Nuclear) hook
+    return this.steelValue + Nuclear.steelValueBonus(this);
   }
 
   public increaseSteelValue(): void {
@@ -755,15 +757,18 @@ export class Player implements IPlayer {
 
     cost -= TurmoilHandler.getCardDiscount(this, card);
 
+    // Nuclear: penalties from opponents' cards (Water Reservoir Analysis, False Flag Operations).
+    cost += Nuclear.cardCostAdjustment(this, card);
+
     return Math.max(cost, 0);
   }
 
   private paymentOptionsForCard(card: IProjectCard): PaymentOptions {
     return {
       heat: this.canUseHeatAsMegaCredits,
-      steel: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING),
+      steel: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card),
       plants: card.tags.includes(Tag.BUILDING) && this.playedCards.has(CardName.MARTIAN_LUMBER_CORP),
-      titanium: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.SPACE),
+      titanium: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.SPACE) || Nuclear.canUseTitanium(this, card),
       lunaTradeFederationTitanium: this.canUseTitaniumAsMegacredits,
       seeds: card.tags.includes(Tag.PLANT) || card.name === CardName.GREENERY_STANDARD_PROJECT,
       floaters: card.tags.includes(Tag.VENUS),
@@ -867,6 +872,7 @@ export class Player implements IPlayer {
   public playCard(selectedCard: IProjectCard, payment?: Payment, cardAction: CardAction = 'add'): void {
     if (payment !== undefined) {
       this.pay(payment);
+      Nuclear.onProjectCardPaid(this, selectedCard, payment);
     }
 
     const selfReplicatingRobots = this.tableau.get(CardName.SELF_REPLICATING_ROBOTS);
@@ -981,6 +987,7 @@ export class Player implements IPlayer {
     }
 
     PathfindersExpansion.onCardPlayed(this, card);
+    Nuclear.onCardPlayed(this, card);
   }
 
   private getPlayCeoOPGAction(): PlayerInput | undefined {

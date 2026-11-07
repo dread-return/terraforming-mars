@@ -67,6 +67,9 @@ const tileTypeToCssClass: Record<TileType, string> = {
   [TileType.PUMPING_HUB]: 'ra-pumping-hub',
   [TileType.SEDIMENT]: 'ra-sediment',
   [TileType.INVAK_CITY]: 'im-invak-city',
+  [TileType.EVACUATION_ZONE]: 'nu-evacuation-zone',
+  [TileType.RADIOACTIVE_DEFLUX]: 'nu-radioactive-deflux',
+  [TileType.ESOTERIC_COMMUNITY]: 'nu-esoteric-community',
 };
 
 const tileTypeToCssClassAresOverride = new Map<TileType, string>([
@@ -114,6 +117,9 @@ const descriptions: Record<TileType, string> = {
   [TileType.ANIMAL_DOME]: 'Animal Dome. Adjacency bonus: 1 animal.',
   [TileType.PUMPING_HUB]: 'Pumping Hub. Adjacency bonus: 2 energy.',
   [TileType.INVAK_CITY]: 'Invak City: counts as a city and as a greenery. Adjacency bonus: 2 M€.',
+  [TileType.EVACUATION_ZONE]: 'Evacuation Zone. Placing a tile next to it costs 1 plant and 1 microbe.',
+  [TileType.RADIOACTIVE_DEFLUX]: 'Radioactive Deflux. Placing a tile next to it costs 1 animal.',
+  [TileType.ESOTERIC_COMMUNITY]: 'Esoteric Community: counts as a city. 1 VP per adjacent special tile. Adjacency bonus: 2 M€.',
   [TileType.SEDIMENT]: 'Sediment: any player may place a city here, ignoring placement rules, and gain 3 M€. Adjacency bonus: 1 titanium.',
 };
 
@@ -125,6 +131,10 @@ export default defineComponent({
       required: true,
     },
     aresExtension: {
+      type: Boolean,
+    },
+    // Nuclear (GIGA): Nuclear Zones carry the Ares -2 M€ adjacency malus.
+    nuclearExpansion: {
       type: Boolean,
     },
     tileView: {
@@ -158,7 +168,7 @@ export default defineComponent({
       let css = 'board-space';
       if (this.tileType !== undefined) {
         let cssClass: string | undefined = tileTypeToCssClass[this.tileType];
-        if (this.aresExtension && tileTypeToCssClassAresOverride.has(this.tileType)) {
+        if ((this.aresExtension || (this.nuclearExpansion && this.tileType === TileType.NUCLEAR_ZONE)) && tileTypeToCssClassAresOverride.has(this.tileType)) {
           cssClass = tileTypeToCssClassAresOverride.get(this.tileType);
         }
         // Special case Crashlanding rotation

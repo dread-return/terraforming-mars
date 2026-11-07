@@ -25,3 +25,4 @@ export const BETTERMENTS_EXPANSION = 'bettermentsExpansion';
 export const ROB_ANTILLES_EXPANSION = 'robAntillesExpansion';
 export const SOLARIS_EXPANSION = 'solarisExpansion';
 export const IDESOFMARS_EXPANSION = 'idesofmarsExpansion';
+export const NUCLEAR_EXPANSION = 'nuclearExpansion';

@@ -174,6 +174,15 @@ const TILE_CLASSES: Record<TileType, Classes> = {
   [TileType.INVAK_CITY]: {
     tile: 'card-tile-im-invak-city',
   },
+  [TileType.EVACUATION_ZONE]: {
+    tile: 'card-tile-nu-evacuation-zone',
+  },
+  [TileType.RADIOACTIVE_DEFLUX]: {
+    tile: 'card-tile-nu-radioactive-deflux',
+  },
+  [TileType.ESOTERIC_COMMUNITY]: {
+    tile: 'card-tile-nu-esoteric-community',
+  },
 };
 
 export default defineComponent({

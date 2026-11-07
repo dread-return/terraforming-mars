@@ -93,6 +93,7 @@ import {byKey} from '@/common/utils/Ordering';
 import {sanitizeEscapeVelocityOptions} from '@/common/game/escapeVelocity';
 import {ColoniesHandler} from './colonies/ColoniesHandler';
 import {IdesOfMars} from './cards/idesofmars/IdesOfMars';
+import {Nuclear} from './cards/nuclear/Nuclear';
 
 // Can be overridden by tests
 let createGameLog: () => Array<LogMessage> = () => [];
@@ -183,6 +184,8 @@ export class Game implements IGame, Logger {
   nomadSpace: SpaceId | undefined = undefined;
   // Trade Embargo
   public tradeEmbargo: boolean = false;
+  // Nuclear (GIGA) contamination track, 0 to 19.
+  public contamination: number = 0;
   // Behold The Emperor
   public beholdTheEmperor: boolean = false;
   // Double Down
@@ -299,6 +302,7 @@ export class Game implements IGame, Logger {
         robantilles: partialOptions.robAntillesExpansion ?? false,
         solaris: partialOptions.solarisExpansion ?? false,
         idesofmars: partialOptions.idesofmarsExpansion ?? false,
+        nuclear: partialOptions.nuclearExpansion ?? false,
       };
     }
     const gameOptions = {...DEFAULT_GAME_OPTIONS, ...partialOptions};
@@ -542,6 +546,7 @@ export class Game implements IGame, Logger {
       tags: this.tags,
       temperature: this.temperature,
       tradeEmbargo: this.tradeEmbargo,
+      contamination: this.contamination,
       underworldData: this.underworldData,
       undoCount: this.undoCount,
       venusScaleLevel: this.venusScaleLevel,
@@ -1226,6 +1231,8 @@ export class Game implements IGame, Logger {
     if (this.phase !== Phase.SOLAR) {
       TurmoilHandler.onGlobalParameterIncrease(player, GlobalParameter.OXYGEN, steps);
       player.onGlobalParameterIncrease(GlobalParameter.OXYGEN, steps);
+      // Aerosol Isotopes (Nuclear) hook
+      Nuclear.onOxygenRaised(player, steps);
       player.increaseTerraformRating(steps);
     }
 
@@ -1353,7 +1360,8 @@ export class Game implements IGame, Logger {
     // Part 1, basic validation checks.
 
     // Land claim a player can claim land for themselves
-    if (space.player !== undefined && space.player !== player && space.tile?.tileType !== TileType.SEDIMENT) {
+    // Sediment (Rob Antilles) and Evacuation Zone (Nuclear) may go on someone else's space.
+    if (space.player !== undefined && space.player !== player && space.tile?.tileType !== TileType.SEDIMENT && tile.tileType !== TileType.EVACUATION_ZONE) {
       throw new Error('This space is land claimed by ' + space.player.name);
     }
 
@@ -1367,12 +1375,20 @@ export class Game implements IGame, Logger {
     AresHandler.ifAres(this, () => {
       AresHandler.assertCanPay(player, space, subjectToHazardAdjacency);
     });
+    // Nuclear (GIGA): Nuclear Zones charge adjacency costs even without Ares.
+    const nuclearWithoutAres = this.gameOptions.nuclearExpansion && !this.gameOptions.aresExtension;
+    if (nuclearWithoutAres) {
+      AresHandler.assertCanPay(player, space, subjectToHazardAdjacency);
+    }
 
     // Part 2. Collect additional fees.
     // Adjacency costs are before the hellas ocean tile because this is a mandatory cost.
     AresHandler.ifAres(this, () => {
       AresHandler.payAdjacencyAndHazardCosts(player, space, subjectToHazardAdjacency);
     });
+    if (nuclearWithoutAres) {
+      AresHandler.payAdjacencyAndHazardCosts(player, space, subjectToHazardAdjacency);
+    }
 
     TurmoilHandler.resolveTilePlacementCosts(player);
 
@@ -1392,6 +1408,9 @@ export class Game implements IGame, Logger {
       AresHandler.ifAres(this, (aresData) => {
         AresHandler.maybeIncrementMilestones(aresData, player, space, hazardSeverity(initialTileType));
       });
+
+      // Nuclear (GIGA): red special tiles take resources from whoever places next to them.
+      Nuclear.payResourceMalus(player, space);
 
       if (this.gameOptions.boardName === BoardName.HOLLANDIA) {
         const spaces = this.board.spaces.filter(Board.ownedBy(player));
@@ -1840,6 +1859,7 @@ export class Game implements IGame, Logger {
     game.stJosephCathedrals = d.stJosephCathedrals.map((id) => board.spaces.some((space) => space.id === id) ? id : `c${id}` as SpaceId);
     game.nomadSpace = d.nomadSpace;
     game.tradeEmbargo = d.tradeEmbargo ?? false;
+    game.contamination = d.contamination ?? 0;
     game.beholdTheEmperor = d.beholdTheEmperor ?? false;
     game.globalsPerGeneration = d.globalsPerGeneration;
     game.verminInEffect = d.verminInEffect;

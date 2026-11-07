@@ -28,6 +28,7 @@ import {BETTERMENTS_CARD_MANIFEST} from './cards/betterments/BettermentsCardMani
 import {ROB_ANTILLES_CARD_MANIFEST} from './cards/robantilles/RobAntillesCardManifest';
 import {SOLARIS_CARD_MANIFEST} from './cards/solaris/SolarisCardManifest';
 import {IDES_OF_MARS_CARD_MANIFEST} from './cards/idesofmars/IdesOfMarsCardManifest';
+import {NUCLEAR_CARD_MANIFEST} from './cards/nuclear/NuclearCardManifest';
 
 /**
  * Returns the cards available to a game based on its `GameOptions`.
@@ -68,6 +69,7 @@ export class GameCards {
       [gameOptions.robAntillesExpansion, ROB_ANTILLES_CARD_MANIFEST],
       [gameOptions.solarisExpansion, SOLARIS_CARD_MANIFEST],
       [gameOptions.idesofmarsExpansion, IDES_OF_MARS_CARD_MANIFEST],
+      [gameOptions.nuclearExpansion, NUCLEAR_CARD_MANIFEST],
     ];
 
     this.moduleManifests = manifests

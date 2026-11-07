@@ -19,6 +19,7 @@
       <BoardSpace v-if="hasSpace(SpaceName.LUNAR_EMBASSY)" :space="getSpace(SpaceName.LUNAR_EMBASSY)" text="Lunar Embassy" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.VENERA_BASE)" :space="getSpace(SpaceName.VENERA_BASE)" text="Venera Base" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.SIDERALIS)" :space="getSpace(SpaceName.SIDERALIS)" text="Sideralis" :tileView="tileView" />
+      <BoardSpace v-if="hasSpace(SpaceName.MAIN_DOCKING_STATION)" :space="getSpace(SpaceName.MAIN_DOCKING_STATION)" text="Main Docking Station" :tileView="tileView" />
     </div>
 
     <div class="global-numbers" :class="{'global-numbers--large': isLargeBoard}">
@@ -80,6 +81,7 @@
         :key="curSpace.id"
         :space="curSpace"
         :aresExtension="expansions.ares"
+        :nuclearExpansion="expansions.nuclear"
         :tileView="tileView"
         data-test="board-space"
       />

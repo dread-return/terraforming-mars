@@ -137,6 +137,7 @@ const CARD_TAGS: ReadonlyArray<IconEntry> = [
   {iconClass: 'card-resource-budget', label: 'Budget', official: false, expansions: ['idesofmars']},
   {iconClass: 'card-resource-loot', label: 'Loot', official: false, expansions: ['idesofmars']},
   {iconClass: 'card-resource-ore', label: 'Ore', official: false, expansions: ['idesofmars']},
+  {iconClass: 'card-resource-radiation', label: 'Radiation', official: false, expansions: ['nuclear']},
 ];
 
 const STANDARD_RESOURCES: ReadonlyArray<IconEntry> = [

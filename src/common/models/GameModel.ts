@@ -32,6 +32,8 @@ export type GameModel = {
   aresData: AresData | undefined;
   awards: ReadonlyArray<FundedAwardModel>;
   colonies: ReadonlyArray<ColonyModel>;
+  // Nuclear (GIGA) contamination track; undefined when Nuclear is not in the game.
+  contamination: number | undefined;
   discardedColonies: ReadonlyArray<ColonyName>;
   deckSize: number;
   discardPileSize: number;

@@ -3,6 +3,7 @@
     <BoardSpaceTile
       :space="space"
       :aresExtension="aresExtension"
+      :nuclearExpansion="nuclearExpansion"
       :tileView="tileView"
     />
     <div class="board-space-text" v-if="text" v-i18n>{{ text }}</div>
@@ -56,6 +57,9 @@ export default defineComponent({
       default: '',
     },
     aresExtension: {
+      type: Boolean,
+    },
+    nuclearExpansion: {
       type: Boolean,
     },
     tileView: {

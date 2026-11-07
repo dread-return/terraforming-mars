@@ -86,6 +86,7 @@ export function fakeGameOptionsModel(overrides?: RecursivePartial<GameOptionsMod
 export function fakeGameModel(overrides?: RecursivePartial<GameModel>): GameModel {
   return {
     aresData: undefined,
+    contamination: undefined,
     awards: [],
     colonies: [],
     discardedColonies: [],

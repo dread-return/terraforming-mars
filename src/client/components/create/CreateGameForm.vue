@@ -194,6 +194,12 @@
               <div class="create-game-expansion-icon expansion-icon-idesofmars"></div>
               <span v-i18n>Ides of Mars</span><span></span>&nbsp;<a :href="wikiUrls.idesofmars" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
             </label>
+
+            <input type="checkbox" name="nuclear" id="nuclear-checkbox" v-model="expansions.nuclear">
+            <label for="nuclear-checkbox" class="expansion-button">
+              <div class="create-game-expansion-icon expansion-icon-nuclear"></div>
+              <span v-i18n>Nuclear</span><span></span>&nbsp;<a :href="wikiUrls.nuclear" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
+            </label>
           </div>
 
           <div class="create-game-page-column">

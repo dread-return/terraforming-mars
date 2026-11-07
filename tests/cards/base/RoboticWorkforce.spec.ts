@@ -364,6 +364,7 @@ describe('RoboticWorkforce', () => {
     CardName.SMALL_OPEN_PIT_MINE, // Tough to test
     CardName.BEHEMOTH_EXCAVATOR, // False positive
     CardName.GREAT_OCEAN_LABORATORY, // Production comes from its effect, not a production box
+    CardName.MAIN_DOCKING_STATION, // Needs its reserved space, which only exists in Nuclear games
   ];
 
   describe('test all cards', () => {

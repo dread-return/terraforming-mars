@@ -44,6 +44,7 @@ export type GameOptions = {
   robAntillesExpansion: boolean;
   solarisExpansion: boolean;
   idesofmarsExpansion: boolean;
+  nuclearExpansion: boolean;
 
   expansions: Record<Expansion, boolean>,
 
@@ -125,6 +126,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
     robantilles: false,
     solaris: false,
     idesofmars: false,
+    nuclear: false,
   },
   fastModeOption: false,
   includeFanMA: false,
@@ -160,6 +162,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   robAntillesExpansion: false,
   solarisExpansion: false,
   idesofmarsExpansion: false,
+  nuclearExpansion: false,
   automa: false,
   undoOption: false,
   venusNextExtension: false,

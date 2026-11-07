@@ -13,6 +13,10 @@
       <GlobalParameterValue :param="globalParameter.OCEANS" :value="oceans" :boardName="gameOptions.boardName" />
       <GlobalParameterValue v-if="gameOptions.expansions.venus" :param="globalParameter.VENUS" :value="venus" :boardName="gameOptions.boardName" />
       <MoonGlobalParameterValue v-if="moonData" :moonData="moonData" />
+      <div v-if="contamination !== undefined" :title="contaminationTitle" data-test="contamination">
+        <div class="contamination-tile"></div>
+        <div class="global_params_value">{{ contamination }}</div>
+      </div>
     </div>
     <div class="sidebar_item preferences_player" :title="$t('Player Color Cube')">
       <div class="preferences_player_inner" :class="[`player_bg_color_${playerColor}`, {active: isAnimated}]"></div>
@@ -62,6 +66,7 @@
 </template>
 
 <script lang="ts">
+import {CONTAMINATION_MAX, describeContaminationReward, nextContaminationReward} from '@/common/nuclear/Contamination';
 
 import {defineComponent} from 'vue';
 import {Color} from '@/common/Color';
@@ -123,6 +128,11 @@ export default defineComponent({
     moonData: {
       type: Object as () => MoonModel | undefined,
     },
+    // Nuclear (GIGA) contamination track; undefined when Nuclear is off.
+    contamination: {
+      type: Number as () => number | undefined,
+      default: undefined,
+    },
     turmoil: {
       type: Object as () => TurmoilModel | undefined,
     },
@@ -159,6 +169,15 @@ export default defineComponent({
     };
   },
   computed: {
+    contaminationTitle(): string {
+      const level = this.contamination ?? 0;
+      let title = `Contamination track: ${level}/${CONTAMINATION_MAX}. Each Radioactive tag played moves it up 1.`;
+      const next = nextContaminationReward(level);
+      if (next !== undefined) {
+        title += ` Step ${next.step}: ${describeContaminationReward(next.reward)}.`;
+      }
+      return title;
+    },
     isAnimated(): boolean {
       return this.actingPlayer && getPreferences().hide_animated_sidebar === false;
     },

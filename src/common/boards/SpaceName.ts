@@ -21,4 +21,7 @@ export const SpaceName = {
 
   // Solaris (GIGA)
   SIDERALIS: 'c79',
+
+  // Nuclear (GIGA)
+  MAIN_DOCKING_STATION: 'c80',
 } as const;

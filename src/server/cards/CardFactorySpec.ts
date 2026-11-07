@@ -55,6 +55,8 @@ export function isCompatibleWith(cf: CardFactorySpec<any>, gameOptions: GameOpti
       return gameOptions.solarisExpansion;
     case 'idesofmars':
       return gameOptions.idesofmarsExpansion;
+    case 'nuclear':
+      return gameOptions.nuclearExpansion;
     }
     throw new Error(`Unhandled expansion type ${expansion}`);
   });

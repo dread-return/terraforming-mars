@@ -191,6 +191,7 @@ export class ApiCreateGame extends Handler {
         robAntillesExpansion: gameReq.expansions.robantilles,
         solarisExpansion: gameReq.expansions.solaris,
         idesofmarsExpansion: gameReq.expansions.idesofmars,
+        nuclearExpansion: gameReq.expansions.nuclear,
         undoOption: gameReq.undoOption,
         venusNextExtension: gameReq.expansions.venus,
       };

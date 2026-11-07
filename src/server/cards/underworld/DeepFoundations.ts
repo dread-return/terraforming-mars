@@ -8,6 +8,7 @@ import {Card} from '../Card';
 import {IActionCard} from '../ICard';
 import {CardType} from '../../../common/cards/CardType';
 import {SelectPaymentDeferred} from '../../deferredActions/SelectPaymentDeferred';
+import {IdesOfMars} from '../idesofmars/IdesOfMars';
 
 export class DeepFoundations extends Card implements IActionCard {
   constructor() {
@@ -32,8 +33,13 @@ export class DeepFoundations extends Card implements IActionCard {
     return player.game.board.getAvailableSpacesForCity(player);
   }
 
+  /** 20 M€, less the Martian Infrastructures (Ides of Mars) discount. */
+  private actionCost(player: IPlayer): number {
+    return 20 - IdesOfMars.marsTileActionDiscount(player);
+  }
+
   public canAct(player: IPlayer): boolean {
-    return player.canAfford({cost: 20, steel: true}) && this.getCandidateSpaces(player).length > 0;
+    return player.canAfford({cost: this.actionCost(player), steel: true}) && this.getCandidateSpaces(player).length > 0;
   }
 
   public action(player: IPlayer) {
@@ -43,7 +49,7 @@ export class DeepFoundations extends Card implements IActionCard {
     }
 
     player.game.defer(new SelectPaymentDeferred(
-      player, 20, {
+      player, this.actionCost(player), {
         canUseSteel: true,
         title: 'Spend 20 M€ for to excavate a space and place a city',
       })

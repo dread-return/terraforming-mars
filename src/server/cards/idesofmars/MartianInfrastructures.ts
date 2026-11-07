@@ -28,7 +28,7 @@ export class MartianInfrastructures extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'I29',
         renderData: CardRenderer.builder((b) => {
-          b.effect('Standard projects that place a tile on Mars cost 2 M€ less.', (eb) => {
+          b.effect('Card actions and standard projects that place a tile on Mars cost 2 M€ less.', (eb) => {
             eb.emptyTile().asterix().startEffect.megacredits(-2);
           }).br;
           b.production((pb) => pb.minus().energy(1));
@@ -38,6 +38,7 @@ export class MartianInfrastructures extends Card implements IProjectCard {
     });
   }
 
+  // Card actions get the discount in the behavior executor (see IdesOfMars.actionMegacredits).
   public getStandardProjectDiscount(_player: IPlayer, card: IStandardProjectCard): number {
     return TILE_PROJECTS.includes(card.name) ? 2 : 0;
   }

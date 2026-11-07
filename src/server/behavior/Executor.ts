@@ -43,6 +43,7 @@ import {ProxyCard} from '../cards/ProxyCard';
 import {From} from '../logs/From';
 import {BaseStock} from '../player/StockBase';
 import {AddResourcesToAnyCardExecutor} from './AddResourcesToAnyCardExecutor';
+import {IdesOfMars} from '../cards/idesofmars/IdesOfMars';
 
 /**
  * Caps each count at what `lose` is allowed to take: never below zero, so a countable that
@@ -124,8 +125,10 @@ export class Executor implements BehaviorExecutor {
     // TODO(kberg): Spend is not combined with PredictedCost.
     if (behavior.spend !== undefined) {
       const spend = behavior.spend;
-      if (spend.megacredits && !player.canAfford({
-        cost: spend.megacredits,
+      // Martian Infrastructures (Ides of Mars): actions placing a tile on Mars cost less.
+      const megacredits = spend.megacredits ? IdesOfMars.actionMegacredits(player, behavior, spend.megacredits) : 0;
+      if (megacredits > 0 && !player.canAfford({
+        cost: megacredits,
         steel: spend.canUseSteel,
         titanium: spend.canUseTitanium,
         tr: asTrSource,
@@ -359,8 +362,10 @@ export class Executor implements BehaviorExecutor {
       const remainder = {...behavior};
       delete remainder['spend'];
 
-      if (spend.megacredits) {
-        player.game.defer(new SelectPaymentDeferred(player, spend.megacredits, {
+      // Martian Infrastructures (Ides of Mars): actions placing a tile on Mars cost less.
+      const megacredits = spend.megacredits ? IdesOfMars.actionMegacredits(player, behavior, spend.megacredits) : 0;
+      if (megacredits > 0) {
+        player.game.defer(new SelectPaymentDeferred(player, megacredits, {
           title: TITLES.payForCardAction(card.name),
           canUseSteel: spend.canUseSteel,
           canUseTitanium: spend.canUseTitanium,

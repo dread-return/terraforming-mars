@@ -13,6 +13,7 @@ import {ICard} from '../ICard';
 import {CardResource} from '../../../common/CardResource';
 import {SelectCard} from '../../inputs/SelectCard';
 import {SelectAmount} from '../../inputs/SelectAmount';
+import {Behavior} from '../../behavior/Behavior';
 
 /**
  * Engine hooks and helpers shared by the Ides of Mars (GIGA) cards.
@@ -108,6 +109,36 @@ export class IdesOfMars {
       return true;
     }
     return false;
+  }
+
+  // ---- Martian Infrastructures --------------------------------------------
+
+  /** M€ discount on card actions that place a tile on Mars. */
+  public static readonly MARS_TILE_ACTION_DISCOUNT = 2;
+
+  /** How much less `player` pays for a card action that places a tile on Mars. */
+  public static marsTileActionDiscount(player: IPlayer): number {
+    return player.tableau.has(CardName.MARTIAN_INFRASTRUCTURES) ? this.MARS_TILE_ACTION_DISCOUNT : 0;
+  }
+
+  /** True when the behavior places a tile on Mars (city, greenery, ocean or special tile). */
+  public static placesTileOnMars(player: IPlayer, behavior: Behavior): boolean {
+    if (behavior.greenery !== undefined || behavior.ocean !== undefined || behavior.tile !== undefined) {
+      return true;
+    }
+    if (behavior.city !== undefined) {
+      const spaceId = behavior.city.space;
+      return spaceId === undefined || player.game.board.getSpaceOrThrow(spaceId).spaceType !== SpaceType.COLONY;
+    }
+    return false;
+  }
+
+  /** The M€ a card action costs after Martian Infrastructures. */
+  public static actionMegacredits(player: IPlayer, behavior: Behavior, megacredits: number): number {
+    if (!this.placesTileOnMars(player, behavior)) {
+      return megacredits;
+    }
+    return Math.max(0, megacredits - this.marsTileActionDiscount(player));
   }
 
   // ---- Shared bits ----------------------------------------------------------

@@ -31,6 +31,9 @@ import {Copyleft} from '../../../src/server/cards/idesofmars/Copyleft';
 import {CollaborationCrossCompanies} from '../../../src/server/cards/idesofmars/CollaborationCrossCompanies';
 import {SelectPlayer} from '../../../src/server/inputs/SelectPlayer';
 import {Payment} from '../../../src/common/inputs/Payment';
+import {AquiferPumping} from '../../../src/server/cards/base/AquiferPumping';
+import {DeepFoundations} from '../../../src/server/cards/underworld/DeepFoundations';
+import {IdesOfMars} from '../../../src/server/cards/idesofmars/IdesOfMars';
 
 describe('Ides of Mars cards with engine hooks', () => {
   it('Insect Pollinators: greenery next to your greenery costs 1 plant less', () => {
@@ -135,6 +138,29 @@ describe('Ides of Mars cards with engine hooks', () => {
     expect(retainers.getCardDiscount(player, fakeCard({behavior: {ocean: {}}}))).eq(3);
     expect(retainers.getCardDiscount(player, fakeCard({behavior: {greenery: {}}}))).eq(2);
     expect(retainers.getCardDiscount(player, fakeCard({}))).eq(0);
+  });
+
+  it('Martian Infrastructures: card actions that place a tile on Mars cost 2 M€ less', () => {
+    const [game, player] = testGame(2, {underworldExpansion: true});
+    const aquifer = new AquiferPumping();
+    const foundations = new DeepFoundations();
+    player.megaCredits = 6;
+    expect(aquifer.canAct(player)).is.false;
+    player.playedCards.push(new MartianInfrastructures());
+    expect(aquifer.canAct(player)).is.true;
+    aquifer.action(player);
+    runAllActions(game);
+    const select = cast(player.popWaitingFor(), SelectSpace);
+    select.cb(select.spaces[0]);
+    expect(player.megaCredits).eq(0);
+    expect(game.board.getOceanSpaces()).has.length(1);
+
+    player.megaCredits = 18;
+    expect(foundations.canAct(player)).is.true;
+
+    // Actions that don't place a tile keep their price.
+    expect(IdesOfMars.actionMegacredits(player, {production: {titanium: 1}}, 11)).eq(11);
+    expect(IdesOfMars.actionMegacredits(player, {city: {}}, 11)).eq(9);
   });
 
   it('Copyleft: the player of a science tag may buy the revealed card, otherwise the owner may', () => {

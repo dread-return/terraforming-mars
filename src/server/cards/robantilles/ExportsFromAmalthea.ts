@@ -13,6 +13,7 @@ export class ExportsFromAmalthea extends Card implements IProjectCard {
       name: CardName.EXPORTS_FROM_AMALTHEA,
       tags: [Tag.JOVIAN, Tag.SPACE],
       cost: 24,
+      requirements: {display: 'offWorldCity'},
       victoryPoints: 2,
 
       behavior: {

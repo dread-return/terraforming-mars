@@ -147,7 +147,8 @@ export const CITY_TILES = new Set([TileType.CITY, TileType.CAPITAL, TileType.OCE
   TileType.SUBURBS, TileType.METROPOLIS, TileType.PARADISE_CITY, TileType.INVAK_CITY, TileType.ESOTERIC_COMMUNITY]);
 export const OCEAN_TILES = new Set([TileType.OCEAN, TileType.OCEAN_CITY, TileType.OCEAN_FARM, TileType.OCEAN_SANCTUARY, TileType.WETLANDS, TileType.NEW_HOLLAND, TileType.HARBOR]);
 export const BASE_OCEAN_TILES = new Set([TileType.OCEAN, TileType.WETLANDS]);
-export const GREENERY_TILES = new Set([TileType.GREENERY, TileType.WETLANDS, TileType.INVAK_CITY]);
+// Suburbs (Rob Antilles) and Invak City (Ides of Mars) count as both a city and a greenery.
+export const GREENERY_TILES = new Set([TileType.GREENERY, TileType.WETLANDS, TileType.INVAK_CITY, TileType.SUBURBS]);
 
 /** Rob Antilles special tiles. */
 export const ROB_ANTILLES_TILES = new Set([TileType.SUBURBS, TileType.HARBOR, TileType.METROPOLIS, TileType.PARADISE_CITY, TileType.ANIMAL_DOME, TileType.PUMPING_HUB, TileType.SEDIMENT, TileType.INVAK_CITY, TileType.ESOTERIC_COMMUNITY]);

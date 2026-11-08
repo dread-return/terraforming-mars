@@ -22,7 +22,7 @@ export class PublicRelations extends Card implements IProjectCard {
         cardNumber: 'I25',
         renderData: CardRenderer.builder((b) => {
           b.effect('Cards with negative VP do not count for you.', (eb) => {
-            eb.text('-?').vpIcon().startEffect.text('0').vpIcon();
+            eb.vpIcon('-X').startEffect.vpIcon('0');
           }).br;
           b.production((pb) => pb.megacredits(-1));
         }),

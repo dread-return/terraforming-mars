@@ -13,6 +13,7 @@ export class DerivedProducts extends Card implements IProjectCard {
       name: CardName.DERIVED_PRODUCTS,
       tags: [Tag.EARTH],
       cost: 4,
+      requirements: {display: 'cardVP', count: 3},
 
       behavior: {
         production: {megacredits: 2},

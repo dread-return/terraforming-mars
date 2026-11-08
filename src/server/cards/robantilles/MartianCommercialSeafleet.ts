@@ -1,3 +1,4 @@
+import {Size} from '../../../common/cards/render/Size';
 import {IProjectCard} from '../IProjectCard';
 import {Card} from '../Card';
 import {CardType} from '../../../common/cards/CardType';
@@ -21,8 +22,8 @@ export class MartianCommercialSeafleet extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'H53',
         renderData: CardRenderer.builder((b) => {
-          b.action('Spend 1 steel to gain 2 M€ for each of your cities connected to another city through oceans.', (eb) => {
-            eb.steel(1).startAction.megacredits(2).slash().city().asterix();
+          b.action('Spend 1 steel to gain 2 M€ for each of your cities on Mars next to an ocean, when that group of connected oceans also touches another city (any player\'s).', (eb) => {
+            eb.steel(1).startAction.megacredits(2).slash().city().oceans(1, {size: Size.SMALL}).asterix();
           });
         }),
         description: 'Requires 3 ocean tiles.',

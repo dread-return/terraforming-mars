@@ -4,7 +4,7 @@ import {CardType} from '../../../common/cards/CardType';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
-import {all} from '../Options';
+import {all, digit} from '../Options';
 
 export class ColdFusionReactor extends Card implements IProjectCard {
   constructor() {
@@ -22,7 +22,7 @@ export class ColdFusionReactor extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'N15',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.energy(5)).nbsp.tr(2);
+          b.production((pb) => pb.energy(5, {digit})).nbsp.tr(2);
         }),
         description: 'Requires 6 radioactive tags in play. Increase your energy production 5 steps. Raise your TR 2 steps.',
       },

@@ -85,6 +85,7 @@
           :altVenusBoard="game.gameOptions.altVenusBoard"
           :tileView="tileView"
           @toggleTileView="$emit('toggleTileView')" />
+        <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" />
 
         <Turmoil v-if="game.turmoil" :turmoil="game.turmoil" />
 
@@ -102,6 +103,7 @@
 import {defineComponent} from 'vue';
 
 import Board from '@/client/components/Board.vue';
+import ContaminationTrack from '@/client/components/nuclear/ContaminationTrack.vue';
 import Card from '@/client/components/card/Card.vue';
 import DeltaProjectBoard from '@/client/components/delta/DeltaProjectBoard.vue';
 import DynamicTitle from '@/client/components/common/DynamicTitle.vue';
@@ -143,6 +145,7 @@ export default defineComponent({
   },
   components: {
     Board,
+    ContaminationTrack,
     Card,
     DeltaProjectBoard,
     DynamicTitle,

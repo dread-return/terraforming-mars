@@ -27,10 +27,10 @@ export class UtopiaPlanitiaSpaceport extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'H15',
         renderData: CardRenderer.builder((b) => {
-          b.effect('You may place a space event you play here (one at a time).', (eb) => {
+          b.effect('When you play a space event, you may place it here right after it resolves (one at a time).', (eb) => {
             eb.tag(Tag.SPACE).tag(Tag.EVENT).startEffect.text('here');
           }).br;
-          b.action('Replay it for 8 M€ less, +1 TR per its VP, then discard it.', (eb) => {
+          b.action('Replay the event here for 8 M€ less, raise your TR 1 step per VP it has, then discard it.', (eb) => {
             eb.megacredits(-8).startAction.tr(1).asterix();
           });
         }),

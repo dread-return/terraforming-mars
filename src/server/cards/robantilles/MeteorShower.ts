@@ -1,3 +1,4 @@
+import {digit} from '../Options';
 import {IProjectCard} from '../IProjectCard';
 import {Card} from '../Card';
 import {CardType} from '../../../common/cards/CardType';
@@ -21,7 +22,7 @@ export class MeteorShower extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'H68',
         renderData: CardRenderer.builder((b) => {
-          b.steel(5).titanium(4);
+          b.steel(5, {digit}).nbsp.titanium(4, {digit});
         }),
         description: 'Gain 5 steel and 4 titanium.',
       },

@@ -31,4 +31,7 @@ export enum RequirementType {
     // Underworld
     CORRUPTION = 'Corruption',
     UNDERGROUND_TOKENS = 'Underground tokens',
+
+    // GIGA fan expansions: shown on the card only; the card checks it itself.
+    DISPLAY = 'Display',
 }

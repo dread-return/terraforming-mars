@@ -29,7 +29,7 @@ export class NeutrinoDetector extends ActionCard implements IProjectCard {
           b.action('Add a radiation to ANY card.', (eb) => {
             eb.empty().startAction.resource(CardResource.RADIATION).asterix();
           }).br;
-          b.effect('When you play a science tag, you may convert 1 energy to 1 heat.', (eb) => {
+          b.effect('When you play a science tag, including this, you may convert 1 energy to 1 heat.', (eb) => {
             eb.tag(Tag.SCIENCE).startEffect.energy(1).arrow().heat(1);
           });
         }),
@@ -39,7 +39,7 @@ export class NeutrinoDetector extends ActionCard implements IProjectCard {
   }
 
   public onCardPlayed(player: IPlayer, card: ICard) {
-    if (card.name === this.name || !card.tags.includes(Tag.SCIENCE) || player.energy < 1) {
+    if (!card.tags.includes(Tag.SCIENCE) || player.energy < 1) {
       return undefined;
     }
     return new OrOptions(

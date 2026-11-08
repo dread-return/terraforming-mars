@@ -1,3 +1,5 @@
+import {all} from '../Options';
+import {Size} from '../../../common/cards/render/Size';
 import {IProjectCard} from '../IProjectCard';
 import {Card} from '../Card';
 import {IActionCard} from '../ICard';
@@ -24,9 +26,11 @@ export class FalseFlagOperations extends Card implements IProjectCard, IActionCa
         cardNumber: 'N69',
         renderData: CardRenderer.builder((b) => {
           b.action('Put your marker on one of these tags. When opponents play a card with that tag, they pay 1 M€ more. ' +
-            'The circled tags (space, science, building) apply to all players.', (eb) => {
-            eb.empty().startAction.tag(Tag.SPACE).tag(Tag.SCIENCE).tag(Tag.BUILDING).tag(Tag.JOVIAN).tag(Tag.EARTH).tag(Tag.POWER).colon().megacredits(1);
-          });
+            'The red-outlined tags (space, science, building) cost you 1 M€ more too.', (eb) => {
+            eb.empty().startAction.text('marker', {size: Size.SMALL}).colon().megacredits(1).asterix();
+          }).br;
+          b.tag(Tag.SPACE, {all}).tag(Tag.SCIENCE, {all}).tag(Tag.BUILDING, {all}).br;
+          b.tag(Tag.JOVIAN).tag(Tag.EARTH).tag(Tag.POWER);
         }),
         description: 'Requires that you own at least 15 tags.',
       },

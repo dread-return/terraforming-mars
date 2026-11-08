@@ -28,7 +28,7 @@ export class Suburbs extends Card implements IProjectCard {
           b.production((pb) => pb.megacredits(3)).nbsp.tile(TileType.SUBURBS, false).asterix();
         }),
         description: 'Increase your M€ production 3 steps. Place the Suburbs tile on top of one of your greenery tiles. ' +
-          'It counts as a city. Adjacency bonus: 1 M€.',
+          'It counts as a city and a greenery. Adjacency bonus: 1 M€.',
       },
     });
   }

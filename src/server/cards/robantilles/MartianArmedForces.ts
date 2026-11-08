@@ -1,3 +1,5 @@
+import {uppercase} from '../Options';
+import {Size} from '../../../common/cards/render/Size';
 import {IProjectCard} from '../IProjectCard';
 import {Card} from '../Card';
 import {CardType} from '../../../common/cards/CardType';
@@ -17,9 +19,8 @@ export class MartianArmedForces extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'H16',
         renderData: CardRenderer.builder((b) => {
-          b.effect('Opponents cannot remove your M€, steel or titanium.', (eb) => {
-            eb.megacredits(1).steel(1).titanium(1).startEffect.text('protected');
-          });
+          b.text('Opponents may not remove your', {size: Size.SMALL, uppercase}).br;
+          b.megacredits(1).steel(1).titanium(1);
         }),
       },
     });

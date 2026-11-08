@@ -1,3 +1,4 @@
+import {digit} from '../Options';
 import {IProjectCard} from '../IProjectCard';
 import {Card} from '../Card';
 import {CardType} from '../../../common/cards/CardType';
@@ -22,7 +23,8 @@ export class AsteroidFragmentation extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'B06',
         renderData: CardRenderer.builder((b) => {
-          b.minus().heat(6).nbsp.minus().steel(3).nbsp.minus().titanium(3).nbsp.tr(3);
+          b.minus().heat(6, {digit}).nbsp.steel(3, {digit}).nbsp.titanium(3, {digit}).br;
+          b.tr(3);
         }),
         description: 'Spend 6 heat, 3 steel and 3 titanium to raise your TR 3 steps.',
       },

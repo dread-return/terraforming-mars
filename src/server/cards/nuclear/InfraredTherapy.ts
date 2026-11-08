@@ -1,3 +1,4 @@
+import {digit} from '../Options';
 import {IProjectCard} from '../IProjectCard';
 import {Card} from '../Card';
 import {CardType} from '../../../common/cards/CardType';
@@ -22,7 +23,8 @@ export class InfraredTherapy extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'N67',
         renderData: CardRenderer.builder((b) => {
-          b.minus().steel(1).titanium(2).nbsp.heat(4).nbsp.tr(2);
+          b.minus().steel(1).titanium(2).br;
+          b.heat(4, {digit}).nbsp.tr(2);
         }),
         description: 'Requires that you have heat production of at least 4. Spend 1 steel and 2 titanium to gain 4 heat and raise your TR 2 steps.',
       },

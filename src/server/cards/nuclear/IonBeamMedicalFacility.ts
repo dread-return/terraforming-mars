@@ -1,3 +1,4 @@
+import {digit} from '../Options';
 import {IProjectCard} from '../IProjectCard';
 import {Card} from '../Card';
 import {ICard} from '../ICard';
@@ -23,11 +24,11 @@ export class IonBeamMedicalFacility extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'N76',
         renderData: CardRenderer.builder((b) => {
-          b.effect('When you play a science, animal or radioactive tag, add a microbe to this card.', (eb) => {
+          b.effect('When you play a science, animal or radioactive tag, including these, add a microbe to this card.', (eb) => {
             eb.tag(Tag.SCIENCE).slash().tag(Tag.ANIMAL).slash().tag(Tag.RADIOACTIVE).startEffect.resource(CardResource.MICROBE);
           }).br;
           b.effect('Whenever there are 4 microbes here, remove them to increase your heat production 1 step.', (eb) => {
-            eb.resource(CardResource.MICROBE, 4).startEffect.production((pb) => pb.heat(1));
+            eb.resource(CardResource.MICROBE, {amount: 4, digit}).startEffect.production((pb) => pb.heat(1));
           }).br;
           b.resource(CardResource.MICROBE);
         }),
@@ -37,9 +38,7 @@ export class IonBeamMedicalFacility extends Card implements IProjectCard {
   }
 
   public onCardPlayed(player: IPlayer, card: ICard) {
-    if (card.name === this.name) {
-      return;
-    }
+    // Its own tags count too.
     const count = card.tags.filter((tag) => tag === Tag.SCIENCE || tag === Tag.ANIMAL || tag === Tag.RADIOACTIVE).length;
     if (count > 0) {
       player.addResourceTo(this, {qty: count, log: true});

@@ -1,3 +1,5 @@
+import {uppercase} from '../Options';
+import {Size} from '../../../common/cards/render/Size';
 import {IProjectCard} from '../IProjectCard';
 import {Card} from '../Card';
 import {CardType} from '../../../common/cards/CardType';
@@ -19,9 +21,9 @@ export class MartianRangers extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'H35',
         renderData: CardRenderer.builder((b) => {
-          b.effect('Opponents cannot remove your animals.', (eb) => {
-            eb.resource(CardResource.ANIMAL).startEffect.text('protected');
-          }).br;
+          b.text('Opponents may not remove your', {size: Size.SMALL, uppercase}).br;
+          b.resource(CardResource.ANIMAL).br;
+          b.vSpace().br;
           b.resource(CardResource.ANIMAL, 2).asterix();
         }),
         description: 'Add 2 animals to a card that already has at least 1 animal.',

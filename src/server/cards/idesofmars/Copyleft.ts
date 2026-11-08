@@ -26,7 +26,7 @@ export class Copyleft extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'I15',
         renderData: CardRenderer.builder((b) => {
-          b.effect('When any science tag is played, reveal the top card of the deck. The player who played the tag may buy it for 3 M€. ' +
+          b.effect('When any science tag is played, including this, reveal the top card of the deck. The player who played the tag may buy it for 3 M€. ' +
             'If they don\'t, you may buy it for 3 M€.', (eb) => {
             eb.tag(Tag.SCIENCE, {all}).startEffect.cards(1).asterix();
           });

@@ -25,8 +25,11 @@ export class SpecializedIndustrialComplex extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'N44',
         renderData: CardRenderer.builder((b) => {
-          b.effect('When an opponent places a special tile, add a radiation to ANY card. When you place one, add 2 radiation to ANY card.', (eb) => {
-            eb.specialTile({all}).colon().resource(CardResource.RADIATION).nbsp.specialTile().colon().startEffect.resource(CardResource.RADIATION, 2).asterix();
+          b.effect('When an opponent places a special tile, add a radiation to ANY card.', (eb) => {
+            eb.specialTile({all}).startEffect.resource(CardResource.RADIATION).asterix();
+          }).br;
+          b.effect('When you place a special tile, add 2 radiation to ANY card.', (eb) => {
+            eb.specialTile().startEffect.resource(CardResource.RADIATION, 2).asterix();
           }).br;
           b.steel(1).slash().specialTile({all});
         }),

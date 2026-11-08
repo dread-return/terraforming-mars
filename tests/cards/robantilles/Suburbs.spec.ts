@@ -8,7 +8,7 @@ import {TileType} from '../../../src/common/TileType';
 import {Board} from '../../../src/server/boards/Board';
 
 describe('Suburbs', () => {
-  it('goes on top of your greenery and counts as a city', () => {
+  it('goes on top of your greenery and counts as a city and a greenery', () => {
     const card = new Suburbs();
     const [game, player, player2] = testGame(2);
     expect(card.canPlay(player)).is.false;
@@ -22,6 +22,8 @@ describe('Suburbs', () => {
     expect(greenery.tile?.tileType).eq(TileType.SUBURBS);
     expect(Board.isCitySpace(greenery)).is.true;
     expect(game.board.getCities(player)).has.length(1);
+    expect(Board.isGreenerySpace(greenery)).is.true;
+    expect(game.board.getGreeneries(player)).has.length(1);
 
     // Adjacency bonus: placing next to it pays 1 M€ to the placer and 1 M€ to the owner.
     const next = game.board.getAdjacentSpaces(greenery).find((s) => s.tile === undefined && s.spaceType === 'land')!;

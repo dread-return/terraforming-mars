@@ -4,7 +4,7 @@ import {CardType} from '../../../common/cards/CardType';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
-import {all} from '../Options';
+import {all, digit} from '../Options';
 
 export class SupernovaExplosion extends Card implements IProjectCard {
   constructor() {
@@ -23,8 +23,8 @@ export class SupernovaExplosion extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'H43',
         renderData: CardRenderer.builder((b) => {
-          b.temperature(1).energy(5).heat(5).br;
-          b.minus().plants(4, {all});
+          b.temperature(1).nbsp.energy(5, {digit}).nbsp.heat(5, {digit}).br;
+          b.minus().plants(4, {all, digit});
         }),
         description: 'Raise the temperature 1 step. Gain 5 energy and 5 heat. Remove up to 4 plants from any player.',
       },

@@ -368,8 +368,9 @@ abstract class Builder<T> {
     return this._appendToRow(new CardRenderItem(CardRenderItemType.RULING_PARTY));
   }
 
-  public vpIcon() {
-    return this._appendToRow(new CardRenderItem(CardRenderItemType.VP));
+  /** A VP badge. Shows a question mark, or `text` when given (e.g. '-X'). */
+  public vpIcon(text?: string) {
+    return this._appendToRow(new CardRenderItem(CardRenderItemType.VP, undefined, text === undefined ? undefined : {text}));
   }
 
   public community() {

@@ -15,6 +15,7 @@ export class Ecoplants extends Card implements IProjectCard {
       name: CardName.ECOPLANTS,
       tags: [Tag.PLANT],
       cost: 10,
+      requirements: {display: 'plantProduction'},
       victoryPoints: 1,
 
       behavior: {
@@ -37,6 +38,7 @@ export class Ecoplants extends Card implements IProjectCard {
   }
 
   public override bespokeCanPlay(player: IPlayer) {
+    // The requirement can't be a production requirement (Ecology Experts), so it's checked here.
     return player.production.plants >= 1;
   }
 

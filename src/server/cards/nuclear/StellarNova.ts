@@ -26,8 +26,9 @@ export class StellarNova extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'N68',
         renderData: CardRenderer.builder((b) => {
-          b.minus().oceans(1).nbsp.temperature(1).nbsp.steel(1).titanium(2).energy(1).heat(2).br;
-          b.resource(CardResource.RADIATION).asterix();
+          b.minus().oceans(1).nbsp.temperature(1).br;
+          b.steel(1).titanium(2).br;
+          b.energy(1).heat(2).nbsp.resource(CardResource.RADIATION).asterix();
         }),
         description: 'Requires at most 7 oceans in play. Remove an ocean tile. Raise the temperature 1 step. ' +
           'Gain 1 steel, 2 titanium, 1 energy and 2 heat. Add a radiation to ANY card.',

@@ -7,7 +7,7 @@ import {CardResource} from '../../../common/CardResource';
 import {CardRenderer} from '../render/CardRenderer';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
-import {all} from '../Options';
+import {all, digit} from '../Options';
 
 export class NuclearWinter extends Card implements IProjectCard {
   constructor() {
@@ -33,7 +33,8 @@ export class NuclearWinter extends Card implements IProjectCard {
         cardNumber: 'N03',
         renderData: CardRenderer.builder((b) => {
           b.production((pb) => pb.minus().plants(1).heat(1, {all}).br.plus().steel(2)).br;
-          b.minus().plants(2, {all}).or().resource(CardResource.MICROBE, {amount: 2, all}).nbsp.resource(CardResource.RADIATION, 2).asterix();
+          b.minus().plants(2, {all, digit}).or().resource(CardResource.MICROBE, {amount: 2, all, digit}).br;
+          b.resource(CardResource.RADIATION, 2).asterix();
         }),
         description: 'Requires at most 5 other cards in your hand. Decrease your plant production and any heat production 1 step. ' +
           'Increase your steel production 2 steps. Remove 2 plants OR 2 microbes from any player. Add 2 radiation to ANY card.',

@@ -24,7 +24,7 @@ export class NuclearClassifiedLaboratory extends Card implements IProjectCard {
         cardNumber: 'N45',
         renderData: CardRenderer.builder((b) => {
           b.effect('You may use titanium to pay for science cards. If you pay a science card only with titanium, add a radiation to ANY card.', (eb) => {
-            eb.tag(Tag.SCIENCE).colon().startEffect.titanium(1).nbsp.resource(CardResource.RADIATION).asterix();
+            eb.tag(Tag.SCIENCE).colon().titanium(1).startEffect.resource(CardResource.RADIATION).asterix();
           }).br;
           b.effect('When you play a space tag, you pay 1 M€ less.', (eb) => {
             eb.tag(Tag.SPACE).startEffect.megacredits(-1);

@@ -17,8 +17,8 @@ export class InsectPollinators extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'I17',
         renderData: CardRenderer.builder((b) => {
-          b.effect('Placing a greenery from plants next to one of your other greeneries costs 1 plant less.', (eb) => {
-            eb.greenery().greenery().startEffect.minus().plants(1);
+          b.effect('When you convert plants into a greenery tile next to one of your greenery tiles, it costs 1 plant less.', (eb) => {
+            eb.greenery().greenery().asterix().startEffect.minus().plants(1);
           });
         }),
         description: 'Requires 4% oxygen.',

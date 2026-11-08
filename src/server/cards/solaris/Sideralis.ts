@@ -14,6 +14,7 @@ export class Sideralis extends Card implements IProjectCard {
       name: CardName.SIDERALIS,
       tags: [Tag.JOVIAN, Tag.CITY, Tag.SPACE],
       cost: 29,
+      requirements: {display: 'offWorldCity'},
       victoryPoints: {cities: {where: 'offmars'}, all: false},
 
       behavior: {

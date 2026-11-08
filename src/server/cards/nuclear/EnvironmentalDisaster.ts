@@ -26,7 +26,8 @@ export class EnvironmentalDisaster extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'N55',
         renderData: CardRenderer.builder((b) => {
-          b.temperature(1).oxygen(1).nbsp.minus().plants(2, {all}).resource(CardResource.MICROBE, {all}).resource(CardResource.ANIMAL, {all}).br;
+          b.temperature(1).oxygen(1).br;
+          b.minus().plants(2, {all}).resource(CardResource.MICROBE, {all}).resource(CardResource.ANIMAL, {all}).br;
           b.resource(CardResource.RADIATION, 2).asterix();
         }),
         description: 'Requires a plant tag and an animal tag. Raise the temperature and oxygen 1 step. ' +

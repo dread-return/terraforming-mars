@@ -28,6 +28,7 @@ import {CardRequirementDescriptor} from '../../../common/cards/CardRequirementDe
 import {CorruptionRequirement} from './CorruptionRequirement';
 import {IProjectCard} from '../IProjectCard';
 import {UndergroundTokenRequirement} from './UndergroundTokenRequirement';
+import {DisplayRequirement} from './DisplayRequirement';
 
 export class CardRequirements {
   constructor(public requirements: Array<CardRequirement>) {}
@@ -113,6 +114,8 @@ export class CardRequirements {
       return new CorruptionRequirement({...descriptor, count: descriptor.corruption});
     } else if (descriptor.undergroundTokens !== undefined) {
       return new UndergroundTokenRequirement({...descriptor, count: descriptor.undergroundTokens});
+    } else if (descriptor.display !== undefined) {
+      return new DisplayRequirement(descriptor.display, descriptor);
     } else {
       throw new Error('Unknown requirement: ' + JSON.stringify(descriptor));
     }

@@ -1,3 +1,4 @@
+import {digit} from '../Options';
 import {IProjectCard} from '../IProjectCard';
 import {Card} from '../Card';
 import {CardType} from '../../../common/cards/CardType';
@@ -30,7 +31,8 @@ export class Stormfarm extends Card implements IProjectCard {
         cardNumber: 'N21',
         renderData: CardRenderer.builder((b) => {
           b.production((pb) => pb.energy(1)).or().production((pb) => pb.heat(1)).br;
-          b.energy(5).arrow().heat(5).or().heat(5).arrow().energy(5);
+          b.energy(5, {digit}).arrow().heat(5, {digit}).nbsp.or().br;
+          b.heat(5, {digit}).arrow().energy(5, {digit});
         }),
         description: 'Increase your energy OR heat production 1 step. Convert either 5 energy to 5 heat OR 5 heat to 5 energy.',
       },

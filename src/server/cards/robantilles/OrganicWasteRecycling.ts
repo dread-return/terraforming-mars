@@ -25,7 +25,7 @@ export class OrganicWasteRecycling extends Card implements IProjectCard {
         cardNumber: 'H44',
         renderData: CardRenderer.builder((b) => {
           b.action('Place a microbe or plant card from your hand here, with 1 resource on it per city you own, OR add 1 resource per city you own to a card here.', (eb) => {
-            eb.empty().startAction.cards(1, {secondaryTag: Tag.MICROBE}).slash().city().or().city();
+            eb.empty().startAction.cards(1, {secondaryTag: Tag.MICROBE}).slash().cards(1, {secondaryTag: Tag.PLANT}).asterix().or().city().asterix();
           }).br;
           b.text('Effect: a card here may be played as if from hand, costing 1 M€ less per resource on it.', {size: Size.TINY, uppercase}).br;
         }),

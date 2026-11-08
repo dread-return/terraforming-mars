@@ -18,7 +18,7 @@ export class CardPool {
         return undefined;
       }
       const max = Math.min(count, this.cards.length);
-      return new SelectCard(`Select ${max} card(s) to keep`, 'Keep', this.cards, {min: max, max: max})
+      return new SelectCard(`${this.source.name}: keep ${max} of the cards revealed from the deck`, 'Keep', this.cards, {min: max, max: max})
         .andThen((selected) => {
           for (const card of selected) {
             this.remove(card);

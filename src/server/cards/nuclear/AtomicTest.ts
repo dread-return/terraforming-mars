@@ -7,7 +7,7 @@ import {CardResource} from '../../../common/CardResource';
 import {CardRenderer} from '../render/CardRenderer';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
-import {all} from '../Options';
+import {all, digit} from '../Options';
 import {MIN_TEMPERATURE} from '../../../common/constants';
 
 export class AtomicTest extends Card implements IProjectCard {
@@ -25,7 +25,8 @@ export class AtomicTest extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'N02',
         renderData: CardRenderer.builder((b) => {
-          b.heat(1).slash().temperature(1).nbsp.minus().plants(3, {all}).nbsp.resource(CardResource.RADIATION, 4).asterix();
+          b.heat(1).slash().temperature(1).br;
+          b.minus().plants(3, {all}).nbsp.resource(CardResource.RADIATION, {amount: 4, digit}).asterix();
         }),
         description: 'Gain 1 heat for every temperature step reached. Remove 3 plants from a player. Add 4 radiation to ANY card.',
       },

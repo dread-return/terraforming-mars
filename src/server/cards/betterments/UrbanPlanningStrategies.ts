@@ -1,3 +1,4 @@
+import {Size} from '../../../common/cards/render/Size';
 import {IProjectCard} from '../IProjectCard';
 import {Card} from '../Card';
 import {CardType} from '../../../common/cards/CardType';
@@ -6,7 +7,7 @@ import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
 import {IPlayer} from '../../IPlayer';
 import {BettermentsUtils} from './BettermentsUtils';
-import {all} from '../Options';
+import {all, digit} from '../Options';
 
 export class UrbanPlanningStrategies extends Card implements IProjectCard {
   constructor() {
@@ -19,10 +20,11 @@ export class UrbanPlanningStrategies extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'B42',
         renderData: CardRenderer.builder((b) => {
-          b.tr(2).slash().city().asterix().br;
+          b.city().asterix().colon().oceans(1, {size: Size.SMALL}).greenery({size: Size.SMALL, withO2: false}).greenery({size: Size.SMALL, withO2: false}).br;
+          b.tr(2, {digit}).slash().city().asterix().br;
           b.tr(1, {all}).slash().city({all}).asterix();
         }),
-        description: 'Raise your TR 2 steps for each city you own that is next to at least one ocean and 2 greeneries. ' +
+        description: '*A city next to at least one ocean and 2 greeneries. Raise your TR 2 steps for each such city you own. ' +
           'Each other player raises their TR 1 step for each such city they own.',
       },
     });

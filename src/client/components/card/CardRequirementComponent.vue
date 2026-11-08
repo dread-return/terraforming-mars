@@ -19,6 +19,30 @@
         </div>
       </template>
       <CardParty v-else-if="type === RequirementType.PARTY" :party="party" size="req" />
+      <template v-else-if="type === RequirementType.DISPLAY">
+        <template v-if="requirement.display === 'offWorldCity'">
+          <div class="card-resource-tag--S tag-space"></div>
+          <div class="card-tile city-tile tile-size--req"></div>
+        </template>
+        <template v-else-if="requirement.display === 'allOceans'">
+          all&nbsp;<div class="card-global-requirement card-ocean--req"></div>
+        </template>
+        <template v-else-if="requirement.display === 'cardVP'">
+          {{ count }}&nbsp;<div class="card-vp--req">VP</div>
+        </template>
+        <div v-else-if="requirement.display === 'plantProduction'" class="card-production-box card-production-box--req">
+          <div class="card-production-box-row">
+            <div class="card-production-box-row-item">
+              <div class="card-item-container">
+                <div class="card-resource card-resource-plant"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <template v-else-if="requirement.display === 'generation'">
+          generation&nbsp;{{ count }}
+        </template>
+      </template>
       <template v-else>
         <div v-for="num in repeats" :key="num" :class="componentClasses"></div>
       </template>
@@ -47,6 +71,11 @@ export default defineComponent({
       required: false,
       default: true,
     },
+    compact: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   components: {
     CardParty,
@@ -67,6 +96,8 @@ export default defineComponent({
       case RequirementType.MINING_RATE:
       case RequirementType.LOGISTIC_RATE:
         return this.count;
+      case RequirementType.DISPLAY:
+        return '';
       }
       if (this.requirement.max) {
         return this.count;
@@ -145,6 +176,7 @@ export default defineComponent({
         return ['card-resource', 'card-resource-corruption'];
       case RequirementType.PRODUCTION:
       case RequirementType.REMOVED_PLANTS:
+      case RequirementType.DISPLAY:
         break;
       }
       return [];
@@ -177,6 +209,10 @@ export default defineComponent({
       case RequirementType.PARTY:
       case RequirementType.REMOVED_PLANTS:
       case RequirementType.UNDERGROUND_TOKENS:
+      case RequirementType.DISPLAY:
+        return false;
+      }
+      if (this.compact) {
         return false;
       }
       return this.count > 0 && this.count < 4;

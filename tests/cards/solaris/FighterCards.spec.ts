@@ -94,14 +94,14 @@ describe('Solaris fighter cards', () => {
     expect(card.getVictoryPoints(player)).eq(1);
   });
 
-  it('Shielding Drones: a fighter per space, building or science tag, not its own', () => {
+  it('Shielding Drones: a fighter per space, building or science tag, including its own', () => {
     const card = new ShieldingDrones();
     const [/* game */, player] = testGame(2);
     player.playCard(card);
-    expect(card.resourceCount).eq(0);
+    expect(card.resourceCount).eq(1);
     player.playCard(fakeCard({tags: [Tag.SPACE, Tag.BUILDING]}));
     player.playCard(fakeCard({tags: [Tag.SCIENCE, Tag.PLANT]}));
-    expect(card.resourceCount).eq(3);
+    expect(card.resourceCount).eq(4);
   });
 
   it('Space Telescope: data when any player plays a space event', () => {

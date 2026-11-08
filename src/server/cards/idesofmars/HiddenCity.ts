@@ -25,7 +25,7 @@ export class HiddenCity extends Card implements IProjectCard {
           b.production((pb) => pb.minus().energy(1).br.megacredits(2)).nbsp.city().asterix();
         }),
         description: 'Requires 2 Mars tags. Energy prod -1, M€ prod +2. ' +
-          'At game end, after final greeneries, place a city on Mars (or outside the map if no area is free).',
+          'At game end, after final greeneries, place a city on Mars (or in space if no area on Mars is free).',
       },
     });
   }

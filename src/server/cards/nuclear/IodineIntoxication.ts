@@ -7,7 +7,7 @@ import {CardResource} from '../../../common/CardResource';
 import {CardRenderer} from '../render/CardRenderer';
 import {IPlayer} from '../../IPlayer';
 import {Nuclear} from './Nuclear';
-import {all} from '../Options';
+import {all, digit} from '../Options';
 
 export class IodineIntoxication extends ActionCard implements IProjectCard {
   constructor() {
@@ -35,9 +35,11 @@ export class IodineIntoxication extends ActionCard implements IProjectCard {
           b.action('Add a radiation to ANY card.', (eb) => {
             eb.empty().startAction.resource(CardResource.RADIATION).asterix();
           }).br;
-          b.or().br;
-          b.action('Remove 2 radiation here to gain 3 energy and 1 heat, or to remove 2 plants from an opponent.', (eb) => {
-            eb.resource(CardResource.RADIATION, 2).startAction.energy(3).heat(1).slash().minus().plants(2, {all});
+          b.action('Remove 2 radiation here to gain 3 energy and 1 heat.', (eb) => {
+            eb.resource(CardResource.RADIATION, {amount: 2, digit}).startAction.energy(3, {digit}).heat(1);
+          }).br;
+          b.action('Remove 2 radiation here to remove 2 plants from an opponent.', (eb) => {
+            eb.resource(CardResource.RADIATION, {amount: 2, digit}).startAction.minus().plants(2, {all, digit});
           }).br;
           b.resource(CardResource.RADIATION).asterix();
         }),

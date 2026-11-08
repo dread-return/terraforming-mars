@@ -6,7 +6,7 @@ import {Tag} from '../../../common/cards/Tag';
 import {CardResource} from '../../../common/CardResource';
 import {CardRenderer} from '../render/CardRenderer';
 import {IPlayer} from '../../IPlayer';
-import {all} from '../Options';
+import {all, digit} from '../Options';
 import {RemoveResourcesFromCard} from '../../deferredActions/RemoveResourcesFromCard';
 
 export class SolarFlare extends Card implements IProjectCard {
@@ -24,8 +24,8 @@ export class SolarFlare extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'N11',
         renderData: CardRenderer.builder((b) => {
-          b.temperature(1).nbsp.minus().plants(2, {all}).nbsp.minus().resource(CardResource.ANIMAL, {all}).nbsp
-            .minus().resource(CardResource.RADIATION, {amount: 2, all});
+          b.temperature(1).br;
+          b.minus().plants(2, {all}).nbsp.resource(CardResource.ANIMAL, {all}).nbsp.resource(CardResource.RADIATION, {amount: 2, all, digit});
         }),
         description: 'Raise the temperature 1 step. Remove 2 plants, 1 animal and 2 radiation from any player or players.',
       },

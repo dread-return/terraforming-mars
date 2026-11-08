@@ -20,7 +20,8 @@ export class EMFConnection extends PreludeCard {
       metadata: {
         cardNumber: 'P01',
         renderData: CardRenderer.builder((b) => {
-          b.temperature(1).nbsp.cards(1).nbsp.tag(Tag.EVENT).colon().megacredits(-11);
+          b.temperature(1).nbsp.cards(1).br;
+          b.cards(1, {secondaryTag: Tag.EVENT}).colon().megacredits(-11);
         }),
         description: 'Raise the temperature 1 step and draw a card. Play an event card from your hand, paying 11 M€ less.',
       },

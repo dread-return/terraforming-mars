@@ -21,7 +21,8 @@ export class MutatedTrees extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'N04',
         renderData: CardRenderer.builder((b) => {
-          b.oxygen(1).nbsp.production((pb) => pb.plants(1).slash().resource(CardResource.MICROBE).slash().resource(CardResource.ANIMAL).asterix());
+          b.oxygen(1).br;
+          b.production((pb) => pb.plants(1)).slash().cards(1, {secondaryTag: Tag.MICROBE}).slash().cards(1, {secondaryTag: Tag.ANIMAL}).asterix();
         }),
         description: 'Requires 6% oxygen. Raise oxygen 1 step. Increase your plant production 1 step for every card you own holding at least 1 microbe or 1 animal.',
       },

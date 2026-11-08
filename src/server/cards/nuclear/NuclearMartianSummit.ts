@@ -1,3 +1,4 @@
+import {Size} from '../../../common/cards/render/Size';
 import {IProjectCard} from '../IProjectCard';
 import {Card} from '../Card';
 import {CardType} from '../../../common/cards/CardType';
@@ -17,7 +18,8 @@ export class NuclearMartianSummit extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'N62',
         renderData: CardRenderer.builder((b) => {
-          b.text('this generation:').megacredits(-1).nbsp.tag(Tag.EVENT).colon().megacredits(-2);
+          b.text('this generation:', {size: Size.SMALL}).br;
+          b.cards(1).colon().megacredits(-1).nbsp.cards(1, {secondaryTag: Tag.EVENT}).colon().megacredits(-2);
         }),
         description: 'This generation, cards you play cost 1 M€ less and event cards you play cost 2 M€ less.',
       },

@@ -358,7 +358,9 @@ export default defineComponent({
         result = '<span class="card-award-icon">milestone</span>';
       }
       if (this.item.type === CardRenderItemType.VP) {
-        result = '<div class="card-resource points-big card-vp-questionmark">?</div>';
+        result = this.item.innerText === undefined ?
+          '<div class="card-resource points-big card-vp-questionmark">?</div>' :
+          `<div class="card-resource points-big card-vp-questionmark card-vp--text">${this.item.innerText}</div>`;
       }
       if (this.item.type === CardRenderItemType.MEGACREDITS && this.item.amount === undefined) {
         result = '?';

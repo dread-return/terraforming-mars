@@ -25,7 +25,7 @@ export class JovianMegaResearchBay extends ActionCard implements IProjectCard {
       metadata: {
         cardNumber: 'N72',
         renderData: CardRenderer.builder((b) => {
-          b.effect('When you play a radioactive card, draw a card.', (eb) => {
+          b.effect('When you play a radioactive tag, including this, draw a card.', (eb) => {
             eb.tag(Tag.RADIOACTIVE).startEffect.cards(1);
           }).br;
           b.action('Spend 1 titanium to draw a card.', (eb) => {
@@ -39,7 +39,7 @@ export class JovianMegaResearchBay extends ActionCard implements IProjectCard {
   }
 
   public onCardPlayed(player: IPlayer, card: ICard) {
-    if (card.name !== this.name && card.tags.includes(Tag.RADIOACTIVE)) {
+    if (card.tags.includes(Tag.RADIOACTIVE)) {
       player.drawCard();
     }
   }

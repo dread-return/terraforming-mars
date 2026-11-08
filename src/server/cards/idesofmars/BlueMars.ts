@@ -13,6 +13,7 @@ export class BlueMars extends Card implements IProjectCard {
       name: CardName.BLUE_MARS,
       tags: [Tag.MARS],
       cost: 2,
+      requirements: {display: 'allOceans'},
 
       metadata: {
         cardNumber: 'I58',

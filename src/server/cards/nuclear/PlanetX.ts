@@ -23,7 +23,8 @@ export class PlanetX extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'N66',
         renderData: CardRenderer.builder((b) => {
-          b.tr(1).nbsp.heat(1).slash().tag(Tag.SPACE, 2).nbsp.resource(CardResource.RADIATION, 2).asterix();
+          b.tr(1).nbsp.heat(1).slash().text('2').tag(Tag.SPACE).br;
+          b.resource(CardResource.RADIATION, 2).asterix();
         }),
         description: 'Requires 3 radioactive tags. Raise your TR 1 step. Gain 1 heat for every 2 space tags you own. Add 2 radiation to ANY card.',
       },

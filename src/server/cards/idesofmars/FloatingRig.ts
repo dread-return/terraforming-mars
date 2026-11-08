@@ -35,7 +35,7 @@ export class FloatingRig extends ActionCard implements IProjectCard {
           }).br;
           b.production((pb) => pb.energy(3));
         }),
-        description: 'Requires Venus 16% or lower. Increase your energy production 3 steps. 1 VP per 2 floaters here.',
+        description: 'Requires Venus 16% or lower. Increase your energy production 3 steps.',
       },
     });
   }

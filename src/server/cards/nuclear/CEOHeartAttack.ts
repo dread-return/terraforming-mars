@@ -1,3 +1,4 @@
+import {Size} from '../../../common/cards/render/Size';
 import {IProjectCard} from '../IProjectCard';
 import {Card} from '../Card';
 import {CardType} from '../../../common/cards/CardType';
@@ -25,7 +26,7 @@ export class CEOHeartAttack extends Card implements IProjectCard {
         cardNumber: 'N48',
         renderData: CardRenderer.builder((b) => {
           b.text('steal').megacredits(4, {all}).resource(CardResource.RADIATION, {all}).br;
-          b.text('next card or standard project: -6 M€');
+          b.text('next card or standard project', {size: Size.SMALL}).colon().megacredits(-6);
         }),
         description: 'Steal 4 M€ and a radiation from any player. Your next card or standard project costs 6 M€ less.',
       },

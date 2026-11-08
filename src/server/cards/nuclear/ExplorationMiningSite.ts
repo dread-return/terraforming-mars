@@ -25,7 +25,8 @@ export class ExplorationMiningSite extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'N75',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.steel(2)).nbsp.cards(2).nbsp.resource(CardResource.RADIATION).asterix();
+          b.production((pb) => pb.steel(2)).nbsp.cards(2).br;
+          b.resource(CardResource.RADIATION).asterix();
         }),
         description: 'Requires -14 °C or colder. Increase your steel production 2 steps, draw 2 cards and add a radiation to ANY card.',
       },

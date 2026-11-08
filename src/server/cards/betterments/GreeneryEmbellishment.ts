@@ -1,3 +1,4 @@
+import {Size} from '../../../common/cards/render/Size';
 import {IProjectCard} from '../IProjectCard';
 import {Card} from '../Card';
 import {CardType} from '../../../common/cards/CardType';
@@ -21,7 +22,7 @@ export class GreeneryEmbellishment extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'B13',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.megacredits(2)).slash().city().asterix();
+          b.production((pb) => pb.megacredits(2)).slash().city().greenery({size: Size.SMALL, withO2: false}).asterix();
         }),
         description: 'Requires 5 plant tags. Increase your M€ production 2 steps for each city you own that is next to at least one greenery tile.',
       },

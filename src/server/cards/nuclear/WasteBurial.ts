@@ -1,3 +1,4 @@
+import {digit} from '../Options';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardResource} from '../../../common/CardResource';
@@ -18,7 +19,8 @@ export class WasteBurial extends PreludeCard {
       metadata: {
         cardNumber: 'P02',
         renderData: CardRenderer.builder((b) => {
-          b.tr(1).nbsp.production((pb) => pb.steel(1)).nbsp.resource(CardResource.RADIATION, 4).asterix();
+          b.tr(1).nbsp.production((pb) => pb.steel(1)).br;
+          b.resource(CardResource.RADIATION, {amount: 4, digit}).asterix();
         }),
         description: 'Raise your TR 1 step and increase your steel production 1 step. Place 4 radiation here; ' +
           'move them to the first radiation-holding card you play.',

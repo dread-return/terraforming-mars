@@ -165,3 +165,110 @@
   height: 50px;
   background-size: 44px 50px;
 }
+
+// Nuclear (GIGA) contamination track, next to the board.
+.contamination-track {
+  display: inline-block;
+  vertical-align: top;
+  margin: 20px 0 0 10px;
+  padding: 8px 10px;
+  width: 150px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 2px solid #6a6a6a;
+  border-radius: 12px;
+  color: white;
+  font-family: Prototype, sans-serif;
+}
+
+.contamination-track-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.contamination-track-icon {
+  background: url(./assets/tags/radioactive.png) no-repeat center / 34px;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.contamination-track-title {
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.contamination-track-level {
+  font-size: 18px;
+  color: #ffe400;
+}
+
+.contamination-step {
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+.contamination-step-marker {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.contamination-step-cube {
+  background: url(./assets/tags/radioactive.png) no-repeat center / 20px;
+  width: 22px;
+  height: 22px;
+  filter: drop-shadow(0 0 3px #ffe400);
+}
+
+.contamination-step-number {
+  width: 34px;
+  height: 22px;
+  line-height: 22px;
+  text-align: center;
+  font-size: 17px;
+  color: #ffe400;
+  border: 1px solid #222;
+  border-radius: 4px;
+  margin: 1px 0;
+  text-shadow: 1px 1px 1px #000, 0 0 2px #000;
+}
+
+.contamination-step--passed {
+  opacity: 0.5;
+}
+
+.contamination-step--current .contamination-step-number {
+  border: 2px solid #ffe400;
+  box-shadow: 0 0 6px #ffe400;
+}
+
+.contamination-step-reward {
+  display: flex;
+  align-items: center;
+  margin-left: 6px;
+  gap: 2px;
+}
+
+.contamination-reward-nuclear-zone {
+  .special-tile-board('./assets/tiles/special_tile_icons/nuclear_zone.png');
+  background-size: 22px, 21px;
+  width: 22px;
+  height: 24px;
+}
+
+.contamination-reward-radiation {
+  background: url(./assets/resources/radiation.png) no-repeat center / 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.contamination-track-help {
+  margin-top: 6px;
+  font-family: Ubuntu, sans-serif;
+  font-size: 11px;
+  line-height: 1.3;
+  color: #ddd;
+}

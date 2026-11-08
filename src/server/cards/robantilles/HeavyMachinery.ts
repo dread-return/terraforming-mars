@@ -27,8 +27,8 @@ export class HeavyMachinery extends ActionCard implements IProjectCard {
           b.action('Pay 11 M€ to increase your titanium production 1 step.', (eb) => {
             eb.megacredits(11).startAction.production((pb) => pb.titanium(1));
           }).br;
-          b.effect('The City standard project costs 1 M€ less.', (eb) => {
-            eb.city().slash().specialTile().startEffect.megacredits(-1);
+          b.effect('Your City standard project costs you 1 M€ less.', (eb) => {
+            eb.city().asterix().startEffect.megacredits(-1);
           });
         }),
         description: 'Requires a building tag.',

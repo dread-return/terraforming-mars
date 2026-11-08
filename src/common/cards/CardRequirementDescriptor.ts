@@ -26,6 +26,16 @@ import {RequirementType} from './RequirementType';
 //     MoonRequirement |
 //     MiscRequirement) & {max?: boolean, all?: boolean}
 
+/**
+ * GIGA fan expansions: requirements that only exist on one card. They are drawn in the
+ * requirement bar, while the card itself checks them (in bespokeCanPlay).
+ *
+ * offWorldCity: you own a city off Mars. allOceans: every ocean is placed.
+ * cardVP: you have at least `count` VP on your cards. generation: it is generation `count` or later.
+ * plantProduction: you have plant production.
+ */
+export type DisplayRequirement = 'offWorldCity' | 'allOceans' | 'cardVP' | 'generation' | 'plantProduction';
+
 export type CardRequirementDescriptor = {
   tag?: Tag,
   oxygen?: number,
@@ -61,6 +71,9 @@ export type CardRequirementDescriptor = {
   // Underworld
   undergroundTokens?: number,
   corruption?: number,
+
+  // GIGA fan expansions (see DisplayRequirement)
+  display?: DisplayRequirement,
 
   // Adjectives
   count?: number,
@@ -119,6 +132,8 @@ export function requirementType(descriptor: CardRequirementDescriptor): Requirem
     return RequirementType.UNDERGROUND_TOKENS;
   } else if (descriptor.corruption !== undefined) {
     return RequirementType.CORRUPTION;
+  } else if (descriptor.display !== undefined) {
+    return RequirementType.DISPLAY;
   } else {
     throw new Error('Unknown requirement: ' + JSON.stringify(descriptor));
   }

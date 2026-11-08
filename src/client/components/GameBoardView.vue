@@ -16,6 +16,8 @@
     id="shortkey-board"
   />
 
+  <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" />
+
   <template v-if="game.turmoil">
     <a class="hotkey-target"></a>
     <Turmoil :turmoil="game.turmoil" />
@@ -48,6 +50,7 @@ import {PublicPlayerModel} from '@/common/models/PlayerModel';
 import {SpaceId} from '@/common/Types';
 import Board from '@/client/components/Board.vue';
 import DeltaProjectBoard from '@/client/components/delta/DeltaProjectBoard.vue';
+import ContaminationTrack from '@/client/components/nuclear/ContaminationTrack.vue';
 import Milestones from '@/client/components/Milestones.vue';
 import Awards from '@/client/components/Awards.vue';
 import Turmoil from '@/client/components/turmoil/Turmoil.vue';
@@ -75,6 +78,7 @@ export default defineComponent({
   emits: ['toggleTileView'],
   components: {
     Board,
+    ContaminationTrack,
     DeltaProjectBoard,
     Milestones,
     Awards,

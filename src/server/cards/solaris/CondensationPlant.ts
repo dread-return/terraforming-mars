@@ -19,7 +19,7 @@ export class CondensationPlant extends Card implements IProjectCard {
         cardNumber: 'S17',
         renderData: CardRenderer.builder((b) => {
           b.effect('During the production phase, gain 1 extra heat for each energy converted into heat.', (eb) => {
-            eb.production((pb) => pb.energy(1)).startEffect.plus().heat(1);
+            eb.energy(1).arrow().heat(1).asterix().startEffect.plus().heat(1);
           });
         }),
         description: 'Requires that Kelvinists are ruling or that you have 2 delegates there.',

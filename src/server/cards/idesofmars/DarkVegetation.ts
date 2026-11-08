@@ -21,7 +21,8 @@ export class DarkVegetation extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'I44',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.plants(1).heat(1)).or().text('3').tag(Tag.PLANT).colon().production((pb) => pb.plants(2));
+          b.production((pb) => pb.plants(1).heat(1)).nbsp.or().br;
+          b.text('3').tag(Tag.PLANT).colon().production((pb) => pb.plants(2));
         }),
         description: 'Requires 7% oxygen. Increase your heat and plant production 1 step, ' +
           'OR increase your plant production 2 steps if you own 3 or more plant tags (including this).',

@@ -20,8 +20,11 @@ export class EnergyBudgetCutoffs extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'N46',
         renderData: CardRenderer.builder((b) => {
-          b.effect('When you play a radioactive card, you pay 1 M€ less. When you play a power tag, you pay 1 M€ more and gain 1 energy.', (eb) => {
-            eb.tag(Tag.RADIOACTIVE).colon().megacredits(-1).nbsp.tag(Tag.POWER).startEffect.megacredits(1).energy(1);
+          b.effect('When you play a radioactive card, you pay 1 M€ less.', (eb) => {
+            eb.tag(Tag.RADIOACTIVE).startEffect.megacredits(-1);
+          }).br;
+          b.effect('When you play a power tag, including this, you pay 1 M€ more and gain 1 energy.', (eb) => {
+            eb.tag(Tag.POWER).startEffect.megacredits(1).energy(1);
           }).br;
           b.production((pb) => pb.energy(1));
         }),
@@ -42,7 +45,7 @@ export class EnergyBudgetCutoffs extends Card implements IProjectCard {
   }
 
   public onCardPlayed(player: IPlayer, card: ICard) {
-    if (card.name !== this.name && card.tags.includes(Tag.POWER)) {
+    if (card.tags.includes(Tag.POWER)) {
       player.stock.add(Resource.ENERGY, 1, {log: true});
     }
   }

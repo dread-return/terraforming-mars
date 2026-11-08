@@ -1,3 +1,4 @@
+import {digit} from '../Options';
 import {IProjectCard} from '../IProjectCard';
 import {Card} from '../Card';
 import {CardType} from '../../../common/cards/CardType';
@@ -29,7 +30,7 @@ export class TritonCampaign extends Card implements IProjectCard {
         cardNumber: 'N40',
         renderData: CardRenderer.builder((b) => {
           b.production((pb) => pb.steel(1).heat(1)).or().production((pb) => pb.titanium(1)).br;
-          b.titanium(3).steel(1).nbsp.resource(CardResource.RADIATION, 3).asterix();
+          b.titanium(3, {digit}).steel(1).nbsp.resource(CardResource.RADIATION, {amount: 3, digit}).asterix();
         }),
         description: 'Increase your steel and heat production 1 step OR your titanium production 1 step. Gain 3 titanium and 1 steel and add 3 radiation to ANY card.',
       },

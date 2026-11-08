@@ -11,7 +11,7 @@ import {BoardType} from '../../boards/BoardType';
 import {Board} from '../../boards/Board';
 import {AddResourcesToCard} from '../../deferredActions/AddResourcesToCard';
 import {AddResourcesToCards} from '../../deferredActions/AddResourcesToCards';
-import {all} from '../Options';
+import {all, digit} from '../Options';
 
 export class OceanicAtomicTests extends Card implements IProjectCard {
   constructor() {
@@ -31,7 +31,7 @@ export class OceanicAtomicTests extends Card implements IProjectCard {
           b.effect('While the temperature is -4 °C or colder, your cards cost 1 M€ less; at -2 °C or warmer they cost 1 M€ more.', (eb) => {
             eb.temperature(1).asterix().startEffect.megacredits(-1).slash().megacredits(1);
           }).br;
-          b.resource(CardResource.RADIATION, 5).asterix().nbsp.tr(1);
+          b.resource(CardResource.RADIATION, {amount: 5, digit}).asterix().nbsp.tr(1);
         }),
         description: 'Add 5 radiation to up to 5 different cards. Raise your TR 1 step.',
       },

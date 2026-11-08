@@ -10,7 +10,7 @@ import {Space} from '../../boards/Space';
 import {BoardType} from '../../boards/BoardType';
 import {Board} from '../../boards/Board';
 import {AddResourcesToCard} from '../../deferredActions/AddResourcesToCard';
-import {all} from '../Options';
+import {all, digit} from '../Options';
 
 export class GeneticMutations extends ActionCard implements IProjectCard {
   constructor() {
@@ -43,7 +43,7 @@ export class GeneticMutations extends ActionCard implements IProjectCard {
             eb.greenery().startEffect.resource(CardResource.RADIATION).asterix();
           }).br;
           b.action('Remove 2 radiation here to remove 2 plants or 2 microbes from an opponent.', (eb) => {
-            eb.resource(CardResource.RADIATION, 2).startAction.minus().plants(2, {all}).slash().resource(CardResource.MICROBE, {amount: 2, all});
+            eb.resource(CardResource.RADIATION, {amount: 2, digit}).startAction.minus().plants(2, {all, digit}).slash().resource(CardResource.MICROBE, {amount: 2, all, digit});
           });
         }),
         description: 'Requires 2 plant tags and 2 radioactive tags. 1 VP for every 4 radiation on this card.',

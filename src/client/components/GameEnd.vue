@@ -198,6 +198,7 @@
             :temperature="game.temperature"
             :tileView="tileView"
             @toggleTileView="cycleTileView()" />
+          <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" />
           <MoonBoard v-if="game.moon !== undefined" :model="game.moon" :tileView="tileView" />
           <div v-if="game.gameOptions.expansions.pathfinders">
             <PlanetaryTracks :tracks="game.pathfinders" :gameOptions="game.gameOptions" />
@@ -224,6 +225,7 @@ import {paths} from '@/common/app/paths';
 import {GameModel} from '@/common/models/GameModel';
 import {PublicPlayerModel, ViewModel} from '@/common/models/PlayerModel';
 import Board from '@/client/components/Board.vue';
+import ContaminationTrack from '@/client/components/nuclear/ContaminationTrack.vue';
 import MoonBoard from '@/client/components/moon/MoonBoard.vue';
 import {nextTileView, TileView} from '@/client/components/board/TileView';
 import PlanetaryTracks from '@/client/components/pathfinders/PlanetaryTracks.vue';
@@ -364,6 +366,7 @@ export default defineComponent({
   components: {
     HomeLink,
     Board,
+    ContaminationTrack,
     LogPanel,
     AppButton,
     MoonBoard,

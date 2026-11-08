@@ -22,7 +22,7 @@ export class TerrainLease extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'S33',
         renderData: CardRenderer.builder((b) => {
-          b.effect('When any player uses a standard project, gain 1 M€. (Selling patents is not a standard project here.)', (eb) => {
+          b.effect('When any player uses a standard project, gain 1 M€. Selling patents does not count.', (eb) => {
             eb.plate('Standard projects').asterix().startEffect.megacredits(1);
           });
         }),

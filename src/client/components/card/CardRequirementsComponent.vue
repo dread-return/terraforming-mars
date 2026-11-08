@@ -1,7 +1,7 @@
 <template>
   <div class="card-requirements" :class="{'card-requirements-max': hasMax}">
     <div v-for="(req, idx) in requirements" :key="idx">
-      <CardRequirementComponent :requirement="req" :leftMargin="indentRight[idx]" />
+      <CardRequirementComponent :requirement="req" :leftMargin="indentRight[idx]" :compact="compact" />
     </div>
   </div>
 </template>
@@ -26,6 +26,15 @@ export default defineComponent({
   computed: {
     hasMax(): boolean {
       return this.requirements?.some((req) => req.max) ?? false;
+    },
+    // When several requirements would draw more than 5 icons in a row, draw each as a number + 1 icon.
+    compact(): boolean {
+      const reqs = this.requirements ?? [];
+      if (reqs.length < 2) {
+        return false;
+      }
+      const icons = reqs.reduce((sum, req) => sum + (req.tag !== undefined && (req.count ?? 1) < 4 ? (req.count ?? 1) : 1), 0);
+      return icons > 5;
     },
     indentRight(): ReadonlyArray<boolean> {
       const indentations = [false];

@@ -16,6 +16,7 @@ export class Takeover extends Card implements IProjectCard {
       name: CardName.TAKEOVER,
       tags: [Tag.EARTH],
       cost: 35,
+      requirements: {display: 'generation', count: 5},
 
       metadata: {
         cardNumber: 'I60',

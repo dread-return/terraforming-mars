@@ -1,3 +1,4 @@
+import {digit} from '../Options';
 import {IProjectCard} from '../IProjectCard';
 import {ActionCard} from '../ActionCard';
 import {CardType} from '../../../common/cards/CardType';
@@ -33,11 +34,11 @@ export class ParticleAccelerator extends ActionCard implements IProjectCard {
       metadata: {
         cardNumber: 'N18',
         renderData: CardRenderer.builder((b) => {
-          b.effect('When you play a science or power tag, add a radiation to ANY card.', (eb) => {
+          b.effect('When you play a science or power tag, including these, add a radiation to ANY card.', (eb) => {
             eb.tag(Tag.SCIENCE).slash().tag(Tag.POWER).startEffect.resource(CardResource.RADIATION).asterix();
           }).br;
           b.action('Remove a radiation here to gain 1 titanium, 1 energy or 2 heat.', (eb) => {
-            eb.resource(CardResource.RADIATION).startAction.titanium(1).slash().energy(1).slash().heat(2);
+            eb.resource(CardResource.RADIATION).startAction.titanium(1).slash().energy(1).slash().heat(2, {digit});
           }).br;
         }),
         description: 'Requires 2 science tags. 1 VP for every 4 radiation on this card.',
@@ -46,9 +47,7 @@ export class ParticleAccelerator extends ActionCard implements IProjectCard {
   }
 
   public onCardPlayed(player: IPlayer, card: ICard) {
-    if (card.name === this.name) {
-      return;
-    }
+    // Its own science and power tags count too.
     const count = card.tags.filter((tag) => tag === Tag.SCIENCE || tag === Tag.POWER).length;
     if (count > 0) {
       player.game.defer(new AddResourcesToCard(player, CardResource.RADIATION, {count, log: true}));

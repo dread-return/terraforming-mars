@@ -23,7 +23,8 @@ export class CoolingLiquidEmergency extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'N20',
         renderData: CardRenderer.builder((b) => {
-          b.oceans(1).asterix().nbsp.heat(1).nbsp.resource(CardResource.RADIATION, 3).asterix();
+          b.oceans(1).asterix().nbsp.heat(1).br;
+          b.resource(CardResource.RADIATION, 3).asterix();
         }),
         description: 'Place an ocean tile and get 1 M€ more from each adjacent ocean. Gain 1 heat and add 3 radiation to ANY card.',
       },

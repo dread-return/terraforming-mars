@@ -10,7 +10,7 @@ import {CardResource} from '../../../common/CardResource';
 import {TileType} from '../../../common/TileType';
 import {Resource} from '../../../common/Resource';
 import {Payment} from '../../../common/inputs/Payment';
-import {CONTAMINATION_MAX, CONTAMINATION_REWARDS} from '../../../common/nuclear/Contamination';
+import {ContaminationTrack, contaminationTrack} from '../../../common/nuclear/Contamination';
 import {PlaceTile} from '../../deferredActions/PlaceTile';
 import {AddResourcesToCard} from '../../deferredActions/AddResourcesToCard';
 import {RemoveResourcesFromCard} from '../../deferredActions/RemoveResourcesFromCard';
@@ -56,14 +56,20 @@ export class Nuclear {
     }
   }
 
+  /** The contamination track this game uses (standard or Alt.). */
+  public static track(game: IGame): ContaminationTrack {
+    return contaminationTrack(game.gameOptions.altContaminationTrack);
+  }
+
   /** Moves the contamination marker up `steps` steps, giving `player` each step's reward. */
   public static raiseContamination(player: IPlayer, steps: number): void {
     const game = player.game;
+    const track = this.track(game);
     let raised = 0;
-    for (let i = 0; i < steps && game.contamination < CONTAMINATION_MAX; i++) {
+    for (let i = 0; i < steps && game.contamination < track.max; i++) {
       game.contamination++;
       raised++;
-      this.grantReward(player, game.contamination);
+      this.grantReward(player, track, game.contamination);
     }
     if (raised > 0) {
       game.log('${0} raised the contamination track ${1} step(s) to ${2}',
@@ -71,8 +77,8 @@ export class Nuclear {
     }
   }
 
-  private static grantReward(player: IPlayer, step: number): void {
-    const reward = CONTAMINATION_REWARDS[step];
+  private static grantReward(player: IPlayer, track: ContaminationTrack, step: number): void {
+    const reward = track.rewards[step];
     if (reward === undefined) {
       return;
     }
@@ -82,8 +88,16 @@ export class Nuclear {
         on: 'land',
         title: 'Contamination track: select space for a Nuclear Zone',
       }));
-    } else {
+    } else if ('radiation' in reward) {
       player.game.defer(new AddResourcesToCard(player, CardResource.RADIATION, {count: reward.radiation, log: true}));
+    } else if ('heat' in reward) {
+      player.stock.add(Resource.HEAT, reward.heat, {log: true});
+    } else if ('energy' in reward) {
+      player.stock.add(Resource.ENERGY, reward.energy, {log: true});
+    } else if ('data' in reward) {
+      player.game.defer(new AddResourcesToCard(player, CardResource.DATA, {count: reward.data, log: true}));
+    } else {
+      player.game.defer(new AddResourcesToCard(player, CardResource.SCIENCE, {count: reward.science, log: true}));
     }
   }
 

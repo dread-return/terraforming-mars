@@ -21,7 +21,7 @@
         <div class="contamination-step-reward">
           <div v-if="step.reward === 'nuclearZone'" class="contamination-reward-nuclear-zone"></div>
           <template v-else-if="step.reward !== undefined">
-            <div v-for="n in step.reward" :key="n" class="contamination-reward-radiation"></div>
+            <div v-for="n in step.reward.count" :key="n" class="contamination-reward-resource" :class="'contamination-reward-' + step.reward.kind"></div>
           </template>
         </div>
       </div>
@@ -32,16 +32,34 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import {CONTAMINATION_MAX, CONTAMINATION_REWARDS, describeContaminationReward} from '@/common/nuclear/Contamination';
+import {ContaminationReward, ContaminationTrack, contaminationTrack, describeContaminationReward} from '@/common/nuclear/Contamination';
 import {range} from '@/common/utils/utils';
+
+/** A resource reward drawn as `count` icons of `kind`. */
+type ResourceReward = {kind: 'radiation' | 'heat' | 'energy' | 'data' | 'science', count: number};
 
 type Step = {
   value: number,
-  /** 'nuclearZone', or the number of radiation. */
-  reward: 'nuclearZone' | number | undefined,
+  reward: 'nuclearZone' | ResourceReward | undefined,
   title: string,
   color: string,
 };
+
+function toDisplay(reward: ContaminationReward): 'nuclearZone' | ResourceReward {
+  if ('nuclearZone' in reward) {
+    return 'nuclearZone';
+  } else if ('radiation' in reward) {
+    return {kind: 'radiation', count: reward.radiation};
+  } else if ('heat' in reward) {
+    return {kind: 'heat', count: reward.heat};
+  } else if ('energy' in reward) {
+    return {kind: 'energy', count: reward.energy};
+  } else if ('data' in reward) {
+    return {kind: 'data', count: reward.data};
+  } else {
+    return {kind: 'science', count: reward.science};
+  }
+}
 
 export default defineComponent({
   name: 'ContaminationTrack',
@@ -50,21 +68,30 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    // True when the game uses the Alt. Contamination track (from the GIGA rules).
+    alt: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
+    track(): ContaminationTrack {
+      return contaminationTrack(this.alt);
+    },
     max(): number {
-      return CONTAMINATION_MAX;
+      return this.track.max;
     },
     // Highest step first, so the track reads bottom to top.
     steps(): Array<Step> {
-      return range(CONTAMINATION_MAX + 1).reverse().map((value) => {
-        const reward = CONTAMINATION_REWARDS[value];
+      const max = this.track.max;
+      return range(max + 1).reverse().map((value) => {
+        const reward = this.track.rewards[value];
         // From green at the bottom of the track to black at the top, as on the GIGA board.
-        const t = value / CONTAMINATION_MAX;
+        const t = value / max;
         const color = `rgb(${Math.round(110 * (1 - t))}, ${Math.round(170 * (1 - t) + 20)}, ${Math.round(20 * (1 - t))})`;
         return {
           value,
-          reward: reward === undefined ? undefined : ('nuclearZone' in reward ? 'nuclearZone' : reward.radiation),
+          reward: reward === undefined ? undefined : toDisplay(reward),
           title: reward === undefined ? `Step ${value}` : `Step ${value}: ${describeContaminationReward(reward)}`,
           color,
         };

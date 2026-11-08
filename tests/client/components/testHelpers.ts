@@ -45,6 +45,7 @@ export function fakeGameOptionsModel(overrides?: RecursivePartial<GameOptionsMod
   return {
     aresExtremeVariant: false,
     altVenusBoard: false,
+    altContaminationTrack: false,
     boardName: BoardName.THARSIS,
     bannedCards: [],
     expansions: {...DEFAULT_EXPANSIONS},

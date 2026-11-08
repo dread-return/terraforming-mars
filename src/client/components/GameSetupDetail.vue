@@ -36,6 +36,7 @@
       </li>
       <li v-if="gameOptions.requiresVenusTrackCompletion" v-i18n>Require terraforming Venus to end the game</li>
       <li v-if="gameOptions.requiresMoonTrackCompletion" v-i18n>Require terraforming The Moon to end the game</li>
+      <li v-if="gameOptions.expansions.nuclear && gameOptions.altContaminationTrack" v-i18n>Alt. Contamination track</li>
 
       <li v-if="playerNumber > 1">
         <div class="setup-item" v-i18n>Milestones and Awards:</div>

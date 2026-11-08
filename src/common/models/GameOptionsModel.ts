@@ -10,6 +10,7 @@ import {GameId} from '../Types';
 export type GameOptionsModel = {
   aresExtremeVariant: boolean,
   altVenusBoard: boolean,
+  altContaminationTrack: boolean,
   boardName: BoardName,
   bannedCards: ReadonlyArray<CardName>;
   expansions: Record<Expansion, boolean>,

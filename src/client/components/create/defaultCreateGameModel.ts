@@ -60,6 +60,7 @@ export function defaultCreateGameModel(): CreateGameModel {
     moonStandardProjectVariant: false,
     moonStandardProjectVariant1: false,
     altVenusBoard: false,
+    altContaminationTrack: false,
     escapeVelocityMode: false,
     escapeVelocityThreshold: constants.DEFAULT_ESCAPE_VELOCITY_THRESHOLD,
     escapeVelocityBonusSeconds: constants.DEFAULT_ESCAPE_VELOCITY_BONUS_SECONDS,

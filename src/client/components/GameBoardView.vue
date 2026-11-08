@@ -16,7 +16,7 @@
     id="shortkey-board"
   />
 
-  <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" />
+  <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" :alt="game.gameOptions.altContaminationTrack" />
 
   <template v-if="game.turmoil">
     <a class="hotkey-target"></a>

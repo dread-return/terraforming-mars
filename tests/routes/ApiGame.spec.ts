@@ -58,6 +58,7 @@ describe('ApiGame', () => {
         'spectatorId': 'spectatorid',
         'gameOptions': {
           'altVenusBoard': false,
+          'altContaminationTrack': false,
           'aresExtremeVariant': false,
           'bannedCards': [],
           'boardName': 'tharsis',

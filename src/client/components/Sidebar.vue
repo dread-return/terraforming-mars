@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import {CONTAMINATION_MAX, describeContaminationReward, nextContaminationReward} from '@/common/nuclear/Contamination';
+import {contaminationTrack, describeContaminationReward, nextContaminationReward} from '@/common/nuclear/Contamination';
 
 import {defineComponent} from 'vue';
 import {Color} from '@/common/Color';
@@ -171,8 +171,9 @@ export default defineComponent({
   computed: {
     contaminationTitle(): string {
       const level = this.contamination ?? 0;
-      let title = `Contamination track: ${level}/${CONTAMINATION_MAX}. Each Radioactive tag played moves it up 1.`;
-      const next = nextContaminationReward(level);
+      const track = contaminationTrack(this.gameOptions.altContaminationTrack);
+      let title = `Contamination track: ${level}/${track.max}. Each Radioactive tag played moves it up 1.`;
+      const next = nextContaminationReward(track, level);
       if (next !== undefined) {
         title += ` Step ${next.step}: ${describeContaminationReward(next.reward)}.`;
       }

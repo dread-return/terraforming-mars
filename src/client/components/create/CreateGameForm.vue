@@ -200,6 +200,13 @@
               <div class="create-game-expansion-icon expansion-icon-nuclear"></div>
               <span v-i18n>Nuclear</span><span></span>&nbsp;<a :href="wikiUrls.nuclear" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
             </label>
+
+            <template v-if="expansions.nuclear">
+              <input type="checkbox" v-model="altContaminationTrack" id="altContaminationTrack-checkbox">
+              <label for="altContaminationTrack-checkbox">
+                <span v-i18n>Alt. Contamination track</span>
+              </label>
+            </template>
           </div>
 
           <div class="create-game-page-column">
@@ -790,6 +797,7 @@ export default defineComponent({
         moonStandardProjectVariant: this.moonStandardProjectVariant,
         moonStandardProjectVariant1: this.moonStandardProjectVariant1,
         altVenusBoard: this.altVenusBoard,
+        altContaminationTrack: this.altContaminationTrack,
         // Not sanitized, so validation can catch negative values.
         escapeVelocity: this.escapeVelocityMode ? {
           thresholdMinutes: this.escapeVelocityThreshold,

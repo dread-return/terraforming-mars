@@ -74,6 +74,8 @@ export type NewGameConfig = {
   moonStandardProjectVariant: boolean;
   moonStandardProjectVariant1: boolean;
   altVenusBoard: boolean;
+  // Nuclear (GIGA). Optional so older saved configs still load.
+  altContaminationTrack?: boolean;
   escapeVelocity: EscapeVelocityOptions | undefined;
   twoCorpsVariant: boolean;
   customCeos: ReadonlyArray<CardName>;

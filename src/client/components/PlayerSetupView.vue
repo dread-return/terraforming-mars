@@ -85,7 +85,7 @@
           :altVenusBoard="game.gameOptions.altVenusBoard"
           :tileView="tileView"
           @toggleTileView="$emit('toggleTileView')" />
-        <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" />
+        <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" :alt="game.gameOptions.altContaminationTrack" />
 
         <Turmoil v-if="game.turmoil" :turmoil="game.turmoil" />
 

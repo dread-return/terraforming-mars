@@ -198,7 +198,7 @@
             :temperature="game.temperature"
             :tileView="tileView"
             @toggleTileView="cycleTileView()" />
-          <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" />
+          <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" :alt="game.gameOptions.altContaminationTrack" />
           <MoonBoard v-if="game.moon !== undefined" :model="game.moon" :tileView="tileView" />
           <div v-if="game.gameOptions.expansions.pathfinders">
             <PlanetaryTracks :tracks="game.pathfinders" :gameOptions="game.gameOptions" />

@@ -82,12 +82,15 @@ export type GameOptions = {
   /** Standard projects can be paid for with steel or titanium at a 1MC loss per alloy */
   moonStandardProjectVariant1: boolean;
   altVenusBoard: boolean;
+  /** Nuclear (GIGA): use the contamination track from the GIGA rules instead of the GIGA board's. */
+  altContaminationTrack: boolean;
   escapeVelocity?: EscapeVelocityOptions;
   twoCorpsVariant: boolean;
 }
 
 export const DEFAULT_GAME_OPTIONS: GameOptions = {
   altVenusBoard: false,
+  altContaminationTrack: false,
   aresExtension: false,
   aresHazards: true,
   aresExtremeVariant: false,

@@ -207,6 +207,12 @@
                 <span v-i18n>Alt. Contamination track</span>
               </label>
             </template>
+
+            <input type="checkbox" name="venusphase2" id="venusphase2-checkbox" v-model="expansions.venusphase2">
+            <label for="venusphase2-checkbox" class="expansion-button">
+              <div class="create-game-expansion-icon expansion-icon-venusphase2"></div>
+              <span v-i18n>Venus Phase 2</span><span></span>&nbsp;<a :href="wikiUrls.venusphase2" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
+            </label>
           </div>
 
           <div class="create-game-page-column">
@@ -683,6 +689,15 @@ export default defineComponent({
     },
     'expansions.venus': function(value: boolean) {
       this.solarPhaseOption = value;
+      // Venus Phase 2 needs Venus Next.
+      if (value === false) {
+        this.expansions.venusphase2 = false;
+      }
+    },
+    'expansions.venusphase2': function(value: boolean) {
+      if (value === true) {
+        this.expansions.venus = true;
+      }
     },
     'expansions.turmoil': function(value: boolean) {
       if (value === false) {

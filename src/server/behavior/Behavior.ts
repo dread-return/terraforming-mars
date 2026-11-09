@@ -181,6 +181,15 @@ export type Behavior = {
     logisticRate?: number,
   },
 
+  /** Venus Phase 2: place tiles on the Venus map. Each Venus tile raises Venus 1 step. */
+  venusMap?: {
+    floatingArray?: number,
+    gasMine?: number,
+    habitat?: number,
+    /** Places a city on the Venus map (not a Venus tile, so no Venus raise). */
+    city?: number,
+  },
+
   underworld?: {
     identify?: number | {count: number, claim?: number},
     excavate?: number | {count: Countable, ignorePlacementRestrictions?: boolean},

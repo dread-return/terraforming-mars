@@ -78,6 +78,7 @@ export class GlobalEventDealer {
       solaris: gameOptions.solarisExpansion,
       idesofmars: gameOptions.idesofmarsExpansion,
       nuclear: gameOptions.nuclearExpansion,
+      venusphase2: gameOptions.venusPhase2Expansion,
     };
 
     for (const manifest of ALL_MODULE_MANIFESTS) {

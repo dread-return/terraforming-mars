@@ -193,6 +193,8 @@ export class ApiCreateGame extends Handler {
         solarisExpansion: gameReq.expansions.solaris,
         idesofmarsExpansion: gameReq.expansions.idesofmars,
         nuclearExpansion: gameReq.expansions.nuclear,
+        // Venus Phase 2 needs Venus Next.
+        venusPhase2Expansion: gameReq.expansions.venusphase2 === true && gameReq.expansions.venus === true,
         undoOption: gameReq.undoOption,
         venusNextExtension: gameReq.expansions.venus,
       };

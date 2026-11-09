@@ -7,6 +7,8 @@ import {InputError} from './InputError';
 import {PaymentOptions} from '../../common/inputs/Payment';
 import {Message} from '../../common/logs/Message';
 import {PlayCardMetadata, SelectCardToPlay} from './SelectCardToPlay';
+import {VenusPhase2Expansion} from '../venus2/VenusPhase2Expansion';
+import {SelectProjectCardToPlayModel} from '../../common/models/PlayerInputModel';
 
 export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProjectCard> {
   constructor(
@@ -51,15 +53,39 @@ export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProje
 
     const reserveUnits = details.reserveUnits;
 
-    if (!this.player.canSpend(input.payment, reserveUnits)) {
+    // Venus Phase 2: floaters from any card pay for Venus standard projects.
+    let floaterCredit = 0;
+    let payment = input.payment;
+    if (canPayWith.floaters === true && payment.floaters > 0) {
+      if (payment.floaters > VenusPhase2Expansion.floatersOnCards(this.player)) {
+        throw new InputError('You do not have that many floaters');
+      }
+      floaterCredit = payment.floaters * VenusPhase2Expansion.floaterValue(this.player);
+      payment = {...payment, floaters: 0};
+    }
+
+    if (!this.player.canSpend(payment, reserveUnits)) {
       throw new InputError('You do not have that many resources');
     }
-    const amountPaid = this.player.payingAmount(input.payment, paymentOptions);
+    const amountPaid = this.player.payingAmount(payment, paymentOptions) + floaterCredit;
     const requiredCost = details.overriddenCost ?? card.getAdjustedCost(this.player);
     if (amountPaid < requiredCost) {
       throw new InputError('Did not spend enough to pay for standard project');
     }
     return undefined;
+  }
+
+  public override toModel(player: IPlayer): SelectProjectCardToPlayModel {
+    const model = super.toModel(player);
+    // Venus Phase 2: Venus standard projects take floaters from any card.
+    if (this.cards.some((card) => card.canPayWith(player).floaters === true)) {
+      return {
+        ...model,
+        floaters: VenusPhase2Expansion.floatersOnCards(player),
+        floaterValue: VenusPhase2Expansion.floaterValue(player),
+      };
+    }
+    return model;
   }
 
   // Public for tests

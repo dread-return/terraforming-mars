@@ -23,6 +23,7 @@ import {ICard} from './cards/ICard';
 import {Turmoil} from './turmoil/Turmoil';
 import {AresData} from '../common/ares/AresData';
 import {MoonData} from './moon/MoonData';
+import {VenusMapData} from './venus2/VenusMapData';
 import {SeededRandom} from '../common/utils/Random';
 import {PathfindersData} from './pathfinders/PathfindersData';
 import {GameOptions} from './game/GameOptions';
@@ -100,6 +101,8 @@ export interface IGame extends Logger {
   inTurmoil: boolean;
   aresData: AresData | undefined;
   moonData: MoonData | undefined;
+  /** Venus Phase 2 map. */
+  venusMapData: VenusMapData | undefined;
   pathfindersData: PathfindersData | undefined;
   underworldData: UnderworldData;
 

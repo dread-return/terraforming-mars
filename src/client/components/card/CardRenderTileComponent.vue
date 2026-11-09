@@ -183,6 +183,18 @@ const TILE_CLASSES: Record<TileType, Classes> = {
   [TileType.ESOTERIC_COMMUNITY]: {
     tile: 'card-tile-nu-esoteric-community',
   },
+  [TileType.VENUS_FLOATING_ARRAY]: {
+    tile: 'card-tile-venus-floating-array',
+  },
+  [TileType.VENUS_GAS_MINE]: {
+    tile: 'card-tile-venus-gas-mine',
+  },
+  [TileType.VENUS_HABITAT]: {
+    tile: 'card-tile-venus-habitat',
+  },
+  [TileType.MENAGERIE]: {
+    tile: 'card-tile-vp-menagerie',
+  },
 };
 
 export default defineComponent({

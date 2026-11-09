@@ -836,6 +836,7 @@ describe('Game', () => {
     game.monsInsuranceOwner = undefined;
     game.syndicatePirateRaider = undefined;
     game.moonData = undefined;
+    game.venusMapData = undefined;
     game.pathfindersData = undefined;
     const serialized = game.serialize();
     assertIsJSON(serialized);

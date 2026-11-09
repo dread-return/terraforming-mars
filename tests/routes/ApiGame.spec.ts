@@ -75,6 +75,7 @@ describe('ApiGame', () => {
             'solaris': false,
             'idesofmars': false,
             'nuclear': false,
+            'venusphase2': false,
             'moon': false,
             'pathfinders': false,
             'prelude': false,

@@ -8,6 +8,13 @@ import {PlaceGreeneryTile} from '../deferredActions/PlaceGreeneryTile';
 import {PlaceOceanTile} from '../deferredActions/PlaceOceanTile';
 import {RemoveAnyPlants} from '../deferredActions/RemoveAnyPlants';
 import {MoonExpansion} from '../moon/MoonExpansion';
+import {VenusPhase2Expansion, VenusTileType} from '../venus2/VenusPhase2Expansion';
+import {TileType} from '../../common/TileType';
+import {PlaceVenusTile} from '../venus2/PlaceVenusTile';
+import {NamedVenusSpaces} from '../../common/venus2/NamedVenusSpaces';
+import {SpaceName} from '../../common/boards/SpaceName';
+import {IGame} from '../IGame';
+import {SpaceId} from '../../common/Types';
 import {PlaceMoonHabitatTile} from '../moon/PlaceMoonHabitatTile';
 import {PlaceMoonMineTile} from '../moon/PlaceMoonMineTile';
 import {PlaceMoonRoadTile} from '../moon/PlaceMoonRoadTile';
@@ -56,6 +63,21 @@ function loseable(units: Units, stock: BaseStock, minimums: Units): Units {
     capped[key] = Math.max(0, Math.min(units[key], stock[key] - minimums[key]));
   }
   return capped;
+}
+
+/**
+ * Venus Phase 2: with the Venus map in play, Stratopolis and Maxwell Base place
+ * their cities on the reserved spaces of the Venus map instead of the off-world spaces.
+ */
+function venusMapSpaceFor(game: IGame, spaceId: SpaceId): SpaceId | undefined {
+  if (!VenusPhase2Expansion.isActive(game)) {
+    return undefined;
+  }
+  switch (spaceId) {
+  case SpaceName.STRATOPOLIS: return NamedVenusSpaces.STRATOPOLIS;
+  case SpaceName.MAXWELL_BASE: return NamedVenusSpaces.MAXWELL_BASE;
+  default: return undefined;
+  }
 }
 
 export class Executor implements BehaviorExecutor {
@@ -225,8 +247,13 @@ export class Executor implements BehaviorExecutor {
           return false;
         }
       } else {
-        // Special case for Star Vegas. The space may already be occupied.
-        if (game.board.getSpaceOrThrow(behavior.city.space).tile !== undefined) {
+        const venusSpace = venusMapSpaceFor(game, behavior.city.space);
+        if (venusSpace !== undefined) {
+          if (VenusPhase2Expansion.board(game).getSpaceOrThrow(venusSpace).tile !== undefined) {
+            return false;
+          }
+        } else if (game.board.getSpaceOrThrow(behavior.city.space).tile !== undefined) {
+          // Special case for Star Vegas. The space may already be occupied.
           return false;
         }
       }
@@ -289,6 +316,20 @@ export class Executor implements BehaviorExecutor {
       }
       if ((moon.logisticRate ?? 0) >= MAXIMUM_LOGISTIC_RATE) {
         card.addWarning('maxLogisticRate');
+      }
+    }
+
+    if (behavior.venusMap !== undefined) {
+      if (!VenusPhase2Expansion.isActive(game)) {
+        return false;
+      }
+      const v = behavior.venusMap;
+      const land = (v.floatingArray ?? 0) + (v.habitat ?? 0) + (v.city ?? 0);
+      if (land > 0 && VenusPhase2Expansion.availableSpaces(player, TileType.VENUS_FLOATING_ARRAY).length < land) {
+        return false;
+      }
+      if ((v.gasMine ?? 0) > 0 && VenusPhase2Expansion.availableSpaces(player, TileType.VENUS_GAS_MINE).length < (v.gasMine ?? 0)) {
+        return false;
       }
     }
 
@@ -593,7 +634,11 @@ export class Executor implements BehaviorExecutor {
       }
     }
     if (behavior.city !== undefined) {
-      if (behavior.city.space !== undefined) {
+      const venusSpace = behavior.city.space !== undefined ? venusMapSpaceFor(player.game, behavior.city.space) : undefined;
+      if (venusSpace !== undefined) {
+        // Venus Phase 2: Stratopolis and Maxwell Base go on their reserved spaces on the Venus map.
+        VenusPhase2Expansion.addCity(player, venusSpace, card.name);
+      } else if (behavior.city.space !== undefined) {
         const space = player.game.board.getSpaceOrThrow(behavior.city.space);
         player.game.addCity(player, space);
         if (space.tile !== undefined) { // Should never be undefined
@@ -617,6 +662,19 @@ export class Executor implements BehaviorExecutor {
         title: tile.title ?? message('Select space for ${0} tile', (b) => b.cardName(card.name)),
         adjacencyBonus: tile.adjacencyBonus,
       }));
+    }
+
+    if (behavior.venusMap !== undefined) {
+      const v = behavior.venusMap;
+      const place = (tileType: VenusTileType | TileType.CITY, count: number | undefined) => {
+        for (let i = 0; i < (count ?? 0); i++) {
+          player.game.defer(new PlaceVenusTile(player, tileType, card.name));
+        }
+      };
+      place(TileType.VENUS_FLOATING_ARRAY, v.floatingArray);
+      place(TileType.VENUS_GAS_MINE, v.gasMine);
+      place(TileType.VENUS_HABITAT, v.habitat);
+      place(TileType.CITY, v.city);
     }
 
     if (behavior.turmoil) {
@@ -783,7 +841,11 @@ export class Executor implements BehaviorExecutor {
       tr: tr,
       temperature: behavior.global?.temperature,
       oxygen: steps(behavior.global?.oxygen, behavior.greenery),
-      venus: behavior.global?.venus,
+      venus: (() => {
+        const v = behavior.venusMap;
+        const total = (behavior.global?.venus ?? 0) + (v?.floatingArray ?? 0) + (v?.gasMine ?? 0) + (v?.habitat ?? 0);
+        return total === 0 ? undefined : total;
+      })(),
       oceans: behavior.ocean !== undefined ? (behavior.ocean.count ?? 1) : undefined,
 
       moonHabitat: steps(behavior.moon?.habitatRate, behavior.moon?.habitatTile),

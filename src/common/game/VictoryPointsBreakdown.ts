@@ -12,6 +12,8 @@ export type VictoryPointsBreakdown = {
   moonHabitats: number;
   moonMines: number;
   moonRoads: number;
+  /** Venus Phase 2: Venus Habitats, Gas Mines and cities on Venus, 1 VP per adjacent Floating Array. */
+  venusTiles: number;
   planetaryTracks: number;
   victoryPoints: number;
   total: number;

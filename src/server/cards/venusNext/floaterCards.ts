@@ -44,5 +44,19 @@ export const floaterCards: ReadonlySet<CardName> = new Set([
   CardName.FLYING_CORSAIRS,
   CardName.AIR_TRANSPORT_COMPANY,
   CardName.UNIVERSAL_FIGHTERS,
+
+  // Rob Antilles
+  CardName.CLOUD_CITY_RA,
+
+  // Venus Phase 2
+  CardName.APHRODITE_SHUTTLE_BASE,
+  CardName.ATMO_SEQUESTER,
+  CardName.FLOATER_FACTORY,
+  CardName.IONIC_THRUSTERS_SUPPORT,
+  CardName.ISHTAR_ENERGY_NETWORK,
+  CardName.MODULAR_QUARTERS,
+  CardName.NEGATIVE_MASS_FLUIDS,
+  CardName.NEW_ATHENS,
+  CardName.VENUS_TRADESHIP,
 ]);
 

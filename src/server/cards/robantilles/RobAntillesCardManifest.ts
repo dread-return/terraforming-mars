@@ -59,6 +59,8 @@ import {MiningOutpost} from './MiningOutpost';
 import {ExportsFromAmalthea} from './ExportsFromAmalthea';
 import {InterplanetaryCruise} from './InterplanetaryCruise';
 import {MoonMineralMetropolis} from './MoonMineralMetropolis';
+import {CloudCity} from './CloudCity';
+import {TroposphericCity} from './TroposphericCity';
 import {MeteorShower} from './MeteorShower';
 
 /**
@@ -130,6 +132,9 @@ export const ROB_ANTILLES_CARD_MANIFEST = new ModuleManifest({
     [CardName.EXPORTS_FROM_AMALTHEA]: {Factory: ExportsFromAmalthea},
     [CardName.INTERPLANETARY_CRUISE]: {Factory: InterplanetaryCruise},
     [CardName.MOON_MINERAL_METROPOLIS]: {Factory: MoonMineralMetropolis, compatibility: 'moon'},
+    // Need the Venus map from Venus Phase 2.
+    [CardName.CLOUD_CITY_RA]: {Factory: CloudCity, compatibility: 'venusphase2'},
+    [CardName.TROPOSPHERIC_CITY]: {Factory: TroposphericCity, compatibility: 'venusphase2'},
     [CardName.METEOR_SHOWER]: {Factory: MeteorShower},
   },
 });

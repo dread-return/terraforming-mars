@@ -48,6 +48,8 @@ export type SelectProjectCardToPlayModel = BaseInputModel & {
   paymentOptions: Partial<PaymentOptions>,
   microbes: number;
   floaters: number;
+  /** Venus Phase 2: value of a floater when paying for a Venus standard project (3, or 4 with Negative Mass Fluids). */
+  floaterValue?: number;
   lunaArchivesScience: number;
   seeds: number;
   graphene: number;

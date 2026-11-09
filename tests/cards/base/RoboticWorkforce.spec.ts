@@ -365,6 +365,7 @@ describe('RoboticWorkforce', () => {
     CardName.BEHEMOTH_EXCAVATOR, // False positive
     CardName.GREAT_OCEAN_LABORATORY, // Production comes from its effect, not a production box
     CardName.MAIN_DOCKING_STATION, // Needs its reserved space, which only exists in Nuclear games
+    CardName.OUTSKIRTS, // The energy loss belongs to the neighbouring city's owner, not the player
   ];
 
   describe('test all cards', () => {
@@ -385,7 +386,7 @@ describe('RoboticWorkforce', () => {
       let include = false;
       if ((card.tags.includes(Tag.BUILDING) || card.tags.includes(Tag.WILD)) && card.play !== undefined) {
         // Create new players, set all productions to 2
-        [game, player, player2] = testGame(2, {turmoilExtension: true, aresExtension: true, aresHazards: false, moonExpansion: true, underworldExpansion: true});
+        [game, player, player2] = testGame(2, {turmoilExtension: true, aresExtension: true, aresHazards: false, moonExpansion: true, underworldExpansion: true, venusNextExtension: true, venusPhase2Expansion: true});
 
         player.production.override({megacredits: 2, steel: 2, titanium: 2, plants: 2, energy: 2, heat: 2});
         player2.production.override({megacredits: 2, steel: 2, titanium: 2, plants: 2, energy: 2, heat: 2});

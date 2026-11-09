@@ -8,6 +8,7 @@ import {Phase} from '../Phase';
 import {AresData} from '../ares/AresData';
 import {SpaceModel} from './SpaceModel';
 import {MoonModel} from './MoonModel';
+import {VenusMapModel} from './VenusMapModel';
 import {PathfindersModel} from './PathfindersModel';
 import {SpectatorId} from '../Types';
 import {ColonyName} from '../colonies/ColonyName';
@@ -47,6 +48,8 @@ export type GameModel = {
   lastSoloGeneration: number,
   milestones: ReadonlyArray<ClaimedMilestoneModel>;
   moon: MoonModel | undefined;
+  /** Venus Phase 2 map. */
+  venusMap?: VenusMapModel;
   name: string;
   oceans: number;
   oxygenLevel: number;

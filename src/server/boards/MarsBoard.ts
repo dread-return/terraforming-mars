@@ -91,16 +91,34 @@ export class MarsBoard extends Board {
     this.max = max;
   }
 
+  /**
+   * Venus Phase 2: the Venus map. Cities on it count as cities in space (off Mars).
+   * Set by the game when the Venus map is in play.
+   */
+  public venusMap?: Board;
+
+  private static isOnVenusMap(space: Space): boolean {
+    return space.id.startsWith('v');
+  }
+
   public getCitiesOffMars(player?: IPlayer): Array<Space> {
-    return this.getCities(player).filter((space) => space.spaceType === SpaceType.COLONY);
+    return this.getCities(player).filter((space) => space.spaceType === SpaceType.COLONY || MarsBoard.isOnVenusMap(space));
   }
 
   public getCitiesOnMars(player?: IPlayer): Array<Space> {
-    return this.getCities(player).filter((space) => space.spaceType !== SpaceType.COLONY);
+    return this.getCities(player).filter((space) => space.spaceType !== SpaceType.COLONY && !MarsBoard.isOnVenusMap(space));
+  }
+
+  /** Cities on the Venus map have no neighbours on Mars. */
+  public override getAdjacentSpaces(space: Space): ReadonlyArray<Space> {
+    if (MarsBoard.isOnVenusMap(space)) {
+      return [];
+    }
+    return super.getAdjacentSpaces(space);
   }
 
   public getCities(player?: IPlayer): Array<Space> {
-    let cities = this.spaces.filter(Board.isCitySpace);
+    let cities = [...this.spaces.filter(Board.isCitySpace), ...(this.venusMap?.spaces.filter(Board.isCitySpace) ?? [])];
     if (player !== undefined) {
       cities = cities.filter(Board.ownedBy(player));
     }
@@ -348,7 +366,7 @@ export class MarsBoard extends Board {
       return true;
     }
     // Rob Antilles tiles that go on top of an existing tile.
-    if (space.tile.tileType === TileType.GREENERY && (newTile.tileType === TileType.SUBURBS || newTile.tileType === TileType.INVAK_CITY || newTile.tileType === TileType.EVACUATION_ZONE)) {
+    if (space.tile.tileType === TileType.GREENERY && (newTile.tileType === TileType.SUBURBS || newTile.tileType === TileType.INVAK_CITY || newTile.tileType === TileType.EVACUATION_ZONE || newTile.tileType === TileType.MENAGERIE)) {
       return true;
     }
     if (space.tile.tileType === TileType.CITY && (newTile.tileType === TileType.METROPOLIS || newTile.tileType === TileType.PARADISE_CITY)) {

@@ -39,6 +39,7 @@
             </div>
           </div>
         </div>
+        <div v-else-if="requirement.display === 'venusHabitat'" class="card-tile card-tile-venus-habitat tile-size--req"></div>
         <template v-else-if="requirement.display === 'generation'">
           generation&nbsp;{{ count }}
         </template>

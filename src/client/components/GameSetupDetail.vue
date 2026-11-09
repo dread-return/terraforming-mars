@@ -22,6 +22,7 @@
         <a v-if="gameOptions.expansions.solaris" :href="rulebookUrls.solaris" class="tooltip" data-tooltip="Solaris rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-solaris"></div></a>
         <a v-if="gameOptions.expansions.idesofmars" :href="rulebookUrls.idesofmars" class="tooltip" data-tooltip="Ides of Mars rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-idesofmars"></div></a>
         <a v-if="gameOptions.expansions.nuclear" :href="rulebookUrls.nuclear" class="tooltip" data-tooltip="Nuclear rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-nuclear"></div></a>
+        <a v-if="gameOptions.expansions.venusphase2" :href="rulebookUrls.venusphase2" class="tooltip" data-tooltip="Venus Phase 2 rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-venusphase2"></div></a>
       </li>
 
       <li><div class="setup-item" v-i18n>Board:</div>

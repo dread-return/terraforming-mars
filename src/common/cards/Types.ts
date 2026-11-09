@@ -33,6 +33,8 @@ export type StandardProjectCanPayWith = {
   titanium?: boolean,
   seeds?: boolean,
   kuiperAsteroids?: boolean,
+  /** Venus Phase 2: floaters from any of your cards (Venus standard projects). */
+  floaters?: boolean,
 }
 
 /**

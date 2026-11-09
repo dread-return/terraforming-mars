@@ -21,7 +21,7 @@
         </span>
         <span v-else-if="data.type === LogMessageDataType.SPACE" class="log-space-id" @click.prevent="$emit('spaceClicked', data.value)">
           <svg width="20" height="14" viewBox="0 0 28 38">
-            <circle cx="14" cy="19" r="16" stroke="black" stroke-width="1" transform="translate(0, 2)" :fill="data.value.startsWith('m') ? 'gray' : '#b7410e'" />
+            <circle cx="14" cy="19" r="16" stroke="black" stroke-width="1" transform="translate(0, 2)" :fill="data.value.startsWith('m') ? 'gray' : data.value.startsWith('v') ? '#d9b44a' : '#b7410e'" />
           </svg>
           {{ spaceName(data.value) }}
         </span>

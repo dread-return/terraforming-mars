@@ -196,9 +196,11 @@ export default defineComponent({
           return canPayWith.seeds === true;
         case 'kuiperAsteroids':
           return canPayWith.kuiperAsteroids === true;
+        case 'floaters':
+          // Venus Phase 2: Venus standard projects take floaters from any card.
+          return canPayWith.floaters === true;
         case 'plants':
         case 'microbes':
-        case 'floaters':
         case 'lunaArchivesScience':
         case 'graphene':
           return false;

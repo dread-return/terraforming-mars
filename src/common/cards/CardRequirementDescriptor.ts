@@ -32,9 +32,9 @@ import {RequirementType} from './RequirementType';
  *
  * offWorldCity: you own a city off Mars. allOceans: every ocean is placed.
  * cardVP: you have at least `count` VP on your cards. generation: it is generation `count` or later.
- * plantProduction: you have plant production.
+ * plantProduction: you have plant production. venusHabitat: you have a Venus Habitat (Venus Phase 2).
  */
-export type DisplayRequirement = 'offWorldCity' | 'allOceans' | 'cardVP' | 'generation' | 'plantProduction';
+export type DisplayRequirement = 'offWorldCity' | 'allOceans' | 'cardVP' | 'generation' | 'plantProduction' | 'venusHabitat';
 
 export type CardRequirementDescriptor = {
   tag?: Tag,

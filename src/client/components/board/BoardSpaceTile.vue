@@ -70,6 +70,10 @@ const tileTypeToCssClass: Record<TileType, string> = {
   [TileType.EVACUATION_ZONE]: 'nu-evacuation-zone',
   [TileType.RADIOACTIVE_DEFLUX]: 'nu-radioactive-deflux',
   [TileType.ESOTERIC_COMMUNITY]: 'nu-esoteric-community',
+  [TileType.VENUS_FLOATING_ARRAY]: 'venus-floating-array',
+  [TileType.VENUS_GAS_MINE]: 'venus-gas-mine',
+  [TileType.VENUS_HABITAT]: 'venus-habitat',
+  [TileType.MENAGERIE]: 'vp-menagerie',
 };
 
 const tileTypeToCssClassAresOverride = new Map<TileType, string>([
@@ -120,6 +124,10 @@ const descriptions: Record<TileType, string> = {
   [TileType.EVACUATION_ZONE]: 'Evacuation Zone. Placing a tile next to it costs 1 plant and 1 microbe.',
   [TileType.RADIOACTIVE_DEFLUX]: 'Radioactive Deflux. Placing a tile next to it costs 1 animal.',
   [TileType.ESOTERIC_COMMUNITY]: 'Esoteric Community: counts as a city. 1 VP per adjacent special tile. Adjacency bonus: 2 M€.',
+  [TileType.VENUS_FLOATING_ARRAY]: 'Floating Array: 1 VP for each adjacent Venus Habitat, Gas Mine or city.',
+  [TileType.VENUS_GAS_MINE]: 'Gas Mine: 1 VP per adjacent Floating Array',
+  [TileType.VENUS_HABITAT]: 'Venus Habitat: 1 VP per adjacent Floating Array',
+  [TileType.MENAGERIE]: 'Menagerie. Adjacency bonus: 1 animal.',
   [TileType.SEDIMENT]: 'Sediment: any player may place a city here, ignoring placement rules, and gain 3 M€. Adjacency bonus: 1 titanium.',
 };
 

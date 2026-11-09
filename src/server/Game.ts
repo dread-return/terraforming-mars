@@ -50,6 +50,8 @@ import {GlobalParameter} from '../common/GlobalParameter';
 import {AresSetup} from './ares/AresSetup';
 import {MoonData} from './moon/MoonData';
 import {MoonExpansion} from './moon/MoonExpansion';
+import {VenusMapData} from './venus2/VenusMapData';
+import {VenusPhase2Expansion} from './venus2/VenusPhase2Expansion';
 import {TurmoilHandler} from './turmoil/TurmoilHandler';
 import {SeededRandom, UnseededRandom} from '../common/utils/Random';
 import {chooseMilestonesAndAwards} from './ma/MilestoneAwardSelector';
@@ -165,6 +167,7 @@ export class Game implements IGame, Logger {
   public turmoil: Turmoil | undefined;
   public aresData: AresData | undefined;
   public moonData: MoonData | undefined;
+  public venusMapData: VenusMapData | undefined;
   public pathfindersData: PathfindersData | undefined;
   public underworldData: UnderworldData = UnderworldExpansion.initializeGameWithoutUnderworld();
   public inTurmoil: boolean = false;
@@ -303,6 +306,7 @@ export class Game implements IGame, Logger {
         solaris: partialOptions.solarisExpansion ?? false,
         idesofmars: partialOptions.idesofmarsExpansion ?? false,
         nuclear: partialOptions.nuclearExpansion ?? false,
+        venusphase2: partialOptions.venusPhase2Expansion ?? false,
       };
     }
     const gameOptions = {...DEFAULT_GAME_OPTIONS, ...partialOptions};
@@ -403,6 +407,11 @@ export class Game implements IGame, Logger {
 
     if (gameOptions.moonExpansion) {
       game.moonData = MoonExpansion.initialize(gameOptions, rng);
+    }
+
+    if (gameOptions.venusPhase2Expansion && gameOptions.venusNextExtension) {
+      game.venusMapData = VenusPhase2Expansion.initialize();
+      game.board.venusMap = game.venusMapData.board;
     }
 
     if (gameOptions.pathfindersExpansion) {
@@ -530,6 +539,7 @@ export class Game implements IGame, Logger {
       lastSaveId: this.lastSaveId,
       milestones: this.milestones.map(toName),
       moonData: MoonData.serialize(this.moonData),
+      venusMapData: VenusMapData.serialize(this.venusMapData),
       name: this.name,
       oxygenLevel: this.oxygenLevel,
       passedPlayers: Array.from(this.passedPlayers),
@@ -1707,6 +1717,10 @@ export class Game implements IGame, Logger {
         case CardName.MOON_MINE_STANDARD_PROJECT_VARIANT_1:
         case CardName.MOON_ROAD_STANDARD_PROJECT_VARIANT_1:
           return gameOptions.moonStandardProjectVariant1 === true;
+        case CardName.FLOATING_ARRAY_STANDARD_PROJECT:
+        case CardName.GAS_MINE_STANDARD_PROJECT:
+        case CardName.CLOUD_CITY_STANDARD_PROJECT:
+          return gameOptions.venusPhase2Expansion === true && gameOptions.venusNextExtension === true;
         case CardName.EXCAVATE_STANDARD_PROJECT:
           return gameOptions.underworldExpansion === true;
         case CardName.COLLUSION_STANDARD_PROJECT:
@@ -1825,6 +1839,11 @@ export class Game implements IGame, Logger {
     // Reload moon elements if needed
     if (d.moonData !== undefined && gameOptions.moonExpansion === true) {
       game.moonData = MoonData.deserialize(d.moonData, players);
+    }
+
+    if (d.venusMapData !== undefined && gameOptions.venusPhase2Expansion === true) {
+      game.venusMapData = VenusMapData.deserialize(d.venusMapData, players);
+      game.board.venusMap = game.venusMapData.board;
     }
 
     if (d.pathfindersData !== undefined && gameOptions.pathfindersExpansion === true) {

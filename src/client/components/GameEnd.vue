@@ -65,6 +65,7 @@
               <th v-if="game.moon !== undefined"><div class="table-moon-road-tile"></div></th>
               <th v-if="game.moon !== undefined"><div class="table-moon-habitat-tile"></div></th>
               <th v-if="game.moon !== undefined"><div class="table-moon-mine-tile"></div></th>
+              <th v-if="game.venusMap !== undefined"><div class="table-venus-map-tile tooltip tooltip-top" :data-tooltip="$t('Venus Habitats, Gas Mines and cities on Venus')"></div></th>
               <th v-if="game.pathfinders !== undefined"><div class="table-planetary-track"></div></th>
               <th><div class="vp">VP</div></th>
               <th v-if="game.gameOptions.escapeVelocity" class="clock-icon tooltip tooltip-top" :data-tooltip="$t('Escape Velocity penalty')">&#x23F3;</th>
@@ -90,6 +91,7 @@
               <td v-if="game.moon !== undefined">{{ p.victoryPointsBreakdown.moonRoads }}</td>
               <td v-if="game.moon !== undefined">{{ p.victoryPointsBreakdown.moonHabitats }}</td>
               <td v-if="game.moon !== undefined">{{ p.victoryPointsBreakdown.moonMines }}</td>
+              <td v-if="game.venusMap !== undefined">{{ p.victoryPointsBreakdown.venusTiles }}</td>
               <td v-if="game.pathfinders !== undefined"> {{ p.victoryPointsBreakdown.planetaryTracks }}</td>
               <td>{{ p.victoryPointsBreakdown.victoryPoints }}</td>
               <td v-if="game.gameOptions.escapeVelocity">{{ p.victoryPointsBreakdown.escapeVelocity }}</td>
@@ -200,6 +202,7 @@
             @toggleTileView="cycleTileView()" />
           <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" :alt="game.gameOptions.altContaminationTrack" />
           <MoonBoard v-if="game.moon !== undefined" :model="game.moon" :tileView="tileView" />
+          <VenusMapBoard v-if="game.venusMap !== undefined" :model="game.venusMap" :tileView="tileView" />
           <div v-if="game.gameOptions.expansions.pathfinders">
             <PlanetaryTracks :tracks="game.pathfinders" :gameOptions="game.gameOptions" />
           </div>
@@ -227,6 +230,7 @@ import {PublicPlayerModel, ViewModel} from '@/common/models/PlayerModel';
 import Board from '@/client/components/Board.vue';
 import ContaminationTrack from '@/client/components/nuclear/ContaminationTrack.vue';
 import MoonBoard from '@/client/components/moon/MoonBoard.vue';
+import VenusMapBoard from '@/client/components/venus2/VenusMapBoard.vue';
 import {nextTileView, TileView} from '@/client/components/board/TileView';
 import PlanetaryTracks from '@/client/components/pathfinders/PlanetaryTracks.vue';
 import DeltaProjectBoard from '@/client/components/delta/DeltaProjectBoard.vue';
@@ -370,6 +374,7 @@ export default defineComponent({
     LogPanel,
     AppButton,
     MoonBoard,
+    VenusMapBoard,
     PlanetaryTracks,
     DeltaProjectBoard,
     VictoryPointChart,

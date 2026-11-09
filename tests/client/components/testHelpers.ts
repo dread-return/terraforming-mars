@@ -179,6 +179,7 @@ export function fakePublicPlayerModel(overrides?: RecursivePartial<PublicPlayerM
       moonHabitats: 0,
       moonMines: 0,
       moonRoads: 0,
+      venusTiles: 0,
       planetaryTracks: 0,
       victoryPoints: 0,
       total: 20,

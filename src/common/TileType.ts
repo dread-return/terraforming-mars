@@ -79,6 +79,12 @@ export enum TileType {
     EVACUATION_ZONE, // 53
     RADIOACTIVE_DEFLUX, // 54
     ESOTERIC_COMMUNITY, // 55
+
+    // Venus Phase 2
+    VENUS_FLOATING_ARRAY, // 56
+    VENUS_GAS_MINE, // 57
+    VENUS_HABITAT, // 58
+    MENAGERIE, // 59
   }
 
 export const tileTypeToString: Record<TileType, string> = {
@@ -139,6 +145,10 @@ export const tileTypeToString: Record<TileType, string> = {
   [TileType.EVACUATION_ZONE]: 'Evacuation Zone',
   [TileType.RADIOACTIVE_DEFLUX]: 'Radioactive Deflux',
   [TileType.ESOTERIC_COMMUNITY]: 'Esoteric Community',
+  [TileType.VENUS_FLOATING_ARRAY]: 'Floating Array',
+  [TileType.VENUS_GAS_MINE]: 'Gas Mine',
+  [TileType.VENUS_HABITAT]: 'Venus Habitat',
+  [TileType.MENAGERIE]: 'Menagerie',
 } as const;
 
 export const HAZARD_TILES = new Set([TileType.DUST_STORM_MILD, TileType.DUST_STORM_SEVERE, TileType.EROSION_MILD, TileType.EROSION_SEVERE]);
@@ -151,7 +161,10 @@ export const BASE_OCEAN_TILES = new Set([TileType.OCEAN, TileType.WETLANDS]);
 export const GREENERY_TILES = new Set([TileType.GREENERY, TileType.WETLANDS, TileType.INVAK_CITY, TileType.SUBURBS]);
 
 /** Rob Antilles special tiles. */
-export const ROB_ANTILLES_TILES = new Set([TileType.SUBURBS, TileType.HARBOR, TileType.METROPOLIS, TileType.PARADISE_CITY, TileType.ANIMAL_DOME, TileType.PUMPING_HUB, TileType.SEDIMENT, TileType.INVAK_CITY, TileType.ESOTERIC_COMMUNITY]);
+export const ROB_ANTILLES_TILES = new Set([TileType.SUBURBS, TileType.HARBOR, TileType.METROPOLIS, TileType.PARADISE_CITY, TileType.ANIMAL_DOME, TileType.PUMPING_HUB, TileType.SEDIMENT, TileType.INVAK_CITY, TileType.ESOTERIC_COMMUNITY, TileType.MENAGERIE]);
+
+/** Venus Phase 2 tiles, placed on the Venus map. */
+export const VENUS_TILES = new Set([TileType.VENUS_FLOATING_ARRAY, TileType.VENUS_GAS_MINE, TileType.VENUS_HABITAT]);
 
 // Nuclear (GIGA) red special tiles: placing a tile next to one costs the placer resources.
 export const NUCLEAR_MALUS_TILES = new Set([TileType.NUCLEAR_ZONE, TileType.EVACUATION_ZONE, TileType.RADIOACTIVE_DEFLUX]);

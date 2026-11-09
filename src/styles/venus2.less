@@ -1,0 +1,154 @@
+// Venus Phase 2: the Venus map (same layout as The Moon).
+.venus-map-board {
+  position: relative;
+  width: 490px;
+  height: 340px;
+  margin: 85px 0 0 0;
+  background: url(./assets/venus2/board.png) no-repeat;
+
+  .venus-map-title {
+    position: absolute;
+    left: 6px;
+    top: 4px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #f3d9a4;
+    text-shadow: 1px 1px 2px #000;
+  }
+
+  .venus-map-legend {
+    position: absolute;
+    left: 6px;
+    bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #f3d9a4;
+    text-shadow: 1px 1px 2px #000;
+  }
+
+  .venus-map-legend-hex {
+    width: 23px;
+    height: 25px;
+    background-size: 23px 25px !important;
+  }
+
+  .venus-map-space-type-gas {
+    background: url(./assets/venus2/hex_gas.png);
+  }
+
+  .venus-map-space-type-other {
+    background: url(./assets/venus2/hex_other.png);
+  }
+
+  .venus-map-label {
+    position: absolute;
+    z-index: 2;
+    width: 70px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 11px;
+    text-align: center;
+    color: #222;
+    text-shadow: 0 0 3px #f3e6c4, 0 0 2px #f3e6c4;
+    pointer-events: none;
+  }
+  // Centred on v12 (row 3) and v25 (row 5), using the space positions below.
+  .venus-map-label-v12 { left: 183px; top: 126px; }
+  .venus-map-label-v25 { left: 281px; top: 204px; }
+
+  .venus-map-space-v01 { margin: -57px 0 0 53px; }
+  .venus-map-space-v02 { margin: -57px 0 0 102px; }
+  .venus-map-space-v03 { margin: -57px 0 0 151px; }
+  .venus-map-space-v04 { margin: -57px 0 0 200px; }
+  .venus-map-space-v05 { margin: -18px 0 0 29px; }
+  .venus-map-space-v06 { margin: -18px 0 0 78px; }
+  .venus-map-space-v07 { margin: -18px 0 0 127px; }
+  .venus-map-space-v08 { margin: -18px 0 0 176px; }
+  .venus-map-space-v09 { margin: -18px 0 0 225px; }
+  .venus-map-space-v10 { margin: 21px 0 0 4px; }
+  .venus-map-space-v11 { margin: 21px 0 0 53px; }
+  .venus-map-space-v12 { margin: 21px 0 0 102px; }
+  .venus-map-space-v13 { margin: 21px 0 0 151px; }
+  .venus-map-space-v14 { margin: 21px 0 0 200px; }
+  .venus-map-space-v15 { margin: 21px 0 0 250px; }
+  .venus-map-space-v16 { margin: 60px 0 0 29px; }
+  .venus-map-space-v17 { margin: 60px 0 0 78px; }
+  .venus-map-space-v18 { margin: 60px 0 0 127px; }
+  .venus-map-space-v19 { margin: 60px 0 0 176px; }
+  .venus-map-space-v20 { margin: 60px 0 0 225px; }
+  .venus-map-space-v21 { margin: 99px 0 0 4px; }
+  .venus-map-space-v22 { margin: 99px 0 0 53px; }
+  .venus-map-space-v23 { margin: 99px 0 0 102px; }
+  .venus-map-space-v24 { margin: 99px 0 0 151px; }
+  .venus-map-space-v25 { margin: 99px 0 0 200px; }
+  .venus-map-space-v26 { margin: 99px 0 0 250px; }
+  .venus-map-space-v27 { margin: 138px 0 0 29px; }
+  .venus-map-space-v28 { margin: 138px 0 0 78px; }
+  .venus-map-space-v29 { margin: 138px 0 0 127px; }
+  .venus-map-space-v30 { margin: 138px 0 0 176px; }
+  .venus-map-space-v31 { margin: 138px 0 0 225px; }
+  .venus-map-space-v32 { margin: 177px 0 0 53px; }
+  .venus-map-space-v33 { margin: 177px 0 0 102px; }
+  .venus-map-space-v34 { margin: 177px 0 0 151px; }
+  .venus-map-space-v35 { margin: 177px 0 0 200px; }
+}
+
+.board-space-tile--venus-floating-array {
+  background: url(./assets/venus2/floating_array.png);
+  background-size: 44px 51px;
+}
+
+.board-space-tile--venus-gas-mine {
+  background: url(./assets/venus2/gas_mine.png);
+  background-size: 44px 51px;
+}
+
+.board-space-tile--venus-habitat {
+  background: url(./assets/venus2/venus_habitat.png);
+  background-size: 44px 51px;
+}
+
+.board-space-tile--vp-menagerie {
+  background: url(./assets/venus2/menagerie.png);
+  width: 44px;
+  height: 50px;
+  background-size: 44px 50px;
+}
+
+.card-tile-venus-floating-array, .card-tile-venus-gas-mine, .card-tile-venus-habitat, .card-tile-vp-menagerie {
+  filter: none;
+  width: 44px;
+  height: 51px;
+  background-size: 44px 51px;
+}
+
+.card-tile-venus-floating-array {
+  background-image: url(./assets/venus2/floating_array.png);
+}
+
+.card-tile-venus-gas-mine {
+  background-image: url(./assets/venus2/gas_mine.png);
+}
+
+.card-tile-venus-habitat {
+  background-image: url(./assets/venus2/venus_habitat.png);
+  &.tile-size--req {
+    width: 22px;
+    height: 25px;
+    background-size: 22px 25px;
+  }
+}
+
+.card-tile-vp-menagerie {
+  background-image: url(./assets/venus2/menagerie.png);
+}
+
+.table-venus-map-tile {
+  width: 30px;
+  height: 34px;
+  margin: auto;
+  background: url(./assets/venus2/venus_habitat.png) no-repeat;
+  background-size: 30px 34px;
+}

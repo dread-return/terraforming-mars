@@ -94,6 +94,9 @@ export const PaymentWidgetMixin = defineComponent({
         return this.playerView.thisPlayer.steelValue;
       case 'titanium':
         return this.getTitaniumResourceRate();
+      case 'floaters':
+        // Venus Phase 2: floaters paying for Venus standard projects (Negative Mass Fluids makes them worth more).
+        return (this.playerinput.type === 'projectCard' ? this.playerinput.floaterValue : undefined) ?? DEFAULT_PAYMENT_VALUES[unit];
       default:
         return DEFAULT_PAYMENT_VALUES[unit];
       }

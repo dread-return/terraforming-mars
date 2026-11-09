@@ -1,3 +1,4 @@
+import {SerializedVenusMapData} from './venus2/VenusMapData';
 import {Phase} from '../common/Phase';
 import {SerializedClaimedMilestone} from './milestones/ClaimedMilestone';
 import {SerializedFundedAward} from './awards/FundedAward';
@@ -49,6 +50,7 @@ export type SerializedGame = {
     lastSaveId: number;
     milestones: Array<MilestoneName>;
     moonData: SerializedMoonData | undefined;
+    venusMapData?: SerializedVenusMapData;
     name: string;
     nomadSpace: SpaceId | undefined;
     pathfindersData: SerializedPathfindersData | undefined;

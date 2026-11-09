@@ -5,6 +5,8 @@ import {SpaceBonus} from '../../common/boards/SpaceBonus';
 import {SpaceType} from '../../common/boards/SpaceType';
 import {NamedVenusSpaces} from '../../common/venus2/NamedVenusSpaces';
 import {SpaceId, isSpaceId, safeCast} from '../../common/Types';
+import {Random} from '../../common/utils/Random';
+import {inplaceShuffle} from '../utils/shuffle';
 
 const RESERVED: ReadonlyArray<SpaceId> = [NamedVenusSpaces.STRATOPOLIS, NamedVenusSpaces.MAXWELL_BASE];
 const TILES_PER_ROW = [4, 5, 6, 5, 6, 5, 4];
@@ -52,7 +54,11 @@ export class VenusBoard extends Board {
     return this.available(player, SpaceType.VENUS_GAS_MINE);
   }
 
-  public static newInstance(): VenusBoard {
+  /**
+   * @param shuffle 'Randomize tiles' was ticked. The yellow areas move with their heat
+   * bonuses, so Gas Mines still go on heat spaces; the reserved spaces stay put.
+   */
+  public static newInstance(shuffle?: Random): VenusBoard {
     const HEAT = SpaceBonus.HEAT;
     const ENERGY = SpaceBonus.ENERGY;
     const CARD = SpaceBonus.DRAW_CARD;
@@ -65,7 +71,21 @@ export class VenusBoard extends Board {
     b.row().land(ENERGY, ENERGY).land(ENERGY).gas(HEAT, HEAT).land(ENERGY).land(/* Maxwell Base */).gas(HEAT, HEAT);
     b.row().land().gas(HEAT).gas(HEAT).land(ENERGY).gas(HEAT, HEAT);
     b.row().land(ENERGY, CARD).gas(HEAT).land().land(CARD, CARD);
-    return new VenusBoard(b.build());
+    const spaces = b.build();
+    if (shuffle !== undefined) {
+      VenusBoard.shuffle(spaces, shuffle);
+    }
+    return new VenusBoard(spaces);
+  }
+
+  private static shuffle(spaces: Array<Space>, rng: Random) {
+    const movable = spaces.filter((space) => !RESERVED.includes(space.id));
+    const layouts = movable.map((space) => ({spaceType: space.spaceType, bonus: space.bonus}));
+    inplaceShuffle(layouts, rng);
+    movable.forEach((space, idx) => {
+      space.spaceType = layouts[idx].spaceType;
+      space.bonus = layouts[idx].bonus;
+    });
   }
 }
 

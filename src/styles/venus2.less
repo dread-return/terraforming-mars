@@ -110,14 +110,12 @@
   background-size: 44px 51px;
 }
 
+// Menagerie reuses the Ares Ecological Zone tile.
 .board-space-tile--vp-menagerie {
-  background: url(./assets/venus2/menagerie.png);
-  width: 44px;
-  height: 50px;
-  background-size: 44px 50px;
+  .board-space-tile--ecological-zone-ares();
 }
 
-.card-tile-venus-floating-array, .card-tile-venus-gas-mine, .card-tile-venus-habitat, .card-tile-vp-menagerie {
+.card-tile-venus-floating-array, .card-tile-venus-gas-mine, .card-tile-venus-habitat {
   filter: none;
   width: 44px;
   height: 51px;
@@ -142,7 +140,7 @@
 }
 
 .card-tile-vp-menagerie {
-  background-image: url(./assets/venus2/menagerie.png);
+  .card-tile-ecological-zone-ares();
 }
 
 .table-venus-map-tile {

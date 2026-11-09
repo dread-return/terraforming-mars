@@ -15,6 +15,8 @@ import {LogHelper} from '../LogHelper';
 import {VenusBoard} from './VenusBoard';
 import {VenusMapData} from './VenusMapData';
 import {sum} from '../../common/utils/utils';
+import {GameOptions} from '../game/GameOptions';
+import {Random} from '../../common/utils/Random';
 
 /** Tile types that can be placed on the Venus map, plus cities placed there by cards. */
 export type VenusTileType = TileType.VENUS_FLOATING_ARRAY | TileType.VENUS_GAS_MINE | TileType.VENUS_HABITAT;
@@ -25,8 +27,9 @@ export const VENUS_FLOATER_VALUE = 3;
 export class VenusPhase2Expansion {
   private constructor() {}
 
-  public static initialize(): VenusMapData {
-    return {board: VenusBoard.newInstance()};
+  public static initialize(gameOptions?: GameOptions, rng?: Random): VenusMapData {
+    const shuffle = gameOptions?.shuffleMapOption === true ? rng : undefined;
+    return {board: VenusBoard.newInstance(shuffle)};
   }
 
   public static isActive(game: IGame): boolean {

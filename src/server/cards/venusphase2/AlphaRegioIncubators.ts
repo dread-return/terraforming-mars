@@ -31,7 +31,6 @@ export class AlphaRegioIncubators extends Card implements IProjectCard {
             eb.tag(Tag.VENUS).startEffect.resource(CardResource.MICROBE);
           }).br;
           b.tile(TileType.VENUS_FLOATING_ARRAY).venus(1);
-          b.vpText('1 VP for every 4 microbes on this card.');
         }),
         description: 'Place a Floating Array on Venus and raise Venus 1 step.',
       },

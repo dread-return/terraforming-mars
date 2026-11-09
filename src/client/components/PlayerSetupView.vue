@@ -93,6 +93,7 @@
 
         <a name="moonBoard" class="player_home_anchor"></a>
         <MoonBoard v-if="game.moon !== undefined" :model="game.moon" :tileView="tileView" />
+        <VenusMapBoard v-if="game.venusMap !== undefined" :model="game.venusMap" :tileView="tileView" />
         <DeltaProjectBoard v-if="game.gameOptions.expansions.deltaProject" :players="playerView.players" />
       </div>
     </details>
@@ -112,6 +113,7 @@ import Awards from '@/client/components/Awards.vue';
 import WaitingFor from '@/client/components/WaitingFor.vue';
 import Turmoil from '@/client/components/turmoil/Turmoil.vue';
 import MoonBoard from '@/client/components/moon/MoonBoard.vue';
+import VenusMapBoard from '@/client/components/venus2/VenusMapBoard.vue';
 import PlanetaryTracks from '@/client/components/pathfinders/PlanetaryTracks.vue';
 import {playerColorClass} from '@/common/utils/utils';
 import {Phase} from '@/common/Phase';
@@ -155,6 +157,7 @@ export default defineComponent({
     Turmoil,
     PlanetaryTracks,
     MoonBoard,
+    VenusMapBoard,
   },
   methods: {
     getPlayerCssForTurnOrder: (

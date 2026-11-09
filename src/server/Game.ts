@@ -410,7 +410,7 @@ export class Game implements IGame, Logger {
     }
 
     if (gameOptions.venusPhase2Expansion && gameOptions.venusNextExtension) {
-      game.venusMapData = VenusPhase2Expansion.initialize();
+      game.venusMapData = VenusPhase2Expansion.initialize(gameOptions, rng);
       game.board.venusMap = game.venusMapData.board;
     }
 

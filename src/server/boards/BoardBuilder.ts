@@ -9,6 +9,7 @@ import {GameOptions} from '../game/GameOptions';
 import {expansionSpaceColonies} from '../../common/boards/expansionSpaceColonies';
 import {CardName} from '../../common/cards/CardName';
 import {numeric} from '../../common/utils/Ordering';
+import {VENUS_MAP_CITY_SPACES} from '../../common/venus2/NamedVenusSpaces';
 
 function colonySpace(id: SpaceId): Space {
   return {id, spaceType: SpaceType.COLONY, x: -1, y: -1, bonus: [], edge: false};
@@ -98,8 +99,14 @@ export class BoardBuilder {
       }
     }
 
+    // Venus Phase 2 moves these cities onto the Venus map.
+    const venusMapInPlay = this.gameOptions.venusPhase2Expansion && this.gameOptions.venusNextExtension;
+
     // Include space colonies if the expansion is included, or if the card is included.
     for (const entry of expansionSpaceColonies) {
+      if (venusMapInPlay && VENUS_MAP_CITY_SPACES.includes(entry.name)) {
+        continue;
+      }
       // Special case for Venera Base when Pathfinders is included, but Turmoil or Venus is not
       if (entry.card === CardName.VENERA_BASE) {
         const pathfindersTurmoilVenusInPlay = this.gameOptions.pathfindersExpansion && this.gameOptions.turmoilExtension && this.gameOptions.venusNextExtension;

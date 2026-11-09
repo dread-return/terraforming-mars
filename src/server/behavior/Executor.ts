@@ -66,16 +66,20 @@ function loseable(units: Units, stock: BaseStock, minimums: Units): Units {
 }
 
 /**
- * Venus Phase 2: with the Venus map in play, Stratopolis and Maxwell Base place
- * their cities on the reserved spaces of the Venus map instead of the off-world spaces.
+ * Venus Phase 2: with the Venus map in play, these cards place their cities on the Venus map
+ * instead of their off-world spaces. Stratopolis and Maxwell Base have reserved spaces there;
+ * Dyson Screens and Venera Base go on any space that isn't a Gas Mine area.
  */
-function venusMapSpaceFor(game: IGame, spaceId: SpaceId): SpaceId | undefined {
+function venusMapSpaceFor(game: IGame, spaceId: SpaceId): SpaceId | 'any' | undefined {
   if (!VenusPhase2Expansion.isActive(game)) {
     return undefined;
   }
   switch (spaceId) {
   case SpaceName.STRATOPOLIS: return NamedVenusSpaces.STRATOPOLIS;
   case SpaceName.MAXWELL_BASE: return NamedVenusSpaces.MAXWELL_BASE;
+  case SpaceName.DYSON_SCREENS:
+  case SpaceName.VENERA_BASE:
+    return 'any';
   default: return undefined;
   }
 }
@@ -248,7 +252,11 @@ export class Executor implements BehaviorExecutor {
         }
       } else {
         const venusSpace = venusMapSpaceFor(game, behavior.city.space);
-        if (venusSpace !== undefined) {
+        if (venusSpace === 'any') {
+          if (VenusPhase2Expansion.availableSpaces(player, TileType.CITY).length === 0) {
+            return false;
+          }
+        } else if (venusSpace !== undefined) {
           if (VenusPhase2Expansion.board(game).getSpaceOrThrow(venusSpace).tile !== undefined) {
             return false;
           }
@@ -635,7 +643,10 @@ export class Executor implements BehaviorExecutor {
     }
     if (behavior.city !== undefined) {
       const venusSpace = behavior.city.space !== undefined ? venusMapSpaceFor(player.game, behavior.city.space) : undefined;
-      if (venusSpace !== undefined) {
+      if (venusSpace === 'any') {
+        // Venus Phase 2: Dyson Screens and Venera Base go on any non-Gas-Mine space on Venus.
+        player.game.defer(new PlaceVenusTile(player, TileType.CITY, card.name));
+      } else if (venusSpace !== undefined) {
         // Venus Phase 2: Stratopolis and Maxwell Base go on their reserved spaces on the Venus map.
         VenusPhase2Expansion.addCity(player, venusSpace, card.name);
       } else if (behavior.city.space !== undefined) {

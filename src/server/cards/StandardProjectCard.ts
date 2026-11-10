@@ -10,6 +10,7 @@ import {IStandardProjectCard} from './IStandardProjectCard';
 import {sum} from '../../common/utils/utils';
 import {Payment} from '../../common/inputs/Payment';
 import {StandardProjectCanPayWith} from '../../common/cards/Types';
+import {Eternity} from './eternity/Eternity';
 
 type StaticStandardProjectCardProperties = {
   name: CardName,
@@ -41,7 +42,7 @@ export abstract class StandardProjectCard extends Card implements IStandardProje
       sum(player.tableau.asArray()
         .map((card) => card.getStandardProjectDiscount?.(player, this) ?? 0));
     const discount = discountFromCards + this.discount(player);
-    const adjusted = Math.max(0, this.cost - discount);
+    const adjusted = Math.max(0, this.cost - discount + Eternity.standardProjectCostAdjustment(player, this));
     return adjusted;
   }
 
@@ -59,7 +60,7 @@ export abstract class StandardProjectCard extends Card implements IStandardProje
   }
 
   protected canPlayOptions(player: IPlayer) {
-    const canPayWith = this.canPayWith(player);
+    const canPayWith = Eternity.standardProjectPayWith(player, this, this.canPayWith(player));
     return {
       ...canPayWith,
       cost: this.getAdjustedCost(player),

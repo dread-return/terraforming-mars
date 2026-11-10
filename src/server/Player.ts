@@ -83,6 +83,7 @@ import {SelectStandardProjectToPlay} from './inputs/SelectStandardProjectToPlay'
 import {Turmoil} from './turmoil/Turmoil';
 import {IdesOfMars} from './cards/idesofmars/IdesOfMars';
 import {Nuclear} from './cards/nuclear/Nuclear';
+import {Eternity} from './cards/eternity/Eternity';
 
 const THROW_STATE_ERRORS = Boolean(process.env.THROW_STATE_ERRORS);
 const DEFAULT_GLOBAL_PARAMETER_STEPS = {
@@ -382,6 +383,11 @@ export class Player implements IPlayer {
   }
 
   public decreaseTerraformRating(steps: number = 1, opts: {log?: boolean} = {}) {
+    // Eternity: Interstella ignores effects that reduce TR.
+    if (Eternity.ignoresTrLoss(this)) {
+      this.game.log('${0} ignored a TR loss (Interstella)', (b) => b.player(this));
+      return;
+    }
     this.terraformRating -= steps;
     if (opts.log === true) {
       this.game.log('${0} lost ${1}:i:tr:', (b) => b.player(this).number(steps));
@@ -413,9 +419,9 @@ export class Player implements IPlayer {
       return this.plantsAreProtected();
     case Resource.STEEL:
     case Resource.TITANIUM:
-      return this.alloysAreProtected();
+      return this.alloysAreProtected() || Eternity.isProtected(this, resource);
     case Resource.MEGACREDITS:
-      return this.playedCards.has(CardName.MARTIAN_ARMED_FORCES);
+      return this.playedCards.has(CardName.MARTIAN_ARMED_FORCES) || Eternity.isProtected(this, resource);
     }
     return false;
   }
@@ -433,6 +439,9 @@ export class Player implements IPlayer {
     }
 
     if (attacker !== this && this.playedCards.has(CardName.PRIVATE_SECURITY)) {
+      return false;
+    }
+    if (Eternity.productionProtected(this, resource, attacker)) {
       return false;
     }
     return true;
@@ -759,6 +768,8 @@ export class Player implements IPlayer {
 
     // Nuclear: penalties from opponents' cards (Water Reservoir Analysis, False Flag Operations).
     cost += Nuclear.cardCostAdjustment(this, card);
+    // Eternity: Astral Bog, Exoplanet Builders, Mars Conservationists.
+    cost += Eternity.cardCostAdjustment(this, card);
 
     return Math.max(cost, 0);
   }
@@ -766,9 +777,9 @@ export class Player implements IPlayer {
   private paymentOptionsForCard(card: IProjectCard): PaymentOptions {
     return {
       heat: this.canUseHeatAsMegaCredits,
-      steel: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card),
+      steel: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card) || Eternity.canUseSteel(this, card),
       plants: card.tags.includes(Tag.BUILDING) && this.playedCards.has(CardName.MARTIAN_LUMBER_CORP),
-      titanium: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.SPACE) || Nuclear.canUseTitanium(this, card),
+      titanium: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.SPACE) || Nuclear.canUseTitanium(this, card) || Eternity.canUseTitanium(this, card),
       lunaTradeFederationTitanium: this.canUseTitaniumAsMegacredits,
       seeds: card.tags.includes(Tag.PLANT) || card.name === CardName.GREENERY_STANDARD_PROJECT,
       floaters: card.tags.includes(Tag.VENUS),
@@ -988,6 +999,7 @@ export class Player implements IPlayer {
 
     PathfindersExpansion.onCardPlayed(this, card);
     Nuclear.onCardPlayed(this, card);
+    Eternity.onCardPlayed(this, card);
   }
 
   private getPlayCeoOPGAction(): PlayerInput | undefined {
@@ -1089,6 +1101,7 @@ export class Player implements IPlayer {
       return;
     }
     this.game.projectDeck.discard(card);
+    Eternity.onDiscardFromHand(this);
     if (options?.log === true) {
       this.game.log('${0} discarded ${1}', (b) => b.player(this).card(card), {reservedFor: this});
     }

@@ -12,6 +12,7 @@ import {CardName} from '../../common/cards/CardName';
 import {Tag} from '../../common/cards/Tag';
 import {asArray} from '../../common/utils/utils';
 import {isIStandardProjectCard} from '../cards/IStandardProjectCard';
+import {Eternity} from '../cards/eternity/Eternity';
 
 export function cardsToModel(
   player: IPlayer,
@@ -52,7 +53,7 @@ export function cardsToModel(
       cloneTag: isICloneTagCard(card) ? card.cloneTag : undefined,
     };
     if (isIStandardProjectCard(card)) {
-      model.standardProjectCanPayWith = card.canPayWith(player);
+      model.standardProjectCanPayWith = Eternity.standardProjectPayWith(player, card, card.canPayWith(player));
     }
     if (card.isDisabled) {
       model.isDisabled = true;

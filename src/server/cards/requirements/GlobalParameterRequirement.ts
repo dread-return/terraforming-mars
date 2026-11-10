@@ -4,6 +4,7 @@ import {GlobalParameter} from '../../../common/GlobalParameter';
 import {CardName} from '../../../common/cards/CardName';
 import {IProjectCard} from '../IProjectCard';
 import {CardResource} from '../../../common/CardResource';
+import {Eternity} from '../eternity/Eternity';
 
 
 /**
@@ -21,6 +22,9 @@ export abstract class GlobalParameterRequirement extends InequalityRequirement {
 
   public override satisfies(player: IPlayer, card: IProjectCard): boolean {
     if (super.satisfies(player, card)) {
+      return true;
+    }
+    if (Eternity.ignoresGlobalRequirement(player, card)) {
       return true;
     }
     const aeronGenomicsResources = (card.resourceType === CardResource.ANIMAL) ?

@@ -214,6 +214,12 @@
               <div class="create-game-expansion-icon expansion-icon-venusphase2"></div>
               <span v-i18n>Venus Phase 2</span><span></span>&nbsp;<a :href="wikiUrls.venusphase2" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
             </label>
+
+            <input type="checkbox" name="eternity" id="eternity-checkbox" v-model="expansions.eternity">
+            <label for="eternity-checkbox" class="expansion-button">
+              <div class="create-game-expansion-icon expansion-icon-eternity"></div>
+              <span v-i18n>Eternity</span><span></span>&nbsp;<a :href="wikiUrls.eternity" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
+            </label>
           </div>
 
           <div class="create-game-page-column">

@@ -44,6 +44,7 @@ function newGameConfig(overrides: Partial<NewGameConfig> = {}): NewGameConfig {
       idesofmars: false,
       nuclear: false,
       venusphase2: false,
+      eternity: false,
     },
     boards: boardOptions(RandomBoardOption.OFFICIAL),
     seed: 0,

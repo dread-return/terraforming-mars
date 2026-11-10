@@ -22,6 +22,7 @@ import {SOLARIS_CARD_MANIFEST} from './solaris/SolarisCardManifest';
 import {IDES_OF_MARS_CARD_MANIFEST} from './idesofmars/IdesOfMarsCardManifest';
 import {NUCLEAR_CARD_MANIFEST} from './nuclear/NuclearCardManifest';
 import {VENUS_PHASE_2_CARD_MANIFEST} from './venusphase2/VenusPhase2CardManifest';
+import {ETERNITY_CARD_MANIFEST} from './eternity/EternityCardManifest';
 import {DELTA_PROJECT_CARD_MANIFEST} from './delta/DeltaProjectCardManifest';
 
 export const ALL_MODULE_MANIFESTS: Array<ModuleManifest> = [
@@ -46,5 +47,6 @@ export const ALL_MODULE_MANIFESTS: Array<ModuleManifest> = [
   IDES_OF_MARS_CARD_MANIFEST,
   NUCLEAR_CARD_MANIFEST,
   VENUS_PHASE_2_CARD_MANIFEST,
+  ETERNITY_CARD_MANIFEST,
   DELTA_PROJECT_CARD_MANIFEST,
 ];

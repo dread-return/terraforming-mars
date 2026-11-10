@@ -6,6 +6,7 @@ import {IPlayer} from '../IPlayer';
 import {PRODUCTION_MINIMUMS} from '../../common/constants';
 import {CardName} from '../../common/cards/CardName';
 import {Units} from '../../common/Units';
+import {Eternity} from '../cards/eternity/Eternity';
 
 export class Production extends BaseStock {
   constructor(player: IPlayer) {
@@ -64,5 +65,6 @@ export class Production extends BaseStock {
     for (const card of this.player.tableau) {
       card.onProductionGain?.(this.player, resource, amount);
     }
+    Eternity.onProductionGain(this.player, resource, amount);
   }
 }

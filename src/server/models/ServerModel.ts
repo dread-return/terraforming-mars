@@ -464,6 +464,7 @@ export class Server {
         idesofmars: options.idesofmarsExpansion,
         nuclear: options.nuclearExpansion,
         venusphase2: options.venusPhase2Expansion,
+        eternity: options.eternityExpansion,
       },
       fastModeOption: options.fastModeOption,
       includedCards: options.includedCards,

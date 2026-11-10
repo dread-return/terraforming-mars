@@ -108,6 +108,8 @@ describe('Warmonger', () => {
     CardName.PRECIOUS_METAL_ASTEROID,
     CardName.ATOMIC_TEST, CardName.ENVIRONMENTAL_DISASTER, CardName.SOLAR_FLARE,
     CardName.VIRUS,
+    // Eternity
+    CardName.COLLAPSED_ASTEROID, CardName.DOUBLE_TAILED_ASTEROID, CardName.OVERHEATED_ASTEROID, CardName.PRESSURIZED_ASTEROID, CardName.WOBBLING_ASTEROID,
   ] as const;
   for (const manifest of ALL_MODULE_MANIFESTS) {
     for (const projectCard of CardManifest.values(manifest.projectCards)) {

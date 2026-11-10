@@ -9,6 +9,7 @@ import {Message} from '../../common/logs/Message';
 import {PlayCardMetadata, SelectCardToPlay} from './SelectCardToPlay';
 import {VenusPhase2Expansion} from '../venus2/VenusPhase2Expansion';
 import {SelectProjectCardToPlayModel} from '../../common/models/PlayerInputModel';
+import {Eternity} from '../cards/eternity/Eternity';
 
 export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProjectCard> {
   constructor(
@@ -39,7 +40,7 @@ export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProje
     if (details.overriddenCost === undefined && !card.canAct(this.player)) {
       throw new InputError('You cannot play this standard project');
     }
-    const canPayWith = card.canPayWith(this.player);
+    const canPayWith = Eternity.standardProjectPayWith(this.player, card, card.canPayWith(this.player));
     const paymentOptions: Partial<PaymentOptions> = {
       heat: this.player.canUseHeatAsMegaCredits,
       steel: canPayWith.steel,

@@ -28,6 +28,7 @@ import {AdditionalProjectCosts} from '../../common/cards/Types';
 import {GlobalParameter} from '../../common/GlobalParameter';
 import {Warning} from '../../common/cards/Warning';
 import {Resource} from '@/common/Resource';
+import {Eternity} from './eternity/Eternity';
 
 const NO_WARNINGS: ReadonlySet<Warning> = new Set();
 
@@ -240,6 +241,10 @@ export abstract class Card implements ICard {
     return this.properties.tilesBuilt;
   }
   public canPlay(player: IPlayer, canAffordOptions?: CanAffordOptions): boolean {
+    // Eternity: Earth's Last City Rebuilt forbids its owner from playing city-tag cards.
+    if (Eternity.blocksCard(player, this)) {
+      return false;
+    }
     if (!this.properties.compiledRequirements.satisfies(player, this)) {
       return false;
     }

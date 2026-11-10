@@ -96,6 +96,7 @@ import {sanitizeEscapeVelocityOptions} from '@/common/game/escapeVelocity';
 import {ColoniesHandler} from './colonies/ColoniesHandler';
 import {IdesOfMars} from './cards/idesofmars/IdesOfMars';
 import {Nuclear} from './cards/nuclear/Nuclear';
+import {Eternity} from './cards/eternity/Eternity';
 
 // Can be overridden by tests
 let createGameLog: () => Array<LogMessage> = () => [];
@@ -307,6 +308,7 @@ export class Game implements IGame, Logger {
         idesofmars: partialOptions.idesofmarsExpansion ?? false,
         nuclear: partialOptions.nuclearExpansion ?? false,
         venusphase2: partialOptions.venusPhase2Expansion ?? false,
+        eternity: partialOptions.eternityExpansion ?? false,
       };
     }
     const gameOptions = {...DEFAULT_GAME_OPTIONS, ...partialOptions};
@@ -1336,6 +1338,7 @@ export class Game implements IGame, Logger {
         card.onGlobalParameterIncrease?.(player, GlobalParameter.TEMPERATURE, steps);
       }
       player.onGlobalParameterIncrease(GlobalParameter.TEMPERATURE, steps);
+      Eternity.onGlobalParameterIncrease(player, GlobalParameter.TEMPERATURE, steps);
       TurmoilHandler.onGlobalParameterIncrease(player, GlobalParameter.TEMPERATURE, steps);
       player.increaseTerraformRating(steps);
     }
@@ -1415,7 +1418,11 @@ export class Game implements IGame, Logger {
 
     // Part 5. Collect the bonuses
     if (this.phase !== Phase.SOLAR) {
-      this.grantPlacementBonuses(player, space, coveringExistingTile);
+      if (Eternity.skipNextSpaceBonus) {
+        Eternity.skipNextSpaceBonus = false;
+      } else {
+        this.grantPlacementBonuses(player, space, coveringExistingTile);
+      }
       this.grantTilePlacementBonuses(player, space, arcadianCommunityBonus);
 
       AresHandler.ifAres(this, (aresData) => {

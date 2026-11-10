@@ -57,4 +57,11 @@ export enum CardResource {
 
   // Nuclear
   RADIATION = 'Radiation',
+
+  // Eternity
+  DISCOVERY = 'Discovery',
+  SINGULARITY = 'Singularity',
+  CHEAT = 'Cheat',
+  TRASH = 'Trash',
+  ROOT = 'Root',
 }

@@ -47,6 +47,8 @@ export type GameOptions = {
   nuclearExpansion: boolean;
   /** Venus Phase 2 (GIGA): the Venus map, Venus standard projects and cards. Needs Venus Next. */
   venusPhase2Expansion: boolean;
+  /** Eternity: fan-made cards, corporations and preludes. Cards that need another expansion only join with it. */
+  eternityExpansion: boolean;
 
   expansions: Record<Expansion, boolean>,
 
@@ -133,6 +135,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
     idesofmars: false,
     nuclear: false,
     venusphase2: false,
+    eternity: false,
   },
   fastModeOption: false,
   includeFanMA: false,
@@ -170,6 +173,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   idesofmarsExpansion: false,
   nuclearExpansion: false,
   venusPhase2Expansion: false,
+  eternityExpansion: false,
   automa: false,
   undoOption: false,
   venusNextExtension: false,

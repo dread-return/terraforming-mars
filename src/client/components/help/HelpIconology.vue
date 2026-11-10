@@ -138,6 +138,11 @@ const CARD_TAGS: ReadonlyArray<IconEntry> = [
   {iconClass: 'card-resource-loot', label: 'Loot', official: false, expansions: ['idesofmars']},
   {iconClass: 'card-resource-ore', label: 'Ore', official: false, expansions: ['idesofmars']},
   {iconClass: 'card-resource-radiation', label: 'Radiation', official: false, expansions: ['nuclear']},
+  {iconClass: 'card-resource-discovery', label: 'Discovery', official: false, expansions: ['eternity']},
+  {iconClass: 'card-resource-singularity', label: 'Singularity', official: false, expansions: ['eternity']},
+  {iconClass: 'card-resource-cheat', label: 'Cheat', official: false, expansions: ['eternity']},
+  {iconClass: 'card-resource-trash', label: 'Trash', official: false, expansions: ['eternity']},
+  {iconClass: 'card-resource-root', label: 'Root', official: false, expansions: ['eternity']},
 ];
 
 const STANDARD_RESOURCES: ReadonlyArray<IconEntry> = [

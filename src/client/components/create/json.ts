@@ -27,3 +27,4 @@ export const SOLARIS_EXPANSION = 'solarisExpansion';
 export const IDESOFMARS_EXPANSION = 'idesofmarsExpansion';
 export const NUCLEAR_EXPANSION = 'nuclearExpansion';
 export const VENUS_PHASE_2_EXPANSION = 'venusPhase2Expansion';
+export const ETERNITY_EXPANSION = 'eternityExpansion';

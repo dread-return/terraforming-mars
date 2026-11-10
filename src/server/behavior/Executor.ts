@@ -51,6 +51,7 @@ import {From} from '../logs/From';
 import {BaseStock} from '../player/StockBase';
 import {AddResourcesToAnyCardExecutor} from './AddResourcesToAnyCardExecutor';
 import {IdesOfMars} from '../cards/idesofmars/IdesOfMars';
+import {Eternity} from '../cards/eternity/Eternity';
 
 /**
  * Caps each count at what `lose` is allowed to take: never below zero, so a countable that
@@ -510,6 +511,9 @@ export class Executor implements BehaviorExecutor {
     if (behavior.stock) {
       const units = ctx.countUnits(behavior.stock);
       player.stock.adjust(units, {log: true, from});
+      if (units.plants > 0) {
+        Eternity.onPlantsGained(player, card);
+      }
     }
     if (behavior.standardResource) {
       const entry = behavior.standardResource;

@@ -58,5 +58,13 @@ export const floaterCards: ReadonlySet<CardName> = new Set([
   CardName.NEGATIVE_MASS_FLUIDS,
   CardName.NEW_ATHENS,
   CardName.VENUS_TRADESHIP,
+
+  // Eternity
+  CardName.ASTEROID_FROM_THE_INNER_SOLAR_SYSTEM,
+  CardName.FLOATER_DISTRIBUTORS,
+  CardName.FLOATING_AEROBATS,
+  CardName.METEOR_THAT_CHANGED_VENUS_FOREVER,
+  CardName.SCIENCE_VESSEL,
+  CardName.WOBBLING_ASTEROID,
 ]);
 

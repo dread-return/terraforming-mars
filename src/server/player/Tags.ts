@@ -103,6 +103,11 @@ export class Tags {
       }
     }
 
+    // Eternity: Project Whammy - all your science tags count as Jovian tags as well.
+    if (tag === Tag.JOVIAN && this.player.tableau.has(CardName.PROJECT_WHAMMY)) {
+      tagCount += this.rawCount(Tag.SCIENCE, includeEvents);
+    }
+
     // Habitat Marte hook
     if (mode !== 'raw') {
       if (tag === Tag.SCIENCE && this.player.tableau.has(CardName.HABITAT_MARTE)) {

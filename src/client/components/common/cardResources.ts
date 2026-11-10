@@ -31,5 +31,10 @@ export const cardResourceCSS = {
   [CardResource.LOOT]: 'card-resource-loot',
   [CardResource.ORE]: 'card-resource-ore',
   [CardResource.RADIATION]: 'card-resource-radiation',
+  [CardResource.DISCOVERY]: 'card-resource-discovery',
+  [CardResource.SINGULARITY]: 'card-resource-singularity',
+  [CardResource.CHEAT]: 'card-resource-cheat',
+  [CardResource.TRASH]: 'card-resource-trash',
+  [CardResource.ROOT]: 'card-resource-root',
   [CardResource.DIRECTOR]: 'card-resource-director',
 } satisfies Record<CardResource, string>;

@@ -57,6 +57,7 @@ const fanExpansions: ReadonlyArray<RulebookEntry> = [
   {module: 'idesofmars', name: 'Ides of Mars', iconClass: 'idesofmars', url: RULEBOOK_URLS.idesofmars},
   {module: 'nuclear', name: 'Nuclear', iconClass: 'nuclear', url: RULEBOOK_URLS.nuclear},
   {module: 'venusphase2', name: 'Venus Phase 2', iconClass: 'venusphase2', url: RULEBOOK_URLS.venusphase2},
+  {module: 'eternity', name: 'Eternity', iconClass: 'eternity', url: RULEBOOK_URLS.eternity},
 ];
 
 export default defineComponent({

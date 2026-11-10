@@ -4,6 +4,7 @@ import {CardRenderer} from '../../render/CardRenderer';
 import {StandardProjectCard} from '../../StandardProjectCard';
 import {SelectCard} from '../../../inputs/SelectCard';
 import {IProjectCard} from '../../IProjectCard';
+import {Eternity} from '../../eternity/Eternity';
 
 export class SellPatentsStandardProject extends StandardProjectCard {
   constructor() {
@@ -36,7 +37,8 @@ export class SellPatentsStandardProject extends StandardProjectCard {
       player.cardsInHand,
       {max: player.cardsInHand.length, played: false})
       .andThen((cards) => {
-        player.megaCredits += cards.length;
+        // Eternity: Patent Valuation Adjustment gives 1 M€ more per card.
+        player.megaCredits += cards.length * (1 + Eternity.sellPatentsBonus(player));
         cards.forEach((card) => player.discardCardFromHand(card));
         this.projectPlayed(player);
         player.game.log('${0} sold ${1} patents', (b) => b.player(player).number(cards.length));

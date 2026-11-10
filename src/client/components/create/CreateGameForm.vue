@@ -301,6 +301,11 @@
                 <div class="create-game-expansion-icon expansion-icon-prelude"></div>
                 <span v-i18n>Merger</span>&nbsp;<a :href="wikiUrls.merger" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
               </label>
+              <input type="checkbox" v-model="mergerPlus2P" id="mergerPlus2P-checkbox">
+              <label for="mergerPlus2P-checkbox" title="Always gain the Merger Prelude card on top of 2 chosen preludes">
+                <div class="create-game-expansion-icon expansion-icon-prelude"></div>
+                <span v-i18n>Merger+2P</span>&nbsp;<a :href="wikiUrls.merger" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
+              </label>
             </template>
             <input type="checkbox" v-model="undoOption" id="undo-checkbox">
             <label for="undo-checkbox">
@@ -684,6 +689,17 @@ export default defineComponent({
     ValidationErrorsPopup,
   },
   watch: {
+    // Merger and Merger+2P are alternatives.
+    twoCorpsVariant(value: boolean) {
+      if (value) {
+        this.mergerPlus2P = false;
+      }
+    },
+    mergerPlus2P(value: boolean) {
+      if (value) {
+        this.twoCorpsVariant = false;
+      }
+    },
     allOfficialExpansions(value: boolean) {
       this.expansions.corpera = value;
       this.expansions.prelude = value;
@@ -828,7 +844,8 @@ export default defineComponent({
           penaltyPeriodMinutes: this.escapeVelocityPeriod,
           penaltyVPPerPeriod: this.escapeVelocityPenalty,
         } : undefined,
-        twoCorpsVariant: this.twoCorpsVariant,
+        twoCorpsVariant: this.twoCorpsVariant || this.mergerPlus2P,
+        mergerPlus2P: this.mergerPlus2P,
         startingCeos: this.startingCeos,
         startingPreludes: this.startingPreludes,
       };

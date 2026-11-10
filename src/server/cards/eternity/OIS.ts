@@ -10,7 +10,6 @@ import {PlayerInput} from '../../PlayerInput';
 import {Resource} from '../../../common/Resource';
 import {SelectCard} from '../../inputs/SelectCard';
 import {SelectOption} from '../../inputs/SelectOption';
-import {Size} from '../../../common/cards/render/Size';
 import {Tag} from '../../../common/cards/Tag';
 import {all} from '../Options';
 
@@ -25,12 +24,11 @@ export class OIS extends CorporationCard implements ICorporationCard {
         cardNumber: 'EC05',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(50).cards(1, {all}).br;
-          b.text('After production: opponents show a hand card or lose 1 TR. Most shown: +1 M€ prod. or 4 M€.', {size: Size.TINY}).br;
           b.corpBox('action', (ce) => {
             ce.action('Take a shown card.', (eb) => eb.empty().startAction.cards(1, {all}).asterix());
           });
         }),
-        description: 'Start: 50 M\u20ac. All draw a card. First action: others show a card.',
+        description: 'All draw a card. First action: others show a card. Each production: others show a card or -1 TR; most shown: +1 M\u20ac prod. or 4 M\u20ac.',
       },
     });
   }

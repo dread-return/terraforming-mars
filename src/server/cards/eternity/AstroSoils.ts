@@ -28,11 +28,11 @@ export class AstroSoils extends CorporationCard implements ICorporationCard {
         renderData: CardRenderer.builder((b) => {
           b.megacredits(37).production((pb) => pb.plants(1).titanium(1)).cards(1).asterix().br;
           b.corpBox('effect-action', (ce) => {
-            ce.action('Add an asteroid to any card, or remove one here to draw a card.', (eb) => eb.resource(CardResource.ASTEROID).startAction.cards(1).or().resource(CardResource.ASTEROID).asterix());
+            ce.action('Add an asteroid to any card, OR spend 1 here to draw a card.', (eb) => eb.resource(CardResource.ASTEROID).startAction.cards(1).or().resource(CardResource.ASTEROID).asterix());
             ce.effect('Gain 1 M€ per event you play. Space events that remove plants give them to you.', (eb) => eb.tag(Tag.EVENT).startEffect.megacredits(1).plants(1).asterix());
           });
         }),
-        description: 'You start with 37 M\u20ac, 1 plant and 1 titanium production. First action: draw an "asteroid" card.',
+        description: 'First action: draw an "asteroid" card.',
       },
     });
   }

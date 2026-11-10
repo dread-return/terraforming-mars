@@ -22,7 +22,7 @@ export class CloudSpaceMirrors extends Card implements IProjectCard {
     super({
       type: CardType.AUTOMATED,
       name: CardName.CLOUD_SPACE_MIRRORS,
-      tags: [Tag.SCIENCE, Tag.SPACE],
+      tags: [],
       cost: 0,
       requirements: [{tag: Tag.SPACE}, {tag: Tag.SCIENCE}],
       victoryPoints: 'special',
@@ -30,14 +30,24 @@ export class CloudSpaceMirrors extends Card implements IProjectCard {
         cardNumber: 'E55',
         victoryPoints: questionmark(),
         renderData: CardRenderer.builder((b) => {
-          b.text('Copy any green card in play that places no special tile or reserved city. Pay its cost. You may pay 6 M€ instead of each resource reduction.', {size: Size.SMALL, isBold: false});
+          b.text('Copy any green card in play that places no special tile or reserved city, with its tags. Pay its cost. You may pay 6 M€ instead of each resource reduction.', {size: Size.SMALL, isBold: false});
         }),
-        description: 'Requires a space tag and a science tag. Acts as an exact copy of any green card in play that does not place a special tile or a reserved city, ignoring its requirements. This card costs as much as the copied card. VP equal to the copied card.',
+        description: 'Requires a space tag and a science tag. Acts as an exact copy (tags included) of any green card in play, ignoring its requirements. Costs as much as the copied card. VP equal to the copied card.',
       },
     });
   }
 
-  public data: {copy?: string} = {};
+  /** The copied card and its tags (this card has none of its own). */
+  public data: {copy?: string, tags?: Array<Tag>} = {};
+  public override get tags(): Array<Tag> {
+    return this.data?.tags ?? [];
+  }
+  private static cost(player: IPlayer, copy: IProjectCard): number {
+    return player.getCardCost(copy);
+  }
+  private static paymentOptions(copy: IProjectCard) {
+    return {steel: copy.tags.includes(Tag.BUILDING), titanium: copy.tags.includes(Tag.SPACE)};
+  }
   private targets(player: IPlayer): Array<IProjectCard> {
     const out: Array<IProjectCard> = [];
     for (const p of player.game.players) {
@@ -52,7 +62,7 @@ export class CloudSpaceMirrors extends Card implements IProjectCard {
         if (c.tilesBuilt.length > 0 || Object.getPrototypeOf(c).hasOwnProperty('bespokePlay')) {
           continue;
         }
-        if (!player.canAfford({cost: c.cost, titanium: true})) {
+        if (!player.canAfford({cost: CloudSpaceMirrors.cost(player, c), ...CloudSpaceMirrors.paymentOptions(c)})) {
           continue;
         }
         if (!getBehaviorExecutor().canExecute(CloudSpaceMirrors.withoutReductions(b), player, this)) {
@@ -80,7 +90,12 @@ export class CloudSpaceMirrors extends Card implements IProjectCard {
   }
   public override bespokePlay(player: IPlayer) {
     return new SelectCard('Select a green card to copy', 'Copy', this.targets(player)).andThen(([copy]) => {
-      this.data = {copy: copy.name};
+      const copied = () => this.data = {copy: copy.name, tags: [...copy.tags]};
+      if (player.playedCards.has(this.name)) {
+        player.playedCards.retagCard(this, copied);
+      } else {
+        copied();
+      }
       const behavior = copy.behavior ?? {};
       const production: Record<string, unknown> = {...behavior.production};
       const reductions: Array<Resource> = [];
@@ -93,7 +108,8 @@ export class CloudSpaceMirrors extends Card implements IProjectCard {
       }
       let extra = 0;
       const finish = () => {
-        player.game.defer(new SelectPaymentDeferred(player, copy.cost + extra, {canUseTitanium: true, title: 'Pay for the copied card'}).andThen(() => {
+        const options = CloudSpaceMirrors.paymentOptions(copy);
+        player.game.defer(new SelectPaymentDeferred(player, CloudSpaceMirrors.cost(player, copy) + extra, {canUseSteel: options.steel, canUseTitanium: options.titanium, title: 'Pay for the copied card'}).andThen(() => {
           player.game.log('${0} copied ${1}', (b) => b.player(player).card(copy));
           getBehaviorExecutor().execute({...behavior, production}, player, this);
         }));

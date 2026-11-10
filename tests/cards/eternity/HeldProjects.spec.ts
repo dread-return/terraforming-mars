@@ -229,6 +229,7 @@ describe('Eternity held project cards', () => {
 
   it('Cloud Space Mirrors: copies a green card, paying 6 M€ instead of a reduction', () => {
     player.playedCards.push(fakeCard({tags: [Tag.SPACE, Tag.SCIENCE]}));
+    expect(new CloudSpaceMirrors().tags).is.empty;
     other.playedCards.push(new NuclearPower()); // cost 10, -2 M€ prod, +3 energy prod
     player.playedCards.push(new Mine());
     const mirrors = new CloudSpaceMirrors();
@@ -242,11 +243,14 @@ describe('Eternity held project cards', () => {
     const first = cast(next, OrOptions);
     const second = cast(first.options[1].cb(), OrOptions);
     second.options[0].cb(); // decrease once, paid 6 for the other
-    runAllActions(game); // only M€ to pay with: 10 + 6, paid automatically
+    runAllActions(game); // only M€ to pay with: 10 + 6, paid automatically (Mine gives no steel)
     expect(player.production.energy).eq(3);
     expect(player.production.megacredits).eq(-1);
     expect(player.megaCredits).eq(14);
     expect(mirrors.getVictoryPoints(player)).eq(0);
+    // It takes the copied card's tags (Nuclear Power: power, building).
+    expect(mirrors.tags).to.have.members([Tag.POWER, Tag.BUILDING]);
+    expect(player.tags.count(Tag.POWER, 'raw')).eq(1);
   });
 
   it('Colony Cluster: a colony and a neutral colony, both bonuses to you', () => {

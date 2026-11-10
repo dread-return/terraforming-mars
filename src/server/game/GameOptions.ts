@@ -90,11 +90,14 @@ export type GameOptions = {
   altContaminationTrack: boolean;
   escapeVelocity?: EscapeVelocityOptions;
   twoCorpsVariant: boolean;
+  /** Merger+2P: everyone gets Merger on top of 2 chosen preludes. Implies twoCorpsVariant. */
+  mergerPlus2P: boolean;
 }
 
 export const DEFAULT_GAME_OPTIONS: GameOptions = {
   altVenusBoard: false,
   altContaminationTrack: false,
+  mergerPlus2P: false,
   aresExtension: false,
   aresHazards: true,
   aresExtremeVariant: false,

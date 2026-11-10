@@ -33,6 +33,7 @@ export type GameOptionsModel = {
   requiresMoonTrackCompletion: boolean,
   requiresVenusTrackCompletion: boolean,
   twoCorpsVariant: boolean,
+  mergerPlus2P: boolean,
   undoOption: boolean,
 
   // These are only supplied for the JSON, and

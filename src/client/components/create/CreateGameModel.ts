@@ -64,5 +64,6 @@ export type CreateGameModel = {
   startingCorporations: number;
   startingPreludes: number;
   twoCorpsVariant: boolean;
+  mergerPlus2P: boolean;
   undoOption: boolean;
 }

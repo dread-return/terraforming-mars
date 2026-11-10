@@ -23,9 +23,9 @@ export class CASHCo extends CorporationCard implements ICorporationCard {
         cardNumber: 'EC09',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(29).production((pb) => pb.energy(2)).cards(2, {secondaryTag: Tag.SCIENCE}).br;
-          b.corpBox('effect', (ce) => ce.effect('When playing a power or science card, you pay 1 M€ less for it.', (eb) => eb.tag(Tag.SCIENCE).slash().tag(Tag.POWER).startEffect.megacredits(-1)));
+          b.corpBox('effect', (ce) => ce.effect('Power and science cards cost 1 M€ less.', (eb) => eb.tag(Tag.SCIENCE).slash().tag(Tag.POWER).startEffect.megacredits(-1)));
         }),
-        description: 'You start with 29 M\u20ac and 2 energy production. First action: draw 2 science cards.',
+        description: 'First action: draw 2 science cards.',
       },
     });
   }

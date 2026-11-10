@@ -2,12 +2,12 @@ import {CardName} from '../../../common/cards/CardName';
 import {CardRenderer} from '../render/CardRenderer';
 import {CardType} from '../../../common/cards/CardType';
 import {Card} from '../Card';
-import {DOUBLE_PRELUDES} from './EternityUtils';
 import {IPlayer} from '../../IPlayer';
 import {IPreludeCard} from '../prelude/IPreludeCard';
 import {IProjectCard} from '../IProjectCard';
 import {PlayerInput} from '../../PlayerInput';
 import {SelectCard} from '../../inputs/SelectCard';
+import {UNCOPYABLE_PRELUDES} from './EternityUtils';
 
 export class ClonedWorkforce extends Card implements IProjectCard {
   constructor() {
@@ -32,11 +32,11 @@ export class ClonedWorkforce extends Card implements IProjectCard {
   /** Preludes that give a specific card (or another prelude/corporation) can't be replayed. */
   private static readonly EXCLUDED: ReadonlyArray<CardName> = [
     CardName.INTERSTELLA, CardName.ACQUISITION_TARGET, CardName.METICULOUS_RESEARCH, CardName.PROJECT_BLUEPRINT,
-    CardName.RELATIVISTIC_REVERBERATION, CardName.DOUBLE_DOWN, CardName.MERGER, CardName.NEW_PARTNER,
+    CardName.RELATIVISTIC_REVERBERATION, CardName.DOUBLE_DOWN, CardName.NEW_PARTNER,
   ];
   private replayable(player: IPlayer): Array<IPreludeCard> {
     return player.playedCards.preludes().filter((c) =>
-      !DOUBLE_PRELUDES.has(c.name) && !ClonedWorkforce.EXCLUDED.includes(c.name) && c.canPlayPostRequirements(player));
+      !UNCOPYABLE_PRELUDES.has(c.name) && !ClonedWorkforce.EXCLUDED.includes(c.name) && c.canPlayPostRequirements(player));
   }
   public override bespokePlay(player: IPlayer) {
     player.defer(() => {

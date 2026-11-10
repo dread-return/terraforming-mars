@@ -28,11 +28,11 @@ export class WingspearsCorp extends CorporationCard implements ICorporationCard 
         renderData: CardRenderer.builder((b) => {
           b.megacredits(38).cards(2, {secondaryTag: Tag.PLANT}).br;
           b.corpBox('effect-action', (ce) => {
-            ce.effect('After a greenery, your next action may play an animal card ignoring global reqs.', (eb) => eb.greenery({withO2: false}).startEffect.tag(Tag.ANIMAL).asterix());
-            ce.action('Remove a plant card from the game: +1 plant & M€ prod., draw 2.', (eb) => eb.tag(Tag.PLANT).asterix().startAction.production((pb) => pb.plants(1).megacredits(1)).cards(2, {digit}));
+            ce.effect('After a greenery, your next animal card ignores global reqs.', (eb) => eb.greenery({withO2: false}).startEffect.tag(Tag.ANIMAL).asterix());
+            ce.action('Remove a plant card from play.', (eb) => eb.tag(Tag.PLANT).asterix().startAction.production((pb) => pb.plants(1).megacredits(1)).cards(2, {digit}));
           });
         }),
-        description: 'Start: 38 M\u20ac. First action: 2 plant cards.',
+        description: 'First action: draw 2 plant cards.',
       },
     });
   }

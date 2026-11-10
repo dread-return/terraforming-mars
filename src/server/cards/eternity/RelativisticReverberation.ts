@@ -1,12 +1,12 @@
 import {CardName} from '../../../common/cards/CardName';
 import {CardRenderer} from '../render/CardRenderer';
-import {DOUBLE_PRELUDES} from './EternityUtils';
 import {IPlayer} from '../../IPlayer';
 import {IPreludeCard} from './../prelude/IPreludeCard';
 import {PreludeCard} from '../prelude/PreludeCard';
 import {SelectCard} from '../../inputs/SelectCard';
 import {Size} from '../../../common/cards/render/Size';
 import {Tag} from '../../../common/cards/Tag';
+import {UNCOPYABLE_PRELUDES} from './EternityUtils';
 import {newPrelude} from '../../createCard';
 
 export class RelativisticReverberation extends PreludeCard {
@@ -36,7 +36,7 @@ export class RelativisticReverberation extends PreludeCard {
     const names = new Set<string>();
     for (const p of player.game.players) {
       for (const c of p.playedCards.preludes()) {
-        if (c.name !== this.name && !DOUBLE_PRELUDES.has(c.name)) {
+        if (c.name !== this.name && !UNCOPYABLE_PRELUDES.has(c.name)) {
           names.add(c.name);
         }
       }

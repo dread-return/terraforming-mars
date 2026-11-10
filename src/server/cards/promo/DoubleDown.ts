@@ -5,7 +5,7 @@ import {CardRenderer} from '../render/CardRenderer';
 import {Size} from '../../../common/cards/render/Size';
 import {PreludesExpansion} from '../../preludes/PreludesExpansion';
 import {uppercase} from '../Options';
-import {DOUBLE_PRELUDES} from '../eternity/EternityUtils';
+import {UNCOPYABLE_PRELUDES} from '../eternity/EternityUtils';
 
 export class DoubleDown extends PreludeCard {
   constructor() {
@@ -25,8 +25,8 @@ export class DoubleDown extends PreludeCard {
   private cloneablePreludes(player: IPlayer) {
     const cards = player.playedCards.preludes()
       .filter((card) => card.name !== this.name)
-      // Eternity: preludes that count as two preludes cannot be copied.
-      .filter((card) => !DOUBLE_PRELUDES.has(card.name))
+      // Eternity double preludes, Merger and Delta Project cannot be copied.
+      .filter((card) => !UNCOPYABLE_PRELUDES.has(card.name))
       .filter((card) => card.canPlay(player));
     if (player.lastCardPlayed === CardName.NEW_PARTNER) {
       // This is a super unfortunate hack. See Player.playCard for details.

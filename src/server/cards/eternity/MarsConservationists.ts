@@ -27,11 +27,11 @@ export class MarsConservationists extends CorporationCard implements ICorporatio
         renderData: CardRenderer.builder((b) => {
           b.megacredits(19).production((pb) => pb.plants(2)).greenery().asterix().br;
           b.corpBox('effect', (ce) => {
-            ce.effect('City cards and the City standard project cost everyone 3 M€ more.', (eb) => eb.city().startEffect.plus().megacredits(3));
-            ce.effect('When ANY player places a greenery, gain a plant and 5 M€.', (eb) => eb.greenery({any: true, withO2: false}).startEffect.plants(1).megacredits(5));
+            ce.effect('Everyone pays +3 M€ for cities.', (eb) => eb.city().startEffect.plus().megacredits(3));
+            ce.effect('Any greenery: +1 plant, +5 M€.', (eb) => eb.greenery({any: true, withO2: false}).startEffect.plants(1).megacredits(5));
           });
         }),
-        description: 'You start with 19 M\u20ac and 2 plant production. First action: place a greenery.',
+        description: 'First action: place a greenery.',
       },
     });
   }

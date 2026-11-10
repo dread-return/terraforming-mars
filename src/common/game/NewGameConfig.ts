@@ -78,6 +78,8 @@ export type NewGameConfig = {
   altContaminationTrack?: boolean;
   escapeVelocity: EscapeVelocityOptions | undefined;
   twoCorpsVariant: boolean;
+  /** Merger+2P. Optional so older saved configs still load. */
+  mergerPlus2P?: boolean;
   customCeos: ReadonlyArray<CardName>;
   startingCeos: number;
   startingPreludes: number;

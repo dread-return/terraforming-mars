@@ -312,6 +312,10 @@ export class Game implements IGame, Logger {
       };
     }
     const gameOptions = {...DEFAULT_GAME_OPTIONS, ...partialOptions};
+    // Merger+2P is a form of the Merger variant (Merger leaves the prelude deck, more corps needed).
+    if (gameOptions.mergerPlus2P) {
+      gameOptions.twoCorpsVariant = true;
+    }
 
     if (gameOptions.clonedGamedId !== undefined) {
       throw new Error('Cloning should not come through this execution path.');

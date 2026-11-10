@@ -50,8 +50,10 @@ export class SelectInitialCards extends OptionsInput<undefined> {
         }),
     );
 
-    // Give each player Merger in this variant
-    if (game.gameOptions.twoCorpsVariant) {
+    // Give each player Merger in this variant.
+    // Merger+2P: Merger is not one of the choices; it is added on top of the 2 chosen preludes.
+    const mergerPlus2P = game.gameOptions.mergerPlus2P === true;
+    if (game.gameOptions.twoCorpsVariant && !mergerPlus2P) {
       player.dealtPreludeCards.push(new Merger());
     }
 
@@ -63,6 +65,9 @@ export class SelectInitialCards extends OptionsInput<undefined> {
               throw new InputError('Only select 2 preludes');
             }
             player.preludeCardsInHand.push(...preludeCards);
+            if (mergerPlus2P && !player.preludeCardsInHand.some((c) => c.name === CardName.MERGER)) {
+              player.preludeCardsInHand.push(new Merger());
+            }
             return undefined;
           }));
     }

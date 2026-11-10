@@ -2,6 +2,7 @@ import {ActiveCorporationCard} from '../corporation/CorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {CardRenderer} from '../render/CardRenderer';
 import {ICorporationCard} from '../corporation/ICorporationCard';
+import {Size} from '../../../common/cards/render/Size';
 import {Tag} from '../../../common/cards/Tag';
 import {all} from '../Options';
 import {digit} from '../Options';
@@ -23,14 +24,13 @@ export class GeneralistTerraforma extends ActiveCorporationCard implements ICorp
       metadata: {
         cardNumber: 'EC11',
         renderData: CardRenderer.builder((b) => {
-          b.text('5 free cards').steel(7, {digit}).titanium(7, {digit}).br;
+          b.steel(7, {digit}).titanium(7, {digit}).nbsp.text('5 free cards', {size: Size.SMALL}).br;
           b.production((pb) => pb.megacredits(-2).steel(1).titanium(1).plants(1).energy(1).heat(1));
           b.corpBox('effect-action', (ce) => {
             ce.effect('Steel & titanium pay for the City SP.', (eb) => eb.steel(1).slash().titanium(1).startEffect.city().asterix());
-            ce.action('Gain 1 M€ per city on Mars.', (eb) => eb.empty().startAction.megacredits(1).slash().city({all}).asterix());
+            ce.action(undefined, (eb) => eb.empty().startAction.megacredits(1).slash().city({all}).asterix());
           });
         }),
-        description: 'Keep exactly 5 opening cards, free.',
       },
     });
   }

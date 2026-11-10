@@ -31,7 +31,7 @@ export class IOA extends ActiveCorporationCard implements ICorporationCard {
             ce.action('Pay 10 heat to raise Venus 1 step.', (eb) => eb.heat(10, {digit}).startAction.venus(1));
           });
         }),
-        description: 'You start with 40 M\u20ac and 1 heat production. As your first action, add the Io colony tile if it is not in play, and build a colony there.',
+        description: 'First action: add the Io colony tile if it is not in play, and build a colony there.',
       },
     });
   }

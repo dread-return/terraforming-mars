@@ -19,6 +19,16 @@ export const DOUBLE_PRELUDES: ReadonlySet<CardName> = new Set([
   CardName.WARP_GATE,
 ]);
 
+/**
+ * Preludes no effect may copy or replay (Double Down, Relativistic Reverberation, Cloned Workforce):
+ * the double preludes, plus Merger (too strong to copy) and Delta Project (copying it does nothing).
+ */
+export const UNCOPYABLE_PRELUDES: ReadonlySet<CardName> = new Set([
+  ...DOUBLE_PRELUDES,
+  CardName.MERGER,
+  CardName.DELTA_PROJECT,
+]);
+
 export class EternityUtils {
   /** Reveal-until draw (keeps every matching card), then run `cb` with the cards drawn. */
   public static drawThen(player: IPlayer, count: number, options: DrawOptions, cb: (cards: ReadonlyArray<IProjectCard>) => void): void {

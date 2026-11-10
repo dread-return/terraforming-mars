@@ -20,11 +20,11 @@ export class MadNess extends CorporationCard implements ICorporationCard {
         renderData: CardRenderer.builder((b) => {
           b.megacredits(29).cards(1).asterix().br;
           b.corpBox('effect-action', (ce) => {
-            ce.effect('Buying cards costs 2 M€ (starting hand too).', (eb) => eb.cards(1).startEffect.megacredits(2));
-            ce.action('Pay 5 M€, discard a card: +1 production per building/power/space/plant tag on it.', (eb) => eb.megacredits(5).cards(1).asterix().startAction.production((pb) => pb.wild(1)).asterix());
+            ce.effect('Card buying costs 2 M€ (start too).', (eb) => eb.cards(1).startEffect.megacredits(2));
+            ce.action('Pay 5 M€, discard: +1 prod. per building/power/space/plant tag.', (eb) => eb.megacredits(5).cards(1).asterix().startAction.production((pb) => pb.wild(1)).asterix());
           });
         }),
-        description: 'You start with 29 M\u20ac. First action: discard the top card for the same production bonus (none: +1 M\u20ac production).',
+        description: 'First action: the same with the top deck card (no such tags: +1 M\u20ac prod.).',
       },
     });
   }

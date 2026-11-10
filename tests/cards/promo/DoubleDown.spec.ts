@@ -202,33 +202,12 @@ describe('DoubleDown', () => {
     expect(modelCard.warnings).deep.eq(['ineffectiveDoubleDown', 'cannotAffordBoardOfDirectors']);
   });
 
-  it('Make compatible with Merger + Corp with resources', () => {
-    // Merger doesn't work without at least one starting corporation
+  it('Cannot copy Merger (fork house rule: Merger is uncopyable)', () => {
     player.playedCards.push(new Helion());
-    // player needs some MC to help pay for Merger.
     player.megaCredits = 100;
-
     const merger = new Merger();
     player.playedCards.push(merger);
-
-    player.preludeCardsInHand.push(doubleDown);
-    player.playCard(doubleDown);
-    runAllActions(game);
-
-    const selectCard = cast(player.popWaitingFor(), SelectCard);
-    expect(selectCard.cards).deep.eq([merger]);
-    expect(Array.from(merger.warnings)).does.not.include('ineffectiveDoubleDown');
-    selectCard.cb([merger]);
-
-    runAllActions(game);
-    const astroDrill = new Astrodrill();
-    game.corporationDeck.drawPile.push(astroDrill);
-
-    const selectCorp = cast(player.popWaitingFor(), SelectCard);
-    selectCorp.cb([astroDrill]);
-    runAllActions(game);
-    expect(astroDrill.resourceCount).eq(3);
-    expect(player.tableau.asArray().map(toName)).to.have.members([CardName.HELION, CardName.ASTRODRILL, CardName.MERGER, CardName.DOUBLE_DOWN]);
+    expect(doubleDown.canPlay(player)).is.false;
   });
 
   it('Compatible with New Partner and Board of Directors', () => {

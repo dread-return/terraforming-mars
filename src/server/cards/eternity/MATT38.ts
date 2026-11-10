@@ -28,7 +28,7 @@ export class MATT38 extends ActionCard implements IProjectCard {
         cardNumber: 'E22',
         renderData: CardRenderer.builder((b) => {
           b.action(undefined, (eb) => eb.empty().startAction.production((pb) => pb.megacredits(1))).br;
-          b.action('Or: -3 M€ prod. for 3 M€, +1 plant prod.', (eb) => eb.production((pb) => pb.megacredits(-3)).startAction.megacredits(3).production((pb) => pb.plants(1))).br;
+          b.action('Or: -3 M€ prod.: 3 M€, plant prod.', (eb) => eb.production((pb) => pb.megacredits(-3)).startAction.megacredits(3).production((pb) => pb.plants(1))).br;
           b.production((pb) => pb.minus().energy(1).plus().megacredits(1));
         }),
       },

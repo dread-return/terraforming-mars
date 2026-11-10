@@ -14,6 +14,7 @@
       </div>
     </div>
     <SelectCard v-if="hasPrelude" :playerView="playerView" :playerinput="preludeCardOption" :onsave="noop" :showtitle="true" @cardschanged="preludesChanged" />
+    <div v-if="hasPrelude && mergerPlus2P" class="merger-plus-2p-note" v-i18n>Merger+2P: you also get Merger.</div>
     <SelectCard v-if="hasCeo" :playerView="playerView" :playerinput="ceoCardOption" :onsave="noop" :showtitle="true" @cardschanged="ceosChanged" />
     <SelectCard :playerView="playerView" :playerinput="projectCardOption" :onsave="noop" :showtitle="true" @cardschanged="cardsChanged" />
     <template v-if="selectedCorporations.length === 1">
@@ -115,7 +116,9 @@ export default defineComponent({
       throw new Error('should not be called');
     },
     getAfterPreludes() {
-      return sum(this.selectedPreludes.map((prelude) => {
+      // Merger+2P: Merger is played on top of the 2 chosen preludes.
+      const preludes: Array<CardName> = this.mergerPlus2P ? [...this.selectedPreludes, CardName.MERGER] : this.selectedPreludes;
+      return sum(preludes.map((prelude) => {
         const card = getCardOrThrow(prelude);
         const base = card.startingMegaCredits ?? 0;
         return base + this.extra(prelude);
@@ -327,6 +330,9 @@ export default defineComponent({
     },
     playerCanChooseAridor() {
       return this.playerView.dealtCorporationCards.some((card) => card.name === CardName.ARIDOR);
+    },
+    mergerPlus2P(): boolean {
+      return this.playerView.game?.gameOptions?.mergerPlus2P === true;
     },
     hasPrelude() {
       return hasOption(this.playerinput.options, titles.SELECT_PRELUDE_TITLE);

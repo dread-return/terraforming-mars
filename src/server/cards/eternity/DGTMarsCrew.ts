@@ -21,7 +21,7 @@ export class DGTMarsCrew extends CorporationCard implements ICorporationCard {
           b.megacredits(41).production((pb) => pb.megacredits(3)).br;
           b.corpBox('effect-action', (ce) => {
             ce.effect('You may still play after passing.', (eb) => eb.text('PASS').startEffect.text('PLAY'));
-            ce.effect('Gain 2 M€ after a standard project (not Sell Patents).', (eb) => eb.text('SP').startEffect.megacredits(2));
+            ce.effect('+2 M€ per SP (not Sell Patents).', (eb) => eb.text('SP').startEffect.megacredits(2));
             ce.action('Take 2 more actions.', (eb) => eb.empty().startAction.text('+2 actions'));
           });
         }),

@@ -483,6 +483,7 @@ export class Server {
       requiresMoonTrackCompletion: options.requiresMoonTrackCompletion,
       requiresVenusTrackCompletion: options.requiresVenusTrackCompletion,
       twoCorpsVariant: options.twoCorpsVariant,
+      mergerPlus2P: options.mergerPlus2P,
       undoOption: options.undoOption,
 
       // These are only supplied for the JSON, and

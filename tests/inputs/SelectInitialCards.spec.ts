@@ -97,6 +97,39 @@ describe('SelectInitialCards', () => {
     expect(player.game.preludeDeck.discardPile.map(toName)).to.have.members([CardName.DONATION, CardName.SUPPLIER]);
   });
 
+  it('Merger+2P: choose 2 preludes and also get Merger', () => {
+    const [game, player] = testGame(1, {preludeExtension: true, mergerPlus2P: true});
+    expect(game.gameOptions.twoCorpsVariant).is.true;
+    player.dealtCorporationCards = corporationCardsFromJSON([CardName.INVENTRIX, CardName.HELION]);
+    player.dealtProjectCards = cardsFromJSON([CardName.ANTS]);
+    player.dealtPreludeCards = preludesFromJSON([CardName.LOAN, CardName.BIOLAB, CardName.DONATION, CardName.SUPPLIER]);
+    selectInitialCards = new SelectInitialCards(player, cb);
+    expect(player.dealtPreludeCards.map(toName)).does.not.include(CardName.MERGER);
+
+    selectInitialCards.process({type: 'initialCards', responses: [
+      {type: 'card', cards: [CardName.INVENTRIX]},
+      {type: 'card', cards: [CardName.LOAN, CardName.BIOLAB]},
+      {type: 'card', cards: []},
+    ]}, player);
+
+    expect(player.preludeCardsInHand.map(toName)).to.have.members([CardName.LOAN, CardName.BIOLAB, CardName.MERGER]);
+  });
+
+  it('Merger (classic): Merger is one of the 2 choices', () => {
+    const [/* game */, player] = testGame(1, {preludeExtension: true, twoCorpsVariant: true});
+    player.dealtCorporationCards = corporationCardsFromJSON([CardName.INVENTRIX, CardName.HELION]);
+    player.dealtProjectCards = cardsFromJSON([CardName.ANTS]);
+    player.dealtPreludeCards = preludesFromJSON([CardName.LOAN, CardName.BIOLAB, CardName.DONATION, CardName.SUPPLIER]);
+    selectInitialCards = new SelectInitialCards(player, cb);
+    expect(player.dealtPreludeCards.map(toName)).includes(CardName.MERGER);
+    selectInitialCards.process({type: 'initialCards', responses: [
+      {type: 'card', cards: [CardName.INVENTRIX]},
+      {type: 'card', cards: [CardName.MERGER, CardName.BIOLAB]},
+      {type: 'card', cards: []},
+    ]}, player);
+    expect(player.preludeCardsInHand.map(toName)).to.have.members([CardName.MERGER, CardName.BIOLAB]);
+  });
+
   it('A failed selection leaves the hands unchanged', () => {
     const [/* game */, player] = testGame(1, {ceoExtension: true, preludeExtension: true});
     player.dealtCorporationCards = corporationCardsFromJSON([CardName.INVENTRIX, CardName.HELION]);

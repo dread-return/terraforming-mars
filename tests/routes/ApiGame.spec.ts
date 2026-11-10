@@ -104,6 +104,7 @@ describe('ApiGame', () => {
           'solarPhaseOption': false,
           'soloTR': false,
           'twoCorpsVariant': false,
+          'mergerPlus2P': false,
           'undoOption': false,
 
           'aresHazards': true,

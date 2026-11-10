@@ -33,7 +33,6 @@ export class TheVines extends ActiveCorporationCard implements ICorporationCard 
             ce.effect('When you place a greenery: +1 M€ production and a root here.', (eb) => eb.greenery({withO2: false}).startEffect.production((pb) => pb.megacredits(1)).resource(CardResource.ROOT));
           });
         }),
-        description: 'You start with 22 M\u20ac, -2 M\u20ac production and 4 plant production.',
       },
     });
   }

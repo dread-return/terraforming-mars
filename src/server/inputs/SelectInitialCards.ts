@@ -9,6 +9,7 @@ import {InputError} from './InputError';
 import {OptionsInput} from './OptionsPlayerInput';
 import {InputResponse, isSelectInitialCardsResponse} from '../../common/inputs/InputResponse';
 import {PlayerInput} from '../PlayerInput';
+import {Eternity} from '../cards/eternity/Eternity';
 
 type Inputs = {
   corp: PlayerInput | undefined,
@@ -101,6 +102,13 @@ export class SelectInitialCards extends OptionsInput<undefined> {
     if (corporation.name === CardName.LUNA_TRADE_FEDERATION) {
       // Its 10 starting titanium is worth 2 M€ each.
       budget += 20;
+    }
+    try {
+      Eternity.checkInitialCards(corporation, player.cardsInHand.length);
+    } catch (e) {
+      player.cardsInHand = [];
+      player.preludeCardsInHand = [];
+      throw e;
     }
     if (corporation.name !== CardName.BEGINNER_CORPORATION && player.cardsInHand.length * cardCost > budget) {
       player.cardsInHand = [];

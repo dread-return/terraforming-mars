@@ -27,6 +27,10 @@ export abstract class GlobalParameterRequirement extends InequalityRequirement {
     if (Eternity.ignoresGlobalRequirement(player, card)) {
       return true;
     }
+    const eternityBonus = Eternity.globalRequirementBonus(player, card, this.parameter);
+    if (eternityBonus > 0 && this.distance(player) <= eternityBonus) {
+      return true;
+    }
     const aeronGenomicsResources = (card.resourceType === CardResource.ANIMAL) ?
       (player.tableau.get(CardName.AERON_GENOMICS)?.resourceCount ?? 0):
       0;

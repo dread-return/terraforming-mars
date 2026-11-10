@@ -10,6 +10,7 @@ import {RemoveOwnCardResources} from '../../venus2/RemoveOwnCardResources';
 import {CardResource} from '../../../common/CardResource';
 import {IStandardProjectCard} from '../IStandardProjectCard';
 import {MoonExpansion} from '../../moon/MoonExpansion';
+import {Eternity} from '../eternity/Eternity';
 
 export const VENUS_STANDARD_PROJECTS: ReadonlySet<CardName> = new Set([
   CardName.FLOATING_ARRAY_STANDARD_PROJECT,
@@ -46,7 +47,7 @@ export abstract class VenusStandardProject extends StandardProjectCard {
     }
     const floaterCredit = VenusPhase2Expansion.floatersOnCards(player) * VenusPhase2Expansion.floaterValue(player);
     return player.canAfford({
-      cost: Math.max(0, this.getAdjustedCost(player) - floaterCredit),
+      cost: Math.max(0, this.getAdjustedCost(player) - floaterCredit - Eternity.standardProjectHeatCredit(player, this)),
       tr: this.tr,
       auroraiData: true,
       spireScience: true,

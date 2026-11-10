@@ -8,6 +8,16 @@ import {Resource} from '../../../common/Resource';
 import {CardResource} from '../../../common/CardResource';
 import {GlobalParameter} from '../../../common/GlobalParameter';
 import {StandardProjectCanPayWith} from '../../../common/cards/Types';
+import {Phase} from '../../../common/Phase';
+import {PlayerInput} from '../../PlayerInput';
+import {OrOptions} from '../../inputs/OrOptions';
+import {SelectOption} from '../../inputs/SelectOption';
+import {SelectCard} from '../../inputs/SelectCard';
+import {IColonyTrader} from '../../colonies/IColonyTrader';
+import {IColony} from '../../colonies/IColony';
+import {ColonyName} from '../../../common/colonies/ColonyName';
+import {InputError} from '../../inputs/InputError';
+import {message} from '../../logs/MessageBuilder';
 
 /**
  * Engine hooks for the Eternity fan expansion. Every hook is a no-op unless an Eternity card is in play,
@@ -60,10 +70,19 @@ export class Eternity {
     if (project.name === CardName.SELL_PATENTS_STANDARD_PROJECT) {
       return result;
     }
+    const heatValue = Eternity.standardProjectHeatValue(player);
+    if (heatValue !== undefined) {
+      result.heat = true;
+      result.heatValue = heatValue;
+    }
     if (player.tableau.has(CardName.MECHANIZED_WORLD_MAKER)) {
       result.steel = true;
     }
     if (player.tableau.has(CardName.ASTRAL_BOG)) {
+      result.titanium = true;
+    }
+    if (project.name === CardName.CITY_STANDARD_PROJECT && player.tableau.has(CardName.GENERALIST_TERRAFORMA)) {
+      result.steel = true;
       result.titanium = true;
     }
     if (project.name === CardName.CITY_STANDARD_PROJECT && player.tableau.has(CardName.STEEL_MONOPOLY)) {
@@ -94,10 +113,35 @@ export class Eternity {
     return player.tableau.has(CardName.INTERSTELLA_PROJECT);
   }
 
-  /** Wingspears Corp: the action right after placing a greenery may ignore global requirements on an animal card. */
+  /**
+   * Cards that let a specific card ignore global requirements: Wingspears Corp (the action after a greenery),
+   * Greeting Card and Tardigrade Parthenogenesis (the card they found, this generation).
+   */
   public static ignoresGlobalRequirement(player: IPlayer, card: ICard): boolean {
-    const wingspears = player.tableau.get(CardName.WINGSPEARS_CORP) as (ICard & {ignoresGlobalRequirementsFor?: (p: IPlayer, c: ICard) => boolean}) | undefined;
-    return wingspears?.ignoresGlobalRequirementsFor?.(player, card) ?? false;
+    for (const c of player.tableau) {
+      const f = (c as ICard & {ignoresGlobalRequirementsFor?: (p: IPlayer, c: ICard) => boolean}).ignoresGlobalRequirementsFor;
+      if (f !== undefined && f.call(c, player, card)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** Flora, Fauna, and Funga: its two cards play with global requirements +/- N steps (not oceans). */
+  public static globalRequirementBonus(player: IPlayer, card: ICard, parameter: GlobalParameter): number {
+    let bonus = 0;
+    for (const c of player.tableau) {
+      const f = (c as ICard & {globalRequirementBonusFor?: (p: IPlayer, c: ICard, g: GlobalParameter) => number}).globalRequirementBonusFor;
+      if (f !== undefined) {
+        bonus += f.call(c, player, card, parameter);
+      }
+    }
+    return bonus;
+  }
+
+  /** Venusian Microfauna can't receive resources from other cards. */
+  public static refusesResources(card: ICard): boolean {
+    return card.name === CardName.VENUSIAN_MICROFAUNA;
   }
 
   /** Patent Valuation Adjustment: +1 M€ per card sold. */
@@ -172,5 +216,112 @@ export class Eternity {
   /** Counts the cards a player has that hold a given resource (used by tests and helpers). */
   public static resourceCards(player: IPlayer, type: CardResource): number {
     return player.getResourceCards(type).length;
+  }
+
+  /** DGT Mars Crew: passing only ends the turn while anyone else is still playing. */
+  public static keepsPlayingAfterPass(player: IPlayer): boolean {
+    const game = player.game;
+    return game.phase === Phase.ACTION &&
+      player.tableau.has(CardName.DGT_MARS_CREW) &&
+      game.getPassedPlayers().length < game.players.length - 1;
+  }
+
+  /** Jovicorp: milestones need one unit less. */
+  public static milestoneBonus(player: IPlayer): number {
+    return player.tableau.has(CardName.JOVICORP) ? 1 : 0;
+  }
+
+  /** Extra actions offered to a player: O.I.S.'s "reveal cards" action for its opponents. */
+  public static extraActions(player: IPlayer): Array<PlayerInput> {
+    const result: Array<PlayerInput> = [];
+    for (const p of player.game.players) {
+      if (p === player) {
+        continue;
+      }
+      const ois = p.tableau.get(CardName.OIS) as (ICard & {revealAction?: (owner: IPlayer, target: IPlayer) => PlayerInput | undefined}) | undefined;
+      const input = ois?.revealAction?.(p, player);
+      if (input !== undefined) {
+        result.push(input);
+      }
+    }
+    return result;
+  }
+
+  /** IOA: free trades with Io. */
+  public static colonyTraders(player: IPlayer): Array<IColonyTrader> {
+    if (!player.tableau.has(CardName.IOA)) {
+      return [];
+    }
+    return [{
+      canUse: () => player.game.colonies.some((c) => c.name === ColonyName.IO && c.isActive && c.visitor === undefined),
+      optionText: () => message('Trade with Io for free (${0})', (b) => b.cardName(CardName.IOA)),
+      trade: (colony: IColony) => {
+        if (colony.name !== ColonyName.IO) {
+          throw new InputError('The IOA free trade is only for Io');
+        }
+        player.game.log('${0} traded with ${1} for free', (b) => b.player(player).colony(colony));
+        colony.trade(player);
+      },
+    }];
+  }
+
+  private static powerhouseBusy = false;
+  /** Powerhouse: each energy or steel production increase may become the other. */
+  public static onProductionIncrease(player: IPlayer, resource: Resource, amount: number): void {
+    if (Eternity.powerhouseBusy || amount <= 0 || player.game === undefined) {
+      return;
+    }
+    if (resource !== Resource.ENERGY && resource !== Resource.STEEL) {
+      return;
+    }
+    if (!player.tableau.has(CardName.POWERHOUSE)) {
+      return;
+    }
+    const phase = player.game.phase;
+    if (phase !== Phase.ACTION && phase !== Phase.PRELUDES && phase !== Phase.CEOS) {
+      return;
+    }
+    const other = resource === Resource.ENERGY ? Resource.STEEL : Resource.ENERGY;
+    player.defer(new OrOptions(
+      new SelectOption(message('Keep +${0} ${1} production', (b) => b.number(amount).string(resource))),
+      new SelectOption(message('Make it +${0} ${1} production instead', (b) => b.number(amount).string(other))).andThen(() => {
+        Eternity.powerhouseBusy = true;
+        try {
+          player.production.add(resource, -amount);
+          player.production.add(other, amount, {log: true});
+        } finally {
+          Eternity.powerhouseBusy = false;
+        }
+        return undefined;
+      })).setTitle('Powerhouse: energy or steel production?'));
+  }
+
+  /** Venusia: heat is worth 2 M€ for standard projects. */
+  public static standardProjectHeatValue(player: IPlayer): number | undefined {
+    return player.tableau.has(CardName.VENUSIA) ? 2 : undefined;
+  }
+
+  public static standardProjectHeatCredit(player: IPlayer, project: IStandardProjectCard): number {
+    const value = Eternity.standardProjectHeatValue(player);
+    if (value === undefined || project.name === CardName.SELL_PATENTS_STANDARD_PROJECT) {
+      return 0;
+    }
+    // Helion-style heat is already counted at 1 M€ by canAfford.
+    return player.heat * (player.canUseHeatAsMegaCredits ? value - 1 : value);
+  }
+
+  /** Generalist Terraforma keeps exactly 5 of its opening project cards, for free. */
+  public static checkInitialCards(corporation: ICard, kept: number): void {
+    if (corporation.name === CardName.GENERALIST_TERRAFORMA && kept !== 5) {
+      throw new InputError('Generalist Terraforma must keep exactly 5 project cards');
+    }
+  }
+
+  /** Reveals cards: used by O.I.S. Kept here so the opponents' action can be built without importing the card. */
+  public static selectCardsToReveal(_player: IPlayer, cards: ReadonlyArray<ICard>, min: number, cb: (cards: ReadonlyArray<ICard>) => void): SelectCard<ICard> {
+    return new SelectCard('Place cards from your hand face up (they stay in your hand)', 'Place face up', cards.slice(), {min, max: cards.length}).andThen((selected) => {
+      cb(selected);
+      return undefined;
+    });
   }
 }

@@ -186,7 +186,7 @@ export default defineComponent({
         case 'spireScience':
           return true;
         case 'heat':
-          return this.playerinput.paymentOptions.heat === true;
+          return this.playerinput.paymentOptions.heat === true || canPayWith.heat === true;
         case 'steel':
           return canPayWith.steel === true;
         case 'titanium':

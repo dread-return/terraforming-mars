@@ -65,6 +65,15 @@ export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProje
       payment = {...payment, floaters: 0};
     }
 
+    // Eternity (Venusia): heat pays for standard projects at its own rate.
+    if (canPayWith.heat === true && canPayWith.heatValue !== undefined && payment.heat > 0) {
+      if (payment.heat > this.player.heat) {
+        throw new InputError('You do not have that much heat');
+      }
+      floaterCredit += payment.heat * canPayWith.heatValue;
+      payment = {...payment, heat: 0};
+    }
+
     if (!this.player.canSpend(payment, reserveUnits)) {
       throw new InputError('You do not have that many resources');
     }

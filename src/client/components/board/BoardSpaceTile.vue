@@ -74,6 +74,9 @@ const tileTypeToCssClass: Record<TileType, string> = {
   [TileType.VENUS_GAS_MINE]: 'venus-gas-mine',
   [TileType.VENUS_HABITAT]: 'venus-habitat',
   [TileType.MENAGERIE]: 'vp-menagerie',
+  [TileType.FLOWSTONE_CAVE]: 'et-flowstone-cave',
+  [TileType.GLACIER]: 'et-glacier',
+  [TileType.GROUND_ZERO]: 'et-ground-zero',
 };
 
 const tileTypeToCssClassAresOverride = new Map<TileType, string>([
@@ -128,6 +131,9 @@ const descriptions: Record<TileType, string> = {
   [TileType.VENUS_GAS_MINE]: 'Gas Mine: 1 VP per adjacent Floating Array',
   [TileType.VENUS_HABITAT]: 'Venus Habitat: 1 VP per adjacent Floating Array',
   [TileType.MENAGERIE]: 'Menagerie. Adjacency bonus: 1 animal.',
+  [TileType.FLOWSTONE_CAVE]: 'Flowstone Cave',
+  [TileType.GLACIER]: 'Thawing Glacier: becomes an ocean when the temperature is maxed.',
+  [TileType.GROUND_ZERO]: 'Ground Zero',
   [TileType.SEDIMENT]: 'Sediment: any player may place a city here, ignoring placement rules, and gain 3 M€. Adjacency bonus: 1 titanium.',
 };
 

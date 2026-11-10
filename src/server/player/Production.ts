@@ -66,5 +66,6 @@ export class Production extends BaseStock {
       card.onProductionGain?.(this.player, resource, amount);
     }
     Eternity.onProductionGain(this.player, resource, amount);
+    Eternity.onProductionIncrease(this.player, resource, amount);
   }
 }

@@ -2,6 +2,7 @@ import {CardName} from '../../../common/cards/CardName';
 import {ModuleManifest} from '../ModuleManifest';
 import {AbandonedProject} from './AbandonedProject';
 import {AcademicHoverInstitution} from './AcademicHoverInstitution';
+import {AcquisitionTarget} from './AcquisitionTarget';
 import {Actinobacteria} from './Actinobacteria';
 import {AdvancedTitaniumPlant} from './AdvancedTitaniumPlant';
 import {AerospaceDataMining} from './AerospaceDataMining';
@@ -9,6 +10,7 @@ import {AlienLifeOnMars} from './AlienLifeOnMars';
 import {AllIn} from './AllIn';
 import {AncientReplicatorTech} from './AncientReplicatorTech';
 import {AncientVenusDiscovery} from './AncientVenusDiscovery';
+import {AnimalsFromHome} from './AnimalsFromHome';
 import {AquaticLifeBringingAsteroid} from './AquaticLifeBringingAsteroid';
 import {AsteroidFromTheInnerSolarSystem} from './AsteroidFromTheInnerSolarSystem';
 import {AsteroidFullOfRNA} from './AsteroidFullOfRNA';
@@ -33,6 +35,7 @@ import {CorporationCoalition} from './CorporationCoalition';
 import {CrashingSpaceDebris} from './CrashingSpaceDebris';
 import {CryptoPonziScheme} from './CryptoPonziScheme';
 import {CurrentConductors} from './CurrentConductors';
+import {DGTMarsCrew} from './DGTMarsCrew';
 import {DeepMachineLearningAlgorithms} from './DeepMachineLearningAlgorithms';
 import {DeepSpaceExploration} from './DeepSpaceExploration';
 import {DemolishTheCityForScrap} from './DemolishTheCityForScrap';
@@ -53,14 +56,18 @@ import {FirstLaunch} from './FirstLaunch';
 import {FloaterDistributors} from './FloaterDistributors';
 import {FloatingAerobats} from './FloatingAerobats';
 import {FloodIrrigation} from './FloodIrrigation';
+import {FloraFaunaAndFunga} from './FloraFaunaAndFunga';
+import {FlowstoneCave} from './FlowstoneCave';
 import {FlyingSupplies} from './FlyingSupplies';
 import {FreezingColdAsteroid} from './FreezingColdAsteroid';
 import {FuelPowerNetwork} from './FuelPowerNetwork';
 import {GalacticPanorama} from './GalacticPanorama';
+import {GeneralistTerraforma} from './GeneralistTerraforma';
 import {GenetiCorp} from './GenetiCorp';
 import {Gentrification} from './Gentrification';
 import {GettingRidOfOldFabricsForForests} from './GettingRidOfOldFabricsForForests';
 import {GreenCityLegislation} from './GreenCityLegislation';
+import {GreetingCard} from './GreetingCard';
 import {GroundwaterMoholeDrilling} from './GroundwaterMoholeDrilling';
 import {HackerAttack} from './HackerAttack';
 import {HarvestedVenusianGas} from './HarvestedVenusianGas';
@@ -70,6 +77,7 @@ import {HeavyMiner} from './HeavyMiner';
 import {HempFactory} from './HempFactory';
 import {HiTechUnderwaterResearchFacility} from './HiTechUnderwaterResearchFacility';
 import {HiddenAgendaRevealed} from './HiddenAgendaRevealed';
+import {IOA} from './IOA';
 import {IllegalMiningSite} from './IllegalMiningSite';
 import {ImpulsiveDigging} from './ImpulsiveDigging';
 import {InnastarCorp} from './InnastarCorp';
@@ -78,9 +86,11 @@ import {InterstellaPrelude} from './InterstellaPrelude';
 import {InterstellaProject} from './InterstellaProject';
 import {InterstellarNFTScam} from './InterstellarNFTScam';
 import {InventrixHackerGroup} from './InventrixHackerGroup';
+import {JellyfishFarms} from './JellyfishFarms';
 import {JovianBuildingMission} from './JovianBuildingMission';
 import {JovianFauna} from './JovianFauna';
 import {JovianOutpost} from './JovianOutpost';
+import {Jovicorp} from './Jovicorp';
 import {LargeIndustrialMicrobes} from './LargeIndustrialMicrobes';
 import {LaserFactory} from './LaserFactory';
 import {LavaCaverns} from './LavaCaverns';
@@ -122,6 +132,7 @@ import {NebulaEnergyFieldPortal} from './NebulaEnergyFieldPortal';
 import {NewHorizon} from './NewHorizon';
 import {NewThorgate} from './NewThorgate';
 import {NuclearPoweredExcavation} from './NuclearPoweredExcavation';
+import {OIS} from './OIS';
 import {OmegaMeteorShower} from './OmegaMeteorShower';
 import {OrbitalSpaceDebrisTether} from './OrbitalSpaceDebrisTether';
 import {OverheatedAsteroid} from './OverheatedAsteroid';
@@ -133,6 +144,7 @@ import {PhotosyntheticSolarCells} from './PhotosyntheticSolarCells';
 import {PlantsFromHome} from './PlantsFromHome';
 import {PowerFailure} from './PowerFailure';
 import {PowerSiphon} from './PowerSiphon';
+import {Powerhouse} from './Powerhouse';
 import {PressurizedAsteroid} from './PressurizedAsteroid';
 import {PrivateColony} from './PrivateColony';
 import {ProjectBlueprint} from './ProjectBlueprint';
@@ -140,6 +152,7 @@ import {ProjectGreenhouse} from './ProjectGreenhouse';
 import {ProjectWhammy} from './ProjectWhammy';
 import {RadioactiveAsteroid} from './RadioactiveAsteroid';
 import {RedHotAsteroid} from './RedHotAsteroid';
+import {RelativisticReverberation} from './RelativisticReverberation';
 import {ResearchProfiteering} from './ResearchProfiteering';
 import {ResourceGarrison} from './ResourceGarrison';
 import {RummagingThroughTheTrash} from './RummagingThroughTheTrash';
@@ -149,6 +162,7 @@ import {SecondRockSubsidies} from './SecondRockSubsidies';
 import {SeedingMission} from './SeedingMission';
 import {Settlement} from './Settlement';
 import {ShapeshiftingBacteria} from './ShapeshiftingBacteria';
+import {ShellCorporation} from './ShellCorporation';
 import {ShinyGoldenAsteroid} from './ShinyGoldenAsteroid';
 import {SingularitySuit} from './SingularitySuit';
 import {SmallCheats} from './SmallCheats';
@@ -163,6 +177,7 @@ import {SteelFrictionProducers} from './SteelFrictionProducers';
 import {SteelIndustries} from './SteelIndustries';
 import {SteelMonopoly} from './SteelMonopoly';
 import {StrategicBaseBombardment} from './StrategicBaseBombardment';
+import {SunkenCity} from './SunkenCity';
 import {SupernovaAsteroid} from './SupernovaAsteroid';
 import {TechEnabledEnergyHub} from './TechEnabledEnergyHub';
 import {TerraMars} from './TerraMars';
@@ -188,6 +203,8 @@ import {UnstableElementMining} from './UnstableElementMining';
 import {UrbanizationIncentives} from './UrbanizationIncentives';
 import {VenusDevelopmentContract} from './VenusDevelopmentContract';
 import {VenusTradeStation} from './VenusTradeStation';
+import {Venusia} from './Venusia';
+import {VenusianMicrofauna} from './VenusianMicrofauna';
 import {VenusianPowerBrokerage} from './VenusianPowerBrokerage';
 import {Vipers} from './Vipers';
 import {ViralAmoeboid} from './ViralAmoeboid';
@@ -325,7 +342,9 @@ export const ETERNITY_CARD_MANIFEST = new ModuleManifest({
   },
   preludeCards: {
     [CardName.ACADEMIC_HOVER_INSTITUTION]: {Factory: AcademicHoverInstitution, compatibility: 'venus'},
+    [CardName.ACQUISITION_TARGET]: {Factory: AcquisitionTarget},
     [CardName.ALL_IN]: {Factory: AllIn},
+    [CardName.ANIMALS_FROM_HOME]: {Factory: AnimalsFromHome},
     [CardName.COLONIZATION_PROJECT]: {Factory: ColonizationProject},
     [CardName.CORPORATION_COALITION]: {Factory: CorporationCoalition},
     [CardName.CRASHING_SPACE_DEBRIS]: {Factory: CrashingSpaceDebris},
@@ -336,15 +355,19 @@ export const ETERNITY_CARD_MANIFEST = new ModuleManifest({
     [CardName.ENRICHED_MARTIAN_SOIL]: {Factory: EnrichedMartianSoil},
     [CardName.EXPERIMENTAL_BIO_SEEDING]: {Factory: ExperimentalBioSeeding},
     [CardName.FLOOD_IRRIGATION]: {Factory: FloodIrrigation},
+    [CardName.FLORA_FAUNA_AND_FUNGA]: {Factory: FloraFaunaAndFunga},
+    [CardName.FLOWSTONE_CAVE]: {Factory: FlowstoneCave},
     [CardName.FLYING_SUPPLIES]: {Factory: FlyingSupplies},
     [CardName.FUEL_POWER_NETWORK]: {Factory: FuelPowerNetwork},
     [CardName.GALACTIC_PANORAMA]: {Factory: GalacticPanorama},
+    [CardName.GREETING_CARD]: {Factory: GreetingCard},
     [CardName.GROUNDWATER_MOHOLE_DRILLING]: {Factory: GroundwaterMoholeDrilling},
     [CardName.HACKER_ATTACK]: {Factory: HackerAttack},
     [CardName.HEAVY_MINER]: {Factory: HeavyMiner},
     [CardName.IMPULSIVE_DIGGING]: {Factory: ImpulsiveDigging},
     [CardName.INTERSTELLA]: {Factory: InterstellaPrelude},
     [CardName.INVENTRIX_HACKER_GROUP]: {Factory: InventrixHackerGroup, compatibility: 'pathfinders'},
+    [CardName.JELLYFISH_FARMS]: {Factory: JellyfishFarms},
     [CardName.JOVIAN_OUTPOST]: {Factory: JovianOutpost},
     [CardName.LASER_FACTORY]: {Factory: LaserFactory},
     [CardName.LIGHT_METAL_MANUFACTURING]: {Factory: LightMetalManufacturing},
@@ -364,6 +387,7 @@ export const ETERNITY_CARD_MANIFEST = new ModuleManifest({
     [CardName.OXYGENATED_ASTEROID]: {Factory: OxygenatedAsteroid},
     [CardName.PROJECT_BLUEPRINT]: {Factory: ProjectBlueprint},
     [CardName.PROJECT_GREENHOUSE]: {Factory: ProjectGreenhouse},
+    [CardName.RELATIVISTIC_REVERBERATION]: {Factory: RelativisticReverberation},
     [CardName.RUMMAGING_THROUGH_THE_TRASH]: {Factory: RummagingThroughTheTrash},
     [CardName.SEEDING_MISSION]: {Factory: SeedingMission},
     [CardName.SETTLEMENT]: {Factory: Settlement},
@@ -373,6 +397,7 @@ export const ETERNITY_CARD_MANIFEST = new ModuleManifest({
     [CardName.STARGAZING]: {Factory: Stargazing},
     [CardName.STEEL_INDUSTRIES]: {Factory: SteelIndustries},
     [CardName.STRATEGIC_BASE_BOMBARDMENT]: {Factory: StrategicBaseBombardment},
+    [CardName.SUNKEN_CITY]: {Factory: SunkenCity},
     [CardName.TERRA_MARS]: {Factory: TerraMars},
     [CardName.TERRAFORM_LOBBYISM]: {Factory: TerraformLobbyism},
     [CardName.THARSIS_PROTOTYPE_CITY]: {Factory: TharsisPrototypeCity},
@@ -380,25 +405,34 @@ export const ETERNITY_CARD_MANIFEST = new ModuleManifest({
     [CardName.TRANQUIL_RESPITE]: {Factory: TranquilRespite},
     [CardName.UNKNOWN_TERRITORY]: {Factory: UnknownTerritory},
     [CardName.VENUS_TRADE_STATION]: {Factory: VenusTradeStation, compatibility: ['venus', 'colonies']},
+    [CardName.VENUSIAN_MICROFAUNA]: {Factory: VenusianMicrofauna, compatibility: 'venus'},
     [CardName.WARP_GATE]: {Factory: WarpGate},
   },
   corporationCards: {
     [CardName.ASTRO_SOILS]: {Factory: AstroSoils},
     [CardName.BAMBOO_BUILDINGS]: {Factory: BamBooBuildings},
     [CardName.CASH_CO]: {Factory: CASHCo},
+    [CardName.DGT_MARS_CREW]: {Factory: DGTMarsCrew},
     [CardName.EXOPLANET_BUILDERS]: {Factory: ExoplanetBuilders},
     [CardName.FARMS_OF_THE_FUTURE]: {Factory: FarmsOfTheFuture},
+    [CardName.GENERALIST_TERRAFORMA]: {Factory: GeneralistTerraforma},
     [CardName.GENETICORP]: {Factory: GenetiCorp},
+    [CardName.IOA]: {Factory: IOA, compatibility: ['colonies', 'venus']},
     [CardName.INNASTAR_CORP]: {Factory: InnastarCorp},
     [CardName.INTERPLANETARY_INTEREST_CHARGERS]: {Factory: InterplanetaryInterestChargers},
+    [CardName.JOVICORP]: {Factory: Jovicorp},
     [CardName.MADNESS]: {Factory: MadNess},
     [CardName.MARS_CONSERVATIONISTS]: {Factory: MarsConservationists},
     [CardName.MISERVISION]: {Factory: MiserVision},
     [CardName.NEW_THORGATE]: {Factory: NewThorgate},
+    [CardName.OIS]: {Factory: OIS},
+    [CardName.POWERHOUSE]: {Factory: Powerhouse},
+    [CardName.SHELL_CORPORATION]: {Factory: ShellCorporation},
     [CardName.THE_GARRISON_FOUNDATION]: {Factory: TheGarrisonFoundation},
     [CardName.THE_VINES]: {Factory: TheVines},
     [CardName.THERMACORP]: {Factory: Thermacorp},
     [CardName.TILLCO_40]: {Factory: Tillco40},
+    [CardName.VENUSIA]: {Factory: Venusia, compatibility: 'venus'},
     [CardName.WINGSPEARS_CORP]: {Factory: WingspearsCorp},
   },
 });

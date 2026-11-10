@@ -94,6 +94,11 @@ export const PaymentWidgetMixin = defineComponent({
         return this.playerView.thisPlayer.steelValue;
       case 'titanium':
         return this.getTitaniumResourceRate();
+      case 'heat': {
+        // Eternity (Venusia): heat pays for standard projects at its own rate.
+        const heatValue = (this as any).card?.standardProjectCanPayWith?.heatValue;
+        return typeof heatValue === 'number' ? heatValue : DEFAULT_PAYMENT_VALUES[unit];
+      }
       case 'floaters':
         // Venus Phase 2: floaters paying for Venus standard projects (Negative Mass Fluids makes them worth more).
         return (this.playerinput.type === 'projectCard' ? this.playerinput.floaterValue : undefined) ?? DEFAULT_PAYMENT_VALUES[unit];

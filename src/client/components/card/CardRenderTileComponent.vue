@@ -195,6 +195,15 @@ const TILE_CLASSES: Record<TileType, Classes> = {
   [TileType.MENAGERIE]: {
     tile: 'card-tile-vp-menagerie',
   },
+  [TileType.FLOWSTONE_CAVE]: {
+    tile: 'card-tile-et-flowstone-cave',
+  },
+  [TileType.GLACIER]: {
+    tile: 'card-tile-et-glacier',
+  },
+  [TileType.GROUND_ZERO]: {
+    tile: 'card-tile-et-ground-zero',
+  },
 };
 
 export default defineComponent({

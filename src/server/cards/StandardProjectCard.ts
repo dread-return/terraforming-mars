@@ -63,7 +63,7 @@ export abstract class StandardProjectCard extends Card implements IStandardProje
     const canPayWith = Eternity.standardProjectPayWith(player, this, this.canPayWith(player));
     return {
       ...canPayWith,
-      cost: this.getAdjustedCost(player),
+      cost: Math.max(0, this.getAdjustedCost(player) - Eternity.standardProjectHeatCredit(player, this)),
       tr: this.tr,
       auroraiData: true,
       spireScience: true,

@@ -85,6 +85,11 @@ export enum TileType {
     VENUS_GAS_MINE, // 57
     VENUS_HABITAT, // 58
     MENAGERIE, // 59
+
+    // Eternity
+    FLOWSTONE_CAVE, // 60
+    GLACIER, // 61
+    GROUND_ZERO, // 62
   }
 
 export const tileTypeToString: Record<TileType, string> = {
@@ -149,6 +154,9 @@ export const tileTypeToString: Record<TileType, string> = {
   [TileType.VENUS_GAS_MINE]: 'Gas Mine',
   [TileType.VENUS_HABITAT]: 'Venus Habitat',
   [TileType.MENAGERIE]: 'Menagerie',
+  [TileType.FLOWSTONE_CAVE]: 'Flowstone Cave',
+  [TileType.GLACIER]: 'Thawing Glacier',
+  [TileType.GROUND_ZERO]: 'Ground Zero',
 } as const;
 
 export const HAZARD_TILES = new Set([TileType.DUST_STORM_MILD, TileType.DUST_STORM_SEVERE, TileType.EROSION_MILD, TileType.EROSION_SEVERE]);

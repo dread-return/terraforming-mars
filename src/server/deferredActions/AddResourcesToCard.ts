@@ -7,6 +7,7 @@ import {DeferredAction} from './DeferredAction';
 import {Priority} from './Priority';
 import {Message} from '../../common/logs/Message';
 import {message} from '../logs/MessageBuilder';
+import {Eternity} from '../cards/eternity/Eternity';
 
 export type Options = {
   count?: number;
@@ -43,6 +44,8 @@ export class AddResourcesToCard extends DeferredAction {
         return card.tags.includes(restrictedTag) || card.tags.includes(Tag.WILD);
       });
     }
+    // Eternity: Venusian Microfauna only keeps its starting microbes.
+    cards = cards.filter((card) => !Eternity.refusesResources(card));
     if (this.options.filter !== undefined) {
       cards = cards.filter(this.options.filter);
     }

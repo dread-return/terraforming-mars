@@ -35,6 +35,9 @@ export type StandardProjectCanPayWith = {
   kuiperAsteroids?: boolean,
   /** Venus Phase 2: floaters from any of your cards (Venus standard projects). */
   floaters?: boolean,
+  /** Eternity (Venusia): heat pays for standard projects at this rate. */
+  heat?: boolean,
+  heatValue?: number,
 }
 
 /**

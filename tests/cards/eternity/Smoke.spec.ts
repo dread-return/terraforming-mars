@@ -141,7 +141,11 @@ describe('Eternity smoke test: every card plays, acts and renders', () => {
       if (card.type === CardType.CORPORATION) {
         player.playCorporationCard(card as any);
       } else {
-        player.cardsInHand.push(card as any);
+        if (card.type === CardType.PRELUDE) {
+          player.preludeCardsInHand.push(card as any);
+        } else {
+          player.cardsInHand.push(card as any);
+        }
         if ((card as any).canPlay(player) === false) {
           if (process.env.SHOW_SKIPPED) {
             console.log('SKIPPED ' + card.name);

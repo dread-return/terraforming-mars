@@ -2,6 +2,7 @@ import {MilestoneName} from '../../common/ma/MilestoneName';
 import {BoardName} from '../../common/boards/BoardName';
 import {IPlayer} from '../IPlayer';
 import {IMarsBot} from '@/server/automa/IMarsBot';
+import {Eternity} from '../cards/eternity/Eternity';
 
 export interface IMilestone {
   name: MilestoneName;
@@ -33,6 +34,7 @@ export abstract class BaseMilestone implements IMilestone {
 
   public abstract getScore(player: IPlayer): number;
   public canClaim(player: IPlayer): boolean {
-    return this.getScore(player) >= this.threshold;
+    // Eternity: Jovicorp claims milestones with one unit less.
+    return this.getScore(player) + Eternity.milestoneBonus(player) >= this.threshold;
   }
 }

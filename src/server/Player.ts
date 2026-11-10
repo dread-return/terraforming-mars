@@ -1210,6 +1210,12 @@ export class Player implements IPlayer {
   }
 
   public pass(): void {
+    // Eternity: DGT Mars Crew may still play after passing, so passing only ends its turn.
+    if (Eternity.keepsPlayingAfterPass(this)) {
+      this.actionsTakenThisRound = this.availableActionsThisRound;
+      this.game.log('${0} passed, but may still play later this generation (DGT Mars Crew)', (b) => b.player(this));
+      return;
+    }
     this.game.playerHasPassed(this);
     this.lastCardPlayed = undefined;
     this.autopass = false;
@@ -1676,6 +1682,9 @@ export class Player implements IPlayer {
     if (coloniesTradeAction !== undefined) {
       action.options.push(coloniesTradeAction);
     }
+
+    // Eternity: extra actions (O.I.S. lets opponents place cards face up).
+    action.options.push(...Eternity.extraActions(this));
 
     // Add delegates
     const input = this.game.turmoil?.getSendDelegateInput(this);

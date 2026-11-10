@@ -32,3 +32,216 @@
 .card-tile-et-ground-zero {
   background-image: url(./assets/eternity/ground_zero.png);
 }
+
+// ---------------------------------------------------------------------------
+// Eternity corporation logos: the lettering of the printed cards.
+// Fonts: assets/eternity/fonts (see its README for licences).
+// ---------------------------------------------------------------------------
+@font-face {
+  font-family: 'EtUbuntu';
+  src: url('./assets/eternity/fonts/ubuntu-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EtUbuntu';
+  src: url('./assets/eternity/fonts/ubuntu-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EtUbuntu';
+  src: url('./assets/eternity/fonts/ubuntu-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EtTinos';
+  src: url('./assets/eternity/fonts/tinos-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EtTinos';
+  src: url('./assets/eternity/fonts/tinos-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EtTinos';
+  src: url('./assets/eternity/fonts/tinos-latin-700-italic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EtBaloo';
+  src: url('./assets/eternity/fonts/baloo-2-latin-800-normal.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EtArchivoBlack';
+  src: url('./assets/eternity/fonts/archivo-black-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EtFjalla';
+  src: url('./assets/eternity/fonts/fjalla-one-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EtExo';
+  src: url('./assets/eternity/fonts/exo-2-latin-800-italic.woff2') format('woff2');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EtExo';
+  src: url('./assets/eternity/fonts/exo-2-latin-900-italic.woff2') format('woff2');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EtPlayfair';
+  src: url('./assets/eternity/fonts/playfair-display-latin-900-italic.woff2') format('woff2');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@et-dark-outline: -1px 0 #222, 0 1px #222, 1px 0 #222, 0 -1px #222;
+@et-light-outline: -1px 0 #fff, 0 1px #fff, 1px 0 #fff, 0 -1px #fff;
+
+.card-corporation-logo .et-logo {
+  position: absolute;
+  top: 18px;
+  left: 4px;
+  max-width: 160px;
+  font-size: 20px;
+  line-height: 1.05;
+  font-weight: normal;
+  letter-spacing: 0;
+  text-align: left;
+  white-space: nowrap;
+
+  &.et-logo-dgt {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 700; font-size: 19px; color: #fff;
+    text-shadow: @et-dark-outline, 2px 2px 4px #000;
+  }
+  &.et-logo-exoplanet {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 500; font-size: 19px; color: #3a3a3a;
+    text-shadow: 1px 1px 2px #c9a77a;
+  }
+  &.et-logo-iic {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 400; font-size: 17px; color: #2b2b2b;
+  }
+  &.et-logo-conservationists {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 700; font-size: 16px; color: #fff;
+    text-shadow: @et-dark-outline, 2px 2px 3px #000;
+  }
+  &.et-logo-miservision {
+    font-family: 'EtExo', sans-serif; font-weight: 900; font-style: italic; font-size: 24px; color: #3a2626;
+    text-shadow: @et-light-outline, 0 0 6px #ff6a00, 3px 2px 4px #ff3d00;
+  }
+  &.et-logo-ois {
+    font-family: 'EtTinos', serif; font-weight: 400; font-size: 26px; color: #4fd2ff;
+    text-shadow: 1px 1px 2px #1a4a66;
+    .et-line-1 { font-family: 'EtUbuntu', sans-serif; font-weight: 500; font-size: 9px; color: #111; text-shadow: none; }
+  }
+  &.et-logo-thermacorp {
+    font-family: 'EtTinos', serif; font-weight: 700; font-style: italic; font-size: 22px; color: #6b0d0d;
+    padding-bottom: 1px; border-bottom: 4px solid; border-image: linear-gradient(to right, #b00, #ff3b1f, #111) 1;
+  }
+  &.et-logo-astro-soils {
+    font-family: Prototype, sans-serif; font-size: 24px; color: #3b2f8f;
+    text-shadow: 1px 1px 0 #111, 2px 2px 3px #888;
+  }
+  &.et-logo-bamboo {
+    font-family: 'EtBaloo', sans-serif; font-weight: 800; font-size: 20px; line-height: 0.95; color: #3d2312;
+    text-shadow: 1px 1px 2px #c8e6a0;
+  }
+  &.et-logo-cash-co {
+    font-family: 'EtArchivoBlack', sans-serif; font-style: italic; font-size: 20px; color: #111;
+    border-bottom: 2px solid #111; padding-right: 6px;
+  }
+  &.et-logo-farms {
+    font-family: 'EtFjalla', sans-serif; font-size: 19px; color: #fff; letter-spacing: 0.5px;
+    text-shadow: @et-dark-outline, 2px 2px 3px #000;
+  }
+  &.et-logo-generalist {
+    font-family: 'EtFjalla', sans-serif; font-size: 18px; color: #fff; letter-spacing: 0.5px;
+    text-shadow: @et-dark-outline, 2px 2px 4px #000;
+  }
+  &.et-logo-geneticorp {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 700; font-size: 25px; color: #111;
+    padding: 0 8px 0 2px; border-radius: 0 10px 10px 0;
+    background: linear-gradient(to bottom, #9fdcff, #2b9be8 55%, #9fdcff);
+  }
+  &.et-logo-innastar {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 500; font-size: 24px; color: #d9d9d9;
+    text-shadow: @et-dark-outline, 2px 2px 3px #000;
+  }
+  &.et-logo-ioa {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 28px; color: #e01010;
+    text-shadow: 1px 1px 2px #400;
+    .et-line-1 { font-family: 'EtUbuntu', sans-serif; font-weight: 500; font-size: 12px; color: #e01010; text-shadow: none; }
+  }
+  &.et-logo-jovicorp {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 700; font-size: 26px; color: #fff;
+    text-shadow: @et-dark-outline, 2px 2px 4px #0b3b40;
+  }
+  &.et-logo-madness {
+    font-family: 'EtTinos', serif; font-weight: 700; font-style: italic; font-size: 26px; color: #8b2bd9;
+    text-shadow: -1px 0 #2a2aff, 0 1px #2a2aff, 1px 0 #2a2aff, 0 -1px #2a2aff, 3px 3px 0 #c9c9ff;
+  }
+  &.et-logo-new-thorgate {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 700; font-size: 15px; color: #111;
+    .et-line-0::before {
+      content: '';
+      display: inline-block; width: 16px; height: 14px; margin-right: 4px; vertical-align: -1px;
+      background: linear-gradient(135deg, #c8202a 45%, #2b3a8f 55%); transform: skewX(-15deg);
+    }
+  }
+  &.et-logo-powerhouse {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 18px; color: #8d1fd6;
+    text-shadow: 1px 1px 2px #333;
+    .et-line-1 { font-family: 'EtUbuntu', sans-serif; font-weight: 400; font-style: italic; font-size: 9px; color: #111; text-shadow: none; }
+  }
+  &.et-logo-shell {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 700; font-size: 19px; color: #fff;
+    text-shadow: @et-dark-outline, 2px 2px 4px #000;
+  }
+  &.et-logo-garrison {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 700; font-size: 17px; color: #13213f;
+    text-shadow: 1px 1px 2px #aab;
+  }
+  &.et-logo-vines {
+    font-family: 'EtExo', sans-serif; font-weight: 800; font-style: italic; font-size: 26px; color: #151515;
+    text-shadow: 2px 2px 3px #f3b9c9;
+  }
+  &.et-logo-tillco {
+    font-family: 'EtExo', sans-serif; font-weight: 900; font-style: italic; font-size: 26px; color: #fff;
+    text-shadow: @et-dark-outline, 3px 3px 0 #9b2bd9;
+  }
+  &.et-logo-venusia {
+    font-family: 'EtPlayfair', serif; font-weight: 900; font-style: italic; font-size: 30px;
+    color: #b4691c; text-shadow: -1px 0 #5a3008, 0 1px #5a3008, 1px 0 #5a3008, 0 -1px #5a3008, 2px 2px 3px #e6b35a;
+  }
+  &.et-logo-wingspears {
+    font-family: 'EtExo', sans-serif; font-weight: 900; font-style: italic; font-size: 19px; color: #3e9b3a;
+    text-shadow: -1px 0 #12340f, 0 1px #12340f, 1px 0 #12340f, 0 -1px #12340f;
+  }
+}

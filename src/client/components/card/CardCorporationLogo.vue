@@ -287,6 +287,7 @@
         </div>
       </template>
     </template>
+    <EternityCorpLogo v-else-if="isEternity" :title="title" />
     <template v-else>
       <div :class="logoClass">{{ capsTitle }}</div>
     </template>
@@ -297,6 +298,7 @@
 
 import {defineComponent} from 'vue';
 import {CardName} from '@/common/cards/CardName';
+import EternityCorpLogo, {ETERNITY_LOGOS} from '@/client/components/card/EternityCorpLogo.vue';
 
 
 const logos: Partial<Record<CardName, 'image' | 'css' | 'bespoke'>> = {
@@ -405,6 +407,9 @@ const logos: Partial<Record<CardName, 'image' | 'css' | 'bespoke'>> = {
 
 export default defineComponent({
   name: 'CardCorporationLogo',
+  components: {
+    EternityCorpLogo,
+  },
   props: {
     title: {
       type: String as () => CardName,
@@ -412,6 +417,9 @@ export default defineComponent({
     },
   },
   computed: {
+    isEternity(): boolean {
+      return ETERNITY_LOGOS[this.title] !== undefined;
+    },
     logos(): typeof logos {
       return logos;
     },

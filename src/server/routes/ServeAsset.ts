@@ -183,6 +183,15 @@ export class ServeAsset extends Handler {
         }
       }
 
+      // Eternity: corporation logo web fonts live in assets/eternity/fonts.
+      if (urlPath.startsWith('assets/eternity/fonts/') && urlPath.endsWith('.woff2')) {
+        const fontsRoot = path.resolve('./assets/eternity/fonts');
+        const resolvedFile = path.resolve(path.normalize(urlPath));
+        if (resolvedFile.startsWith(fontsRoot)) {
+          return {file: resolvedFile};
+        }
+      }
+
       if (urlPath.endsWith('.png') || urlPath.endsWith('.jpg') || urlPath.endsWith('.json') || urlPath.endsWith('.svg')) {
         const assetsRoot = path.resolve('./assets');
         const resolvedFile = path.resolve(path.normalize(urlPath));

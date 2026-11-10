@@ -17,7 +17,7 @@ export class NebulaEnergyFieldPortal extends PreludeCard {
       metadata: {
         cardNumber: 'EP41',
         renderData: CardRenderer.builder((b) => {
-          b.text('Counts as playing 2 preludes. If it is your last prelude play, discard it and play the top prelude instead. Cannot be copied.', {size: Size.SMALL}).br;
+          b.text('Counts as 2 preludes. If it is your last prelude play, play the top prelude instead.', {size: Size.SMALL, isBold: false}).br;
           b.production((pb) => pb.energy(2)).cards(8, {digit});
         }),
         description: 'Increase your energy production 2 steps. Draw 8 cards.',

@@ -10,7 +10,7 @@ export class ControllingImportantSpaceMarkets extends Card implements IProjectCa
     super({
       type: CardType.EVENT,
       name: CardName.CONTROLLING_IMPORTANT_SPACE_MARKETS,
-      tags: [Tag.GALACTIC, Tag.EVENT],
+      tags: [Tag.GALACTIC],
       cost: 45,
       requirements: {tag: Tag.GALACTIC, count: 2},
       victoryPoints: 5,

@@ -1,3 +1,4 @@
+import {NEUTRAL_COLONY_ID} from '../colonies/NeutralColony';
 import {IPlayer} from '../IPlayer';
 import {PlayerId} from '../../common/Types';
 import {IColony} from '../colonies/IColony';
@@ -24,6 +25,9 @@ export class GiveColonyBonus extends DeferredAction {
     }
 
     for (const playerId of this.colony.colonies) {
+      if (playerId === NEUTRAL_COLONY_ID) {
+        continue; // Eternity: neutral colonies give no bonus.
+      }
       if (!this.selfish) {
         // Normal behavior; colony owners get their bonuses.
         this.waitingFor.add(playerId);

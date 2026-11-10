@@ -17,7 +17,7 @@ export class SunkenCity extends PreludeCard {
       metadata: {
         cardNumber: 'EP57',
         renderData: CardRenderer.builder((b) => {
-          b.minus().cards(1).oceans(1).oceans(1).city().asterix().br.text('City on one of them: an ocean and a city.', {size: Size.SMALL});
+          b.minus().cards(1).oceans(1).oceans(1).city().asterix().br.text('City on one of them: an ocean and a city.', {size: Size.SMALL, isBold: false});
         }),
         description: 'Discard a card. Place 2 connected ocean tiles. Then place a city on top of one of those oceans; it counts as an ocean and a city.',
       },

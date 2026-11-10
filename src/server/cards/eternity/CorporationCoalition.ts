@@ -3,6 +3,7 @@ import {CardRenderer} from '../render/CardRenderer';
 import {IPlayer} from '../../IPlayer';
 import {PreludeCard} from '../prelude/PreludeCard';
 import {Resource} from '../../../common/Resource';
+import {Size} from '../../../common/cards/render/Size';
 import {all} from '../Options';
 
 export class CorporationCoalition extends PreludeCard {
@@ -13,7 +14,7 @@ export class CorporationCoalition extends PreludeCard {
       metadata: {
         cardNumber: 'EP08',
         renderData: CardRenderer.builder((b) => {
-          b.text('ALL players:').cards(1, {all}).tr(2, {all}).production((pb) => pb.megacredits(2, {all})).br.text('Then again for you only.');
+          b.cards(1, {all}).tr(2, {all}).production((pb) => pb.megacredits(2, {all})).br.text('Then again for you only.', {size: Size.SMALL});
         }),
         description: 'ALL players draw a card, raise their TR 2 steps and increase their M\u20ac production 2 steps. Repeat this effect, but only for you.',
       },

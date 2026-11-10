@@ -8,6 +8,8 @@ export const SPENDABLE_STANDARD_RESOURCES = [
   'megacredits',
   // Helion corporation can spend heat as M€.
   'heat',
+  // Eternity: Powered Steel lets its owner spend energy as M€.
+  'energy',
   // Used for cards with building tags
   'steel',
   // Used for cards with space tags, and as the Luna Trade Federation

@@ -5,14 +5,13 @@ import {Card} from '../Card';
 import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
 import {SelectCard} from '../../inputs/SelectCard';
-import {Tag} from '../../../common/cards/Tag';
 
 export class UnsanctionedSalvage extends Card implements IProjectCard {
   constructor() {
     super({
       type: CardType.EVENT,
       name: CardName.UNSANCTIONED_SALVAGE,
-      tags: [Tag.EVENT],
+      tags: [],
       cost: 1,
       victoryPoints: -2,
       metadata: {

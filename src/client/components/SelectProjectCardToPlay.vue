@@ -82,6 +82,7 @@ export default defineComponent({
         'steel',
         'titanium',
         'heat',
+        'energy',
         'plants',
         'microbes',
         'floaters',
@@ -168,6 +169,7 @@ export default defineComponent({
       this.available.steel = Math.max(thisPlayer.steel - this.reserveUnits.steel, 0);
       this.available.titanium = Math.max(thisPlayer.titanium - this.reserveUnits.titanium, 0);
       this.available.heat = Math.max(this.availableHeat() - this.reserveUnits.heat, 0);
+      this.available.energy = Math.max(thisPlayer.energy - this.reserveUnits.energy, 0);
       this.available.plants = Math.max(thisPlayer.plants - this.reserveUnits.plants, 0);
     },
     canUse(unit: SpendableResource): boolean {
@@ -187,6 +189,8 @@ export default defineComponent({
           return true;
         case 'heat':
           return this.playerinput.paymentOptions.heat === true || canPayWith.heat === true;
+        case 'energy':
+          return this.playerinput.paymentOptions.energy === true;
         case 'steel':
           return canPayWith.steel === true;
         case 'titanium':
@@ -213,6 +217,8 @@ export default defineComponent({
           return true;
         case 'heat':
           return this.playerinput.paymentOptions.heat === true;
+        case 'energy':
+          return this.playerinput.paymentOptions.energy === true;
         case 'steel':
           return this.tags.includes(Tag.BUILDING) ||
           this.playerView.thisPlayer.lastCardPlayed === CardName.LAST_RESORT_INGENUITY;

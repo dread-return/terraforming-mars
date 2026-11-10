@@ -15,7 +15,7 @@ export class LightMetalManufacturing extends PreludeCard {
       metadata: {
         cardNumber: 'EP31',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.megacredits(1).heat(1).steel(1)).megacredits(1).heat(1).steel(1);
+          b.production((pb) => pb.megacredits(1).heat(1).steel(1)).br.megacredits(1).heat(1).steel(1);
         }),
         description: 'Increase your M\u20ac, heat and steel production 1 step. Gain 1 M\u20ac, 1 heat and 1 steel.',
       },

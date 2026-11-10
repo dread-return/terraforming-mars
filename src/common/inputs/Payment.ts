@@ -33,6 +33,7 @@ export const DEFAULT_PAYMENT_VALUES = {
   steel: 2,
   titanium: 3,
   heat: 1,
+  energy: 1,
   plants: 3,
 
   microbes: MICROBES_VALUE,
@@ -48,6 +49,7 @@ export const DEFAULT_PAYMENT_VALUES = {
 export namespace Payment {
   export const EMPTY: Readonly<Payment> = {
     heat: 0,
+    energy: 0,
     megacredits: 0,
     steel: 0,
     titanium: 0,
@@ -67,6 +69,7 @@ export namespace Payment {
       auroraiData: payment.auroraiData ?? 0,
       floaters: payment.floaters ?? 0,
       heat: payment.heat ?? 0,
+      energy: payment.energy ?? 0,
       lunaArchivesScience: payment.lunaArchivesScience ?? 0,
       spireScience: payment.spireScience ?? 0,
       megacredits: payment.megacredits ?? 0,
@@ -85,6 +88,7 @@ export namespace Payment {
     steel: ':r:steel:',
     titanium: ':r:titanium:',
     heat: ':r:heat:',
+    energy: ':r:energy:',
     plants: ':r:plants:',
     microbes: ':cr:microbe:',
     floaters: ':cr:floater:',

@@ -5,6 +5,8 @@ import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
 import {PreludeCard} from '../prelude/PreludeCard';
 import {SelectCard} from '../../inputs/SelectCard';
+import {Size} from '../../../common/cards/render/Size';
+import {digit} from '../Options';
 
 export class GreetingCard extends PreludeCard {
   constructor() {
@@ -14,7 +16,7 @@ export class GreetingCard extends PreludeCard {
       metadata: {
         cardNumber: 'EP21',
         renderData: CardRenderer.builder((b) => {
-          b.cards(4).text('keep 1').br.text('This generation:').megacredits(-25).projectRequirements();
+          b.cards(4, {digit}).text('keep 1').br.text('This gen:', {size: Size.SMALL}).megacredits(-25).projectRequirements();
         }),
         description: 'Reveal 4 cards. Keep one and discard the rest. You may play it this generation for up to 25 M\u20ac less, ignoring all global requirements (tag requirements still apply).',
       },

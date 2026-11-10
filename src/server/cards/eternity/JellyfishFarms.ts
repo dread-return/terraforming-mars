@@ -21,7 +21,7 @@ export class JellyfishFarms extends PreludeCard {
       metadata: {
         cardNumber: 'EP28',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.megacredits(3)).oceans(1).asterix().br.text('Anyone placing a tile next to it may add an animal to a card.', {size: Size.SMALL});
+          b.production((pb) => pb.megacredits(3)).oceans(1).asterix().br.text('Anyone placing a tile next to it may add an animal to a card.', {size: Size.SMALL, isBold: false});
         }),
         description: 'Increase your M\u20ac production 3 steps. Place an ocean tile and put a marker on it. Anyone placing a tile adjacent to this ocean may add an animal to a card.',
       },

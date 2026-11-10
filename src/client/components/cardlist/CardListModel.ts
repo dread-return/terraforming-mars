@@ -195,6 +195,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       [CardResource.CHEAT]: true,
       [CardResource.TRASH]: true,
       [CardResource.ROOT]: true,
+      [CardResource.MEDDLING]: true,
     },
     searchIndex: SearchIndex.create(),
     namesOnly: true,

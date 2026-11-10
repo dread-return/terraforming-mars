@@ -21,11 +21,9 @@ export class SteelMonopoly extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E124',
         renderData: CardRenderer.builder((b) => {
-          b.effect('Each steel you have is worth 1 M€ extra.', (eb) => eb.steel(1).startEffect.plus().megacredits(1)).br;
-          b.effect('You may use steel to pay for the City standard project.', (eb) => eb.steel(1).startEffect.city().asterix()).br;
+          b.effect('Steel is worth 1 M€ more and may pay for the City SP.', (eb) => eb.steel(1).startEffect.plus().megacredits(1).slash().city().asterix()).br;
           b.production((pb) => pb.steel(1));
         }),
-        description: 'Requires 3 building tags. Increase your steel production 1 step. -1 VP per 2 science tags you have.',
       },
     });
   }

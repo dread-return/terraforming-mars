@@ -26,6 +26,7 @@ export class SelectPayment extends BasePlayerInput<Payment> {
       amount: this.amount,
       paymentOptions: {
         heat: player.canUseHeatAsMegaCredits,
+        energy: player.canUseEnergyAsMegaCredits,
         lunaTradeFederationTitanium: player.canUseTitaniumAsMegacredits,
         ...this.paymentOptions,
       },

@@ -65,6 +65,29 @@ export class EternityUtils {
     }
   }
 
+  /**
+   * Lets `player` pick (optionally) one of `source()` and play it for free, ignoring requirements.
+   * `fromDiscard` removes it from the project discard pile first.
+   */
+  public static playFree(player: IPlayer, source: () => ReadonlyArray<IProjectCard>, title: string, fromDiscard: boolean): void {
+    player.defer(() => {
+      const playable = source().filter((c) => c.canPlayPostRequirements(player, {cost: 0}));
+      if (playable.length === 0) {
+        return undefined;
+      }
+      return new SelectCard(title, 'Play', playable, {min: 0, max: 1}).andThen(([card]) => {
+        if (card === undefined) {
+          return undefined;
+        }
+        if (fromDiscard) {
+          inplaceRemove(player.game.projectDeck.discardPile, card);
+        }
+        player.playCard(card);
+        return undefined;
+      });
+    });
+  }
+
   /** Lets `player` play a card from hand matching `filter`, if any is playable. Never fizzles. */
   public static mayPlayFromHand(player: IPlayer, filter: (card: IProjectCard) => boolean): void {
     player.defer(() => {

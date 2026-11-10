@@ -9,6 +9,7 @@ import {RemoveResourcesFromCard} from '../../deferredActions/RemoveResourcesFrom
 import {Resource} from '../../../common/Resource';
 import {Size} from '../../../common/cards/render/Size';
 import {Tag} from '../../../common/cards/Tag';
+import {digit} from '../Options';
 
 export class SingularitySuit extends Card implements IProjectCard {
   constructor() {
@@ -23,13 +24,10 @@ export class SingularitySuit extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E117',
         renderData: CardRenderer.builder((b) => {
-          b.text('Gen 2-4:').production((pb) => pb.megacredits(2)).resource(CardResource.SINGULARITY).br;
-          b.text('Gen 5-7:').cards(2).resource(CardResource.SINGULARITY).br;
-          b.text('Gen 8-10:').tr(1).resource(CardResource.SINGULARITY).br;
-          b.text('Gen 11+:').minus().resource(CardResource.SINGULARITY, 2).asterix().br;
-          b.text('(Action: do the effect for the current generation.)', {size: Size.SMALL});
+          b.text('Gen 2-4:', {size: Size.SMALL}).production((pb) => pb.megacredits(2)).nbsp.text('5-7:', {size: Size.SMALL}).cards(2, {digit}).br;
+          b.text('8-10:', {size: Size.SMALL}).tr(1).nbsp.text('11+:', {size: Size.SMALL}).minus().resource(CardResource.SINGULARITY, {amount: 2, digit}).asterix().br;
+          b.text('Action: this generation’s effect (gens 2-10: +1 singularity here).', {size: Size.SMALL, isBold: false});
         }),
-        description: 'Requires a space tag and a science tag. -1 VP per singularity here (effects that ignore negative VP do not affect this card).',
       },
     });
   }

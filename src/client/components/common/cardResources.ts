@@ -34,6 +34,7 @@ export const cardResourceCSS = {
   [CardResource.DISCOVERY]: 'card-resource-discovery',
   [CardResource.SINGULARITY]: 'card-resource-singularity',
   [CardResource.CHEAT]: 'card-resource-cheat',
+  [CardResource.MEDDLING]: 'card-resource-meddling',
   [CardResource.TRASH]: 'card-resource-trash',
   [CardResource.ROOT]: 'card-resource-root',
   [CardResource.DIRECTOR]: 'card-resource-director',

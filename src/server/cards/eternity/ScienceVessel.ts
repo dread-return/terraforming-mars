@@ -10,7 +10,6 @@ import {OrOptions} from '../../inputs/OrOptions';
 import {PlaceOceanTile} from '../../deferredActions/PlaceOceanTile';
 import {Resource} from '../../../common/Resource';
 import {SelectOption} from '../../inputs/SelectOption';
-import {Size} from '../../../common/cards/render/Size';
 import {Tag} from '../../../common/cards/Tag';
 
 export class ScienceVessel extends Card implements IProjectCard {
@@ -24,14 +23,11 @@ export class ScienceVessel extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E114',
         renderData: CardRenderer.builder((b) => {
-          b.action('Pay 1 energy to add 1 floater to any card and draw a card.', (eb) => eb.energy(1).startAction.resource(CardResource.FLOATER).asterix().cards(1)).br;
-          b.or().br;
-          b.action('Pay 1 steel to add 1 data to any card and gain 1 titanium.', (eb) => eb.steel(1).startAction.resource(CardResource.DATA).asterix().titanium(1)).br;
-          b.or().br;
-          b.action('Pay 1 titanium to add 1 science resource to any card and gain 1 M€.', (eb) => eb.titanium(1).startAction.resource(CardResource.SCIENCE).asterix().megacredits(1)).br;
-          b.text('Raise any global parameter 1 step or place an ocean.', {size: Size.SMALL});
+          b.action(undefined, (eb) => eb.energy(1).startAction.resource(CardResource.FLOATER).asterix().cards(1)).br;
+          b.action(undefined, (eb) => eb.steel(1).startAction.resource(CardResource.DATA).asterix().titanium(1)).br;
+          b.action('Do one: * = to any card.', (eb) => eb.titanium(1).startAction.resource(CardResource.SCIENCE).asterix().megacredits(1)).br;
+          b.temperature(1).slash().oxygen(1).slash().oceans(1).asterix();
         }),
-        description: '1 VP.',
       },
     });
   }

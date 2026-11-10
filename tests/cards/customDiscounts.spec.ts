@@ -45,6 +45,8 @@ const NOT_DISPLAYED: ReadonlyArray<CardName> = [
   CardName.MARS_ROVER_EXPLORING_MISSION,
   CardName.TERRAFORMING_CONTROL_STATION_E,
   CardName.CASH_CO,
+  // Eternity: Greeting Card's discount only applies to the card it revealed, this generation.
+  CardName.GREETING_CARD,
 ];
 
 describe('customDiscounts', () => {

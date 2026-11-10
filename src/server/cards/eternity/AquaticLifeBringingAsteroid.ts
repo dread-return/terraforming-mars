@@ -13,7 +13,7 @@ export class AquaticLifeBringingAsteroid extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.AQUATIC_LIFE_BRINGING_ASTEROID,
-      tags: [Tag.SPACE, Tag.EVENT],
+      tags: [Tag.SPACE],
       cost: 30,
       behavior: {
         ocean: {},

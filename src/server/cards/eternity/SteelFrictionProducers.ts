@@ -24,7 +24,7 @@ export class SteelFrictionProducers extends Card implements IProjectCard {
           b.megacredits(7).colon().production((pb) => pb.energy(1).heat(1)).br;
           b.megacredits(5).colon().tr(1);
         }),
-        description: 'You may do each: pay 6 M\u20ac to increase your steel production 2 steps; pay 7 M\u20ac to increase energy and heat production 1 step; pay 5 M\u20ac to raise your TR 1 step.',
+        description: 'You may do each: pay 6 M\u20ac for +2 steel production; 7 M\u20ac for +1 energy and heat production; 5 M\u20ac for +1 TR.',
       },
     });
   }

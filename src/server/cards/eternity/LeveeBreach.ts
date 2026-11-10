@@ -7,7 +7,6 @@ import {IProjectCard} from '../IProjectCard';
 import {SelectSpace} from '../../inputs/SelectSpace';
 import {Size} from '../../../common/cards/render/Size';
 import {Space} from '../../boards/Space';
-import {Tag} from '../../../common/cards/Tag';
 import {TileType} from '../../../common/TileType';
 
 export class LeveeBreach extends Card implements IProjectCard {
@@ -15,12 +14,12 @@ export class LeveeBreach extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.LEVEE_BREACH,
-      tags: [Tag.EVENT],
+      tags: [],
       cost: 2,
       metadata: {
         cardNumber: 'E83',
         renderData: CardRenderer.builder((b) => {
-          b.text('Move an ocean to an adjacent land space. Gain its placement bonuses, no TR.', {size: Size.SMALL});
+          b.text('Move an ocean to an adjacent land space. Gain its placement bonuses, no TR.', {size: Size.SMALL, isBold: false});
         }),
         description: 'Move an ocean tile to an adjacent unoccupied area not reserved for oceans. Gain its placement bonuses, but no TR.',
       },

@@ -13,7 +13,7 @@ export class SupernovaAsteroid extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.SUPERNOVA_ASTEROID,
-      tags: [Tag.SPACE, Tag.EVENT],
+      tags: [Tag.SPACE],
       cost: 54,
       behavior: {
         drawCard: 1,
@@ -21,7 +21,7 @@ export class SupernovaAsteroid extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E126',
         renderData: CardRenderer.builder((b) => {
-          b.oceans(1).oceans(1).asterix().greenery().greenery().asterix().cards(1);
+          b.oceans(1).oceans(1).asterix().br.greenery().greenery().asterix().cards(1);
         }),
         description: 'Place 1 ocean, then 1 ocean adjacent to it if possible. Then place 2 greeneries adjacent to each other and adjacent to at least one of those oceans. Draw a card.',
       },

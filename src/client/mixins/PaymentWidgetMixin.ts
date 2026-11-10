@@ -70,7 +70,7 @@ export const PaymentWidgetMixin = defineComponent({
     },
 
     isGreedy(unit: SpendableResource, rate: number): boolean {
-      if (unit === 'heat') {
+      if (unit === 'heat' || unit === 'energy') {
         return false;
       }
 
@@ -120,6 +120,7 @@ export const PaymentWidgetMixin = defineComponent({
       const units: Record<SpendableResource, number> = {
         megacredits: thisPlayer.megacredits,
         heat: this.available ? this.available.heat : this.availableHeat(),
+        energy: this.available ? this.available.energy : thisPlayer.energy,
         steel: this.available ? this.available.steel : thisPlayer.steel,
         titanium: this.available ? this.available.titanium : thisPlayer.titanium,
         plants: this.available ? this.available.plants : thisPlayer.plants,

@@ -4,6 +4,7 @@ import {IProjectCard} from '../IProjectCard';
 import {IStandardProjectCard} from '../IStandardProjectCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
+import {CardType} from '../../../common/cards/CardType';
 import {Resource} from '../../../common/Resource';
 import {CardResource} from '../../../common/CardResource';
 import {GlobalParameter} from '../../../common/GlobalParameter';
@@ -18,6 +19,8 @@ import {IColony} from '../../colonies/IColony';
 import {ColonyName} from '../../../common/colonies/ColonyName';
 import {InputError} from '../../inputs/InputError';
 import {message} from '../../logs/MessageBuilder';
+import {IGame} from '../../IGame';
+import {TileType} from '../../../common/TileType';
 
 /**
  * Engine hooks for the Eternity fan expansion. Every hook is a no-op unless an Eternity card is in play,
@@ -42,6 +45,14 @@ export class Eternity {
     delta += Eternity.anyoneHas(player, CardName.EXOPLANET_BUILDERS).length * 2 * tags;
     if (card.tags.includes(Tag.CITY) || card.behavior?.city !== undefined) {
       delta += Eternity.anyoneHas(player, CardName.MARS_CONSERVATIONISTS).length * 3;
+    }
+    // Eternal Space Walk: its owner's space-tag cards cost 2 M€ more.
+    if (card.tags.includes(Tag.SPACE) && player.tableau.has(CardName.ETERNAL_SPACE_WALK)) {
+      delta += 2;
+    }
+    // Sunset over Arsia Mons: assumes up to 6 discards at 2 M€ each (settled as it is played).
+    if (card.name === CardName.SUNSET_OVER_ARSIA_MONS) {
+      delta -= 2 * Math.max(0, Math.min(6, player.cardsInHand.length - 1));
     }
     return delta;
   }
@@ -105,6 +116,9 @@ export class Eternity {
 
   /** Earth's Last City Rebuilt: its owner may not play city-tag cards. */
   public static blocksCard(player: IPlayer, card: ICard): boolean {
+    if (Eternity.blocksProjectCard(player, card)) {
+      return true;
+    }
     return card.tags.includes(Tag.CITY) && card.name !== CardName.EARTHS_LAST_CITY_REBUILT && player.tableau.has(CardName.EARTHS_LAST_CITY_REBUILT);
   }
 
@@ -191,6 +205,9 @@ export class Eternity {
   public static onCardPlayed(player: IPlayer, card: ICard): void {
     if (!player.game.gameOptions.eternityExpansion) {
       return;
+    }
+    if (card.type === CardType.ACTIVE || card.type === CardType.AUTOMATED || card.type === CardType.EVENT) {
+      player.projectCardsThisGeneration.push(card.name);
     }
     for (const p of player.game.players) {
       const exo = p.tableau.get(CardName.EXOPLANET_BUILDERS);
@@ -322,6 +339,144 @@ export class Eternity {
     return new SelectCard('Place cards from your hand face up (they stay in your hand)', 'Place face up', cards.slice(), {min, max: cards.length}).andThen((selected) => {
       cb(selected);
       return undefined;
+    });
+  }
+
+  /** Administrative Restructure: 1 action per turn for everyone for the rest of the generation. */
+  public static actionsPerTurn(game: IPlayer['game']): number {
+    for (const p of game.players) {
+      const card = p.playedCards.get(CardName.ADMINISTRATIVE_RESTRUCTURE);
+      if (card !== undefined && (card.data as {gen?: number} | undefined)?.gen === game.generation) {
+        return 1;
+      }
+    }
+    return 2;
+  }
+
+  /** Eternal Space Walk: once played, its owner plays no other project card this generation. */
+  public static blocksProjectCard(player: IPlayer, card: ICard): boolean {
+    if (card.type !== CardType.ACTIVE && card.type !== CardType.AUTOMATED && card.type !== CardType.EVENT) {
+      return false;
+    }
+    if (card.name === CardName.ETERNAL_SPACE_WALK) {
+      return false;
+    }
+    return player.projectCardsThisGeneration.includes(CardName.ETERNAL_SPACE_WALK);
+  }
+
+  /** Big Cheats: generic hook for cards that waive tag requirements for a specific card. */
+  public static ignoresTagRequirement(player: IPlayer, card: ICard): boolean {
+    // Some unit tests use players without a game.
+    if (player.game === undefined || !player.game.gameOptions.eternityExpansion) {
+      return false;
+    }
+    for (const c of player.tableau) {
+      const f = (c as ICard & {ignoresTagRequirementsFor?: (p: IPlayer, c: ICard) => boolean}).ignoresTagRequirementsFor;
+      if (f !== undefined && f.call(c, player, card)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** Big Cheats: called before a project card is played (before its requirements change). */
+  public static beforeCardPlayed(player: IPlayer, card: ICard): void {
+    if (!player.game.gameOptions.eternityExpansion) {
+      return;
+    }
+    for (const c of player.tableau.asArray().slice()) {
+      const f = (c as ICard & {beforeCardPlayedFor?: (p: IPlayer, c: ICard) => void}).beforeCardPlayedFor;
+      f?.call(c, player, card);
+    }
+  }
+
+  /** Price Manipulation Subsidies: this generation's production pays 2 M€ per non-M€ resource. */
+  public static priceManipulationActive(game: IGame): boolean {
+    if (!game.gameOptions.eternityExpansion) {
+      return false;
+    }
+    return game.players.some((p) => {
+      const card = p.playedCards.get(CardName.PRICE_MANIPULATION_SUBSIDIES);
+      return card !== undefined && (card.data as {gen?: number} | undefined)?.gen === game.generation;
+    });
+  }
+
+  /** Initiative Manipulator: the player who passed it last generation keeps the first player marker. */
+  public static keptFirstPlayer(game: IGame): IPlayer | undefined {
+    if (!game.gameOptions.eternityExpansion) {
+      return undefined;
+    }
+    for (const p of game.players) {
+      const card = p.playedCards.get(CardName.INITIATIVE_MANIPULATOR);
+      const data = card?.data as {keepGen?: number, keeper?: string} | undefined;
+      if (data?.keepGen === game.generation - 1 && data.keeper !== undefined) {
+        return game.players.find((pl) => pl.id === data.keeper);
+      }
+    }
+    return undefined;
+  }
+
+  /** Thawing Glacier: when temperature maxes out, each glacier becomes an ocean. */
+  public static onTemperatureMaxed(game: IGame): void {
+    if (!game.gameOptions.eternityExpansion) {
+      return;
+    }
+    for (const space of game.board.spaces) {
+      if (space.tile?.tileType !== TileType.GLACIER) {
+        continue;
+      }
+      const owner = space.player ?? game.players.find((p) => p.tableau.has(CardName.THAWING_GLACIER));
+      game.removeTile(space.id);
+      if (owner === undefined) {
+        continue;
+      }
+      owner.defer(() => {
+        game.log('The Thawing Glacier melted', (b) => b);
+        if (game.canAddOcean()) {
+          game.addOcean(owner, space);
+        } else {
+          game.addTile(owner, space, {tileType: TileType.OCEAN});
+        }
+        owner.production.add(Resource.PLANTS, 2, {log: true});
+        const animals = owner.getResourceCards(CardResource.ANIMAL);
+        if (animals.length === 0) {
+          return undefined;
+        }
+        return new SelectCard('Thawing Glacier: you may add 1 animal to a card', 'Add', animals, {min: 0, max: 1}).andThen(([card]) => {
+          if (card !== undefined) {
+            owner.addResourceTo(card, {qty: 1, log: true});
+          }
+          return undefined;
+        });
+      });
+    }
+  }
+
+  /** Project Selection Device: whether `player` may draft an extra card this draft round. */
+  public static canUseProjectSelectionDevice(player: IPlayer): boolean {
+    return player.game.gameOptions.eternityExpansion === true && player.playedCards.has(CardName.PROJECT_SELECTION_DEVICE);
+  }
+
+  /** Project Selection Device: gain 3 M€ and put the device into the cards being passed on. */
+  public static useProjectSelectionDevice(player: IPlayer): void {
+    const card = player.playedCards.get(CardName.PROJECT_SELECTION_DEVICE);
+    if (card === undefined) {
+      return;
+    }
+    const game = player.game;
+    player.playedCards.remove(card);
+    card.data = {gen: game.generation, round: game.draftRound, by: player.id};
+    player.draftHand.push(card as IProjectCard);
+    player.stock.add(Resource.MEGACREDITS, 3, {log: true});
+    game.log('${0} used ${1} to draft an extra card and passed it on', (b) => b.player(player).card(card));
+  }
+
+  /** Project Selection Device: its user skips the repick step of the round they used it in. */
+  public static usedProjectSelectionDeviceThisRound(player: IPlayer): boolean {
+    const game = player.game;
+    return player.draftHand.some((c) => {
+      const data = c.data as {gen?: number, round?: number, by?: string} | undefined;
+      return c.name === CardName.PROJECT_SELECTION_DEVICE && data?.by === player.id && data.gen === game.generation && data.round === game.draftRound;
     });
   }
 }

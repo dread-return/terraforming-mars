@@ -19,8 +19,8 @@ export class AstralBog extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E46',
         renderData: CardRenderer.builder((b) => {
-          b.effect('You may use titanium to pay for standard projects.', (eb) => eb.titanium(1).startEffect.text('standard projects')).br;
-          b.effect('ALL cards cost 1 M€ more for each tag on them.', (eb) => eb.text('each tag').startEffect.plus().megacredits(1, {all})).br;
+          b.effect('Titanium may pay for standard projects.', (eb) => eb.titanium(1).startEffect.text('SP')).br;
+          b.effect('ALL cards cost 1 M€ more per tag.', (eb) => eb.text('each tag').startEffect.plus().megacredits(1, {all})).br;
           b.production((pb) => pb.titanium(1));
         }),
         description: 'Increase your titanium production 1 step.',

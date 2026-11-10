@@ -31,6 +31,7 @@ import {TileType} from '../../../src/common/TileType';
 import {ErodeSpacesDeferred} from '../underworld/ErodeSpacesDeferred';
 import {CardName} from '../../common/cards/CardName';
 import {GlobalParameter} from '@/common/GlobalParameter';
+import {NEUTRAL_COLONY_ID} from './NeutralColony';
 
 export abstract class Colony implements IColony {
   // Players can't build colonies on Miranda until someone has played an Animal card.
@@ -82,6 +83,18 @@ export abstract class Colony implements IColony {
 
   public isFull(): boolean {
     return this.colonies.length >= MAX_COLONIES_PER_TILE;
+  }
+
+  /**
+   * Eternity (Colony Cluster): places a neutral colony on this tile. `bonusTo` collects its placement bonus.
+   */
+  public addNeutralColony(bonusTo: IPlayer): void {
+    bonusTo.game.log('${0} placed a neutral colony on ${1}', (b) => b.player(bonusTo).colony(this));
+    this.giveBonus(bonusTo, this.metadata.build.type, this.metadata.build.quantity[this.colonies.length], this.metadata.build.resource);
+    this.colonies.push(NEUTRAL_COLONY_ID);
+    if (this.trackPosition < this.colonies.length) {
+      this.trackPosition = this.colonies.length;
+    }
   }
 
   public addColony(player: IPlayer, options?: {giveBonusTwice: boolean}): void {

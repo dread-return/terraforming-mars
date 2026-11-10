@@ -17,7 +17,7 @@ export class MeteorTheft extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.METEOR_THEFT,
-      tags: [Tag.SPACE, Tag.EVENT],
+      tags: [Tag.SPACE],
       cost: 2,
       behavior: {
         tr: -1,
@@ -25,7 +25,7 @@ export class MeteorTheft extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E87',
         renderData: CardRenderer.builder((b) => {
-          b.minus().tr(1).minus().resource(CardResource.ASTEROID).asterix().resource(CardResource.ASTEROID).asterix().cards(1).asterix();
+          b.minus().tr(1).minus().resource(CardResource.ASTEROID).asterix().br.resource(CardResource.ASTEROID).asterix().cards(1).asterix();
         }),
         description: 'Lower your TR 1 step. Remove up to 1 asteroid from ANY card. Add 1 asteroid to ANY card. Name a tag; reveal cards until you reveal that tag. Take that card and discard the rest.',
       },

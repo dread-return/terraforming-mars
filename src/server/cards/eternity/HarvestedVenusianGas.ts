@@ -26,12 +26,12 @@ export class HarvestedVenusianGas extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E16',
         renderData: CardRenderer.builder((b) => {
-          b.effect('When anyone plays a Venus tag, including this, add 1 floater here, gain 2 M€ and draw a card.', (eb) => {
+          b.effect('When anyone plays a Venus tag (incl. this): 1 floater here, 2 M€, draw a card.', (eb) => {
             eb.tag(Tag.VENUS, {all}).startEffect.resource(CardResource.FLOATER).megacredits(2).cards(1);
           }).br;
           b.production((pb) => pb.energy(1).heat(1));
         }),
-        description: 'Requires 10% Venus. Increase your energy and heat production 1 step. 1 VP per 2 floaters here.',
+        description: 'Requires 10% Venus. Increase your energy and heat production 1 step.',
       },
     });
   }

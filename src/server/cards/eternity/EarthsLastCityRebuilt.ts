@@ -23,12 +23,11 @@ export class EarthsLastCityRebuilt extends ActionCard implements IProjectCard {
       metadata: {
         cardNumber: 'E66',
         renderData: CardRenderer.builder((b) => {
-          b.effect('You may not play cards with a city tag for the rest of the game.', (eb) => eb.tag(Tag.CITY).startEffect.text('X'));
+          b.effect('You can’t play city-tag cards.', (eb) => eb.tag(Tag.CITY).startEffect.text('X'));
           b.br;
           b.action('Gain 7 M€.', (eb) => eb.empty().startAction.megacredits(7)).br;
           b.city();
         }),
-        description: 'Requires 2 cities in play. Place a city. 1 VP per city tag you have.',
       },
     });
   }

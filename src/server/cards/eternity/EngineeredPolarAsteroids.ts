@@ -13,7 +13,7 @@ export class EngineeredPolarAsteroids extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.ENGINEERED_POLAR_ASTEROIDS,
-      tags: [Tag.SCIENCE, Tag.SPACE, Tag.EVENT],
+      tags: [Tag.SCIENCE, Tag.SPACE],
       cost: 21,
       requirements: {tag: Tag.SCIENCE, count: 2},
       behavior: {

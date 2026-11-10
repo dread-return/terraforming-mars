@@ -25,12 +25,12 @@ export class OIS extends CorporationCard implements ICorporationCard {
         cardNumber: 'EC05',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(50).cards(1, {all}).br;
-          b.text('After production, opponents place a card face up (still in hand), or lose 1 TR. Most face-up: +1 M€ production or 4 M€.', {size: Size.TINY}).br;
+          b.text('After production: opponents show a hand card or lose 1 TR. Most shown: +1 M€ prod. or 4 M€.', {size: Size.TINY}).br;
           b.corpBox('action', (ce) => {
-            ce.action('Opponents, once per generation: place any cards face up. You: take one face-up card from another player.', (eb) => eb.empty().startAction.cards(1, {all}).asterix());
+            ce.action('Take a shown card.', (eb) => eb.empty().startAction.cards(1, {all}).asterix());
           });
         }),
-        description: 'You start with 50 M\u20ac. All players draw a card. As your first action, all other players place a card from their hand face up.',
+        description: 'Start: 50 M\u20ac. All draw a card. First action: others show a card.',
       },
     });
   }

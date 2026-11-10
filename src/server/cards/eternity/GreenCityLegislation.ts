@@ -27,7 +27,7 @@ export class GreenCityLegislation extends Card implements IProjectCard {
           b.city().tr(1).br;
           b.production((pb) => pb.minus().heat(1, {all}).br.minus().megacredits(1).plus().energy(2));
         }),
-        description: 'Requires that you have heat production. Place a city on Mars. Raise your TR 1 step. Decrease any heat production 1 step. Decrease your M\u20ac production 1 step and increase your energy production 2 steps.',
+        description: 'Requires heat production. Place a city and raise your TR 1 step.',
       },
     });
   }

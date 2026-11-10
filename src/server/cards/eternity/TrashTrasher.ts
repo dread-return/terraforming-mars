@@ -21,7 +21,7 @@ export class TrashTrasher extends Card implements IProjectCard {
         cardNumber: 'E134',
         renderData: CardRenderer.builder((b) => {
           b.action('If the discard pile has 30+ cards, remove it from the game to gain 4 M€ and add a trash counter here.', (eb) => eb.text('DISCARD PILE (30+)').startAction.megacredits(4).resource(CardResource.TRASH)).br;
-          b.text('Remove the discard pile from the game.', {size: Size.SMALL});
+          b.text('Remove the discard pile from the game.', {size: Size.SMALL, isBold: false});
         }),
         description: 'When this comes into play, remove the discard pile from the game. 1 VP per trash counter here.',
       },

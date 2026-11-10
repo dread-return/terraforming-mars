@@ -17,13 +17,13 @@ export class HiddenAgendaRevealed extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.HIDDEN_AGENDA_REVEALED,
-      tags: [Tag.EVENT],
+      tags: [],
       cost: 4,
       requirements: {display: 'generation', count: 8, max: true},
       metadata: {
         cardNumber: 'E18',
         renderData: CardRenderer.builder((b) => {
-          b.text('Reveal your hand. Name a tag. Reveal 12 cards and buy any with that tag.', {size: Size.SMALL});
+          b.text('Reveal your hand. Name a tag. Reveal 12 cards and buy any with that tag.', {size: Size.SMALL, isBold: false});
         }),
         description: 'It must be generation 8 or earlier. Reveal your hand. Name a tag, reveal 12 cards and buy any of them with that tag at the normal price. Discard the rest.',
       },

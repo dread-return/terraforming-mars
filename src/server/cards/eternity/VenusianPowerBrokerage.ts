@@ -27,12 +27,10 @@ export class VenusianPowerBrokerage extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E38',
         renderData: CardRenderer.builder((b) => {
-          b.action('Spend X energy to add X floaters here.', (eb) => eb.text('X').energy(1).startAction.text('X').resource(CardResource.FLOATER)).br;
-          b.or().br;
-          b.action('Remove 2 floaters here to increase any production 1 step.', (eb) => eb.resource(CardResource.FLOATER, 2).startAction.production((pb) => pb.wild(1))).br;
+          b.action(undefined, (eb) => eb.text('X').energy(1).startAction.text('X').resource(CardResource.FLOATER)).br;
+          b.action('Spend X energy for X floaters here, OR 2 floaters for +1 any production.', (eb) => eb.resource(CardResource.FLOATER, 2).startAction.production((pb) => pb.wild(1))).br;
           b.resource(CardResource.FLOATER, 2);
         }),
-        description: 'Requires 4% Venus. Add 2 floaters here.',
       },
     });
   }

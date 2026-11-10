@@ -3,14 +3,13 @@ import {CardRenderer} from '../render/CardRenderer';
 import {CardType} from '../../../common/cards/CardType';
 import {Card} from '../Card';
 import {IProjectCard} from '../IProjectCard';
-import {Tag} from '../../../common/cards/Tag';
 
 export class WrenisPinkle extends Card implements IProjectCard {
   constructor() {
     super({
       type: CardType.EVENT,
       name: CardName.WRENIS_PINKLE,
-      tags: [Tag.EVENT],
+      tags: [],
       cost: 0,
       behavior: {
         stock: {megacredits: 3},

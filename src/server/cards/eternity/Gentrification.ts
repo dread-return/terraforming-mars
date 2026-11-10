@@ -14,7 +14,7 @@ export class Gentrification extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.GENTRIFICATION,
-      tags: [Tag.CITY, Tag.EVENT],
+      tags: [Tag.CITY],
       cost: 2,
       requirements: {display: 'generation', count: 7, max: true},
       victoryPoints: -1,

@@ -33,6 +33,21 @@ describe('SelectPayment', () => {
     tester.expectPayment({heat: 4, megacredits: 6});
   });
 
+  it('Uses energy (Eternity: Powered Steel)', async () => {
+    const wrapper = setupBill(
+      10,
+      {energy: 5, megacredits: 7},
+      {paymentOptions: {energy: true}});
+
+    const tester = new PaymentTester(wrapper);
+    await tester.nextTick();
+    tester.expectAvailablePaymentComponents('energy', 'megacredits');
+    tester.expectPayment({energy: 3, megacredits: 7});
+
+    await tester.clickMax('energy');
+    tester.expectPayment({energy: 5, megacredits: 5});
+  });
+
   it('Uses steel', async () => {
     const wrapper = setupBill(
       10,

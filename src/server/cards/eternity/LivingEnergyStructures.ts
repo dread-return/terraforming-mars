@@ -9,6 +9,7 @@ import {PlaceOceanTile} from '../../deferredActions/PlaceOceanTile';
 import {Resource} from '../../../common/Resource';
 import {SelectOption} from '../../inputs/SelectOption';
 import {Tag} from '../../../common/cards/Tag';
+import {digit} from '../Options';
 import {questionmark} from '../render/DynamicVictoryPoints';
 
 export class LivingEnergyStructures extends Card implements IProjectCard {
@@ -27,8 +28,8 @@ export class LivingEnergyStructures extends Card implements IProjectCard {
         cardNumber: 'E84',
         victoryPoints: questionmark(),
         renderData: CardRenderer.builder((b) => {
-          b.action('Spend 5 energy to raise any global parameter 1 step or place an ocean.', (eb) => eb.energy(5).startAction.temperature(1).slash().oxygen(1).slash().venus(1).slash().oceans(1)).br;
-          b.production((pb) => pb.energy(1)).nbsp.vpText('1 VP per 3 energy production.');
+          b.action('Spend 5 energy: raise a global parameter 1 step or place an ocean.', (eb) => eb.energy(5, {digit}).startAction.temperature(1).slash().oxygen(1).slash().oceans(1).asterix()).br;
+          b.production((pb) => pb.energy(1)).nbsp.vpText('1 VP / 3 energy prod.');
         }),
         description: 'Requires 3 building tags. Increase your energy production 1 step.',
       },

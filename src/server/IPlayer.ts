@@ -92,6 +92,8 @@ export interface IPlayer {
 
   // Helion
   canUseHeatAsMegaCredits: boolean;
+  /** Eternity: Powered Steel. */
+  readonly canUseEnergyAsMegaCredits: boolean;
   // Luna Trade Federation
   canUseTitaniumAsMegacredits: boolean;
   // Martian Lumber Corp
@@ -167,6 +169,8 @@ export interface IPlayer {
    * Note: Sell Patents is absent to simplify Labor Trafficking. It's also not necessary.
    */
   standardProjectsThisGeneration: Set<CardName>;
+  /** Eternity: project cards played this generation (Eternal Space Walk, Sabotaged Satellite Repair). */
+  projectCardsThisGeneration: Array<CardName>;
 
   /**
    * For Hollandia. When true, player has tiles on Mars, and all of them are in the deflection zone.

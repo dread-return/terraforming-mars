@@ -8,6 +8,7 @@ import {SelectCard} from './inputs/SelectCard';
 import {message} from './logs/MessageBuilder';
 import {IPreludeCard} from './cards/prelude/IPreludeCard';
 import {ICeoCard} from './cards/ceos/ICeoCard';
+import {Eternity} from './cards/eternity/Eternity';
 
 export type DraftType = 'none' | 'initial' | 'prelude' | 'ceos' | 'standard';
 
@@ -118,6 +119,12 @@ export abstract class Draft {
     const giveTo = this.givingTo(player);
     const cardsToKeep = this.cardsToKeep(player);
 
+    // Eternity: Project Selection Device. Its user skips the repick step of that round.
+    if (repick && Eternity.usedProjectSelectionDeviceThisRound(player)) {
+      return;
+    }
+    const selectionDevice = !repick && this.type === 'standard' && player.draftHand.length >= 2 && Eternity.canUseProjectSelectionDevice(player);
+
     let cardsToConsider: Array<IProjectCard>;
     let enabled: Array<boolean> | undefined;
     if (repick) {
@@ -132,7 +139,7 @@ export abstract class Draft {
       cardsToConsider = player.draftHand;
     }
 
-    const messageTitle = repick ?
+    const messageTitle = selectionDevice ? 'Select a card to keep (or one more with Project Selection Device) and pass the rest to ${0}' : repick ?
       'You can change your selection until all players have selected a card. Passing to ${0}' :
       (cardsToKeep === 1 ?
         'Select a card to keep and pass the rest to ${0}' :
@@ -142,7 +149,7 @@ export abstract class Draft {
       'Select',
       cardsToConsider,
       {
-        min: cardsToKeep, max: cardsToKeep, played: false,
+        min: cardsToKeep, max: selectionDevice ? cardsToKeep + 1 : cardsToKeep, played: false,
         enabled: enabled,
       });
     selectCard.optional = repick;
@@ -157,6 +164,9 @@ export abstract class Draft {
         for (const card of selected) {
           player.draftedCards.push(card);
           inplaceRemove(player.draftHand, card);
+        }
+        if (selectionDevice && selected.length > cardsToKeep) {
+          Eternity.useProjectSelectionDevice(player);
         }
         this.onCardDrafted(player);
         return undefined;

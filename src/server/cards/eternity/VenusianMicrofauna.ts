@@ -8,6 +8,7 @@ import {PreludeCard} from '../prelude/PreludeCard';
 import {SelectOption} from '../../inputs/SelectOption';
 import {Size} from '../../../common/cards/render/Size';
 import {Tag} from '../../../common/cards/Tag';
+import {digit} from '../Options';
 
 export class VenusianMicrofauna extends PreludeCard {
   constructor() {
@@ -23,7 +24,7 @@ export class VenusianMicrofauna extends PreludeCard {
       metadata: {
         cardNumber: 'EP65',
         renderData: CardRenderer.builder((b) => {
-          b.venus(1).cards(2, {secondaryTag: Tag.MICROBE}).resource(CardResource.MICROBE, 3).br.text('No other microbes here. When you play a microbe card, you may move 1 microbe onto it.', {size: Size.SMALL});
+          b.venus(1).cards(2, {secondaryTag: Tag.MICROBE}).resource(CardResource.MICROBE, {amount: 3, digit}).br.text('No other microbes here. When you play a microbe card, you may move 1 microbe onto it.', {size: Size.SMALL, isBold: false});
         }),
         description: 'Raise Venus 1 step. Reveal cards until you reveal 2 microbe cards that hold microbes; take them. Place 3 microbes here (no other microbes can be added here). When you play a microbe card, you may move 1 microbe from here onto it.',
       },

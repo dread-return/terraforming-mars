@@ -11,7 +11,7 @@ export class DiscoveryOfLifeOnMars extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.DISCOVERY_OF_LIFE_ON_MARS,
-      tags: [Tag.MARS, Tag.MICROBE, Tag.EVENT],
+      tags: [Tag.MARS, Tag.MICROBE],
       cost: 3,
       requirements: {tr: 23, max: true, all: true},
       behavior: {

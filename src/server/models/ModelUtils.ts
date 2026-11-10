@@ -1,3 +1,4 @@
+import {NEUTRAL_COLONY_ID} from '../colonies/NeutralColony';
 import {CardModel} from '../../common/models/CardModel';
 import {ColonyModel} from '../../common/models/ColonyModel';
 import {Color} from '../../common/Color';
@@ -89,7 +90,7 @@ export function coloniesToModel(game: IGame, colonies: Array<IColony>, showTileO
   return colonies.map(
     (colony): ColonyModel => ({
       colonies: colony.colonies.map(
-        (playerId): Color => game.getPlayerById(playerId).color,
+        (playerId): Color => playerId === NEUTRAL_COLONY_ID ? 'neutral' : game.getPlayerById(playerId).color,
       ),
       isActive: isActive && colony.isActive && showTileOnly === false,
       name: colony.name,

@@ -119,6 +119,11 @@ export class Tags {
       }
     }
 
+    // Eternity: Gestalt Intelligence lets wild tags count toward awards.
+    if (mode === 'award' && tag !== Tag.WILD && this.player.tableau.has(CardName.GESTALT_INTELLIGENCE)) {
+      tagCount += this.rawCount(Tag.WILD, includeEvents);
+    }
+
     // Chimera hook
     if (this.player.tableau.has(CardName.CHIMERA)) {
       // Awards do not count wild tags, so in this case one will be added.
@@ -219,6 +224,10 @@ export class Tags {
       // Chimera counts as one wild tag for awards
       if (this.player.tableau.has(CardName.CHIMERA)) {
         tagCount++;
+      }
+      // Eternity: Gestalt Intelligence lets wild tags count toward awards.
+      if (this.player.tableau.has(CardName.GESTALT_INTELLIGENCE)) {
+        tagCount += this.rawCount(Tag.WILD, includeEvents);
       }
     }
 

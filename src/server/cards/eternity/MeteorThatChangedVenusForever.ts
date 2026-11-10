@@ -14,7 +14,7 @@ export class MeteorThatChangedVenusForever extends Card implements IProjectCard 
     super({
       type: CardType.EVENT,
       name: CardName.METEOR_THAT_CHANGED_VENUS_FOREVER,
-      tags: [Tag.VENUS, Tag.SPACE, Tag.EVENT],
+      tags: [Tag.VENUS, Tag.SPACE],
       cost: 19,
       behavior: {
         global: {venus: 2},
@@ -22,7 +22,7 @@ export class MeteorThatChangedVenusForever extends Card implements IProjectCard 
       metadata: {
         cardNumber: 'E29',
         renderData: CardRenderer.builder((b) => {
-          b.venus(2).br.text('Discard up to 2 cards: per card, remove 1 floater from EVERY Venus card in play.', {size: Size.SMALL});
+          b.venus(2).br.text('Discard up to 2 cards: per card, remove 1 floater from EVERY Venus card in play.', {size: Size.SMALL, isBold: false});
         }),
         description: 'Raise Venus 2 steps. Discard up to 2 cards. For each card discarded, remove 1 floater from each card in play with a Venus tag.',
       },

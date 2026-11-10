@@ -14,7 +14,7 @@ export class RadioactiveAsteroid extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.RADIOACTIVE_ASTEROID,
-      tags: [Tag.RADIOACTIVE, Tag.SPACE, Tag.EVENT],
+      tags: [Tag.RADIOACTIVE, Tag.SPACE],
       cost: 21,
       behavior: {
         global: {temperature: 1},

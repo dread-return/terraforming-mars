@@ -24,10 +24,10 @@ export class ChromatinWaterGenerator extends Card implements IProjectCard {
         cardNumber: 'E53',
         victoryPoints: questionmark(),
         renderData: CardRenderer.builder((b) => {
-          b.action('Spend 1 titanium, 1 plant, 1 heat and 1 energy to place an ocean and add 1 microbe to any card.', (eb) => {
-            eb.titanium(1).plants(1).heat(1).energy(1).startAction.oceans(1).resource(CardResource.MICROBE).asterix();
+          b.action('Spend 1 titanium, plant, heat and energy: place an ocean, add 1 microbe to any card.', (eb) => {
+            eb.titanium(1).plants(1).heat(1).energy(1).startAction.oceans(1).asterix();
           }).br;
-          b.vpText('1 VP per 3 science and/or microbe tags you have.');
+          b.vpText('1 VP per 3 science/microbe tags.');
         }),
         description: 'Requires that you have a greenery, a microbe tag and 2 science tags.',
       },

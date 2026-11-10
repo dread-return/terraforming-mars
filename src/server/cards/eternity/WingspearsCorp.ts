@@ -11,6 +11,7 @@ import {Resource} from '../../../common/Resource';
 import {SelectCard} from '../../inputs/SelectCard';
 import {Space} from '../../boards/Space';
 import {Tag} from '../../../common/cards/Tag';
+import {digit} from '../Options';
 
 export class WingspearsCorp extends CorporationCard implements ICorporationCard {
   constructor() {
@@ -27,11 +28,11 @@ export class WingspearsCorp extends CorporationCard implements ICorporationCard 
         renderData: CardRenderer.builder((b) => {
           b.megacredits(38).cards(2, {secondaryTag: Tag.PLANT}).br;
           b.corpBox('effect-action', (ce) => {
-            ce.effect('After you place a greenery, your next action may play an animal card ignoring global requirements.', (eb) => eb.greenery({withO2: false}).startEffect.tag(Tag.ANIMAL).asterix());
-            ce.action('Remove a played plant card from the game: +1 plant and +1 M€ production, draw 2 cards.', (eb) => eb.tag(Tag.PLANT).asterix().startAction.production((pb) => pb.plants(1).megacredits(1)).cards(2));
+            ce.effect('After a greenery, your next action may play an animal card ignoring global reqs.', (eb) => eb.greenery({withO2: false}).startEffect.tag(Tag.ANIMAL).asterix());
+            ce.action('Remove a plant card from the game: +1 plant & M€ prod., draw 2.', (eb) => eb.tag(Tag.PLANT).asterix().startAction.production((pb) => pb.plants(1).megacredits(1)).cards(2, {digit}));
           });
         }),
-        description: 'You start with 38 M\u20ac. First action: draw 2 plant cards.',
+        description: 'Start: 38 M\u20ac. First action: 2 plant cards.',
       },
     });
   }

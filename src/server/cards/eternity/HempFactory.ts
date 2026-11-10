@@ -27,12 +27,11 @@ export class HempFactory extends ActionCard implements IProjectCard {
       metadata: {
         cardNumber: 'E76',
         renderData: CardRenderer.builder((b) => {
-          b.action('Spend 2 plants to gain 8 M€ and draw a card.', (eb) => eb.plants(2).startAction.megacredits(8).cards(1)).br;
+          b.action(undefined, (eb) => eb.plants(2).startAction.megacredits(8).cards(1)).br;
           b.or().br;
-          b.action('Gain 1 plant.', (eb) => eb.empty().startAction.plants(1)).br;
+          b.action('Spend 2 plants for 8 M€ and a card, OR gain 1 plant.', (eb) => eb.empty().startAction.plants(1)).br;
           b.production((pb) => pb.minus().energy(1));
         }),
-        description: 'Decrease your energy production 1 step.',
       },
     });
   }

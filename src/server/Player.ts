@@ -174,6 +174,7 @@ export class Player implements IPlayer {
   public underworldData: UnderworldPlayerData = UnderworldExpansion.initializePlayer();
   public deltaProjectData?: DeltaProjectPlayerModel;
   public standardProjectsThisGeneration: Set<CardName> = new Set();
+  public projectCardsThisGeneration: Array<CardName> = [];
   public temporaryGlobalParameterRequirementBonus = 0;
 
   // The number of actions a player can take this round.
@@ -639,6 +640,7 @@ export class Player implements IPlayer {
     this.actionsThisGeneration.clear();
     this.removingPlayers = [];
     this.standardProjectsThisGeneration.clear();
+    this.projectCardsThisGeneration = [];
 
     this.turmoilPolicyActionUsed = false;
     this.politicalAgendasActionUsedCount = 0;
@@ -653,6 +655,22 @@ export class Player implements IPlayer {
   }
 
   public finishProductionPhase() {
+    // Eternity: Price Manipulation Subsidies turns this generation's other production into 2 M€ each.
+    if (Eternity.priceManipulationActive(this.game)) {
+      const p = this.production;
+      const units = p.steel + p.titanium + p.plants + p.energy + p.heat;
+      this.megaCredits += p.megacredits + this.terraformRating + 2 * units;
+      this.game.log('${0} gained ${1} M€ instead of their other production (Price Manipulation Subsidies)', (b) => b.player(this).number(2 * units));
+      for (const card of this.tableau) {
+        card.onProductionPhase?.(this);
+      }
+      for (const card of this.playedCards) {
+        if (isCeoCard(card)) {
+          card.opgActionIsActive = false;
+        }
+      }
+      return;
+    }
     this.megaCredits += this.production.megacredits + this.terraformRating;
     this.steel += this.production.steel;
     this.titanium += this.production.titanium;
@@ -676,10 +694,18 @@ export class Player implements IPlayer {
    * ../..return {number} the number of available megacredits. Which is just a shorthand for megacredits,
    * plus any units of heat available thanks to Helion (and Stormcraft, by proxy).
    */
+  /** Eternity: Powered Steel lets its owner use energy as M€. */
+  public get canUseEnergyAsMegaCredits(): boolean {
+    return this.tableau.has(CardName.POWERED_STEEL);
+  }
+
   public spendableMegacredits(): number {
     let total = this.megaCredits;
     if (this.canUseHeatAsMegaCredits) {
       total += this.availableHeat();
+    }
+    if (this.canUseEnergyAsMegaCredits) {
+      total += this.energy;
     }
     if (this.canUseTitaniumAsMegacredits) {
       total += this.titanium * (this.titaniumValue - 1);
@@ -777,6 +803,7 @@ export class Player implements IPlayer {
   private paymentOptionsForCard(card: IProjectCard): PaymentOptions {
     return {
       heat: this.canUseHeatAsMegaCredits,
+      energy: this.canUseEnergyAsMegaCredits,
       steel: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card) || Eternity.canUseSteel(this, card),
       plants: card.tags.includes(Tag.BUILDING) && this.playedCards.has(CardName.MARTIAN_LUMBER_CORP),
       titanium: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.SPACE) || Nuclear.canUseTitanium(this, card) || Eternity.canUseTitanium(this, card),
@@ -853,6 +880,7 @@ export class Player implements IPlayer {
       steel: payment.steel,
       titanium: payment.titanium,
       plants: payment.plants,
+      energy: payment.energy,
     });
 
     this.stock.deductUnits(standardUnits);
@@ -881,6 +909,8 @@ export class Player implements IPlayer {
   }
 
   public playCard(selectedCard: IProjectCard, payment?: Payment, cardAction: CardAction = 'add'): void {
+    // Eternity: Big Cheats counts the requirements its card ignores.
+    Eternity.beforeCardPlayed(this, selectedCard);
     if (payment !== undefined) {
       this.pay(payment);
       Nuclear.onProjectCardPaid(this, selectedCard, payment);
@@ -1363,6 +1393,7 @@ export class Player implements IPlayer {
       titanium: this.titanium - reserveUnits.titanium,
       plants: this.plants - reserveUnits.plants,
       heat: this.availableHeat() - reserveUnits.heat,
+      energy: this.energy - reserveUnits.energy,
     };
     for (const resource of SPENDABLE_CARD_RESOURCES) {
       payment[resource] = this.getSpendable(resource);
@@ -1399,6 +1430,7 @@ export class Player implements IPlayer {
       steel: options?.steel ?? false,
       titanium: options?.titanium ?? false,
       heat: this.canUseHeatAsMegaCredits,
+      energy: this.canUseEnergyAsMegaCredits,
       plants: options?.plants ?? false,
       microbes: options?.microbes ?? false,
       floaters: options?.floaters ?? false,
@@ -1551,7 +1583,8 @@ export class Player implements IPlayer {
 
         if (game.hasPassedThisActionPhase(this) || (this.allOtherPlayersHavePassed() === false && this.actionsTakenThisRound >= this.availableActionsThisRound)) {
           this.actionsTakenThisRound = 0;
-          this.availableActionsThisRound = 2;
+          // Eternity: Administrative Restructure limits everyone to 1 action per turn this generation.
+          this.availableActionsThisRound = Eternity.actionsPerTurn(this.game);
           game.resettable = true;
           game.playerIsFinishedTakingActions();
           return;
@@ -1905,6 +1938,7 @@ export class Player implements IPlayer {
       removedFromPlayCards: this.removedFromPlayCards.map(toName),
       // Standard Technology: Underworld
       standardProjectsThisGeneration: Array.from(this.standardProjectsThisGeneration),
+      projectCardsThisGeneration: this.projectCardsThisGeneration,
       withinDeflectionZone: this.withinDeflectionZone,
 
       name: this.name,
@@ -1953,6 +1987,7 @@ export class Player implements IPlayer {
     player.heat = d.heat;
     player.lastCardPlayed = d.lastCardPlayed;
     player.standardProjectsThisGeneration = new Set(d.standardProjectsThisGeneration);
+    player.projectCardsThisGeneration = d.projectCardsThisGeneration ?? [];
     player.megaCredits = d.megaCredits;
     player.needsToDraft = d.needsToDraft;
     player.oceanBonus = d.oceanBonus;

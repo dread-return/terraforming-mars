@@ -5,6 +5,7 @@ import {CardResource} from '../../../common/CardResource';
 import {CardType} from '../../../common/cards/CardType';
 import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
+import {Size} from '../../../common/cards/render/Size';
 import {Tag} from '../../../common/cards/Tag';
 
 export class MicroorganismMutation extends ActionCard implements IProjectCard {
@@ -22,9 +23,9 @@ export class MicroorganismMutation extends ActionCard implements IProjectCard {
         cardNumber: 'E89',
         renderData: CardRenderer.builder((b) => {
           b.action('Add a microbe to any card.', (eb) => eb.empty().startAction.resource(CardResource.MICROBE).asterix()).br;
-          b.text('Double the microbes on all cards. Then, if one of your cards has 10+ microbes:').tr(1);
+          b.resource(CardResource.MICROBE).text('x2', {size: Size.SMALL}).asterix().nbsp.text('10+:', {size: Size.SMALL}).tr(1);
         }),
-        description: 'It must be -20 \u00b0C or warmer. Double the microbes on all cards in play, then if you have 10 microbes on any card, raise your TR 1 step.',
+        description: 'Requires -20 \u00b0C or warmer. Double the microbes on all cards in play. Then if one of your cards has 10+ microbes, raise your TR 1 step.',
       },
     });
   }

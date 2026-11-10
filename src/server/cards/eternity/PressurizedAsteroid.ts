@@ -11,7 +11,7 @@ export class PressurizedAsteroid extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.PRESSURIZED_ASTEROID,
-      tags: [Tag.SPACE, Tag.EVENT],
+      tags: [Tag.SPACE],
       cost: 30,
       behavior: {
         global: {oxygen: 2},
@@ -21,7 +21,7 @@ export class PressurizedAsteroid extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E105',
         renderData: CardRenderer.builder((b) => {
-          b.oxygen(2).oceans(1).minus().plants(2, {all});
+          b.oxygen(2).oceans(1).br.minus().plants(2, {all});
         }),
         description: 'Raise oxygen 2 steps. Place an ocean. Remove up to 2 plants from any player.',
       },

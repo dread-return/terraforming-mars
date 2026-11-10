@@ -19,8 +19,8 @@ export class DomeValley extends PreludeCard {
       metadata: {
         cardNumber: 'EP11',
         renderData: CardRenderer.builder((b) => {
-          b.text('Counts as playing 2 preludes. If it is your last prelude play, discard it and play the top prelude instead. Cannot be copied.', {size: Size.SMALL}).br;
-          b.production((pb) => pb.plants(2).heat(2)).plants(2).slash().heat(2);
+          b.text('Counts as 2 preludes. If it is your last prelude play, play the top prelude instead.', {size: Size.SMALL, isBold: false}).br;
+          b.production((pb) => pb.plants(2).heat(2)).br.plants(2).slash().heat(2);
         }),
         description: 'Increase your plant and heat production 2 steps. Gain 2 plants or 2 heat.',
       },

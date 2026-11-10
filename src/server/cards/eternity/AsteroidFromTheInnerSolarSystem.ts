@@ -6,13 +6,14 @@ import {Card} from '../Card';
 import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
 import {Tag} from '../../../common/cards/Tag';
+import {digit} from '../Options';
 
 export class AsteroidFromTheInnerSolarSystem extends Card implements IProjectCard {
   constructor() {
     super({
       type: CardType.EVENT,
       name: CardName.ASTEROID_FROM_THE_INNER_SOLAR_SYSTEM,
-      tags: [Tag.VENUS, Tag.SPACE, Tag.EVENT],
+      tags: [Tag.VENUS, Tag.SPACE],
       cost: 47,
       behavior: {
         production: {heat: 2},
@@ -21,7 +22,7 @@ export class AsteroidFromTheInnerSolarSystem extends Card implements IProjectCar
       metadata: {
         cardNumber: 'E44',
         renderData: CardRenderer.builder((b) => {
-          b.venus(4).production((pb) => pb.heat(2)).resource(CardResource.FLOATER, 2).asterix();
+          b.venus(4, {digit}).br.production((pb) => pb.heat(2)).resource(CardResource.FLOATER, 2).asterix();
         }),
         description: 'Raise Venus 4 steps. Increase your heat production 2 steps. Add 2 floaters to any card.',
       },

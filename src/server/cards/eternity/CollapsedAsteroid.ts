@@ -11,7 +11,7 @@ export class CollapsedAsteroid extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.COLLAPSED_ASTEROID,
-      tags: [Tag.SPACE, Tag.EVENT],
+      tags: [Tag.SPACE],
       cost: 11,
       behavior: {
         tr: 1,

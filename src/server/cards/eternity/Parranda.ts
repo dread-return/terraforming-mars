@@ -26,12 +26,12 @@ export class Parranda extends ActionCard implements IProjectCard {
       metadata: {
         cardNumber: 'E98',
         renderData: CardRenderer.builder((b) => {
-          b.effect('After production, pay M€ equal to the current generation or discard this card.', (eb) => eb.text('PROD').startEffect.megacredits(0).text('-X/GEN, OR DISCARD'));
+          b.effect('Prod.: pay gen M€ or discard.', (eb) => eb.text('PROD').startEffect.minus().megacredits(0, {text: 'gen'}).asterix());
           b.br;
-          b.action('Draw a card and gain 2 heat.', (eb) => eb.empty().startAction.cards(1).heat(2)).br;
+          b.action(undefined, (eb) => eb.empty().startAction.cards(1).heat(2)).br;
           b.city().asterix();
         }),
-        description: 'Requires a city tile in play. Place a city tile next to another city.',
+        description: 'Next to a city.',
       },
     });
   }

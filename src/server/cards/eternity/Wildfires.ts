@@ -5,7 +5,6 @@ import {Card} from '../Card';
 import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
 import {Resource} from '../../../common/Resource';
-import {Tag} from '../../../common/cards/Tag';
 import {all} from '../Options';
 
 export class Wildfires extends Card implements IProjectCard {
@@ -13,7 +12,7 @@ export class Wildfires extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.WILDFIRES,
-      tags: [Tag.EVENT],
+      tags: [],
       cost: 9,
       requirements: {greeneries: 2, all: true},
       behavior: {

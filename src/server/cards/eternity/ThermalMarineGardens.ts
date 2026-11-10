@@ -17,7 +17,7 @@ export class ThermalMarineGardens extends PreludeCard {
       metadata: {
         cardNumber: 'EP61',
         renderData: CardRenderer.builder((b) => {
-          b.plants(5, {digit}).heat(5, {digit}).megacredits(5).oceans(1).cards(1);
+          b.plants(5, {digit}).heat(5, {digit}).megacredits(5).br.oceans(1).cards(1);
         }),
         description: 'Gain 5 plants, 5 heat and 5 M\u20ac. Place an ocean tile. Draw a card.',
       },

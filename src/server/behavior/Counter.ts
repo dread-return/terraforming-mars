@@ -152,7 +152,9 @@ export class Counter implements ICounter {
         }
       } else { // Single tag
         if (countable.others !== true) { // Just count player's own tags.
-          sum += player.tags.count(tag, context === 'default' ? 'default' : 'raw');
+          // Eternity: Gestalt Intelligence lets wild tags count for tag-based VP.
+          const gestalt = context === 'vps' && player.tableau.has(CardName.GESTALT_INTELLIGENCE);
+          sum += player.tags.count(tag, context === 'default' || gestalt ? 'default' : 'raw');
 
           if (this.cardIsUnplayed) { // And include the card itself if it isn't already on the tableau.
             sum += card.tags.filter((t) => t === tag).length;

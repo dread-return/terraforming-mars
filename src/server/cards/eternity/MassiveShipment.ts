@@ -18,7 +18,7 @@ export class MassiveShipment extends PreludeCard {
       metadata: {
         cardNumber: 'EP34',
         renderData: CardRenderer.builder((b) => {
-          b.text('Counts as playing 2 preludes. If it is your last prelude play, discard it and play the top prelude instead. Cannot be copied.', {size: Size.SMALL}).br;
+          b.text('Counts as 2 preludes. If it is your last prelude play, play the top prelude instead.', {size: Size.SMALL, isBold: false}).br;
           b.cards(4).text('10').wild(1);
         }),
         description: 'Draw 4 cards. Gain 10 standard resources.',

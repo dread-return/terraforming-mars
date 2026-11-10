@@ -19,7 +19,7 @@ export class AcquisitionTarget extends PreludeCard {
       metadata: {
         cardNumber: 'EP05',
         renderData: CardRenderer.builder((b) => {
-          b.corporation().asterix().megacredits(5).br.text('Search the corporation deck and play that corporation instead of yours.', {size: Size.SMALL});
+          b.corporation().asterix().megacredits(5).br.text('Search the corporation deck and play that corporation instead of yours.', {size: Size.SMALL, isBold: false});
         }),
         description: "Search the corporation deck for a corporation of your choosing and play it instead of your corporation (its starting M\u20ac, production and resources replace your old corporation's). Gain 5 M\u20ac.",
       },

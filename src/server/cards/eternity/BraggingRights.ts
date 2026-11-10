@@ -5,14 +5,13 @@ import {Card} from '../Card';
 import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
 import {Resource} from '../../../common/Resource';
-import {Tag} from '../../../common/cards/Tag';
 
 export class BraggingRights extends Card implements IProjectCard {
   constructor() {
     super({
       type: CardType.EVENT,
       name: CardName.BRAGGING_RIGHTS,
-      tags: [Tag.EVENT],
+      tags: [],
       cost: 5,
       victoryPoints: -1,
       behavior: {

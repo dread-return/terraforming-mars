@@ -10,7 +10,7 @@ export class RedHotAsteroid extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.RED_HOT_ASTEROID,
-      tags: [Tag.SPACE, Tag.EVENT],
+      tags: [Tag.SPACE],
       cost: 29,
       behavior: {
         global: {temperature: 2},

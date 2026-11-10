@@ -751,6 +751,12 @@ export class Game implements IGame, Logger {
   }
 
   private setNextFirstPlayer() {
+    // Eternity: Initiative Manipulator lets its passer keep the first player marker.
+    const kept = Eternity.keptFirstPlayer(this);
+    if (kept !== undefined) {
+      this.overrideFirstPlayer(kept);
+      return;
+    }
     const spaceWargamesOwner = this.getCardPlayerOrUndefined(CardName.SPACE_WARGAMES);
     if (spaceWargamesOwner) {
       const spaceWargames = spaceWargamesOwner.tableau.get(CardName.SPACE_WARGAMES);
@@ -1346,6 +1352,10 @@ export class Game implements IGame, Logger {
     grantGlobalParameterTrackBonuses(player, 'temperature', this.temperature, newTemperature);
 
     this.temperature = newTemperature;
+    if (this.temperature >= this.max.temperature) {
+      // Eternity: Thawing Glacier melts into an ocean.
+      Eternity.onTemperatureMaxed(this);
+    }
 
     AresHandler.ifAres(this, (aresData) => {
       AresHandler.onTemperatureChange(this, aresData);

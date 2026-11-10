@@ -4,6 +4,7 @@ import {IPlayer} from '../../IPlayer';
 import {PreludeCard} from '../prelude/PreludeCard';
 import {Resource} from '../../../common/Resource';
 import {SelectCard} from '../../inputs/SelectCard';
+import {digit} from '../Options';
 
 export class AllIn extends PreludeCard {
   constructor() {
@@ -13,7 +14,7 @@ export class AllIn extends PreludeCard {
       metadata: {
         cardNumber: 'EP01',
         renderData: CardRenderer.builder((b) => {
-          b.cards(5).colon().megacredits(3).slash().cards(1).asterix();
+          b.cards(5, {digit}).colon().megacredits(3).slash().cards(1).asterix();
         }),
         description: 'Draw 5 cards. Keep any number of them and discard the rest. Gain 3 M\u20ac for each card discarded.',
       },

@@ -22,7 +22,7 @@ export class SpaceMadness extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E120',
         renderData: CardRenderer.builder((b) => {
-          b.text('All other players with a space tag, twice: discard a card OR lose 3 M€.', {size: Size.SMALL});
+          b.text('All other players with a space tag, twice: discard a card OR lose 3 M€.', {size: Size.SMALL, isBold: false});
         }),
         description: 'All OTHER players who have a space tag must, twice, either discard a card or lose 3 M\u20ac.',
       },

@@ -24,8 +24,8 @@ export class LavaCaverns extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E82',
         renderData: CardRenderer.builder((b) => {
-          b.effect('When any player plays an event, gain 2 M€.', (eb) => eb.tag(Tag.EVENT, {all}).startEffect.megacredits(2)).br;
-          b.effect('When you raise the temperature, gain 2 M€.', (eb) => eb.temperature(1).startEffect.megacredits(2)).br;
+          b.effect('Anyone plays an event: +2 M€.', (eb) => eb.tag(Tag.EVENT, {all}).startEffect.megacredits(2)).br;
+          b.effect('You raise temperature: +2 M€.', (eb) => eb.temperature(1).startEffect.megacredits(2)).br;
           b.production((pb) => pb.heat(1));
         }),
         description: 'Increase your heat production 1 step.',

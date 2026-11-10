@@ -5,6 +5,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 import {Tag} from '../../../common/cards/Tag';
+import {digit} from '../Options';
 
 export class Powerhouse extends CorporationCard implements ICorporationCard {
   constructor() {
@@ -19,13 +20,13 @@ export class Powerhouse extends CorporationCard implements ICorporationCard {
       metadata: {
         cardNumber: 'EC18',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(20).steel(3).energy(3).production((pb) => pb.steel(2).energy(2)).br;
+          b.megacredits(20).production((pb) => pb.steel(2).energy(2)).br;
           b.corpBox('effect-action', (ce) => {
-            ce.effect('When you increase energy or steel production, choose which one (no splitting).', (eb) => eb.production((pb) => pb.energy(1)).startEffect.production((pb) => pb.steel(1)).asterix());
-            ce.action('Pay 3 steel and 3 energy to raise your TR 1 step and draw a card.', (eb) => eb.steel(3).energy(3).startAction.tr(1).cards(1));
+            ce.effect('Energy/steel prod. increases may go to either.', (eb) => eb.production((pb) => pb.energy(1)).startEffect.production((pb) => pb.steel(1)).asterix());
+            ce.action('Pay 3 steel and 3 energy: +1 TR, draw a card.', (eb) => eb.steel(3, {digit}).energy(3, {digit}).startAction.tr(1).cards(1));
           });
         }),
-        description: 'You start with 20 M\u20ac, 3 steel, 3 energy, 2 steel production and 2 energy production.',
+        description: 'You also start with 3 steel and 3 energy.',
       },
     });
   }

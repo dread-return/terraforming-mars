@@ -25,7 +25,7 @@ export const RULEBOOK_URLS: Record<GameModule, string> = {
   idesofmars: 'https://boardgamegeek.com/thread/2293920/terraforming-mars-giga-expansion-ares-pathfinder-b',
   nuclear: 'https://boardgamegeek.com/thread/2293920/terraforming-mars-giga-expansion-ares-pathfinder-b',
   venusphase2: 'https://boardgamegeek.com/thread/2293920/terraforming-mars-giga-expansion-ares-pathfinder-b',
-  eternity: 'https://boardgamegeek.com/boardgame/167791/terraforming-mars',
+  eternity: 'https://boardgamegeek.com/thread/2680823/tm-eternity-cards-expansion',
 };
 
 export const WIKI_URLS = {

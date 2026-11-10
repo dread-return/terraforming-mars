@@ -10,7 +10,7 @@ export class FreezingColdAsteroid extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.FREEZING_COLD_ASTEROID,
-      tags: [Tag.SPACE, Tag.EVENT],
+      tags: [Tag.SPACE],
       cost: 33,
       behavior: {
         global: {temperature: 1},
@@ -20,7 +20,7 @@ export class FreezingColdAsteroid extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E72',
         renderData: CardRenderer.builder((b) => {
-          b.temperature(1).oceans(2).plants(4);
+          b.temperature(1).oceans(2).br.plants(4);
         }),
         description: 'Raise the temperature 1 step. Place 2 oceans. Gain 4 plants.',
       },

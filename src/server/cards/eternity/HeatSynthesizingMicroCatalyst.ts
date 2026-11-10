@@ -10,6 +10,7 @@ import {OrOptions} from '../../inputs/OrOptions';
 import {Resource} from '../../../common/Resource';
 import {SelectOption} from '../../inputs/SelectOption';
 import {Tag} from '../../../common/cards/Tag';
+import {digit} from '../Options';
 
 export class HeatSynthesizingMicroCatalyst extends Card implements IProjectCard {
   constructor() {
@@ -27,12 +28,11 @@ export class HeatSynthesizingMicroCatalyst extends Card implements IProjectCard 
       metadata: {
         cardNumber: 'E75',
         renderData: CardRenderer.builder((b) => {
-          b.action('Pay 5 heat to distribute 3 microbes among your cards.', (eb) => eb.heat(5).startAction.resource(CardResource.MICROBE, 3).asterix()).br;
+          b.action(undefined, (eb) => eb.heat(5, {digit}).startAction.resource(CardResource.MICROBE, {amount: 3, digit}).asterix()).br;
           b.or().br;
-          b.action('Pay 12 heat to distribute 4 floaters among your cards.', (eb) => eb.heat(12).startAction.resource(CardResource.FLOATER, 4).asterix()).br;
+          b.action('Spend 5 heat for 3 microbes OR 12 heat for 4 floaters, spread over your cards.', (eb) => eb.heat(12, {digit}).startAction.resource(CardResource.FLOATER, {amount: 4, digit}).asterix()).br;
           b.resource(CardResource.MICROBE).asterix().resource(CardResource.FLOATER).asterix();
         }),
-        description: 'Requires 8% Venus and 0 \u00b0C. Add 1 microbe to any card and 1 floater to any card. 1 VP per 2 floaters here.',
       },
     });
   }

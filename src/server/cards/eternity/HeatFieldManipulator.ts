@@ -9,6 +9,7 @@ import {OrOptions} from '../../inputs/OrOptions';
 import {Resource} from '../../../common/Resource';
 import {SelectOption} from '../../inputs/SelectOption';
 import {Tag} from '../../../common/cards/Tag';
+import {digit} from '../Options';
 
 export class HeatFieldManipulator extends Card implements IProjectCard {
   constructor() {
@@ -25,7 +26,7 @@ export class HeatFieldManipulator extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E74',
         renderData: CardRenderer.builder((b) => {
-          b.action('Pay 2 heat and 2 M€ to name a tag and reveal 4 cards. Take all cards with that tag and discard the rest.', (eb) => eb.heat(2).megacredits(2).startAction.cards(4).asterix()).br;
+          b.action('Pay 2 heat, 2 M€: name a tag, reveal 4 cards, keep those with it.', (eb) => eb.heat(2, {digit}).megacredits(2).startAction.cards(4, {digit}).asterix()).br;
           b.production((pb) => pb.heat(1));
         }),
         description: 'Requires a Jovian tag and a science tag. Increase your heat production 1 step.',

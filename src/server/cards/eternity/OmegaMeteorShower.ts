@@ -13,7 +13,7 @@ export class OmegaMeteorShower extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.OMEGA_METEOR_SHOWER,
-      tags: [Tag.SPACE, Tag.EVENT],
+      tags: [Tag.SPACE],
       cost: 27,
       behavior: {
         global: {temperature: 2, oxygen: 1},

@@ -19,7 +19,7 @@ export class FloraFaunaAndFunga extends PreludeCard {
       metadata: {
         cardNumber: 'EP16',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.plants(1)).cards(1, {secondaryTag: Tag.MICROBE}).cards(1, {secondaryTag: Tag.ANIMAL}).br.text('Play them at +/- 4 global requirements (not oceans) with 2 resources each.', {size: Size.SMALL});
+          b.production((pb) => pb.plants(1)).cards(1, {secondaryTag: Tag.MICROBE}).cards(1, {secondaryTag: Tag.ANIMAL}).br.text('Play them at +/- 4 global requirements (not oceans) with 2 resources each.', {size: Size.SMALL, isBold: false});
         }),
         description: 'Increase your plant production 1 step. Reveal cards until you reveal a microbe card and an animal card; take them. You may play them with global requirements +/- 4 steps (not oceans); when you play each, add 2 of its resources to it.',
       },

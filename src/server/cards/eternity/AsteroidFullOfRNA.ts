@@ -11,7 +11,7 @@ export class AsteroidFullOfRNA extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.ASTEROID_FULL_OF_RNA,
-      tags: [Tag.SPACE, Tag.EVENT],
+      tags: [Tag.SPACE],
       cost: 22,
       behavior: {
         global: {temperature: 1, oxygen: 1},

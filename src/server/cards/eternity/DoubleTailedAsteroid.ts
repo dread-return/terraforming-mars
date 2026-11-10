@@ -11,7 +11,7 @@ export class DoubleTailedAsteroid extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.DOUBLE_TAILED_ASTEROID,
-      tags: [Tag.SPACE, Tag.EVENT],
+      tags: [Tag.SPACE],
       cost: 19,
       behavior: {
         ocean: {on: 'land'},
@@ -21,7 +21,7 @@ export class DoubleTailedAsteroid extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E65',
         renderData: CardRenderer.builder((b) => {
-          b.oceans(1).asterix().titanium(3).minus().plants(2, {all});
+          b.oceans(1).asterix().titanium(3).br.minus().plants(2, {all});
         }),
         description: 'Place an ocean tile on an area NOT reserved for oceans. Gain 3 titanium. Remove up to 2 plants from any player.',
       },

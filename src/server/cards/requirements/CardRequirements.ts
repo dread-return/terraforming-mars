@@ -29,6 +29,7 @@ import {CorruptionRequirement} from './CorruptionRequirement';
 import {IProjectCard} from '../IProjectCard';
 import {UndergroundTokenRequirement} from './UndergroundTokenRequirement';
 import {DisplayRequirement} from './DisplayRequirement';
+import {Eternity} from '../eternity/Eternity';
 
 export class CardRequirements {
   constructor(public requirements: Array<CardRequirement>) {}
@@ -46,7 +47,7 @@ export class CardRequirements {
         tags.push((requirement as TagCardRequirement).tag);
       }
     }
-    if (tags.length > 1 && !player.tags.playerHas(tags)) {
+    if (tags.length > 1 && !player.tags.playerHas(tags) && !Eternity.ignoresTagRequirement(player, card)) {
       return false;
     }
     for (const requirement of this.requirements) {

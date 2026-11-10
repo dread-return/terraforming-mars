@@ -26,14 +26,12 @@ export class DeepSpaceExploration extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E08',
         renderData: CardRenderer.builder((b) => {
-          b.action('Reveal cards until you reveal a space card. Take it and discard the rest. If it also has a Jovian tag, add 1 discovery here.', (eb) => {
+          b.action(undefined, (eb) => {
             eb.empty().startAction.cards(1, {secondaryTag: Tag.SPACE}).resource(CardResource.DISCOVERY).asterix();
           }).br;
-          b.or().br;
-          b.action('Remove 1 discovery here to gain 2 titanium.', (eb) => eb.resource(CardResource.DISCOVERY).startAction.titanium(2)).br;
+          b.action('Take a revealed space card (+1 discovery if Jovian), OR spend 1 discovery for 2 titanium.', (eb) => eb.resource(CardResource.DISCOVERY).startAction.titanium(2)).br;
           b.titanium(1);
         }),
-        description: 'Gain 1 titanium. 1 VP per discovery here.',
       },
     });
   }

@@ -141,6 +141,7 @@ const CARD_TAGS: ReadonlyArray<IconEntry> = [
   {iconClass: 'card-resource-discovery', label: 'Discovery', official: false, expansions: ['eternity']},
   {iconClass: 'card-resource-singularity', label: 'Singularity', official: false, expansions: ['eternity']},
   {iconClass: 'card-resource-cheat', label: 'Cheat', official: false, expansions: ['eternity']},
+  {iconClass: 'card-resource-meddling', label: 'Meddling', official: false, expansions: ['eternity']},
   {iconClass: 'card-resource-trash', label: 'Trash', official: false, expansions: ['eternity']},
   {iconClass: 'card-resource-root', label: 'Root', official: false, expansions: ['eternity']},
 ];

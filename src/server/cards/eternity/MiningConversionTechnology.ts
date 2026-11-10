@@ -25,10 +25,9 @@ export class MiningConversionTechnology extends Card implements IProjectCard {
         renderData: CardRenderer.builder((b) => {
           b.action(undefined, (eb) => eb.resource(CardResource.SCIENCE).startAction.wild(1)).br;
           b.or().br;
-          b.action('Remove 1 science resource here to gain 1 standard resource, or 2 to gain 2 of one standard resource.', (eb) => eb.resource(CardResource.SCIENCE, 2).startAction.wild(2)).br;
-          b.effect('When you gain resources from a placement bonus, add a science resource here.', (eb) => eb.emptyTile().asterix().startEffect.resource(CardResource.SCIENCE));
+          b.action('Spend 1 (or 2) science here for 1 (or 2) of a standard resource.', (eb) => eb.resource(CardResource.SCIENCE, 2).startAction.wild(2)).br;
+          b.effect('Placement bonus: 1 science here.', (eb) => eb.emptyTile().asterix().startEffect.resource(CardResource.SCIENCE));
         }),
-        description: '1 VP.',
       },
     });
   }

@@ -6,14 +6,13 @@ import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
 import {OrOptions} from '../../inputs/OrOptions';
 import {SelectOption} from '../../inputs/SelectOption';
-import {Tag} from '../../../common/cards/Tag';
 
 export class AwardFunding extends Card implements IProjectCard {
   constructor() {
     super({
       type: CardType.EVENT,
       name: CardName.AWARD_FUNDING,
-      tags: [Tag.EVENT],
+      tags: [],
       cost: 10,
       metadata: {
         cardNumber: 'E47',

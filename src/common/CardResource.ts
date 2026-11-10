@@ -64,4 +64,5 @@ export enum CardResource {
   CHEAT = 'Cheat',
   TRASH = 'Trash',
   ROOT = 'Root',
+  MEDDLING = 'Meddling',
 }

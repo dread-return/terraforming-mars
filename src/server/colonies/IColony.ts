@@ -27,6 +27,7 @@ export interface IColony {
   decreaseTrack(steps?: number): void;
   isFull(): boolean;
   addColony(player: IPlayer, options?: {giveBonusTwice: boolean}): void;
+  addNeutralColony(bonusTo: IPlayer): void;
   trade(player: IPlayer, tradeOptions?: TradeOptions, bonusTradeOffset?: number): void;
   giveColonyBonus(player: IPlayer, isGiveColonyBonus?: boolean): undefined | PlayerInput;
   serialize(): SerializedColony;

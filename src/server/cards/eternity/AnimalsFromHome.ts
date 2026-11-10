@@ -21,7 +21,7 @@ export class AnimalsFromHome extends PreludeCard {
       metadata: {
         cardNumber: 'EP06',
         renderData: CardRenderer.builder((b) => {
-          b.cards(1, {secondaryTag: Tag.ANIMAL}).resource(CardResource.ANIMAL, 2).production((pb) => pb.plants(1)).br.text('When you play that card, move these animals onto it.', {size: Size.SMALL});
+          b.cards(1, {secondaryTag: Tag.ANIMAL}).resource(CardResource.ANIMAL, 2).production((pb) => pb.plants(1)).br.text('When you play that card, move these animals onto it.', {size: Size.SMALL, isBold: false});
         }),
         description: 'Increase your plant production 1 step. Add 2 animals here. Reveal cards until you reveal an animal card that holds animals; take it (shuffle the rest back). When you play it, move all animals from here onto it.',
       },

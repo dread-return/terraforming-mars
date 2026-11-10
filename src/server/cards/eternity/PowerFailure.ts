@@ -13,7 +13,7 @@ export class PowerFailure extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.POWER_FAILURE,
-      tags: [Tag.POWER, Tag.EVENT],
+      tags: [Tag.POWER],
       cost: 8,
       metadata: {
         cardNumber: 'E30',

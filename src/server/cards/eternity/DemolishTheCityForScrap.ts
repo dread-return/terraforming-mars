@@ -15,7 +15,7 @@ export class DemolishTheCityForScrap extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.DEMOLISH_THE_CITY_FOR_SCRAP,
-      tags: [Tag.BUILDING, Tag.MARS, Tag.EVENT],
+      tags: [Tag.BUILDING, Tag.MARS],
       cost: 5,
       metadata: {
         cardNumber: 'E62',

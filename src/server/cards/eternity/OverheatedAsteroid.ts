@@ -12,7 +12,7 @@ export class OverheatedAsteroid extends Card implements IProjectCard {
     super({
       type: CardType.EVENT,
       name: CardName.OVERHEATED_ASTEROID,
-      tags: [Tag.SPACE, Tag.EVENT],
+      tags: [Tag.SPACE],
       cost: 26,
       behavior: {
         global: {temperature: 1},

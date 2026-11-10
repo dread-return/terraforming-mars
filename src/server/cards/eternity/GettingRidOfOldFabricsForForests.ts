@@ -19,7 +19,7 @@ export class GettingRidOfOldFabricsForForests extends Card implements IProjectCa
       metadata: {
         cardNumber: 'E73',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.minus().steel(2).plus().plants(2)).steel(2);
+          b.production((pb) => pb.minus().steel(2).plus().plants(2)).br.steel(2);
         }),
         description: 'Decrease your steel production 2 steps and increase your plant production 2 steps. Gain 2 steel.',
       },

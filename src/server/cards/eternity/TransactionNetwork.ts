@@ -25,9 +25,9 @@ export class TransactionNetwork extends Card implements IProjectCard {
         cardNumber: 'E133',
         victoryPoints: questionmark(),
         renderData: CardRenderer.builder((b) => {
-          b.effect('When ANY player discards a card from hand, add a floater here.', (eb) => eb.cards(1, {all}).asterix().startEffect.resource(CardResource.FLOATER)).br;
-          b.action('Remove X floaters here to gain 1 M€ per 4 removed.', (eb) => eb.text('X').resource(CardResource.FLOATER).startAction.megacredits(1).slash().resource(CardResource.FLOATER, 4)).br;
-          b.vpText('2 VP if there are 20 or more floaters here.');
+          b.effect('Anyone discards from hand: 1 floater here.', (eb) => eb.minus().cards(1, {all}).startEffect.resource(CardResource.FLOATER)).br;
+          b.action('Remove X floaters: 1 M€ per 4.', (eb) => eb.text('X').resource(CardResource.FLOATER).startAction.megacredits(0, {text: 'x/4'})).br;
+          b.vpText('2 VP if 20+ floaters here.');
         }),
         description: 'Requires a Mars, an Earth and a Venus tag.',
       },

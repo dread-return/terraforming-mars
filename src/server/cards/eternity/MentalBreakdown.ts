@@ -17,7 +17,7 @@ export class MentalBreakdown extends PreludeCard {
       metadata: {
         cardNumber: 'EP36',
         renderData: CardRenderer.builder((b) => {
-          b.text('Counts as playing 2 preludes. If it is your last prelude play, discard it and play the top prelude instead. Cannot be copied.', {size: Size.SMALL}).br;
+          b.text('Counts as 2 preludes. If it is your last prelude play, play the top prelude instead.', {size: Size.SMALL, isBold: false}).br;
           b.production((pb) => pb.megacredits(-5, {all})).minus().tr(1, {all});
         }),
         description: "Decrease all other players' M\u20ac production 5 steps and their TR 1 step.",

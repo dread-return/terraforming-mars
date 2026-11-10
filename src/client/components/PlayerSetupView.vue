@@ -83,6 +83,7 @@
           :boardName="game.gameOptions.boardName"
           :aresData="game.aresData"
           :altVenusBoard="game.gameOptions.altVenusBoard"
+          :venusPhase2Track="game.gameOptions.expansions.venusphase2 && game.gameOptions.expansions.venus"
           :tileView="tileView"
           @toggleTileView="$emit('toggleTileView')" />
         <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" :alt="game.gameOptions.altContaminationTrack" />

@@ -11,7 +11,7 @@
       <GlobalParameterValue :param="globalParameter.TEMPERATURE" :value="temperature" :boardName="gameOptions.boardName" />
       <GlobalParameterValue :param="globalParameter.OXYGEN" :value="oxygen" :boardName="gameOptions.boardName" />
       <GlobalParameterValue :param="globalParameter.OCEANS" :value="oceans" :boardName="gameOptions.boardName" />
-      <GlobalParameterValue v-if="gameOptions.expansions.venus" :param="globalParameter.VENUS" :value="venus" :boardName="gameOptions.boardName" />
+      <GlobalParameterValue v-if="gameOptions.expansions.venus" :param="globalParameter.VENUS" :value="venus" :boardName="gameOptions.boardName" :venusPhase2Track="gameOptions.expansions.venusphase2" />
       <MoonGlobalParameterValue v-if="moonData" :moonData="moonData" />
       <div v-if="contamination !== undefined" :title="contaminationTitle" data-test="contamination">
         <div class="contamination-tile"></div>

@@ -1,4 +1,5 @@
 import {BoardName} from './BoardName';
+import {Expansion} from '../cards/GameModule';
 import * as constants from '@/common/constants';
 
 /**
@@ -25,9 +26,23 @@ const AMAZONIS_PLANITIA_MAXIMUMS: GlobalParameterMaximums = {
   venus: constants.MAX_VENUS_SCALE_AMAZONIS,
 };
 
-export function getGlobalParameterMaximums(boardName: BoardName): Readonly<GlobalParameterMaximums> {
-  if (boardName === BoardName.AMAZONIS_PLANITIA) {
-    return AMAZONIS_PLANITIA_MAXIMUMS;
-  }
-  return STANDARD_MAXIMUMS;
+/**
+ * Returns the maximums for the map `boardName`.
+ *
+ * `venusPhase2Track` is true when Venus Phase 2 is in play, whose 24-step Venus track (to 48%)
+ * replaces the map's own.
+ */
+export function getGlobalParameterMaximums(boardName: BoardName, venusPhase2Track: boolean = false): Readonly<GlobalParameterMaximums> {
+  const maximums = boardName === BoardName.AMAZONIS_PLANITIA ? AMAZONIS_PLANITIA_MAXIMUMS : STANDARD_MAXIMUMS;
+  return withVenusPhase2Track(maximums, venusPhase2Track);
+}
+
+/** Whether a game with these expansions uses Venus Phase 2's 24-step Venus track. */
+export function hasVenusPhase2Track(expansions: Partial<Record<Expansion, boolean>>): boolean {
+  return expansions.venusphase2 === true && expansions.venus === true;
+}
+
+/** Returns `maximums` with the Venus Phase 2 Venus maximum when `venusPhase2Track` is true. */
+export function withVenusPhase2Track(maximums: Readonly<GlobalParameterMaximums>, venusPhase2Track: boolean): Readonly<GlobalParameterMaximums> {
+  return venusPhase2Track ? {...maximums, venus: constants.MAX_VENUS_SCALE_VENUS_PHASE_2} : maximums;
 }

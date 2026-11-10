@@ -78,10 +78,10 @@ describe('Venus Phase 2 map', () => {
 
   it('tiles can still be placed once Venus is maxed, without raising it', () => {
     const [game, player] = venusGame();
-    setVenusScaleLevel(game, 30);
+    setVenusScaleLevel(game, 48);
     const tr = player.terraformRating;
     VenusPhase2Expansion.addTile(player, 'v02', {tileType: TileType.VENUS_FLOATING_ARRAY});
-    expect(game.getVenusScaleLevel()).eq(30);
+    expect(game.getVenusScaleLevel()).eq(48);
     expect(player.terraformRating).eq(tr);
   });
 

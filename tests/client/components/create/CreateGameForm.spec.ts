@@ -191,6 +191,22 @@ describe('CreateGameForm', () => {
     expect(wrapper.vm.boards).deep.eq([BoardName.THARSIS]);
   });
 
+  it('Venus Phase 2 replaces the Alt. Venus board option', async () => {
+    const wrapper = shallowMount(CreateGameForm, {
+      ...globalConfig,
+    });
+    const model = wrapper.vm as unknown as CreateGameModel;
+    model.expansions.venus = true;
+    model.altVenusBoard = true;
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('#altVenusBoard-checkbox').exists()).is.true;
+
+    model.expansions.venusphase2 = true;
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('#altVenusBoard-checkbox').exists()).is.false;
+    expect(model.altVenusBoard).is.false;
+  });
+
   it('toggling random milestones and awards leaves manual milestones and awards', () => {
     const wrapper = shallowMount(CreateGameForm, {
       ...globalConfig,

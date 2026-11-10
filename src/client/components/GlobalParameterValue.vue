@@ -43,11 +43,16 @@ export default defineComponent({
       type: String as () => BoardName,
       required: true,
     },
+    // Venus Phase 2 lengthens the Venus track to 48%.
+    venusPhase2Track: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     // Maximum value of this parameter, which depends on the map (the larger maps raise them).
     max(): number {
-      const maximums = getGlobalParameterMaximums(this.boardName);
+      const maximums = getGlobalParameterMaximums(this.boardName, this.venusPhase2Track);
       const byParam: Record<BaseGlobalParameter, number> = {
         [GlobalParameter.TEMPERATURE]: maximums.temperature,
         [GlobalParameter.OXYGEN]: maximums.oxygen,

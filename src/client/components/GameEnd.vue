@@ -194,6 +194,7 @@
             :expansions="game.gameOptions.expansions"
             :venusScaleLevel="game.venusScaleLevel"
             :altVenusBoard="game.gameOptions.altVenusBoard"
+            :venusPhase2Track="game.gameOptions.expansions.venusphase2 && game.gameOptions.expansions.venus"
             :boardName="game.gameOptions.boardName"
             :oceans_count="game.oceans"
             :oxygen_level="game.oxygenLevel"
@@ -244,7 +245,7 @@ import {Color} from '@/common/Color';
 import {CardType} from '@/common/cards/CardType';
 import {getCard} from '@/client/cards/ClientCardManifest';
 import {GlobalParameter} from '@/common/GlobalParameter';
-import {getGlobalParameterMaximums} from '@/common/boards/GlobalParameterMaximums';
+import {getGlobalParameterMaximums, hasVenusPhase2Track} from '@/common/boards/GlobalParameterMaximums';
 import {$t, translateTextWithParams, translateMessage} from '@/client/directives/i18n';
 import {Message} from '@/common/logs/Message';
 import {LogMessageDataType} from '@/common/logs/LogMessageDataType';
@@ -319,7 +320,7 @@ export default defineComponent({
         });
       }
 
-      const max = getGlobalParameterMaximums(this.game.gameOptions.boardName);
+      const max = getGlobalParameterMaximums(this.game.gameOptions.boardName, hasVenusPhase2Track(this.game.gameOptions.expansions));
       dataset.push({label: $t('Temperature'), color: 'red', data: getValues(GlobalParameter.TEMPERATURE, constants.MIN_TEMPERATURE, max.temperature)});
       dataset.push({label: $t('Oxygen'), color: 'green', data: getValues(GlobalParameter.OXYGEN, constants.MIN_OXYGEN_LEVEL, max.oxygen)});
       dataset.push({label: $t('Oceans'), color: 'blue', data: getValues(GlobalParameter.OCEANS, 0, max.oceans)});

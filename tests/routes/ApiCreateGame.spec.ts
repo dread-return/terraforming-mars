@@ -215,6 +215,27 @@ describe('ApiCreateGame', () => {
     expect(res.content).contains('customMA must have 5 awards');
   });
 
+  async function createdGameOptions(overrides: object) {
+    const config = newGameConfigForTest();
+    await postConfig({...config, ...overrides});
+    expect(res.statusCode).eq(statusCode.ok);
+    const model = JSON.parse(res.content) as SimpleGameModel;
+    const game = await scaffolding.ctx.gameLoader.getGame(model.id);
+    return game!.gameOptions;
+  }
+
+  it('keeps the Alt. Venus board', async () => {
+    const expansions = {...newGameConfigForTest().expansions, venus: true};
+    expect((await createdGameOptions({expansions, altVenusBoard: true})).altVenusBoard).is.true;
+  });
+
+  it('Venus Phase 2 replaces the Alt. Venus board', async () => {
+    const expansions = {...newGameConfigForTest().expansions, venus: true, venusphase2: true};
+    const options = await createdGameOptions({expansions, altVenusBoard: true});
+    expect(options.venusPhase2Expansion).is.true;
+    expect(options.altVenusBoard).is.false;
+  });
+
   async function createdEscapeVelocity(escapeVelocity: object) {
     await postConfig({...newGameConfigForTest(), escapeVelocity});
     expect(res.statusCode).eq(statusCode.ok);

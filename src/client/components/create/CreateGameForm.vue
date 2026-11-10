@@ -140,7 +140,8 @@
               <span v-i18n>Pathfinders</span>&nbsp;<a :href="wikiUrls.pathfinders" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
             </label>
 
-            <template v-if="expansions.venus">
+            <!-- Venus Phase 2's Venus track replaces the Alt. Venus board. -->
+            <template v-if="expansions.venus && !expansions.venusphase2">
               <input type="checkbox" v-model="altVenusBoard" id="altVenusBoard-checkbox">
               <label for="altVenusBoard-checkbox">
                 <span v-i18n>Alt. Venus Board</span> &nbsp;<a :href="wikiUrls.alternativeVenusBoard" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
@@ -697,6 +698,7 @@ export default defineComponent({
     'expansions.venusphase2': function(value: boolean) {
       if (value === true) {
         this.expansions.venus = true;
+        this.altVenusBoard = false;
       }
     },
     'expansions.turmoil': function(value: boolean) {

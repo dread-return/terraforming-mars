@@ -22,7 +22,7 @@
       <BoardSpace v-if="hasSpace(SpaceName.MAIN_DOCKING_STATION)" :space="getSpace(SpaceName.MAIN_DOCKING_STATION)" text="Main Docking Station" :tileView="tileView" />
     </div>
 
-    <div class="global-numbers" :class="{'global-numbers--large': isLargeBoard}">
+    <div class="global-numbers" :class="{'global-numbers--large': isLargeBoard, 'global-numbers--venus2': venusPhase2Track}">
       <div class="global-numbers-temperature">
         <div :class="getScaleCSS(lvl)" v-for="(lvl, idx) in getValuesForParameter('temperature')" :key="idx">{{ lvl.strValue }}</div>
       </div>
@@ -63,7 +63,7 @@
         </div>
       </div>
 
-      <div v-if="altVenusBoard" class="global-alt-venus">
+      <div v-if="altVenusBoard && !venusPhase2Track" class="global-alt-venus">
         <div class="std-wild-resource p18"></div>
         <div class="std-wild-resource p20"></div>
         <div class="std-wild-resource p22"></div>
@@ -389,6 +389,11 @@ export default defineComponent({
     altVenusBoard: {
       type: Boolean,
     },
+    // Venus Phase 2 replaces the Venus track with a 24-step one, to 48%.
+    venusPhase2Track: {
+      type: Boolean,
+      default: false,
+    },
     boardName: {
       type: String as () => BoardName,
       required: true,
@@ -458,7 +463,8 @@ export default defineComponent({
         break;
       case 'venus':
         startValue = constants.MIN_VENUS_SCALE;
-        endValue = constants.MAX_VENUS_SCALE;
+        // Venus Phase 2 keeps 2% steps all the way.
+        endValue = this.venusPhase2Track ? this.globalParameterMaximums.venus : constants.MAX_VENUS_SCALE;
         step = 2;
         curValue = this.venusScaleLevel;
         break;
@@ -466,7 +472,7 @@ export default defineComponent({
         throw new Error('Wrong parameter to get values from: ' + targetParameter);
       }
 
-      // Above 30%, the Venus scale moves 1% per step (Amazonis Planitia goes to 33%).
+      // Above 30%, the Venus scale moves 1% per step (Amazonis Planitia goes to 33%, unless Venus Phase 2 replaces its track).
       if (targetParameter === 'venus') {
         for (let value = this.globalParameterMaximums.venus; value > endValue; value--) {
           values.push(new GlobalParamLevel(value, value === curValue, value.toString()));
@@ -500,7 +506,7 @@ export default defineComponent({
   computed: {
     // The per-map maximum values of the global parameters (the larger maps raise them).
     globalParameterMaximums() {
-      return getGlobalParameterMaximums(this.boardName);
+      return getGlobalParameterMaximums(this.boardName, this.venusPhase2Track);
     },
     // The larger map needs a bigger board container.
     isLargeBoard(): boolean {
@@ -524,8 +530,14 @@ export default defineComponent({
         .toSorted((space1, space2) => parseInt(space1.id) - parseInt(space2.id));
     },
     gameBoardClassName(): string {
-      const css = this.expansions.venus ? 'board-cont board-with-venus' : 'board-cont board-without-venus';
-      return this.isLargeBoard ? css + ' board-cont--large' : css;
+      let css = this.expansions.venus ? 'board-cont board-with-venus' : 'board-cont board-without-venus';
+      if (this.isLargeBoard) {
+        css += ' board-cont--large';
+      }
+      if (this.venusPhase2Track) {
+        css += ' board-cont--venus2';
+      }
+      return css;
     },
   },
 });

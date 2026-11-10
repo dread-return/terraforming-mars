@@ -117,4 +117,42 @@ describe('Board', () => {
     const ganymede = wrapper.findAllComponents(BoardSpace).find((w) => w.props('text') === 'Ganymede Colony');
     expect(ganymede?.props('space').tileType).to.eq(TileType.CITY);
   });
+
+  function venusValues(wrapper: ReturnType<typeof shallowMount>): Array<string> {
+    return wrapper.findAll('.global-numbers-venus .global-numbers-value').map((w) => w.text());
+  }
+
+  it('draws the 0..30% Venus track', () => {
+    const wrapper = shallowMount(Board, {
+      ...globalConfig,
+      props: {spaces, expansions: {...DEFAULT_EXPANSIONS, venus: true}, venusScaleLevel: 0, boardName: BoardName.THARSIS},
+    });
+    const values = venusValues(wrapper);
+    expect(values).has.length(16);
+    expect(values[0]).eq('30');
+    expect(wrapper.classes()).does.not.include('board-cont--venus2');
+  });
+
+  it('draws the 24-step Venus Phase 2 track', () => {
+    const wrapper = shallowMount(Board, {
+      ...globalConfig,
+      props: {
+        spaces,
+        expansions: {...DEFAULT_EXPANSIONS, venus: true, venusphase2: true},
+        venusScaleLevel: 40,
+        boardName: BoardName.AMAZONIS_PLANITIA,
+        altVenusBoard: true,
+        venusPhase2Track: true,
+      },
+    });
+    const values = venusValues(wrapper);
+    expect(values).has.length(25);
+    expect(values[0]).eq('48');
+    expect(values).does.not.include('33');
+    expect(wrapper.find('.global-numbers-venus .val-is-active').text()).eq('40');
+    expect(wrapper.classes()).includes('board-cont--venus2');
+    expect(wrapper.find('.global-numbers').classes()).includes('global-numbers--venus2');
+    // The Alt. Venus board's bonuses are replaced.
+    expect(wrapper.find('.global-alt-venus').exists()).is.false;
+  });
 });

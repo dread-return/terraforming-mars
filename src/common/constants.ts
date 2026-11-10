@@ -38,6 +38,12 @@ export const TEMPERATURE_BONUS_FOR_HEAT_2 = -20;
 export const TEMPERATURE_BONUS_FOR_PLANT = -12;
 export const VENUS_LEVEL_FOR_AMAZONIS_COLONY_BONUS = 16;
 export const VENUS_LEVEL_FOR_AMAZONIS_TR_BONUS = 22;
+// Venus Phase 2 lengthens the Venus track to 24 steps, still 2% each.
+export const MAX_VENUS_SCALE_VENUS_PHASE_2 = 48;
+export const VENUS_PHASE_2_LEVEL_FOR_SECOND_CARD_BONUS = 22;
+export const VENUS_PHASE_2_LEVEL_FOR_TR_BONUS = 34;
+// Like the Alt. Venus board, every step above this grants a standard resource (and the last a wild one too).
+export const VENUS_PHASE_2_MINIMUM_RESOURCE_BONUS = 34;
 
 // Colonies
 export const MAX_COLONY_TRACK_POSITION = 6;

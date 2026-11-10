@@ -135,7 +135,8 @@ export class ApiCreateGame extends Handler {
       const boardName = gameReq.boards[Math.floor(Math.random() * gameReq.boards.length)];
 
       const gameOptions: GameOptions = {
-        altVenusBoard: gameReq.altVenusBoard,
+        // Venus Phase 2's Venus track replaces the Alt. Venus board.
+        altVenusBoard: gameReq.altVenusBoard && !(gameReq.expansions.venusphase2 === true && gameReq.expansions.venus === true),
         altContaminationTrack: gameReq.altContaminationTrack ?? false,
         aresExtension: gameReq.expansions.ares,
         aresHazards: true, // Not a runtime option.

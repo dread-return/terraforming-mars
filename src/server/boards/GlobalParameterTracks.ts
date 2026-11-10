@@ -76,12 +76,23 @@ const AMAZONIS_PLANITIA: GlobalParameterTracks = {
   ],
 };
 
-export function getGlobalParameterTracks(boardName: BoardName): GlobalParameterTracks {
-  if (boardName === BoardName.AMAZONIS_PLANITIA) {
-    return AMAZONIS_PLANITIA;
-  } else {
-    return STANDARD;
-  }
+/**
+ * Venus Phase 2's 24-step Venus track (to 48%): cards at 8% and 22%, TR at 34%. The standard and wild
+ * resources on its last steps are granted by Game.increaseVenusScaleLevel, like the Alt. Venus board.
+ */
+const VENUS_PHASE_2_VENUS: ReadonlyArray<GlobalParameterThreshold> = [
+  {value: constants.VENUS_LEVEL_FOR_CARD_BONUS, bonus: 'drawcard'},
+  {value: constants.VENUS_PHASE_2_LEVEL_FOR_SECOND_CARD_BONUS, bonus: 'drawcard'},
+  {value: constants.VENUS_PHASE_2_LEVEL_FOR_TR_BONUS, bonus: 'tr'},
+];
+
+/**
+ * Returns the track bonuses for the map `boardName`. When `venusPhase2Track` is true, the Venus
+ * Phase 2 Venus track replaces the map's own.
+ */
+export function getGlobalParameterTracks(boardName: BoardName, venusPhase2Track: boolean = false): GlobalParameterTracks {
+  const tracks = boardName === BoardName.AMAZONIS_PLANITIA ? AMAZONIS_PLANITIA : STANDARD;
+  return venusPhase2Track ? {...tracks, venus: VENUS_PHASE_2_VENUS} : tracks;
 }
 
 /** Grants the bonuses on the `type` track crossed when it rises from `from` to `to`. */

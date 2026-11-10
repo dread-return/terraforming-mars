@@ -10,6 +10,7 @@
     :oxygen_level="game.oxygenLevel"
     :temperature="game.temperature"
     :altVenusBoard="game.gameOptions.altVenusBoard"
+    :venusPhase2Track="game.gameOptions.expansions.venusphase2 && game.gameOptions.expansions.venus"
     :aresData="game.aresData"
     :tileView="tileView"
     @toggleTileView="$emit('toggleTileView')"

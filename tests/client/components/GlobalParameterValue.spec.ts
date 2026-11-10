@@ -22,14 +22,20 @@ describe('GlobalParameterValue', () => {
     {boardName: BoardName.THARSIS, value: 30, isMax: true},
     {boardName: BoardName.AMAZONIS_PLANITIA, value: 30, isMax: false},
     {boardName: BoardName.AMAZONIS_PLANITIA, value: 33, isMax: true},
+    {boardName: BoardName.THARSIS, value: 30, isMax: false, venusPhase2Track: true},
+    {boardName: BoardName.THARSIS, value: 48, isMax: true, venusPhase2Track: true},
+    {boardName: BoardName.AMAZONIS_PLANITIA, value: 33, isMax: false, venusPhase2Track: true},
+    {boardName: BoardName.AMAZONIS_PLANITIA, value: 48, isMax: true, venusPhase2Track: true},
   ]) {
-    it(`Venus at ${run.value} on ${run.boardName} is ${run.isMax ? '' : 'not '}at its maximum`, () => {
+    const vp2 = run.venusPhase2Track === true ? ' with Venus Phase 2' : '';
+    it(`Venus at ${run.value} on ${run.boardName}${vp2} is ${run.isMax ? '' : 'not '}at its maximum`, () => {
       const wrapper = shallowMount(GlobalParameterValue, {
         ...globalConfig,
         props: {
           param: GlobalParameter.VENUS,
           value: run.value,
           boardName: run.boardName,
+          venusPhase2Track: run.venusPhase2Track ?? false,
         },
       });
       expect(wrapper.vm.isMax).eq(run.isMax);

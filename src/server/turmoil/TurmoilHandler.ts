@@ -147,10 +147,10 @@ export class TurmoilHandler {
 
     if (tr.venus !== undefined) {
       const venusLevel = game.getVenusScaleLevel();
-      const availableSteps = venusStepsBetween(venusLevel, game.max.venus);
+      const availableSteps = venusStepsBetween(venusLevel, game.max.venus, game.max.venus);
       const steps = Math.min(availableSteps, tr.venus);
       total = total + steps;
-      const newVenusLevel = venusLevelAfterSteps(venusLevel, steps);
+      const newVenusLevel = venusLevelAfterSteps(venusLevel, steps, game.max.venus);
       for (const {value, bonus} of globalParameterTracks.venus) {
         if (bonus === 'tr' && venusLevel < value && newVenusLevel >= value) {
           tr.tr = (tr.tr ?? 0) + 1;

@@ -51,7 +51,7 @@ import {AresSetup} from './ares/AresSetup';
 import {MoonData} from './moon/MoonData';
 import {MoonExpansion} from './moon/MoonExpansion';
 import {VenusMapData} from './venus2/VenusMapData';
-import {VenusPhase2Expansion} from './venus2/VenusPhase2Expansion';
+import {VenusPhase2Expansion, isVenusPhase2Track} from './venus2/VenusPhase2Expansion';
 import {TurmoilHandler} from './turmoil/TurmoilHandler';
 import {SeededRandom, UnseededRandom} from '../common/utils/Random';
 import {chooseMilestonesAndAwards} from './ma/MilestoneAwardSelector';
@@ -70,7 +70,7 @@ import {Logger} from './logs/Logger';
 import {addDays, stringToNumber} from './database/utils';
 import {Tag} from '../common/cards/Tag';
 import {IGame, Score} from './IGame';
-import {GlobalParameterMaximums} from '../common/boards/GlobalParameterMaximums';
+import {GlobalParameterMaximums, withVenusPhase2Track} from '../common/boards/GlobalParameterMaximums';
 import {MarsBoard} from './boards/MarsBoard';
 import {UnderworldData} from './underworld/UnderworldData';
 import {UnderworldExpansion} from './underworld/UnderworldExpansion';
@@ -251,7 +251,7 @@ export class Game implements IGame, Logger {
     this.preludeDeck = preludeDeck;
     this.ceoDeck = ceoDeck;
     this.board = board;
-    this.max = board.max;
+    this.max = withVenusPhase2Track(board.max, isVenusPhase2Track(gameOptions));
 
     this.players.forEach((player) => {
       player.setup(this);
@@ -264,7 +264,7 @@ export class Game implements IGame, Logger {
     this.marsBotPlayer?.setup(this);
 
     this.tags = tags;
-    this.globalParameterTracks = getGlobalParameterTracks(gameOptions.boardName);
+    this.globalParameterTracks = getGlobalParameterTracks(gameOptions.boardName, isVenusPhase2Track(gameOptions));
     this.standardProjects = this.computeStandardProjects();
   }
 
@@ -1266,24 +1266,27 @@ export class Game implements IGame, Logger {
 
     // PoliticalAgendas Reds P3 hook
     if (increments === -1) {
-      this.venusScaleLevel = venusLevelAfterSteps(this.venusScaleLevel, increments);
+      this.venusScaleLevel = venusLevelAfterSteps(this.venusScaleLevel, increments, this.max.venus);
       return -1;
     }
 
     // Literal typing makes |increments| a const
-    const steps = Math.min(increments, venusStepsBetween(this.venusScaleLevel, this.max.venus));
-    const newValue = venusLevelAfterSteps(this.venusScaleLevel, steps);
+    const steps = Math.min(increments, venusStepsBetween(this.venusScaleLevel, this.max.venus, this.max.venus));
+    const newValue = venusLevelAfterSteps(this.venusScaleLevel, steps, this.max.venus);
 
     grantGlobalParameterTrackBonuses(player, 'venus', this.venusScaleLevel, newValue);
 
     if (this.phase !== Phase.SOLAR) {
-      if (this.gameOptions.altVenusBoard) {
-        const minimalBaseline = Math.max(this.venusScaleLevel, constants.ALT_VENUS_MINIMUM_BONUS);
+      // Venus Phase 2's track replaces the Alt. Venus board's, granting the same resources on its last steps.
+      const venusPhase2Track = isVenusPhase2Track(this.gameOptions);
+      if (venusPhase2Track || this.gameOptions.altVenusBoard) {
+        const minimumBonus = venusPhase2Track ? constants.VENUS_PHASE_2_MINIMUM_RESOURCE_BONUS : constants.ALT_VENUS_MINIMUM_BONUS;
+        const minimalBaseline = Math.max(this.venusScaleLevel, minimumBonus);
         const maximumBaseline = Math.min(newValue, this.max.venus);
-        const standardResourcesGranted = Math.max(venusStepsBetween(minimalBaseline, maximumBaseline), 0);
+        const standardResourcesGranted = Math.max(venusStepsBetween(minimalBaseline, maximumBaseline, this.max.venus), 0);
 
         const grantWildResource = newValue >= this.max.venus;
-        // The second half of this expression removes any increases earlier than 16-to-18.
+        // The second half of this expression removes any increases before the first resource step.
         if (grantWildResource || standardResourcesGranted > 0) {
           this.defer(new GrantVenusAltTrackBonusDeferred(player, standardResourcesGranted, grantWildResource));
         }
@@ -1706,9 +1709,9 @@ export class Game implements IGame, Logger {
         case CardName.BUFFER_GAS_STANDARD_PROJECT:
           return this.isSoloMode() && gameOptions.soloTR;
         case CardName.AIR_SCRAPPING_STANDARD_PROJECT:
-          return gameOptions.altVenusBoard === false;
+          return gameOptions.altVenusBoard === false || isVenusPhase2Track(gameOptions);
         case CardName.AIR_SCRAPPING_STANDARD_PROJECT_VARIANT:
-          return gameOptions.altVenusBoard === true;
+          return gameOptions.altVenusBoard === true && !isVenusPhase2Track(gameOptions);
         case CardName.MOON_HABITAT_STANDARD_PROJECT_VARIANT_2:
         case CardName.MOON_MINE_STANDARD_PROJECT_VARIANT_2:
         case CardName.MOON_ROAD_STANDARD_PROJECT_VARIANT_2:

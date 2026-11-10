@@ -24,6 +24,14 @@ export type VenusTileType = TileType.VENUS_FLOATING_ARRAY | TileType.VENUS_GAS_M
 /** Each floater spent on a Venus standard project is worth this much. */
 export const VENUS_FLOATER_VALUE = 3;
 
+/**
+ * Whether the game uses Venus Phase 2's 24-step Venus track (to 48%), which replaces the map's
+ * Venus track and the Alt. Venus board.
+ */
+export function isVenusPhase2Track(gameOptions: Pick<GameOptions, 'venusPhase2Expansion' | 'venusNextExtension'>): boolean {
+  return gameOptions.venusPhase2Expansion === true && gameOptions.venusNextExtension === true;
+}
+
 export class VenusPhase2Expansion {
   private constructor() {}
 

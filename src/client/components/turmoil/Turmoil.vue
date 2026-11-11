@@ -85,10 +85,10 @@
 import {defineComponent} from 'vue';
 import {vueRoot} from '@/client/components/vueRoot';
 import {PartyName} from '@/common/turmoil/PartyName';
-import {TurmoilModel} from '@/common/models/TurmoilModel';
+import {PARTY_AGENDA_KEYS, TurmoilModel} from '@/common/models/TurmoilModel';
 import TurmoilAgenda from '@/client/components/turmoil/TurmoilAgenda.vue';
 import GlobalEvent from '@/client/components/turmoil/GlobalEvent.vue';
-import {BonusId, PolicyId} from '@/common/turmoil/Types';
+import {Agenda, BonusId, PolicyId} from '@/common/turmoil/Types';
 
 export default defineComponent({
   name: 'Turmoil',
@@ -106,47 +106,22 @@ export default defineComponent({
       }
       return party.toLowerCase().split(' ').join('_');
     },
-    getBonus(party: PartyName): BonusId {
+    getAgenda(party: PartyName): Agenda {
       const politicalAgendas = this.turmoil.politicalAgendas;
       if (politicalAgendas === undefined) {
         throw new Error('Political agendas not defined');
       }
-      switch (party) {
-      case PartyName.MARS:
-        return politicalAgendas.marsFirst.bonusId;
-      case PartyName.SCIENTISTS:
-        return politicalAgendas.scientists.bonusId;
-      case PartyName.UNITY:
-        return politicalAgendas.unity.bonusId;
-      case PartyName.KELVINISTS:
-        return politicalAgendas.kelvinists.bonusId;
-      case PartyName.REDS:
-        return politicalAgendas.reds.bonusId;
-      case PartyName.GREENS:
-        return politicalAgendas.greens.bonusId;
+      const agenda = politicalAgendas[PARTY_AGENDA_KEYS[party]];
+      if (agenda === undefined) {
+        throw new Error(`No agenda for party ${party}`);
       }
+      return agenda;
+    },
+    getBonus(party: PartyName): BonusId {
+      return this.getAgenda(party).bonusId;
     },
     getPolicy(partyName: PartyName): PolicyId {
-      const politicalAgendas = this.turmoil.politicalAgendas;
-      if (politicalAgendas === undefined) {
-        throw new Error('Political agendas not defined');
-      }
-      switch (partyName) {
-      case PartyName.MARS:
-        return politicalAgendas.marsFirst.policyId;
-      case PartyName.SCIENTISTS:
-        return politicalAgendas.scientists.policyId;
-      case PartyName.UNITY:
-        return politicalAgendas.unity.policyId;
-      case PartyName.KELVINISTS:
-        return politicalAgendas.kelvinists.policyId;
-      case PartyName.REDS:
-        return politicalAgendas.reds.policyId;
-      case PartyName.GREENS:
-        return politicalAgendas.greens.policyId;
-      default:
-        throw new Error(`Unknown party name ${partyName}`);
-      }
+      return this.getAgenda(partyName).policyId;
     },
     toggleMe() {
       const currentState: boolean = this.isVisible();

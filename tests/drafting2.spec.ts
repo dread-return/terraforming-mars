@@ -703,6 +703,7 @@ const stored = {
     'moonStandardProjectVariant': false,
     'pathfindersExpansion': false,
     'politicalAgendasExtension': 'Standard',
+    'gigaTurmoil': false,
     'preludeDraftVariant': false,
     'preludeExtension': false,
     'prelude2Expansion': false,

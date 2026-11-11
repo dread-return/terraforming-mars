@@ -1,4 +1,4 @@
-import {PartyName} from '../../common/turmoil/PartyName';
+import {GIGA_PARTIES, GIGA_PARTIES_IN_PLAY, OFFICIAL_PARTIES, PartyName} from '../../common/turmoil/PartyName';
 import {IParty} from './parties/IParty';
 import {MarsFirst} from './parties/MarsFirst';
 import {Scientists} from './parties/Scientists';
@@ -6,6 +6,14 @@ import {Unity} from './parties/Unity';
 import {Kelvinists} from './parties/Kelvinists';
 import {Reds} from './parties/Reds';
 import {Greens} from './parties/Greens';
+import {Spome} from './parties/Spome';
+import {Bureaucrats} from './parties/Bureaucrats';
+import {Empower} from './parties/Empower';
+import {Populists} from './parties/Populists';
+import {Centrists} from './parties/Centrists';
+import {Transhumanists} from './parties/Transhumanists';
+import {chairmanWheelInput} from './ChairmanWheel';
+import {inplaceShuffle} from '../utils/shuffle';
 import {IGame} from '../IGame';
 import {GlobalEventDealer, getGlobalEventByName} from './globalEvents/GlobalEventDealer';
 import {IGlobalEvent} from './globalEvents/IGlobalEvent';
@@ -36,10 +44,34 @@ export const ALL_PARTIES = {
   [PartyName.GREENS]: Greens,
   [PartyName.REDS]: Reds,
   [PartyName.KELVINISTS]: Kelvinists,
+  [PartyName.SPOME]: Spome,
+  [PartyName.BUREAUCRATS]: Bureaucrats,
+  [PartyName.EMPOWER]: Empower,
+  [PartyName.POPULISTS]: Populists,
+  [PartyName.CENTRISTS]: Centrists,
+  [PartyName.TRANSHUMANISTS]: Transhumanists,
 } satisfies Record<PartyName, PartyFactory>;
 
+// The order of the parties on the board. The official parties come first.
+const BOARD_ORDER: ReadonlyArray<PartyName> = [...OFFICIAL_PARTIES, ...GIGA_PARTIES];
+
+function createParty(name: PartyName): IParty {
+  return new ALL_PARTIES[name]();
+}
+
+/** The parties of a standard Turmoil game. */
 function createParties(): ReadonlyArray<IParty> {
-  return [new MarsFirst(), new Scientists(), new Unity(), new Greens(), new Reds(), new Kelvinists()];
+  return OFFICIAL_PARTIES.map(createParty);
+}
+
+/**
+ * Giga Turmoil: draft GIGA_PARTIES_IN_PLAY of the 12 parties. Returns the names in board order.
+ */
+function draftPartyNames(game: IGame): ReadonlyArray<PartyName> {
+  const names = [...BOARD_ORDER];
+  inplaceShuffle(names, game.rng);
+  const drafted = new Set(names.slice(0, GIGA_PARTIES_IN_PLAY));
+  return BOARD_ORDER.filter((name) => drafted.has(name));
 }
 
 const UNINITIALIZED_POLITICAL_AGENDAS_DATA: PoliticalAgendasData = {
@@ -53,7 +85,15 @@ export class Turmoil {
   public dominantParty: IParty;
   public usedFreeDelegateAction = new Set<IPlayer>();
   public delegateReserve = new MultiSet<Delegate>();
-  public parties = createParties();
+  /** The parties in play. Normally the six official parties; in Giga Turmoil, six of the twelve. */
+  public parties: ReadonlyArray<IParty> = createParties();
+  /**
+   * Parties that are not in this game. Cards and global events may still name them, so they can be looked up,
+   * but they never get delegates, never rule and never show up on the board.
+   */
+  private dormantParties: ReadonlyArray<IParty> = [];
+  /** True when playing with Giga Turmoil: the chairman picks a bonus *and* a policy, and a reward from the chairman wheel. */
+  public gigaTurmoil: boolean = false;
   public playersInfluenceBonus = new Map<PlayerId, number>();
   public readonly globalEventDealer: GlobalEventDealer;
   public distantGlobalEvent: IGlobalEvent | undefined;
@@ -65,24 +105,38 @@ export class Turmoil {
     rulingPartyName: PartyName,
     chairman: Delegate,
     dominantPartyName: PartyName,
-    globalEventDealer: GlobalEventDealer) {
+    globalEventDealer: GlobalEventDealer,
+    partiesInPlay?: ReadonlyArray<PartyName>) {
+    if (partiesInPlay !== undefined) {
+      this.setPartiesInPlay(partiesInPlay);
+    }
     this.rulingParty = this.getPartyByName(rulingPartyName);
     this.chairman = chairman;
     this.dominantParty = this.getPartyByName(dominantPartyName);
     this.globalEventDealer = globalEventDealer;
   }
 
-  public static newInstance(game: IGame, agendaStyle: AgendaStyle = 'Standard'): Turmoil {
+  public static newInstance(game: IGame, agendaStyle: AgendaStyle = 'Standard', gigaTurmoil: boolean = false): Turmoil {
     const dealer = GlobalEventDealer.newInstance(game);
 
     // The game begins with Greens in power and a Neutral chairman
     const turmoil = new Turmoil(PartyName.GREENS, 'NEUTRAL', PartyName.GREENS, dealer);
 
-    game.log('A neutral delegate is the new chairman.');
-    game.log('Greens are in power in the first generation.');
-
     // Init parties
     turmoil.parties = createParties();
+    if (gigaTurmoil) {
+      turmoil.gigaTurmoil = true;
+      const names = draftPartyNames(game);
+      turmoil.setPartiesInPlay(names);
+      game.log('Giga Turmoil parties: ${0}', (b) => b.rawString(names.join(', ')));
+      // Greens start in power, unless they were not drafted. Then the first party on the board does.
+      const startingParty = turmoil.parties.find((p) => p.name === PartyName.GREENS) ?? turmoil.parties[0];
+      turmoil.rulingParty = startingParty;
+      turmoil.dominantParty = startingParty;
+    }
+
+    game.log('A neutral delegate is the new chairman.');
+    game.log('${0} are in power in the first generation.', (b) => b.party(turmoil.rulingParty));
 
     game.playersInGenerationOrder.forEach((player) => {
       turmoil.delegateReserve.add(player, DELEGATES_PER_PLAYER);
@@ -90,7 +144,9 @@ export class Turmoil {
     // One Neutral delegate is already Chairman
     turmoil.delegateReserve.add('NEUTRAL', DELEGATES_FOR_NEUTRAL_PLAYER - 1);
 
-    turmoil.politicalAgendasData = PoliticalAgendas.newInstance(agendaStyle, turmoil.parties);
+    // GIGA rules: while the chairman is neutral, the default bonus and policy apply (not random ones).
+    turmoil.politicalAgendasData = PoliticalAgendas.newInstance(gigaTurmoil ? 'Standard' : agendaStyle, turmoil.parties);
+    turmoil.politicalAgendasData.agendaStyle = agendaStyle;
     // Note: this call relies on an instance of Game that will not be fully formed.
     // TODO(kberg): split newInstance into create/set-up so this can be done once the whole thing is ready.
     turmoil.onAgendaSelected(game);
@@ -113,8 +169,19 @@ export class Turmoil {
     this.addNeutralDelegate(this.distantGlobalEvent?.revealedDelegate, game);
   }
 
+  /** Sets which parties are in play. The rest become dormant. Call this during setup: it replaces the parties and their delegates. */
+  public setPartiesInPlay(names: ReadonlyArray<PartyName>): void {
+    this.parties = BOARD_ORDER.filter((name) => names.includes(name)).map(createParty);
+    this.dormantParties = BOARD_ORDER.filter((name) => !names.includes(name)).map(createParty);
+  }
+
+  /** True when `name` is one of the parties in this game. */
+  public isInPlay(name: PartyName): boolean {
+    return this.parties.some((party) => party.name === name);
+  }
+
   public getPartyByName(name: PartyName): IParty {
-    const party = this.parties.find((party) => party.name === name);
+    const party = this.parties.find((party) => party.name === name) ?? this.dormantParties.find((party) => party.name === name);
     if (party === undefined) {
       throw new Error(`Cannot find party with name {${name}}`);
     }
@@ -133,6 +200,10 @@ export class Turmoil {
 
   public sendDelegateToParty(delegate: Delegate, partyName: PartyName, game: IGame, throwIfError = false): void {
     const party = this.getPartyByName(partyName);
+    if (!this.isInPlay(partyName)) {
+      // The party is not in this game (Giga Turmoil), so there is nowhere to send the delegate.
+      return;
+    }
     if (this.delegateReserve.has(delegate)) {
       this.delegateReserve.remove(delegate);
     } else {
@@ -366,18 +437,23 @@ export class Turmoil {
     // Finally, award Chairman benefits
     if (this.chairman !== 'NEUTRAL') {
       const chairman = this.chairman;
-      let steps = gainTR ? 1 : 0;
+      // With Giga Turmoil the +1 TR is one of the options on the chairman wheel.
+      const useWheel = this.gigaTurmoil && gainTR;
+      let steps = gainTR && !useWheel ? 1 : 0;
       // Tempest Consultancy Hook (gains an additional TR when they become chairman)
       if (chairman.tableau.has(CardName.TEMPEST_CONSULTANCY)) {
         steps += 1;
       }
 
+      if (useWheel) {
+        chairman.defer(() => chairmanWheelInput(chairman));
+      }
       // Raise TR
       chairman.defer(() => {
         if (steps > 0) {
           chairman.increaseTerraformRating(steps);
           game.log('${0} is the new chairman and gains ${1}:i:tr:', (b) => b.player(chairman).number(steps));
-        } else {
+        } else if (!useWheel) {
           game.log('${0} is the new chairman', (b) => b.player(chairman));
         }
       });
@@ -557,6 +633,9 @@ export class Turmoil {
       comingGlobalEvent: this.comingGlobalEvent?.name,
       politicalAgendasData: PoliticalAgendas.serialize(this.politicalAgendasData),
     };
+    if (this.gigaTurmoil) {
+      result.gigaTurmoil = true;
+    }
     if (this.currentGlobalEvent !== undefined) {
       result.currentGlobalEvent = this.currentGlobalEvent.name;
     }
@@ -566,7 +645,9 @@ export class Turmoil {
   public static deserialize(d: SerializedTurmoil, players: ReadonlyArray<IPlayer>): Turmoil {
     const dealer = GlobalEventDealer.deserialize(d.globalEventDealer);
     const chairman = deserializeDelegateOrUndefined(d.chairman, players);
-    const turmoil = new Turmoil(d.rulingParty, chairman || 'NEUTRAL', d.dominantParty, dealer);
+    // The parties in play are the ones that were serialized. A standard game has the six official parties.
+    const turmoil = new Turmoil(d.rulingParty, chairman || 'NEUTRAL', d.dominantParty, dealer, d.parties.map((p) => p.name));
+    turmoil.gigaTurmoil = d.gigaTurmoil === true;
 
     turmoil.usedFreeDelegateAction = new Set(d.usedFreeDelegateAction.map((p) => deserializePlayerId(p, players)));
 

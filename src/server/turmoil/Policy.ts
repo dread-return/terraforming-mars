@@ -1,4 +1,5 @@
 import {IProjectCard} from '../cards/IProjectCard';
+import {ICard} from '../cards/ICard';
 import {IGame} from '../IGame';
 import {Space} from '../boards/Space';
 import {IPlayer} from '../IPlayer';
@@ -11,6 +12,10 @@ export interface IPolicy {
   description: string | ((player: IPlayer | undefined) => string);
   onTilePlaced?(player: IPlayer, space: Space): void;
   onCardPlayed?(player: IPlayer, card: IProjectCard): void;
+  /** Giga Turmoil: `player` added `count` resources to a card. */
+  onResourceAdded?(player: IPlayer, card: ICard, count: number): void;
+  /** Giga Turmoil: `player` used a standard project. */
+  onStandardProject?(player: IPlayer): void;
   action?(player: IPlayer): PlayerInput | undefined;
   canAct?(player: IPlayer): boolean;
   onPolicyStart?(game: IGame): void;

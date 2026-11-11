@@ -50,6 +50,7 @@ export type NewGameConfig = {
   // aresHazards: boolean;
   aresExtremeVariant: boolean;
   politicalAgendasExtension: AgendaStyle;
+  gigaTurmoil: boolean;
   solarPhaseOption: boolean;
   removeNegativeGlobalEventsOption: boolean;
   modularMA: boolean;

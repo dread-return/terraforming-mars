@@ -8,7 +8,8 @@ export type AgendaStyle =
   /** The incoming chairman sets the incoming policy and bonus each generation. */
   'Chairman';
 
-const PARTIES = ['m', 's', 'u', 'k', 'r', 'g'] as const;
+// Giga Turmoil parties: o = Spome, b = Bureaucrats, e = Empower, p = Populists, c = Centrists, t = Transhumanists.
+const PARTIES = ['m', 's', 'u', 'k', 'r', 'g', 'o', 'b', 'e', 'p', 'c', 't'] as const;
 const BONUS_SUFFIXES = ['b01', 'b02'] as const;
 const POLICY_SUFFIXES = ['p01', 'p02', 'p03', 'p04'] as const;
 
@@ -25,8 +26,15 @@ export type Agenda = {
   policyId: PolicyId;
 }
 
+// Giga Turmoil parties only have two policies each.
+const GIGA_PARTY_LETTERS: ReadonlyArray<Party> = ['o', 'b', 'e', 'p', 'c', 't'];
+const GIGA_POLICY_SUFFIXES: ReadonlyArray<PolicySuffix> = ['p01', 'p02'];
+
 export const BONUS_IDS: ReadonlyArray<BonusId> = PARTIES.flatMap((p) => BONUS_SUFFIXES.map((s) => `${p}${s}` as BonusId));
-export const POLICY_IDS: ReadonlyArray<PolicyId> = PARTIES.flatMap((p) => POLICY_SUFFIXES.map((s) => `${p}${s}` as PolicyId));
+export const POLICY_IDS: ReadonlyArray<PolicyId> = PARTIES.flatMap((p) => {
+  const suffixes = GIGA_PARTY_LETTERS.includes(p) ? GIGA_POLICY_SUFFIXES : POLICY_SUFFIXES;
+  return suffixes.map((s) => `${p}${s}` as PolicyId);
+});
 
 /** When player has Mars Frontier Alliance, this is their political party alliance. */
 export type AlliedParty = {
@@ -41,6 +49,12 @@ const names: Record<Party, PartyName> = {
   k: PartyName.KELVINISTS,
   r: PartyName.REDS,
   g: PartyName.GREENS,
+  o: PartyName.SPOME,
+  b: PartyName.BUREAUCRATS,
+  e: PartyName.EMPOWER,
+  p: PartyName.POPULISTS,
+  c: PartyName.CENTRISTS,
+  t: PartyName.TRANSHUMANISTS,
 } as const;
 
 export type AgendaInfo = {

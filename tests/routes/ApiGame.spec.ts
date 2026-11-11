@@ -93,6 +93,7 @@ describe('ApiGame', () => {
           'initialDraftVariant': false,
           'ceosDraftVariant': false,
           'politicalAgendasExtension': 'Standard',
+          'gigaTurmoil': false,
           'preludeDraftVariant': false,
           'randomMA': 'No randomization',
           'removeNegativeGlobalEvents': false,

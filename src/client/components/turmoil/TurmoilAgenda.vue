@@ -231,6 +231,12 @@ export default defineComponent({
         k: 'kelvinists',
         r: 'reds',
         g: 'greens',
+        o: 'spome',
+        b: 'bureaucrats',
+        e: 'empower',
+        p: 'populists',
+        c: 'centrists',
+        t: 'transhumanists',
       };
       return 'party-badge party-badge--' + partyBadgeSlugs[this.id[0]];
     },

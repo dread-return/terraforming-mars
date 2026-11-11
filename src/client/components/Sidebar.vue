@@ -204,6 +204,14 @@ export default defineComponent({
         return 'Science';
       case PartyName.KELVINISTS:
         return 'Kelvin';
+      case PartyName.BUREAUCRATS:
+        return 'Bureau.';
+      case PartyName.POPULISTS:
+        return 'Popul.';
+      case PartyName.CENTRISTS:
+        return 'Centr.';
+      case PartyName.TRANSHUMANISTS:
+        return 'Trans.';
       case undefined:
         return '???';
       default:

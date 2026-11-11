@@ -26,4 +26,5 @@ export type SerializedTurmoil = {
     comingGlobalEvent: GlobalEventName | undefined;
     currentGlobalEvent?: GlobalEventName;
     politicalAgendasData: SerializedPoliticalAgendasData;
+    gigaTurmoil?: boolean;
 }

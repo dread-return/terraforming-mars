@@ -111,6 +111,12 @@
             </template>
 
             <template v-if="expansions.turmoil">
+              <input type="checkbox" v-model="gigaTurmoil" id="gigaTurmoil-checkbox">
+              <label for="gigaTurmoil-checkbox">
+                <div class="create-game-expansion-icon expansion-icon-turmoil"></div>
+                <span v-i18n>Giga Turmoil</span>&nbsp;<span class="tooltip" v-i18n data-tooltip="Adds the six GIGA parties (6 of the 12 parties are drafted). The chairman picks the bonus and policy, and a reward from the chairman wheel.">&#9432;</span>
+              </label>
+
               <input type="checkbox" name="politicalAgendas" id="politicalAgendas-checkbox" @change="politicalAgendasExtensionToggle()">
               <label for="politicalAgendas-checkbox" class="expansion-button">
                 <div class="create-game-expansion-icon expansion-icon-agendas"></div>
@@ -726,6 +732,7 @@ export default defineComponent({
     'expansions.turmoil': function(value: boolean) {
       if (value === false) {
         this.politicalAgendasExtension = 'Standard';
+        this.gigaTurmoil = false;
       }
     },
     initialDraft(value: boolean) {
@@ -816,6 +823,7 @@ export default defineComponent({
         solarPhaseOption: this.solarPhaseOption,
         aresExtremeVariant: this.aresExtremeVariant,
         politicalAgendasExtension: this.politicalAgendasExtension,
+        gigaTurmoil: this.gigaTurmoil,
         undoOption: this.undoOption,
         showTimers: this.showTimers,
         fastModeOption: this.fastModeOption,

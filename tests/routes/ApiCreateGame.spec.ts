@@ -53,6 +53,7 @@ function newGameConfigForTest(): NewGameConfig {
     showOtherPlayersVP: false,
     aresExtremeVariant: false,
     politicalAgendasExtension: 'Standard',
+    gigaTurmoil: false,
     solarPhaseOption: false,
     removeNegativeGlobalEventsOption: false,
     modularMA: false,

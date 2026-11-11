@@ -23,6 +23,7 @@ export type GameOptionsModel = {
   preludeDraftVariant: boolean,
   ceosDraftVariant: boolean,
   politicalAgendasExtension: AgendaStyle,
+  gigaTurmoil: boolean,
   removeNegativeGlobalEvents: boolean,
   showOtherPlayersVP: boolean,
   showTimers: boolean,

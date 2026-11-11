@@ -1,3 +1,4 @@
+import {AndOptions} from '../inputs/AndOptions';
 import {OrOptions} from '../inputs/OrOptions';
 import {SelectOption} from '../inputs/SelectOption';
 import {IPlayer} from '../IPlayer';
@@ -15,6 +16,11 @@ export class ChoosePoliticalAgenda extends DeferredAction {
     public party: IParty,
     public bonusCb: (bonusId: BonusId) => void,
     public policyCb: (policyId: PolicyId) => void,
+    /**
+     * When set, the chairman chooses a bonus *and* a policy (Giga Turmoil). `bonusCb` and `policyCb` only record the
+     * choice, and `doneCb` is called once after both are chosen.
+     */
+    public doneCb?: () => void,
   ) {
     super(player, Priority.DEFAULT);
   }
@@ -47,6 +53,13 @@ export class ChoosePoliticalAgenda extends DeferredAction {
     const orPolicies = new OrOptions(...policies)
       .setTitle(message('Select a ${0} policy', (b) => b.party(this.party)));
 
+    if (this.doneCb !== undefined) {
+      const doneCb = this.doneCb;
+      return new AndOptions(orBonuses, orPolicies).andThen(() => {
+        doneCb();
+        return undefined;
+      }).setTitle(message('Choose the ${0} bonus and policy', (b) => b.party(this.party)));
+    }
     return new OrOptions(orBonuses, orPolicies);
   }
 }

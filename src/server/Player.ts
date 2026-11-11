@@ -592,6 +592,9 @@ export class Player implements IPlayer {
       for (const playedCard of this.tableau) {
         playedCard.onResourceAdded?.(this, card, count);
       }
+      if (card.resourceType === CardResource.FLOATER) {
+        PartyHooks.applySpomeRulingPolicy(this, card, count);
+      }
     }
 
     // Vermin hook (2 of 2)
@@ -1246,6 +1249,7 @@ export class Player implements IPlayer {
       this.game.log('${0} passed, but may still play later this generation (DGT Mars Crew)', (b) => b.player(this));
       return;
     }
+    PartyHooks.applyBureaucratsRulingPolicy(this);
     this.game.playerHasPassed(this);
     this.lastCardPlayed = undefined;
     this.autopass = false;

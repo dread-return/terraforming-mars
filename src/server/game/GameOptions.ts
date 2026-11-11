@@ -32,6 +32,8 @@ export type GameOptions = {
   aresHazards: boolean;
   aresExtremeVariant: boolean;
   politicalAgendasExtension: AgendaStyle;
+  // Turmoil add-on: the six GIGA parties (6 of the 12 parties are drafted), two bonuses and policies per GIGA party, and the chairman reward wheel.
+  gigaTurmoil: boolean;
   solarPhaseOption: boolean;
   removeNegativeGlobalEventsOption: boolean;
   moonExpansion: boolean;
@@ -149,6 +151,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   moonStandardProjectVariant1: false,
   pathfindersExpansion: false,
   politicalAgendasExtension: 'Standard',
+  gigaTurmoil: false,
   preludeDraftVariant: false,
   ceosDraftVariant: false,
   preludeExtension: false,

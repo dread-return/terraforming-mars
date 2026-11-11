@@ -1,9 +1,8 @@
 import {Color} from '../../common/Color';
-import {PartyName} from '../../common/turmoil/PartyName';
 import {IGame} from '../IGame';
 import {PoliticalAgendas} from '../turmoil/PoliticalAgendas';
 import {Delegate, Turmoil} from '../turmoil/Turmoil';
-import {DelegatesModel, PartyModel, PoliticalAgendasModel, TurmoilModel} from '../../common/models/TurmoilModel';
+import {DelegatesModel, PARTY_AGENDA_KEYS, PartyModel, PoliticalAgendasModel, TurmoilModel} from '../../common/models/TurmoilModel';
 
 export function getTurmoilModel(game: IGame): TurmoilModel | undefined {
   const turmoil = game.turmoil;
@@ -35,14 +34,10 @@ export function getTurmoilModel(game: IGame): TurmoilModel | undefined {
     });
   });
 
-  const politicalAgendas: PoliticalAgendasModel = {
-    marsFirst: PoliticalAgendas.getAgenda(turmoil, PartyName.MARS),
-    scientists: PoliticalAgendas.getAgenda(turmoil, PartyName.SCIENTISTS),
-    unity: PoliticalAgendas.getAgenda(turmoil, PartyName.UNITY),
-    greens: PoliticalAgendas.getAgenda(turmoil, PartyName.GREENS),
-    reds: PoliticalAgendas.getAgenda(turmoil, PartyName.REDS),
-    kelvinists: PoliticalAgendas.getAgenda(turmoil, PartyName.KELVINISTS),
-  };
+  const politicalAgendas: PoliticalAgendasModel = {};
+  for (const party of turmoil.parties) {
+    politicalAgendas[PARTY_AGENDA_KEYS[party.name]] = PoliticalAgendas.getAgenda(turmoil, party.name);
+  }
 
   const policyActionUsers = Array.from(
     game.playersInGenerationOrder,

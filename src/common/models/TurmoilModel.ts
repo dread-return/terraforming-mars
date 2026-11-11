@@ -33,11 +33,37 @@ export type DelegatesModel = {
   number: number;
 }
 
+/**
+ * The agenda of each party in play. Only the parties in this game are present: in a standard game that is the six
+ * official parties, with Giga Turmoil it is six of the twelve.
+ */
 export type PoliticalAgendasModel = {
-  marsFirst: Agenda;
-  scientists: Agenda;
-  unity: Agenda;
-  greens: Agenda;
-  reds: Agenda;
-  kelvinists: Agenda;
+  marsFirst?: Agenda;
+  scientists?: Agenda;
+  unity?: Agenda;
+  greens?: Agenda;
+  reds?: Agenda;
+  kelvinists?: Agenda;
+  spome?: Agenda;
+  bureaucrats?: Agenda;
+  empower?: Agenda;
+  populists?: Agenda;
+  centrists?: Agenda;
+  transhumanists?: Agenda;
 }
+
+/** Which field of PoliticalAgendasModel holds the agenda of each party. */
+export const PARTY_AGENDA_KEYS: Record<PartyName, keyof PoliticalAgendasModel> = {
+  [PartyName.MARS]: 'marsFirst',
+  [PartyName.SCIENTISTS]: 'scientists',
+  [PartyName.UNITY]: 'unity',
+  [PartyName.GREENS]: 'greens',
+  [PartyName.REDS]: 'reds',
+  [PartyName.KELVINISTS]: 'kelvinists',
+  [PartyName.SPOME]: 'spome',
+  [PartyName.BUREAUCRATS]: 'bureaucrats',
+  [PartyName.EMPOWER]: 'empower',
+  [PartyName.POPULISTS]: 'populists',
+  [PartyName.CENTRISTS]: 'centrists',
+  [PartyName.TRANSHUMANISTS]: 'transhumanists',
+};

@@ -73,6 +73,20 @@ export class PoliticalAgendas {
     // defer the selection.
     if (politicalAgendasData.agendaStyle === 'Chairman' && chairman !== 'NEUTRAL') {
       const agenda = this.getAgenda(turmoil, rulingParty.name);
+      if (turmoil.gigaTurmoil) {
+        // GIGA rules: the chairman chooses the bonus and the policy for the generation.
+        game.defer(new ChoosePoliticalAgenda(
+          chairman,
+          rulingParty,
+          (bonusId) => {
+            agenda.bonusId = bonusId;
+          },
+          (policyId) => {
+            agenda.policyId = policyId;
+          },
+          () => turmoil.onAgendaSelected(game)));
+        return;
+      }
       game.defer(new ChoosePoliticalAgenda(
         chairman,
         rulingParty,
@@ -85,6 +99,12 @@ export class PoliticalAgendas {
           turmoil.onAgendaSelected(game);
         }));
     } else {
+      if (turmoil.gigaTurmoil && chairman === 'NEUTRAL') {
+        // GIGA rules: a neutral chairman means the default bonus and policy.
+        const agenda = this.getAgenda(turmoil, rulingParty.name);
+        agenda.bonusId = rulingParty.bonuses[0].id;
+        agenda.policyId = rulingParty.policies[0].id;
+      }
       turmoil.onAgendaSelected(game);
     }
   }

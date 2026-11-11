@@ -3,6 +3,8 @@
     <h2 v-i18n>Political Parties</h2>
     <p v-i18n>A party bonus is granted once, during the Turmoil phase. Its policy applies ONLY DURING THE ACTION PHASE of the following generation.</p>
 
+    <p v-if="someOptionsAreMissing" v-i18n>Some Giga Turmoil party options are not available yet, so they are not listed.</p>
+
     <div class="help-parties-grid">
       <div class="help-party-card" v-for="party in parties" :key="party.name">
         <div class="help-party-label">
@@ -33,7 +35,7 @@
 import {computed} from 'vue';
 import {PartyName} from '@/common/turmoil/PartyName';
 import {agendaInfoById, BONUS_IDS, POLICY_IDS, BonusId, PolicyId} from '@/common/turmoil/Types';
-import {getAgendaOrThrow} from '@/client/turmoil/ClientAgendaManifest';
+import {getAgenda, getAgendaOrThrow} from '@/client/turmoil/ClientAgendaManifest';
 import TurmoilAgenda from '@/client/components/turmoil/TurmoilAgenda.vue';
 
 type PartyHelpEntry = {
@@ -46,11 +48,14 @@ const parties = computed<Array<PartyHelpEntry>>(() => {
   return Object.values(PartyName).map((name) => {
     return {
       name,
-      bonusIds: BONUS_IDS.filter((id) => agendaInfoById(id).name === name),
-      policyIds: POLICY_IDS.filter((id) => agendaInfoById(id).name === name),
+      bonusIds: BONUS_IDS.filter((id) => agendaInfoById(id).name === name && getAgenda(id) !== undefined),
+      policyIds: POLICY_IDS.filter((id) => agendaInfoById(id).name === name && getAgenda(id) !== undefined),
     };
   });
 });
+
+// Giga Turmoil options that have not been built yet have no description.
+const someOptionsAreMissing = [...BONUS_IDS, ...POLICY_IDS].some((id) => getAgenda(id) === undefined);
 
 function agendaDescription(id: BonusId | PolicyId): string {
   return getAgendaOrThrow(id).description;

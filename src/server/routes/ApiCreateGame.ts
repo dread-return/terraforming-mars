@@ -134,6 +134,7 @@ export class ApiCreateGame extends Handler {
 
       const boardName = gameReq.boards[Math.floor(Math.random() * gameReq.boards.length)];
 
+      const gigaTurmoil = gameReq.expansions.turmoil === true && gameReq.gigaTurmoil === true;
       const gameOptions: GameOptions = {
         // Venus Phase 2's Venus track replaces the Alt. Venus board.
         altVenusBoard: gameReq.altVenusBoard && !(gameReq.expansions.venusphase2 === true && gameReq.expansions.venus === true),
@@ -167,7 +168,9 @@ export class ApiCreateGame extends Handler {
         moonStandardProjectVariant: gameReq.moonStandardProjectVariant,
         moonStandardProjectVariant1: gameReq.moonStandardProjectVariant1,
         pathfindersExpansion: gameReq.expansions.pathfinders,
-        politicalAgendasExtension: gameReq.politicalAgendasExtension,
+        // With Giga Turmoil the chairman always chooses the bonus and policy.
+        politicalAgendasExtension: gigaTurmoil ? 'Chairman' : gameReq.politicalAgendasExtension,
+        gigaTurmoil: gigaTurmoil,
         prelude2Expansion: gameReq.expansions.prelude2,
         preludeDraftVariant: gameReq.preludeDraftVariant,
         preludeExtension: gameReq.expansions.prelude,

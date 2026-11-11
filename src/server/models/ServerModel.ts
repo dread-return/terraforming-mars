@@ -489,6 +489,7 @@ export class Server {
       preludeDraftVariant: options.preludeDraftVariant,
       ceosDraftVariant: options.ceosDraftVariant,
       politicalAgendasExtension: options.politicalAgendasExtension,
+      gigaTurmoil: options.gigaTurmoil,
       removeNegativeGlobalEvents: options.removeNegativeGlobalEventsOption,
       showOtherPlayersVP: options.showOtherPlayersVP,
       showTimers: options.showTimers,

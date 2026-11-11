@@ -7,6 +7,7 @@ import {Merger} from '../../../src/server/cards/promo/Merger';
 import {DeltaProject} from '../../../src/server/cards/delta/DeltaProject';
 import {Biofuels} from '../../../src/server/cards/prelude/Biofuels';
 import {DomeValley} from '../../../src/server/cards/eternity/DomeValley';
+import {ClonedWorkforce} from '../../../src/server/cards/eternity/ClonedWorkforce';
 import {UNCOPYABLE_PRELUDES} from '../../../src/server/cards/eternity/EternityUtils';
 
 describe('Uncopyable preludes', () => {
@@ -30,5 +31,12 @@ describe('Uncopyable preludes', () => {
     const [/* game */, player] = testGame(2, {preludeExtension: true, promoCardsOption: true});
     player.playedCards.push(new Merger(), new DeltaProject());
     expect(new DoubleDown().canPlay(player)).is.false;
+  });
+
+  it('Cloned Workforce cannot replay Merger or Delta Project', () => {
+    const [/* game */, player] = testGame(2, {preludeExtension: true, promoCardsOption: true, eternityExpansion: true});
+    player.playedCards.push(new Merger(), new DeltaProject(), new Biofuels());
+    const replayable = (new ClonedWorkforce() as unknown as {replayable(p: unknown): Array<IPreludeCard>}).replayable(player);
+    expect(replayable.map((c) => c.name)).deep.eq([CardName.BIOFUELS]);
   });
 });

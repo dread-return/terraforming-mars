@@ -5,6 +5,7 @@ import {Resource} from '../../../common/Resource';
 import {Tag} from '../../../common/cards/Tag';
 import {IPolicy} from '../Policy';
 import {IPlayer} from '../../IPlayer';
+import {Industries} from '../../industries/Industries';
 import {buyFirstCardPolicy, cardsWithoutTags, MegacreditBonus, tagChoice} from './GigaHelpers';
 
 const from = {partyName: PartyName.EMPOWER};
@@ -13,10 +14,9 @@ const BONUS_A = new MegacreditBonus('Eb01', PartyName.EMPOWER,
   'Gain 1 M€ for every energy tag, nuclear tag and card with no tag you have',
   (player) => player.tags.count(Tag.POWER, 'raw') + player.tags.count(Tag.RADIOACTIVE, 'raw') + cardsWithoutTags(player));
 
-// TODO(Leo): the "2 M€ for every industry" half of this bonus needs industry tiles, which do not exist yet.
 const BONUS_B = new MegacreditBonus('Eb02', PartyName.EMPOWER,
-  'Gain 1 M€ for every energy production you have (and 2 M€ for every industry, which is not in the game yet)',
-  (player) => player.production.energy);
+  'Gain 1 M€ for every energy production you have and 2 M€ for every industry you own',
+  (player) => player.production.energy + 2 * Industries.owned(player));
 
 // TODO(Leo): the second half of this policy ("2 M€ can be used as energy resources") is not implemented. Energy can be
 // spent as 2 M€ each, but M€ cannot be spent to pay energy costs yet.

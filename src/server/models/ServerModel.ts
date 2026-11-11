@@ -482,6 +482,7 @@ export class Server {
         nuclear: options.nuclearExpansion,
         venusphase2: options.venusPhase2Expansion,
         eternity: options.eternityExpansion,
+        industries: options.industriesExpansion,
       },
       fastModeOption: options.fastModeOption,
       includedCards: options.includedCards,

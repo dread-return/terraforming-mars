@@ -16,7 +16,7 @@ const css: Record<SpaceBonus, string> = {
   [SpaceBonus.DRAW_CARD]: 'card',
   [SpaceBonus.HEAT]: 'heat',
   [SpaceBonus.OCEAN]: 'bonusocean',
-  [SpaceBonus.MEGACREDITS]: '', // Only used for Ares
+  [SpaceBonus.MEGACREDITS]: 'megacredits', // Ares adjacency, and Industries placing M€ on an area.
   [SpaceBonus.ANIMAL]: 'animal',
   [SpaceBonus.MICROBE]: 'microbe',
   [SpaceBonus.ENERGY]: 'energy',
@@ -53,6 +53,9 @@ export default defineComponent({
       let position: string | number = idx;
       if (this.bonus.length === 1 && !doubleWideBonuses.includes(bonus)) {
         position = 'only';
+      } else if (this.bonus.length > 3) {
+        // Crowded spaces, e.g. after an industry places resources, draw smaller icons in a grid.
+        position = `grid-${idx}`;
       }
       return `board-space-bonus board-space-bonus--${css[bonus]} board-space-bonus-pos--${position}`;
     },

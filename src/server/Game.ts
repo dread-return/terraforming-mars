@@ -311,6 +311,7 @@ export class Game implements IGame, Logger {
         nuclear: partialOptions.nuclearExpansion ?? false,
         venusphase2: partialOptions.venusPhase2Expansion ?? false,
         eternity: partialOptions.eternityExpansion ?? false,
+        industries: partialOptions.industriesExpansion ?? false,
       };
     }
     const gameOptions = {...DEFAULT_GAME_OPTIONS, ...partialOptions};
@@ -1627,14 +1628,19 @@ export class Game implements IGame, Logger {
     case SpaceBonus.INCENTIVE_5MC:
       player.stock.add(Resource.MEGACREDITS, 5 * count, {log: true});
       break;
+    case SpaceBonus.MEGACREDITS:
+      player.stock.add(Resource.MEGACREDITS, count, {log: true});
+      break;
     case SpaceBonus.STANDARD_RESOURCE:
-      // A space has this bonus at most once. If one ever has more, use SelectResources (see Philares).
-      player.defer(new SelectResource('Select a standard resource to gain')
-        .andThen((resource) => {
-          player.stock.add(resource, 1, {log: true});
-          onStandardResource?.(resource);
-          return undefined;
-        }));
+      // Industries can stack several of these on one space, so each one asks separately.
+      for (let i = 0; i < count; i++) {
+        player.defer(new SelectResource('Select a standard resource to gain')
+          .andThen((resource) => {
+            player.stock.add(resource, 1, {log: true});
+            onStandardResource?.(resource);
+            return undefined;
+          }));
+      }
       break;
     default:
       throw new Error('Unhandled space bonus ' + spaceBonus + '. Report this exact error, please.');

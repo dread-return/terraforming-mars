@@ -226,6 +226,12 @@
               <div class="create-game-expansion-icon expansion-icon-eternity"></div>
               <span v-i18n>Eternity</span><span></span>&nbsp;<a :href="wikiUrls.eternity" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
             </label>
+
+            <input type="checkbox" name="industries" id="industries-checkbox" v-model="expansions.industries">
+            <label for="industries-checkbox" class="expansion-button">
+              <div class="create-game-expansion-icon expansion-icon-industries"></div>
+              <span v-i18n>Industries</span><span></span>&nbsp;<a :href="wikiUrls.industries" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
+            </label>
           </div>
 
           <div class="create-game-page-column">

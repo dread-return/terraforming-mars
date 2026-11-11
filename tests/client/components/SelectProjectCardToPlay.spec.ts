@@ -825,3 +825,86 @@ describe('SelectProjectCardToPlay', () => {
     });
   };
 });
+
+describe('SelectProjectCardToPlay industries sub-menu', () => {
+  useFakeLocalStorage();
+  beforeEach(() => {
+    PreferencesManager.INSTANCE.set('show_alerts', false);
+  });
+
+  function mountStandardProjects(cards: Array<Partial<CardModel>>) {
+    return mount(SelectProjectCardToPlay, {
+      ...globalConfig,
+      props: {
+        playerView: asComplete<PlayerViewModel>({
+          id: 'p-industries',
+          thisPlayer: {
+            steel: 0,
+            titanium: 0,
+            heat: 0,
+            energy: 0,
+            plants: 0,
+            tableau: [],
+          },
+        }),
+        playerinput: asComplete<SelectProjectCardToPlayModel>({
+          type: 'projectCard',
+          title: 'Standard projects',
+          cards: cards.map((card) => ({reserveUnits: Units.EMPTY, standardProjectCanPayWith: {}, ...card})),
+          paymentOptions: {},
+          buttonLabel: 'Confirm',
+        }),
+        onsave: () => {},
+        showsave: true,
+        showtitle: true,
+      },
+    });
+  }
+
+  const projects: Array<Partial<CardModel>> = [
+    {name: CardName.MONEY_INDUSTRY_STANDARD_PROJECT, calculatedCost: 8},
+    {name: CardName.STEEL_INDUSTRY_STANDARD_PROJECT, calculatedCost: 10, isDisabled: true},
+    {name: CardName.AQUIFER_STANDARD_PROJECT, calculatedCost: 18},
+  ];
+
+  function shownCards(wrapper: ReturnType<typeof mountStandardProjects>) {
+    return wrapper.findAllComponents({name: 'Card'}).map((c) => c.props().card.name);
+  }
+
+  it('hides the industries until the sub-menu is opened', async () => {
+    const wrapper = mountStandardProjects(projects);
+    expect(shownCards(wrapper)).deep.eq([CardName.AQUIFER_STANDARD_PROJECT]);
+
+    const toggle = wrapper.find('[data-test=industries-toggle]');
+    expect(toggle.text()).contains('Industries (1/2)');
+    await toggle.trigger('click');
+    expect(shownCards(wrapper)).to.have.members([
+      CardName.AQUIFER_STANDARD_PROJECT,
+      CardName.MONEY_INDUSTRY_STANDARD_PROJECT,
+      CardName.STEEL_INDUSTRY_STANDARD_PROJECT,
+    ]);
+  });
+
+  it('starts with a regular standard project selected', () => {
+    const wrapper = mountStandardProjects(projects);
+    const selected = wrapper.find<HTMLInputElement>('input[type=radio]:checked');
+    expect(selected.element.value).eq(CardName.AQUIFER_STANDARD_PROJECT);
+  });
+
+  it('selects the first regular project again when the sub-menu closes', async () => {
+    const wrapper = mountStandardProjects(projects);
+    const toggle = wrapper.find('[data-test=industries-toggle]');
+    await toggle.trigger('click');
+    await wrapper.find<HTMLInputElement>(`input[value="${CardName.MONEY_INDUSTRY_STANDARD_PROJECT}"]`).setValue();
+    expect(wrapper.vm.cardName).eq(CardName.MONEY_INDUSTRY_STANDARD_PROJECT);
+
+    await toggle.trigger('click');
+    expect(wrapper.vm.cardName).eq(CardName.AQUIFER_STANDARD_PROJECT);
+  });
+
+  it('has no sub-menu when no industries are offered', () => {
+    const wrapper = mountStandardProjects([{name: CardName.AQUIFER_STANDARD_PROJECT, calculatedCost: 18}]);
+    expect(wrapper.find('[data-test=industries-submenu]').exists()).is.false;
+    expect(shownCards(wrapper)).deep.eq([CardName.AQUIFER_STANDARD_PROJECT]);
+  });
+});

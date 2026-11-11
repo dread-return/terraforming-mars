@@ -509,6 +509,15 @@ describe('Giga Turmoil', () => {
       expect(bonusOf(game, PartyName.EMPOWER, 'Eb02').getScore(player)).eq(3);
     });
 
+    it('Empower: industries are worth 2 M€ each', () => {
+      const [game, player] = gigaGame(PartyName.EMPOWER);
+      player.production.add(Resource.ENERGY, 1);
+      for (const kind of [TileType.INDUSTRY_MONEY, TileType.INDUSTRY_STEEL]) {
+        game.simpleAddTile(player, game.board.getAvailableSpacesOnLand(player)[0], {tileType: kind});
+      }
+      expect(bonusOf(game, PartyName.EMPOWER, 'Eb02').getScore(player)).eq(5);
+    });
+
     it('Populists: events played', () => {
       const [game, player] = gigaGame(PartyName.POPULISTS);
       player.playedCards.push(fakeCard({type: CardType.EVENT}), fakeCard({type: CardType.EVENT}), fakeCard({type: CardType.AUTOMATED}));

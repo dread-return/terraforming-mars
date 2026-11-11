@@ -1373,6 +1373,15 @@ export enum CardName {
   FLOATING_ARRAY_STANDARD_PROJECT = 'Floating Array:SP',
   GAS_MINE_STANDARD_PROJECT = 'Gas Mine:SP',
   CLOUD_CITY_STANDARD_PROJECT = 'Cloud City:SP',
+
+  // Industries (GIGA)
+  MONEY_INDUSTRY_STANDARD_PROJECT = 'Money Industry:SP',
+  HEAT_INDUSTRY_STANDARD_PROJECT = 'Heat Industry:SP',
+  ENERGY_INDUSTRY_STANDARD_PROJECT = 'Energy Industry:SP',
+  STEEL_INDUSTRY_STANDARD_PROJECT = 'Steel Industry:SP',
+  PLANT_INDUSTRY_STANDARD_PROJECT = 'Plant Industry:SP',
+  TITANIUM_INDUSTRY_STANDARD_PROJECT = 'Titanium Industry:SP',
+  RANDOM_INDUSTRY_STANDARD_PROJECT = 'Random Industry:SP',
   OVDA_REGIO_MASS_DRIVER = 'Ovda Regio Mass Driver',
   ATMO_SEQUESTER = 'Atmo Sequester',
   SOLAR_WIND_TRAP = 'Solar Wind Trap',

@@ -1,0 +1,152 @@
+// Industries (GIGA): industry tiles, standard project tile art, and the compact bonus layout.
+
+.expansion-icon-industries {
+  background-image: url(./assets/expansion_icons/expansion_icon_industries.png);
+}
+
+.board-space-tile--industry-money {
+  background: url(./assets/industries/tile_money.png);
+  background-size: 44px 51px;
+}
+
+.board-space-tile--industry-heat {
+  background: url(./assets/industries/tile_heat.png);
+  background-size: 44px 51px;
+}
+
+.board-space-tile--industry-energy {
+  background: url(./assets/industries/tile_energy.png);
+  background-size: 44px 51px;
+}
+
+.board-space-tile--industry-steel {
+  background: url(./assets/industries/tile_steel.png);
+  background-size: 44px 51px;
+}
+
+.board-space-tile--industry-plant {
+  background: url(./assets/industries/tile_plant.png);
+  background-size: 44px 51px;
+}
+
+.board-space-tile--industry-titanium {
+  background: url(./assets/industries/tile_titanium.png);
+  background-size: 44px 51px;
+}
+
+.board-space-tile--industry-random {
+  background: url(./assets/industries/tile_random.png);
+  background-size: 44px 51px;
+}
+
+.card-tile-industry-money, .card-tile-industry-heat, .card-tile-industry-energy, .card-tile-industry-steel, .card-tile-industry-plant, .card-tile-industry-titanium, .card-tile-industry-random {
+  filter: none;
+  width: 44px;
+  height: 51px;
+  background-size: 44px 51px;
+}
+
+.card-tile-industry-money {
+  background-image: url(./assets/industries/tile_money.png);
+}
+
+.card-tile-industry-heat {
+  background-image: url(./assets/industries/tile_heat.png);
+}
+
+.card-tile-industry-energy {
+  background-image: url(./assets/industries/tile_energy.png);
+}
+
+.card-tile-industry-steel {
+  background-image: url(./assets/industries/tile_steel.png);
+}
+
+.card-tile-industry-plant {
+  background-image: url(./assets/industries/tile_plant.png);
+}
+
+.card-tile-industry-titanium {
+  background-image: url(./assets/industries/tile_titanium.png);
+}
+
+.card-tile-industry-random {
+  background-image: url(./assets/industries/tile_random.png);
+}
+
+// Industries can pile several resources onto one area, so a space with more than three
+// bonuses draws them smaller, in a grid of three columns.
+.board-space-bonus--megacredits {
+  background: url(./assets/resources/megacredit.png) no-repeat;
+  background-size: 16px;
+}
+
+.board-space-bonus[class*='board-space-bonus-pos--grid-'] {
+  transform: scale(0.75);
+  transform-origin: top left;
+}
+
+.board-space-bonus.board-space-bonus-pos--grid-1 {
+  margin: 10px 0 0 4px;
+}
+
+.board-space-bonus.board-space-bonus-pos--grid-2 {
+  margin: 10px 0 0 17px;
+}
+
+.board-space-bonus.board-space-bonus-pos--grid-3 {
+  margin: 10px 0 0 30px;
+}
+
+.board-space-bonus.board-space-bonus-pos--grid-4 {
+  margin: 23px 0 0 4px;
+}
+
+.board-space-bonus.board-space-bonus-pos--grid-5 {
+  margin: 23px 0 0 17px;
+}
+
+.board-space-bonus.board-space-bonus-pos--grid-6 {
+  margin: 23px 0 0 30px;
+}
+
+.board-space-bonus.board-space-bonus-pos--grid-7 {
+  margin: 36px 0 0 4px;
+}
+
+.board-space-bonus.board-space-bonus-pos--grid-8 {
+  margin: 36px 0 0 17px;
+}
+
+.board-space-bonus.board-space-bonus-pos--grid-9 {
+  margin: 36px 0 0 30px;
+}
+
+// The Industries sub-menu inside the standard projects selector.
+.industries-submenu {
+  margin: 8px 0;
+}
+
+.industries-submenu-toggle {
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 6px;
+  padding: 6px 12px;
+  text-align: left;
+  font-size: 18px;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid #888;
+  border-radius: 4px;
+
+  &:hover {
+    background: rgba(60, 60, 60, 0.7);
+  }
+}
+
+.industries-submenu-arrow {
+  display: inline-block;
+  width: 1em;
+}

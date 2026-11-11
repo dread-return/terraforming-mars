@@ -21,6 +21,7 @@ export const EXPANSIONS = [
   'nuclear',
   'venusphase2',
   'eternity',
+  'industries',
 ] as const;
 
 export const GAME_MODULES = [
@@ -55,6 +56,7 @@ export const MODULE_NAMES = {
   nuclear: 'Nuclear',
   venusphase2: 'Venus Phase 2',
   eternity: 'Eternity',
+  industries: 'Industries',
 } satisfies Record<GameModule, string>;
 
 export const DEFAULT_EXPANSIONS = {
@@ -80,4 +82,5 @@ export const DEFAULT_EXPANSIONS = {
   nuclear: false,
   venusphase2: false,
   eternity: false,
+  industries: false,
 } satisfies Record<Expansion, boolean>;

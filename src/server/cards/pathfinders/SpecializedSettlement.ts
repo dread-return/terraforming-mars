@@ -56,6 +56,8 @@ export class SpecializedSettlement extends Card implements IProjectCard {
     [SpaceBonus.PLANT]: Resource.PLANTS,
     [SpaceBonus.ENERGY]: Resource.ENERGY,
     [SpaceBonus.HEAT]: Resource.HEAT,
+    // An M€ bonus on a space only appears through Industries.
+    [SpaceBonus.MEGACREDITS]: Resource.MEGACREDITS,
   };
 
   private bonusResources(space: Space): ReadonlySet<Resource> {

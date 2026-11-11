@@ -90,6 +90,15 @@ export enum TileType {
     FLOWSTONE_CAVE, // 60
     GLACIER, // 61
     GROUND_ZERO, // 62
+
+    // Industries (GIGA)
+    INDUSTRY_MONEY, // 63
+    INDUSTRY_HEAT, // 64
+    INDUSTRY_ENERGY, // 65
+    INDUSTRY_STEEL, // 66
+    INDUSTRY_PLANT, // 67
+    INDUSTRY_TITANIUM, // 68
+    INDUSTRY_RANDOM, // 69
   }
 
 export const tileTypeToString: Record<TileType, string> = {
@@ -157,6 +166,13 @@ export const tileTypeToString: Record<TileType, string> = {
   [TileType.FLOWSTONE_CAVE]: 'Flowstone Cave',
   [TileType.GLACIER]: 'Thawing Glacier',
   [TileType.GROUND_ZERO]: 'Ground Zero',
+  [TileType.INDUSTRY_MONEY]: 'Money Industry',
+  [TileType.INDUSTRY_HEAT]: 'Heat Industry',
+  [TileType.INDUSTRY_ENERGY]: 'Energy Industry',
+  [TileType.INDUSTRY_STEEL]: 'Steel Industry',
+  [TileType.INDUSTRY_PLANT]: 'Plant Industry',
+  [TileType.INDUSTRY_TITANIUM]: 'Titanium Industry',
+  [TileType.INDUSTRY_RANDOM]: 'Random Industry',
 } as const;
 
 export const HAZARD_TILES = new Set([TileType.DUST_STORM_MILD, TileType.DUST_STORM_SEVERE, TileType.EROSION_MILD, TileType.EROSION_SEVERE]);
@@ -176,3 +192,8 @@ export const VENUS_TILES = new Set([TileType.VENUS_FLOATING_ARRAY, TileType.VENU
 
 // Nuclear (GIGA) red special tiles: placing a tile next to one costs the placer resources.
 export const NUCLEAR_MALUS_TILES = new Set([TileType.NUCLEAR_ZONE, TileType.EVACUATION_ZONE, TileType.RADIOACTIVE_DEFLUX]);
+
+/** Industries (GIGA) tiles. They are not special tiles, and have no adjacency bonus. */
+export const INDUSTRY_TILES = new Set([
+  TileType.INDUSTRY_MONEY, TileType.INDUSTRY_HEAT, TileType.INDUSTRY_ENERGY, TileType.INDUSTRY_STEEL,
+  TileType.INDUSTRY_PLANT, TileType.INDUSTRY_TITANIUM, TileType.INDUSTRY_RANDOM]);

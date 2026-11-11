@@ -1,10 +1,22 @@
 <template>
   <div class="payments_cont">
     <div v-if="showtitle === true">{{ $t(playerinput.title) }}</div>
-    <label v-for="availableCard in cards" class="payments_cards" :key="availableCard.name">
+    <label v-for="availableCard in regularCards" class="payments_cards" :key="availableCard.name">
       <input v-if="!availableCard.isDisabled" class="hidden" type="radio" v-model="cardName" :value="availableCard.name">
       <Card class="cardbox" :card="availableCard" />
     </label>
+    <div v-if="industryCards.length > 0" class="industries-submenu" data-test="industries-submenu">
+      <button type="button" class="industries-submenu-toggle" data-test="industries-toggle" @click="toggleIndustries">
+        <span class="industries-submenu-arrow">{{ industriesOpen ? '▾' : '▸' }}</span>
+        {{ $t('Industries') }} ({{ availableIndustryCount }}/{{ industryCards.length }})
+      </button>
+      <template v-if="industriesOpen">
+        <label v-for="availableCard in industryCards" class="payments_cards" :key="availableCard.name">
+          <input v-if="!availableCard.isDisabled" class="hidden" type="radio" v-model="cardName" :value="availableCard.name">
+          <Card class="cardbox" :card="availableCard" />
+        </label>
+      </template>
+    </div>
     <template v-if="card !== undefined && card.additionalProjectCosts">
       <div v-if="card.additionalProjectCosts.aeronGenomicsResources" class="card-warning"
         v-i18n="[$t(card.name), card.additionalProjectCosts.aeronGenomicsResources, 'animals', $t(CardName.AERON_GENOMICS)]"
@@ -52,6 +64,7 @@ import {SelectProjectCardToPlayResponse} from '@/common/inputs/InputResponse';
 import WarningsComponent from '@/client/components/WarningsComponent.vue';
 import PaymentForm from '@/client/components/PaymentForm.vue';
 import {Ledger} from '@/client/components/PaymentLedger';
+import {INDUSTRY_STANDARD_PROJECTS} from '@/common/industries/Industries';
 
 export default defineComponent({
   name: 'SelectProjectCardToPlay',
@@ -110,6 +123,16 @@ export default defineComponent({
     showPaymentSection(): boolean {
       return this.card !== undefined && this.card.isDisabled !== true;
     },
+    // Industries (GIGA) are folded into a sub-menu of the standard projects.
+    regularCards(): ReadonlyArray<CardModel> {
+      return this.cards.filter((c) => !INDUSTRY_STANDARD_PROJECTS.has(c.name));
+    },
+    industryCards(): ReadonlyArray<CardModel> {
+      return this.cards.filter((c) => INDUSTRY_STANDARD_PROJECTS.has(c.name));
+    },
+    availableIndustryCount(): number {
+      return this.industryCards.filter((c) => c.isDisabled !== true).length;
+    },
     canUseTitaniumRegularly(): boolean {
       return this.tags.includes(Tag.SPACE) ||
           this.playerView.thisPlayer.lastCardPlayed === CardName.LAST_RESORT_INGENUITY;
@@ -135,12 +158,14 @@ export default defineComponent({
         CardOrderStorage.getCardOrder(this.playerView.id),
         this.playerinput.cards,
       );
-      card = cards[0];
+      // The industries sub-menu starts closed, so don't start with one of them selected.
+      card = cards.find((c) => !INDUSTRY_STANDARD_PROJECTS.has(c.name)) ?? cards[0];
     }
     return {
       cardName: card?.name,
       card: card,
       cards: cards,
+      industriesOpen: card !== undefined && INDUSTRY_STANDARD_PROJECTS.has(card.name),
       cost: card?.calculatedCost ?? 0,
       available: Units.of({}),
     };
@@ -157,6 +182,13 @@ export default defineComponent({
     this.updateAvailableUnits();
   },
   methods: {
+    toggleIndustries() {
+      this.industriesOpen = !this.industriesOpen;
+      // Don't leave a hidden project selected.
+      if (!this.industriesOpen && this.card !== undefined && INDUSTRY_STANDARD_PROJECTS.has(this.card.name)) {
+        this.cardName = this.regularCards[0]?.name;
+      }
+    },
     getCard() {
       const card = this.cards.find((c) => c.name === this.cardName);
       if (card === undefined) {

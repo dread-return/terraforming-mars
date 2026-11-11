@@ -77,6 +77,7 @@ describe('ApiGame', () => {
             'nuclear': false,
             'venusphase2': false,
             'eternity': false,
+            'industries': false,
             'moon': false,
             'pathfinders': false,
             'prelude': false,

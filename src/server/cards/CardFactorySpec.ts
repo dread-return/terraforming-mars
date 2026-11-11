@@ -61,6 +61,8 @@ export function isCompatibleWith(cf: CardFactorySpec<any>, gameOptions: GameOpti
       return gameOptions.venusPhase2Expansion;
     case 'eternity':
       return gameOptions.eternityExpansion;
+    case 'industries':
+      return gameOptions.industriesExpansion;
     }
     throw new Error(`Unhandled expansion type ${expansion}`);
   });

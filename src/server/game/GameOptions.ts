@@ -51,6 +51,8 @@ export type GameOptions = {
   venusPhase2Expansion: boolean;
   /** Eternity: fan-made cards, corporations and preludes. Cards that need another expansion only join with it. */
   eternityExpansion: boolean;
+  /** Industries (GIGA): industry tiles bought as standard projects, in their own sub-menu. */
+  industriesExpansion: boolean;
 
   expansions: Record<Expansion, boolean>,
 
@@ -141,6 +143,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
     nuclear: false,
     venusphase2: false,
     eternity: false,
+    industries: false,
   },
   fastModeOption: false,
   includeFanMA: false,
@@ -180,6 +183,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   nuclearExpansion: false,
   venusPhase2Expansion: false,
   eternityExpansion: false,
+  industriesExpansion: false,
   automa: false,
   undoOption: false,
   venusNextExtension: false,

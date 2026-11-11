@@ -31,6 +31,7 @@ import {IDES_OF_MARS_CARD_MANIFEST} from './cards/idesofmars/IdesOfMarsCardManif
 import {NUCLEAR_CARD_MANIFEST} from './cards/nuclear/NuclearCardManifest';
 import {VENUS_PHASE_2_CARD_MANIFEST} from './cards/venusphase2/VenusPhase2CardManifest';
 import {ETERNITY_CARD_MANIFEST} from './cards/eternity/EternityCardManifest';
+import {INDUSTRIES_CARD_MANIFEST} from './cards/industries/IndustriesCardManifest';
 
 /**
  * Returns the cards available to a game based on its `GameOptions`.
@@ -74,6 +75,7 @@ export class GameCards {
       [gameOptions.nuclearExpansion, NUCLEAR_CARD_MANIFEST],
       [gameOptions.venusPhase2Expansion, VENUS_PHASE_2_CARD_MANIFEST],
       [gameOptions.eternityExpansion, ETERNITY_CARD_MANIFEST],
+      [gameOptions.industriesExpansion, INDUSTRIES_CARD_MANIFEST],
     ];
 
     this.moduleManifests = manifests

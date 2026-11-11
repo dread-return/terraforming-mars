@@ -204,6 +204,27 @@ const TILE_CLASSES: Record<TileType, Classes> = {
   [TileType.GROUND_ZERO]: {
     tile: 'card-tile-et-ground-zero',
   },
+  [TileType.INDUSTRY_MONEY]: {
+    tile: 'card-tile-industry-money',
+  },
+  [TileType.INDUSTRY_HEAT]: {
+    tile: 'card-tile-industry-heat',
+  },
+  [TileType.INDUSTRY_ENERGY]: {
+    tile: 'card-tile-industry-energy',
+  },
+  [TileType.INDUSTRY_STEEL]: {
+    tile: 'card-tile-industry-steel',
+  },
+  [TileType.INDUSTRY_PLANT]: {
+    tile: 'card-tile-industry-plant',
+  },
+  [TileType.INDUSTRY_TITANIUM]: {
+    tile: 'card-tile-industry-titanium',
+  },
+  [TileType.INDUSTRY_RANDOM]: {
+    tile: 'card-tile-industry-random',
+  },
 };
 
 export default defineComponent({

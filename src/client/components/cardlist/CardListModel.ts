@@ -47,6 +47,7 @@ const MODULE_ABBREVIATIONS = {
   nuclear: 'N',
   venusphase2: 'V',
   eternity: 'E',
+  industries: 'Ind',
 } satisfies Record<GameModule, string>;
 
 const TYPE_ABBREVIATIONS = {
@@ -117,6 +118,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       nuclear: true,
       venusphase2: true,
       eternity: true,
+      industries: true,
     },
     types: {
       event: true,

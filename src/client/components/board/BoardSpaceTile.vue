@@ -77,6 +77,13 @@ const tileTypeToCssClass: Record<TileType, string> = {
   [TileType.FLOWSTONE_CAVE]: 'et-flowstone-cave',
   [TileType.GLACIER]: 'et-glacier',
   [TileType.GROUND_ZERO]: 'et-ground-zero',
+  [TileType.INDUSTRY_MONEY]: 'industry-money',
+  [TileType.INDUSTRY_HEAT]: 'industry-heat',
+  [TileType.INDUSTRY_ENERGY]: 'industry-energy',
+  [TileType.INDUSTRY_STEEL]: 'industry-steel',
+  [TileType.INDUSTRY_PLANT]: 'industry-plant',
+  [TileType.INDUSTRY_TITANIUM]: 'industry-titanium',
+  [TileType.INDUSTRY_RANDOM]: 'industry-random',
 };
 
 const tileTypeToCssClassAresOverride = new Map<TileType, string>([
@@ -134,6 +141,13 @@ const descriptions: Record<TileType, string> = {
   [TileType.FLOWSTONE_CAVE]: 'Flowstone Cave',
   [TileType.GLACIER]: 'Thawing Glacier: becomes an ocean when the temperature is maxed.',
   [TileType.GROUND_ZERO]: 'Ground Zero',
+  [TileType.INDUSTRY_MONEY]: 'Industry: raised your M€ production. No adjacency bonus.',
+  [TileType.INDUSTRY_HEAT]: 'Industry: raised your heat production. No adjacency bonus.',
+  [TileType.INDUSTRY_ENERGY]: 'Industry: raised your energy production. No adjacency bonus.',
+  [TileType.INDUSTRY_STEEL]: 'Industry: raised your steel production. No adjacency bonus.',
+  [TileType.INDUSTRY_PLANT]: 'Industry: raised your plant production. No adjacency bonus.',
+  [TileType.INDUSTRY_TITANIUM]: 'Industry: raised your titanium production. No adjacency bonus.',
+  [TileType.INDUSTRY_RANDOM]: 'Industry: raised a production of its owner\'s choice. No adjacency bonus.',
   [TileType.SEDIMENT]: 'Sediment: any player may place a city here, ignoring placement rules, and gain 3 M€. Adjacency bonus: 1 titanium.',
 };
 

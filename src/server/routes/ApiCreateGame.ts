@@ -201,6 +201,7 @@ export class ApiCreateGame extends Handler {
         // Venus Phase 2 needs Venus Next.
         venusPhase2Expansion: gameReq.expansions.venusphase2 === true && gameReq.expansions.venus === true,
         eternityExpansion: gameReq.expansions.eternity ?? false,
+        industriesExpansion: gameReq.expansions.industries ?? false,
         undoOption: gameReq.undoOption,
         venusNextExtension: gameReq.expansions.venus,
       };

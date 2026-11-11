@@ -72,6 +72,8 @@ export type PublicPlayerModel = {
   steel: number;
   steelProduction: number;
   steelValue: number;
+  /** M€ value of one energy when spent as M€ (Giga Turmoil, Empower). Defaults to 1. */
+  energyValue?: number;
   tags: Record<Tag, number>
   terraformRating: number;
   timer: TimerModel;

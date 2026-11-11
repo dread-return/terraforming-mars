@@ -3,72 +3,39 @@
     <h2 v-i18n>Political Parties</h2>
     <p v-i18n>A party bonus is granted once, during the Turmoil phase. Its policy applies ONLY DURING THE ACTION PHASE of the following generation.</p>
 
-    <p v-if="someOptionsAreMissing" v-i18n>Some Giga Turmoil party options are not available yet, so they are not listed.</p>
+    <div class="help-parties-grid">
+      <div class="help-party-card" v-for="party in standardParties" :key="party.name">
+        <HelpParty :party="party" />
+      </div>
+    </div>
+
+    <h2 v-i18n>Giga Turmoil</h2>
+    <p v-i18n>With Giga Turmoil, six of twelve parties are drafted at the start of the game, and every party has the bonuses and policies listed here. The chairman picks both the bonus and the policy.</p>
+    <p v-i18n>Some options are missing because they need parts of the game that do not exist yet: Kelvinists, Populists, Spome and Transhumanists have fewer options for now.</p>
 
     <div class="help-parties-grid">
-      <div class="help-party-card" v-for="party in parties" :key="party.name">
-        <div class="help-party-label">
-          <div :class="'card-party card-party--'+partyLogoSlug(party.name)"></div>
-          <div :class="'party-name party-name--'+partyNameToCss(party.name)" v-i18n>{{ party.name }}</div>
-        </div>
-
-        <div class="help-agenda-section">
-          <div class="help-agenda-card" v-for="id in party.bonusIds" :key="id">
-            <TurmoilAgenda :id="id" />
-            <div class="help-agenda-description" v-i18n>{{ agendaDescription(id) }}</div>
-          </div>
-        </div>
-
-        <div class="help-agenda-divider"></div>
-
-        <div class="help-agenda-section">
-          <div class="help-agenda-card" v-for="id in party.policyIds" :key="id">
-            <TurmoilAgenda :id="id" />
-            <div class="help-agenda-description" v-i18n>{{ agendaDescription(id) }}</div>
-          </div>
-        </div>
+      <div class="help-party-card" v-for="party in gigaParties" :key="party.name">
+        <HelpParty :party="party" />
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import {computed} from 'vue';
-import {PartyName} from '@/common/turmoil/PartyName';
-import {agendaInfoById, BONUS_IDS, POLICY_IDS, BonusId, PolicyId} from '@/common/turmoil/Types';
-import {getAgenda, getAgendaOrThrow} from '@/client/turmoil/ClientAgendaManifest';
-import TurmoilAgenda from '@/client/components/turmoil/TurmoilAgenda.vue';
+import {PartyName, OFFICIAL_PARTIES} from '@/common/turmoil/PartyName';
+import {agendaInfoById, BONUS_IDS, BonusId, POLICY_IDS, PolicyId, isGigaAgendaId} from '@/common/turmoil/Types';
+import {getAgenda} from '@/client/turmoil/ClientAgendaManifest';
+import HelpParty, {PartyHelpEntry} from '@/client/components/help/HelpParty.vue';
 
-type PartyHelpEntry = {
-  name: PartyName;
-  bonusIds: ReadonlyArray<BonusId>;
-  policyIds: ReadonlyArray<PolicyId>;
-};
-
-const parties = computed<Array<PartyHelpEntry>>(() => {
-  return Object.values(PartyName).map((name) => {
-    return {
-      name,
-      bonusIds: BONUS_IDS.filter((id) => agendaInfoById(id).name === name && getAgenda(id) !== undefined),
-      policyIds: POLICY_IDS.filter((id) => agendaInfoById(id).name === name && getAgenda(id) !== undefined),
-    };
-  });
-});
-
-// Giga Turmoil options that have not been built yet have no description.
-const someOptionsAreMissing = [...BONUS_IDS, ...POLICY_IDS].some((id) => getAgenda(id) === undefined);
-
-function agendaDescription(id: BonusId | PolicyId): string {
-  return getAgendaOrThrow(id).description;
+function entries(names: ReadonlyArray<PartyName>, giga: boolean): Array<PartyHelpEntry> {
+  // Options that have not been built yet have no description, so they are left out.
+  const known = (id: BonusId | PolicyId) => isGigaAgendaId(id) === giga && getAgenda(id) !== undefined;
+  return names.map((name) => ({
+    name,
+    bonusIds: BONUS_IDS.filter((id) => known(id) && agendaInfoById(id).name === name),
+    policyIds: POLICY_IDS.filter((id) => known(id) && agendaInfoById(id).name === name),
+  }));
 }
 
-function partyNameToCss(party: PartyName): string {
-  return party.toLowerCase().split(' ').join('_');
-}
-
-// The real .card-party--<slug> party logo images (cards_v2.less's @parties list) use hyphens,
-// unlike every other party-slug class on this page (party-name--mars_first etc, which use
-// underscores) - the only place that differs is "mars-first" vs "mars_first".
-function partyLogoSlug(party: PartyName): string {
-  return partyNameToCss(party).replace('_', '-');
-}
+const standardParties = entries(OFFICIAL_PARTIES, false);
+const gigaParties = entries(Object.values(PartyName), true);
 </script>

@@ -94,6 +94,9 @@ export const PaymentWidgetMixin = defineComponent({
         return this.playerView.thisPlayer.steelValue;
       case 'titanium':
         return this.getTitaniumResourceRate();
+      case 'energy':
+        // Giga Turmoil (Empower policy 1): energy is worth more than 1 M€.
+        return this.playerView.thisPlayer.energyValue ?? DEFAULT_PAYMENT_VALUES[unit];
       case 'heat': {
         // Eternity (Venusia): heat pays for standard projects at its own rate.
         const heatValue = (this as any).card?.standardProjectCanPayWith?.heatValue;

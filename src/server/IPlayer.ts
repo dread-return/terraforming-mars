@@ -94,6 +94,8 @@ export interface IPlayer {
   canUseHeatAsMegaCredits: boolean;
   /** Eternity: Powered Steel. */
   readonly canUseEnergyAsMegaCredits: boolean;
+  /** How many M€ one energy is worth when it is spent as M€. */
+  readonly energyValue: number;
   // Luna Trade Federation
   canUseTitaniumAsMegacredits: boolean;
   // Martian Lumber Corp

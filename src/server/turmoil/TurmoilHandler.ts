@@ -11,6 +11,7 @@ import {GREENS_POLICY_2, GREENS_POLICY_3} from './parties/Greens';
 import {KELVINISTS_POLICY_3, KELVINISTS_POLICY_4} from './parties/Kelvinists';
 import {MARS_FIRST_POLICY_2} from './parties/MarsFirst';
 import {PartyHooks} from './parties/PartyHooks';
+import {GigaHooks} from './giga/GigaHooks';
 import {PartyName} from '../../common/turmoil/PartyName';
 import {REDS_POLICY_2} from './parties/Reds';
 import {UNITY_POLICY_4} from './parties/Unity';
@@ -44,6 +45,8 @@ export class TurmoilHandler {
   }
 
   public static applyOnCardPlayedEffect(player: IPlayer, selectedCard: ICard): void {
+    GigaHooks.onCardPlayed(player, selectedCard);
+
     // PoliticalAgendas Greens P3 hook
     if (PartyHooks.shouldApplyPolicy(player, PartyName.GREENS, 'gp03')) {
       GREENS_POLICY_3.onCardPlayed(player, selectedCard);
@@ -85,6 +88,8 @@ export class TurmoilHandler {
   }
 
   public static onGlobalParameterIncrease(player: IPlayer, parameter: GlobalParameter, steps: number = 1): void {
+    GigaHooks.onGlobalParameterIncrease(player, parameter, steps);
+
     if (parameter === GlobalParameter.TEMPERATURE) {
       // PoliticalAgendas Kelvinists P2 hook
       if (PartyHooks.shouldApplyPolicy(player, PartyName.KELVINISTS, 'kp02')) {

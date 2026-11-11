@@ -77,6 +77,8 @@ import {UnderworldExpansion} from './underworld/UnderworldExpansion';
 import {SendDelegateToArea} from './deferredActions/SendDelegateToArea';
 import {BuildColony} from './deferredActions/BuildColony';
 import {newInitialDraft, newPreludeDraft, newCEOsDraft, newStandardDraft} from './Draft';
+import {restorePartyDraft, startPartyDraft} from './turmoil/giga/PartyDraft';
+import {GigaHooks} from './turmoil/giga/GigaHooks';
 import {partition, sum, toID, toName} from '../common/utils/utils';
 import {OrOptions} from './inputs/OrOptions';
 import {SelectResource} from './inputs/SelectResource';
@@ -499,8 +501,17 @@ export class Game implements IGame, Logger {
     return game;
   }
 
-  /** Properly starts the game with the project draft, or initial research phase. */
+  /** Properly starts the game: first the Giga Turmoil party draft, if it is in use, and then the card draft or research. */
   private gotoInitialPhase(): void {
+    if (this.turmoil?.gigaTurmoil === true) {
+      startPartyDraft(this, () => this.gotoInitialPhaseAfterPartyDraft());
+      return;
+    }
+    this.gotoInitialPhaseAfterPartyDraft();
+  }
+
+  /** Starts the game with the project draft, or initial research phase. */
+  private gotoInitialPhaseAfterPartyDraft(): void {
     // Initial Draft
     if (this.gameOptions.initialDraftVariant) {
       this.phase = Phase.INITIALDRAFTING;
@@ -1510,6 +1521,7 @@ export class Game implements IGame, Logger {
     }
 
     TurmoilHandler.resolveTilePlacementBonuses(player, space.spaceType);
+    GigaHooks.onTilePlaced(player, space);
 
     if (arcadianCommunityBonus) {
       this.defer(new GainResourcesDeferred(player, Resource.MEGACREDITS, {count: 3}));
@@ -1908,7 +1920,10 @@ export class Game implements IGame, Logger {
     game.verminInEffect = d.verminInEffect;
     game.exploitationOfVenusInEffect = d.exploitationOfVenusInEffect;
     // Still in Draft or Research of generation 1
-    if (game.generation === 1 && players.some((p) => p.playedCards.filter(isICorporationCard).length === 0)) {
+    if (game.generation === 1 && game.turmoil?.partyDraft !== undefined) {
+      // Giga Turmoil: still choosing parties.
+      restorePartyDraft(game, () => game.gotoInitialPhaseAfterPartyDraft());
+    } else if (game.generation === 1 && players.some((p) => p.playedCards.filter(isICorporationCard).length === 0)) {
       if (game.phase === Phase.INITIALDRAFTING) {
         switch (game.initialDraftIteration) {
         case 1:

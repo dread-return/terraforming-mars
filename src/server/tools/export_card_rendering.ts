@@ -8,7 +8,7 @@ import {Expansion, GameModule} from '../../common/cards/GameModule';
 import {IGlobalEvent} from '../turmoil/globalEvents/IGlobalEvent';
 import {ClientGlobalEvent} from '../../common/turmoil/ClientGlobalEvent';
 import {ClientAgenda} from '../../common/turmoil/ClientAgenda';
-import {ALL_PARTIES} from '../turmoil/Turmoil';
+import {ALL_GIGA_PARTIES, ALL_PARTIES} from '../turmoil/Turmoil';
 import {BonusId, PolicyId} from '../../common/turmoil/Types';
 import {ClientCard} from '../../common/cards/ClientCard';
 import {isICorporationCard} from '../cards/corporation/ICorporationCard';
@@ -150,7 +150,7 @@ class GlobalEventProcessor {
 class AgendaProcessor {
   public static json: Partial<Record<BonusId | PolicyId, ClientAgenda>> = {};
   public static makeJson() {
-    for (const PartyClass of Object.values(ALL_PARTIES)) {
+    for (const PartyClass of [...Object.values(ALL_PARTIES), ...Object.values(ALL_GIGA_PARTIES)]) {
       const party = new PartyClass();
       party.bonuses.forEach((bonus) => {
         AgendaProcessor.json[bonus.id] = {description: bonus.description};

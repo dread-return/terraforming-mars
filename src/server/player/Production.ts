@@ -7,6 +7,7 @@ import {PRODUCTION_MINIMUMS} from '../../common/constants';
 import {CardName} from '../../common/cards/CardName';
 import {Units} from '../../common/Units';
 import {Eternity} from '../cards/eternity/Eternity';
+import {GigaHooks} from '../turmoil/giga/GigaHooks';
 
 export class Production extends BaseStock {
   constructor(player: IPlayer) {
@@ -47,6 +48,7 @@ export class Production extends BaseStock {
     const adj = PRODUCTION_MINIMUMS[resource];
     const delta = (amount >= 0) ? amount : Math.max(amount, -(this[resource] - adj));
     this[resource] += delta;
+    GigaHooks.onProductionChanged(this.player, resource, delta);
 
     if (options?.log === true) {
       this.logUnitDelta(resource, amount, /* production*/ true, options.from, options.stealing);

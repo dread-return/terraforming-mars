@@ -1,7 +1,11 @@
 <template>
   <div>
     <div @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
-      <template v-if="id === 'mb01'">
+      <template v-if="isGiga">
+        <span v-if="showPartyBadge" :class="partyBadgeClass" v-i18n></span>
+        <span class="giga-agenda-text" v-i18n>{{ resolvedDescription }}</span>
+      </template>
+      <template v-else-if="id === 'mb01'">
         <div class="resource megacredits party-resource">1</div> /
         <div class="resource-tag tag-building party-resource-tag"></div>
       </template>
@@ -200,7 +204,7 @@
 <script lang="ts">
 
 import {getAgendaOrThrow} from '@/client/turmoil/ClientAgendaManifest';
-import {BonusId, PolicyId} from '@/common/turmoil/Types';
+import {BonusId, isGigaAgendaId, PolicyId} from '@/common/turmoil/Types';
 import {defineComponent} from 'vue';
 
 export default defineComponent({
@@ -224,6 +228,7 @@ export default defineComponent({
   },
   computed: {
     partyBadgeClass(): string {
+      // Giga Turmoil ids use a capital letter for the party, the rest use lowercase letters. Both name the same party.
       const partyBadgeSlugs: Record<string, string> = {
         m: 'mars_first',
         s: 'scientists',
@@ -238,7 +243,11 @@ export default defineComponent({
         c: 'centrists',
         t: 'transhumanists',
       };
-      return 'party-badge party-badge--' + partyBadgeSlugs[this.id[0]];
+      return 'party-badge party-badge--' + partyBadgeSlugs[this.id[0].toLowerCase()];
+    },
+    /** Giga Turmoil bonuses and policies are shown as text. */
+    isGiga(): boolean {
+      return isGigaAgendaId(this.id);
     },
     resolvedDescription(): string {
       return getAgendaOrThrow(this.id).description;

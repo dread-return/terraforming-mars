@@ -17,6 +17,7 @@ import {IMilestone} from './milestones/IMilestone';
 import {IProjectCard} from './cards/IProjectCard';
 import {OrOptions} from './inputs/OrOptions';
 import {PartyHooks} from './turmoil/parties/PartyHooks';
+import {GigaHooks} from './turmoil/giga/GigaHooks';
 import {PartyName} from '../common/turmoil/PartyName';
 import {Phase} from '../common/Phase';
 import {PlayerInput} from './PlayerInput';
@@ -294,7 +295,7 @@ export class Player implements IPlayer {
   }
 
   public getTitaniumValue(): number {
-    return this.titaniumValue;
+    return this.titaniumValue + GigaHooks.titaniumValueBonus(this);
   }
 
   public increaseTitaniumValue(): void {
@@ -526,6 +527,8 @@ export class Player implements IPlayer {
     if (PartyHooks.shouldApplyPolicy(this, PartyName.SCIENTISTS, 'sp02')) {
       requirementsBonus += 2;
     }
+    // Giga Turmoil, Scientists policy 2.
+    requirementsBonus += GigaHooks.requirementBonus(this);
 
     requirementsBonus += UnderworldExpansion.getGlobalParameterRequirementBonus(this, parameter);
 
@@ -592,9 +595,6 @@ export class Player implements IPlayer {
       for (const playedCard of this.tableau) {
         playedCard.onResourceAdded?.(this, card, count);
       }
-      if (card.resourceType === CardResource.FLOATER) {
-        PartyHooks.applySpomeRulingPolicy(this, card, count);
-      }
     }
 
     // Vermin hook (2 of 2)
@@ -629,6 +629,11 @@ export class Player implements IPlayer {
 
   public getPlayableActionCards(): Array<ICard & IActionCard> {
     const result: Array<ICard & IActionCard> = [];
+    // Giga Turmoil, Bureaucrats policy 1: only so many actions on cards in play.
+    const limit = GigaHooks.cardActionLimit(this);
+    if (limit !== undefined && this.actionsThisGeneration.size >= limit) {
+      return result;
+    }
     for (const card of this.tableau) {
       if (isIActionCard(card) && !this.actionsThisGeneration.has(card.name) && !isCeoCard(card)) {
         if (card.canAct(this)) {
@@ -699,7 +704,12 @@ export class Player implements IPlayer {
    */
   /** Eternity: Powered Steel lets its owner use energy as M€. */
   public get canUseEnergyAsMegaCredits(): boolean {
-    return this.tableau.has(CardName.POWERED_STEEL);
+    return this.tableau.has(CardName.POWERED_STEEL) || GigaHooks.energyValue(this) !== undefined;
+  }
+
+  /** How many M€ one energy is worth when paying. */
+  public get energyValue(): number {
+    return GigaHooks.energyValue(this) ?? DEFAULT_PAYMENT_VALUES.energy;
   }
 
   public spendableMegacredits(): number {
@@ -708,7 +718,7 @@ export class Player implements IPlayer {
       total += this.availableHeat();
     }
     if (this.canUseEnergyAsMegaCredits) {
-      total += this.energy;
+      total += this.energy * this.energyValue;
     }
     if (this.canUseTitaniumAsMegacredits) {
       total += this.titanium * (this.titaniumValue - 1);
@@ -1249,7 +1259,6 @@ export class Player implements IPlayer {
       this.game.log('${0} passed, but may still play later this generation (DGT Mars Crew)', (b) => b.player(this));
       return;
     }
-    PartyHooks.applyBureaucratsRulingPolicy(this);
     this.game.playerHasPassed(this);
     this.lastCardPlayed = undefined;
     this.autopass = false;
@@ -1427,6 +1436,7 @@ export class Player implements IPlayer {
       ...DEFAULT_PAYMENT_VALUES,
       steel: this.getSteelValue(),
       titanium: this.getTitaniumValue(),
+      energy: this.energyValue,
     };
 
     const usable: {[key in SpendableResource]: boolean} = {
@@ -1603,6 +1613,11 @@ export class Player implements IPlayer {
       const vitor = this.tableau.get(CardName.VITOR);
       if (vitor !== undefined && this.game.allAwardsFunded()) {
         this.pendingInitialActions = this.pendingInitialActions.filter((card) => card !== vitor);
+      }
+
+      // Giga Turmoil (Bureaucrats policy 2): something happens at the start of each turn.
+      if (this.actionsTakenThisRound === 0 && this.pendingInitialActions.length === 0) {
+        GigaHooks.onTurnStart(this);
       }
 
       if (this.pendingInitialActions.length > 0) {

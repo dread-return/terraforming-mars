@@ -1,5 +1,5 @@
 import {CardType} from '../../common/cards/CardType';
-import {PartyHooks} from '../turmoil/parties/PartyHooks';
+import {GigaHooks} from '../turmoil/giga/GigaHooks';
 import {IPlayer} from '../IPlayer';
 import {TRSource} from '../../common/cards/TRSource';
 import {CardMetadata} from '../../common/cards/CardMetadata';
@@ -53,7 +53,7 @@ export abstract class StandardProjectCard extends Card implements IStandardProje
     for (const playedCard of player.tableau) {
       playedCard.onStandardProject?.(player, this);
     }
-    PartyHooks.applyTranshumanistsRulingPolicy(player);
+    GigaHooks.onStandardProject(player);
     for (const p of player.game.players) {
       for (const playedCard of p.tableau) {
         playedCard.onStandardProjectByAnyPlayer?.(p, player, this);

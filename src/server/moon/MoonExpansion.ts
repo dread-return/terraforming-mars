@@ -1,3 +1,4 @@
+import {GigaHooks} from '../turmoil/giga/GigaHooks';
 import {IGame} from '../IGame';
 import {Tile} from '../Tile';
 import {MoonBoard} from './MoonBoard';
@@ -111,6 +112,7 @@ export class MoonExpansion {
     MoonExpansion.logTilePlacement(player, space, tile.tileType);
 
     game.triggerForAllCards((p, c) => c.onTilePlaced?.(p, player, space, BoardType.MOON));
+    GigaHooks.onTilePlaced(player, space);
   }
 
   private static logTilePlacement(player: IPlayer, space: Space, tileType: TileType) {

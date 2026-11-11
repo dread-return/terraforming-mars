@@ -3,6 +3,7 @@ import {PartyName} from '../../common/turmoil/PartyName';
 import {SerializedGlobalEventDealer} from './globalEvents/SerializedGlobalEventDealer';
 import {SerializedPoliticalAgendasData} from './PoliticalAgendas';
 import {PlayerId} from '../../common/Types';
+import {PartyDraftState} from './giga/PartyDraft';
 
 export type SerializedParty = {
     name: PartyName;
@@ -27,4 +28,5 @@ export type SerializedTurmoil = {
     currentGlobalEvent?: GlobalEventName;
     politicalAgendasData: SerializedPoliticalAgendasData;
     gigaTurmoil?: boolean;
+    partyDraft?: PartyDraftState;
 }

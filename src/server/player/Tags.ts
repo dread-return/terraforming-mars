@@ -7,6 +7,7 @@ import {ICard} from '../cards/ICard';
 import {IPlayer} from '../IPlayer';
 import {OneOrArray} from '../../common/utils/types';
 import {intersection} from '../../common/utils/utils';
+import {GigaHooks} from '../turmoil/giga/GigaHooks';
 
 export type CountingMode =
   'raw' | // Count face-up tags literally, including Leavitt Station.
@@ -92,6 +93,11 @@ export class Tags {
       tagCount += this.extraJovianTags;
     }
 
+    // Giga Turmoil policies that count as having more tags.
+    if (mode === 'default' || mode === 'milestone') {
+      tagCount += GigaHooks.tagBonus(this.player, tag);
+    }
+
     if (includeTagSubstitutions) {
       // Earth Embassy hook
       if (tag === Tag.EARTH && this.player.tableau.has(CardName.EARTH_EMBASSY)) {
@@ -100,6 +106,8 @@ export class Tags {
 
       if (tag !== Tag.WILD) {
         tagCount += this.rawCount(Tag.WILD, includeEvents);
+        // Giga Turmoil: policies that give extra wild tags.
+        tagCount += GigaHooks.tagBonus(this.player, Tag.WILD);
       }
     }
 
@@ -215,7 +223,7 @@ export class Tags {
     }
 
     if (mode !== 'award') {
-      tagCount += this.rawCount(Tag.WILD, includeEvents);
+      tagCount += this.rawCount(Tag.WILD, includeEvents) + GigaHooks.tagBonus(this.player, Tag.WILD);
       // Chimera has 2 wild tags but should only count as one for milestones.
       if (this.player.tableau.has(CardName.CHIMERA) && mode === 'milestone') {
         tagCount--;
@@ -229,6 +237,10 @@ export class Tags {
       if (this.player.tableau.has(CardName.GESTALT_INTELLIGENCE)) {
         tagCount += this.rawCount(Tag.WILD, includeEvents);
       }
+    }
+
+    for (const tag of tags) {
+      tagCount += GigaHooks.tagBonus(this.player, tag);
     }
 
     if (tags.includes(Tag.SCIENCE)) {

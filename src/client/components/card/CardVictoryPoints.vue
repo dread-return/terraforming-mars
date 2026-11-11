@@ -16,7 +16,18 @@
     </template>
     <template v-else>
       <div>{{ points }}</div>
-      <CardRenderItemComponent v-if="victoryPoints.item !== undefined" :item="victoryPoints.item" data-test="item" />
+      <div v-if="victoryPoints.production === true && victoryPoints.item !== undefined" class="card-production-box card-points-production">
+        <div class="card-production-box-row">
+          <div class="card-production-box-row-item">
+            <CardRenderItemComponent :item="victoryPoints.item" data-test="item" />
+          </div>
+        </div>
+      </div>
+      <CardRenderItemComponent v-else-if="victoryPoints.item !== undefined" :item="victoryPoints.item" data-test="item" />
+      <template v-for="(extra, idx) in victoryPoints.extraItems ?? []" :key="idx">
+        <div class="card-points-plus">+</div>
+        <CardRenderItemComponent :item="extra" />
+      </template>
     </template>
     <div v-if="victoryPoints.asterisk === true">*</div>
   </div>
@@ -59,6 +70,9 @@ export default defineComponent({
           classes.push('red-outline');
         } else {
           classes.push('card-points-normal');
+        }
+        if ((this.victoryPoints.extraItems?.length ?? 0) > 0) {
+          classes.push('card-points-multi');
         }
         return classes.join(' ');
       }

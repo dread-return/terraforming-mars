@@ -16,7 +16,7 @@ export class JovianBuildingMission extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E20',
         renderData: CardRenderer.builder((b) => {
-          b.vpText('1 VP.');
+          b.br;
         }),
       },
     });

@@ -21,20 +21,20 @@ export class TiceEcologicalLab extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E35',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(5).colon().production((pb) => pb.plants(1)).br;
-          b.megacredits(3).colon().resource(CardResource.MICROBE, 2).asterix().br;
-          b.megacredits(3).colon().resource(CardResource.ANIMAL).asterix();
+          b.megacredits(3).colon().resource(CardResource.ANIMAL).asterix().br;
+          b.megacredits(4).colon().resource(CardResource.MICROBE, 2).asterix().br;
+          b.megacredits(5).colon().production((pb) => pb.plants(1));
         }),
-        description: 'You may do each: pay 5 M\u20ac to increase your plant production 1 step; pay 3 M\u20ac to add 2 microbes to any card; pay 3 M\u20ac to add 1 animal to any card.',
+        description: 'You may do each: pay 3 M\u20ac to add 1 animal to any card; pay 4 M\u20ac to add 2 microbes to any card; pay 5 M\u20ac to increase your plant production 1 step.',
       },
     });
   }
 
   public override bespokePlay(player: IPlayer) {
     const steps: Array<[number, string, () => void]> = [
-      [5, 'Pay 5 M€ to increase your plant production 1 step', () => player.production.add(Resource.PLANTS, 1, {log: true})],
-      [3, 'Pay 3 M€ to add 2 microbes to any card', () => player.game.defer(new AddResourcesToCard(player, CardResource.MICROBE, {count: 2}))],
       [3, 'Pay 3 M€ to add 1 animal to any card', () => player.game.defer(new AddResourcesToCard(player, CardResource.ANIMAL, {count: 1}))],
+      [4, 'Pay 4 M€ to add 2 microbes to any card', () => player.game.defer(new AddResourcesToCard(player, CardResource.MICROBE, {count: 2}))],
+      [5, 'Pay 5 M€ to increase your plant production 1 step', () => player.production.add(Resource.PLANTS, 1, {log: true})],
     ];
     const ask = (i: number): void => {
       if (i >= steps.length) {

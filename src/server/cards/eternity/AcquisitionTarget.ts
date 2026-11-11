@@ -19,9 +19,9 @@ export class AcquisitionTarget extends PreludeCard {
       metadata: {
         cardNumber: 'EP05',
         renderData: CardRenderer.builder((b) => {
-          b.corporation().asterix().megacredits(5).br.text('Search the corporation deck and play that corporation instead of yours.', {size: Size.SMALL, isBold: false});
+          b.text('5', {size: Size.MEDIUM}).corporation().asterix().megacredits(5);
         }),
-        description: "Search the corporation deck for a corporation of your choosing and play it instead of your corporation (its starting M\u20ac, production and resources replace your old corporation's). Gain 5 M\u20ac.",
+        description: "Draw 5 corporation cards. You may play one of them instead of your corporation (its starting M\u20ac, production and resources replace your old corporation's). Discard the rest. Gain 5 M\u20ac.",
       },
     });
   }
@@ -59,12 +59,20 @@ export class AcquisitionTarget extends PreludeCard {
     game.log('${0} replaced ${1} with ${2}', (b) => b.player(player).card(old).card(corp));
   }
   public override bespokePlay(player: IPlayer) {
-    const deck = player.game.corporationDeck;
+    const game = player.game;
+    const deck = game.corporationDeck;
     const old = player.playedCards.corporations()[0];
-    player.defer(new SelectCard('Search the corporation deck for your new corporation', 'Play', deck.drawPile.slice()).andThen(([corp]) => {
-      deck.drawPile.splice(deck.drawPile.indexOf(corp), 1);
-      deck.shuffle();
-      AcquisitionTarget.swap(player, old, corp);
+    const drawn = deck.drawN(game, 5);
+    game.log('${0} drew ${1}', (b) => b.player(player).cards(drawn));
+    player.defer(new SelectCard('You may replace your corporation with one of these', 'Play', drawn, {min: 0, max: 1}).andThen(([corp]) => {
+      for (const c of drawn) {
+        if (c !== corp) {
+          deck.discard(c);
+        }
+      }
+      if (corp !== undefined) {
+        AcquisitionTarget.swap(player, old, corp);
+      }
       return undefined;
     }));
     return undefined;

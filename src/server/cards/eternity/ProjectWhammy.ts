@@ -11,7 +11,7 @@ export class ProjectWhammy extends Card implements IProjectCard {
       type: CardType.ACTIVE,
       name: CardName.PROJECT_WHAMMY,
       tags: [Tag.SPACE, Tag.SCIENCE, Tag.JOVIAN],
-      cost: 150,
+      cost: 90,
       victoryPoints: {tag: Tag.JOVIAN},
       behavior: {
         drawCard: 1,
@@ -19,7 +19,7 @@ export class ProjectWhammy extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E107',
         renderData: CardRenderer.builder((b) => {
-          b.effect('All your science tags count as Jovian tags as well.', (eb) => eb.tag(Tag.SCIENCE).startEffect.tag(Tag.JOVIAN)).br.cards(1);
+          b.effect('All your science tags, including this one, count as Jovian tags as well.', (eb) => eb.tag(Tag.SCIENCE).startEffect.tag(Tag.JOVIAN)).br.cards(1);
         }),
         description: 'Draw a card. 1 VP per Jovian tag you have.',
       },

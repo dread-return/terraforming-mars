@@ -1,4 +1,5 @@
 import {CardName} from '../../../common/cards/CardName';
+import {CardRenderItemType} from '../../../common/cards/render/CardRenderItemType';
 import {CardRenderer} from '../render/CardRenderer';
 import {CardType} from '../../../common/cards/CardType';
 import {Card} from '../Card';
@@ -10,7 +11,7 @@ import {Resource} from '../../../common/Resource';
 import {SelectOption} from '../../inputs/SelectOption';
 import {Tag} from '../../../common/cards/Tag';
 import {digit} from '../Options';
-import {questionmark} from '../render/DynamicVictoryPoints';
+import {productionOf} from '../render/DynamicVictoryPoints';
 
 export class LivingEnergyStructures extends Card implements IProjectCard {
   constructor() {
@@ -26,12 +27,12 @@ export class LivingEnergyStructures extends Card implements IProjectCard {
       },
       metadata: {
         cardNumber: 'E84',
-        victoryPoints: questionmark(),
+        victoryPoints: productionOf(CardRenderItemType.ENERGY, 1, 3),
         renderData: CardRenderer.builder((b) => {
-          b.action('Spend 5 energy: raise a global parameter 1 step or place an ocean.', (eb) => eb.energy(5, {digit}).startAction.temperature(1).slash().oxygen(1).slash().oceans(1).asterix()).br;
-          b.production((pb) => pb.energy(1)).nbsp.vpText('1 VP / 3 energy prod.');
+          b.action('Spend 5 energy: raise a global parameter 1 step or place an ocean.', (eb) => eb.energy(5, {digit}).startAction.wrap.temperature(1).slash().oxygen(1).slash().oceans(1).asterix()).br;
+          b.production((pb) => pb.energy(1));
         }),
-        description: 'Requires 3 building tags. Increase your energy production 1 step.',
+        description: 'Requires 3 building tags. Increase your energy production 1 step. 1 VP per 3 energy production you have.',
       },
     });
   }

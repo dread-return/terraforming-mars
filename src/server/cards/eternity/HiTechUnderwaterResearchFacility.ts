@@ -23,7 +23,7 @@ export class HiTechUnderwaterResearchFacility extends Card implements IProjectCa
           b.action('Pay 12 M€ (steel may be used) to draw 2 cards and raise your TR 1 step.', (eb) => eb.megacredits(12).super((b) => b.steel(1)).startAction.cards(2).tr(1)).br;
           b.city().asterix();
         }),
-        description: 'Requires 3 science tags and 3 building tags. Place a city on an area reserved for oceans.',
+        description: 'Requires 3 science tags and 3 building tags. Place a city on an area reserved for oceans, ignoring normal placement restrictions.',
       },
     });
   }

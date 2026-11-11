@@ -119,3 +119,23 @@ export function undergroundShelters(): CardRenderDynamicVictoryPoints {
     points: 1,
   };
 }
+
+/** Eternity: points per `target` of several tags added together, e.g. 1 VP per 3 science and microbe tags. */
+export function tagsSum(tags: Array<Tag>, points: number, target: number): CardRenderDynamicVictoryPoints {
+  const [first, ...rest] = tags.map((t) => new CardRenderItem(CardRenderItemType.TAG, 1, {tag: t}));
+  return {
+    item: first,
+    extraItems: rest,
+    points: points,
+    target: target,
+  };
+}
+/** Eternity: points per `target` steps of your production of one standard resource. */
+export function productionOf(type: CardRenderItemType, points: number, target: number): CardRenderDynamicVictoryPoints {
+  return {
+    item: new CardRenderItem(type, 1),
+    production: true,
+    points: points,
+    target: target,
+  };
+}

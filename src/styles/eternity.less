@@ -245,3 +245,55 @@
     text-shadow: -1px 0 #12340f, 0 1px #12340f, 1px 0 #12340f, 0 -1px #12340f;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Eternity: an action or effect whose result goes on its own line, under the cause and arrow.
+.card-container .card-effect-box .card-effect-box-row.card-effect-box-row-wrap {
+  flex-wrap: wrap;
+  justify-content: center;
+  > .card-effect-box-content:last-child {
+    flex-basis: 100%;
+    justify-content: center;
+    margin-top: 2px;
+  }
+}
+
+// Eternity: VP circles with two tags added together, or a production box.
+.card-points .card-points-plus {
+  margin-left: 1px;
+  font-size: 20px;
+}
+.card-points .card-points-production {
+  transform: scale(0.8);
+  margin-left: 0;
+  .card-production-box-row-item {
+    padding: 0 2px;
+  }
+}
+
+// Eternity: floater icons inside the requirement bar (Floating Aerobats).
+.card-requirement .et-req-res {
+  width: 18px;
+  height: 18px;
+  margin: 0 1px;
+  background-size: 18px 18px;
+}
+
+// Eternity: Jellyfish Farms marks its ocean with an animal tag.
+.board-marker--jellyfish {
+  position: absolute;
+  margin: 2px 0 0 13px;
+  background: url(./assets/tags/animal.png);
+  background-size: 22px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  z-index: 3;
+  filter: drop-shadow(0 0 2px black);
+}
+.card-container .card-points.card-points-multi {
+  width: auto;
+  min-width: 80px;
+  padding: 0 6px;
+  box-sizing: border-box;
+}

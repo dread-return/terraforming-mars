@@ -18,15 +18,12 @@ export class ViralAmoeboid extends Card implements IProjectCard {
       cost: 8,
       resourceType: CardResource.MICROBE,
       victoryPoints: {resourcesHere: {}, per: 3},
-      behavior: {
-        addResources: 1,
-      },
       metadata: {
         cardNumber: 'E139',
         renderData: CardRenderer.builder((b) => {
-          b.effect('When any player plays a microbe tag, including each tag on this, add a microbe here.', (eb) => eb.tag(Tag.MICROBE, {all}).startEffect.resource(CardResource.MICROBE)).br.resource(CardResource.MICROBE);
+          b.effect('When any player plays a microbe tag, including each tag on this, add a microbe here.', (eb) => eb.tag(Tag.MICROBE, {all}).startEffect.resource(CardResource.MICROBE));
         }),
-        description: 'Add 1 microbe here. 1 VP per 3 microbes here.',
+        description: '1 VP per 3 microbes here.',
       },
     });
   }

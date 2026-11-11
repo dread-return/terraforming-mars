@@ -26,10 +26,8 @@ export class MarsConservationists extends CorporationCard implements ICorporatio
         cardNumber: 'EC03',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(19).production((pb) => pb.plants(2)).greenery().asterix().br;
-          b.corpBox('effect', (ce) => {
-            ce.effect('Everyone pays +3 M€ for cities.', (eb) => eb.city().startEffect.plus().megacredits(3));
-            ce.effect('Any greenery: +1 plant, +5 M€.', (eb) => eb.greenery({any: true, withO2: false}).startEffect.plants(1).megacredits(5));
-          });
+          b.effect('Everyone pays +3 M€ for cities.', (eb) => eb.city().startEffect.plus().megacredits(3)).br;
+          b.effect('Any greenery: +1 plant, +5 M€.', (eb) => eb.greenery({any: true, withO2: false}).startEffect.plants(1).megacredits(5));
         }),
         description: 'First action: place a greenery.',
       },

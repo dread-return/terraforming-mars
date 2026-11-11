@@ -1,11 +1,12 @@
 import {CardName} from '../../../common/cards/CardName';
+import {CardRenderItemType} from '../../../common/cards/render/CardRenderItemType';
 import {CardRenderer} from '../render/CardRenderer';
 import {CardType} from '../../../common/cards/CardType';
 import {Card} from '../Card';
 import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
 import {Tag} from '../../../common/cards/Tag';
-import {questionmark} from '../render/DynamicVictoryPoints';
+import {productionOf} from '../render/DynamicVictoryPoints';
 
 export class UrbanizationIncentives extends Card implements IProjectCard {
   constructor() {
@@ -22,11 +23,11 @@ export class UrbanizationIncentives extends Card implements IProjectCard {
       },
       metadata: {
         cardNumber: 'E136',
-        victoryPoints: questionmark(),
+        victoryPoints: productionOf(CardRenderItemType.ENERGY, -1, 1),
         renderData: CardRenderer.builder((b) => {
-          b.city().minus().tr(1).br.production((pb) => pb.minus().plants(1).plus().energy(4)).br.vpText('-1 VP per energy production you have.');
+          b.city().minus().tr(1).br.production((pb) => pb.minus().plants(1).plus().energy(4));
         }),
-        description: 'Place a city. Lower your TR 1 step. Decrease your plant production 1 step and increase your energy production 4 steps.',
+        description: 'Place a city. Lower your TR 1 step. Decrease your plant production 1 step and increase your energy production 4 steps. -1 VP per energy production you have.',
       },
     });
   }

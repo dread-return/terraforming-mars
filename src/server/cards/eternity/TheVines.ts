@@ -28,10 +28,8 @@ export class TheVines extends ActiveCorporationCard implements ICorporationCard 
         cardNumber: 'EC21',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(22).production((pb) => pb.megacredits(-2).plants(4)).br;
-          b.corpBox('effect-action', (ce) => {
-            ce.action('Remove 2 roots: +1 plant production.', (eb) => eb.resource(CardResource.ROOT, 2).startAction.production((pb) => pb.plants(1)));
-            ce.effect('When you place a greenery: +1 M€ production and a root here.', (eb) => eb.greenery({withO2: false}).startEffect.production((pb) => pb.megacredits(1)).resource(CardResource.ROOT));
-          });
+          b.action('Remove 2 roots: +1 plant production.', (eb) => eb.resource(CardResource.ROOT, 2).startAction.production((pb) => pb.plants(1))).br;
+          b.effect('When you place a greenery: +1 M€ production and a root here.', (eb) => eb.greenery({withO2: false}).startEffect.production((pb) => pb.megacredits(1)).resource(CardResource.ROOT));
         }),
       },
     });

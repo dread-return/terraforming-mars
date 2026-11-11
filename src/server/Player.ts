@@ -1716,9 +1716,6 @@ export class Player implements IPlayer {
       action.options.push(coloniesTradeAction);
     }
 
-    // Eternity: extra actions (O.I.S. lets opponents place cards face up).
-    action.options.push(...Eternity.extraActions(this));
-
     // Add delegates
     const input = this.game.turmoil?.getSendDelegateInput(this);
     if (input !== undefined) {

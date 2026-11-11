@@ -21,12 +21,10 @@ export class Powerhouse extends CorporationCard implements ICorporationCard {
         cardNumber: 'EC18',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(20).production((pb) => pb.steel(2).energy(2)).br;
-          b.corpBox('effect-action', (ce) => {
-            ce.effect('Energy/steel prod. increases may go to either.', (eb) => eb.production((pb) => pb.energy(1)).startEffect.production((pb) => pb.steel(1)).asterix());
-            ce.action('Pay 3 steel and 3 energy: +1 TR, draw a card.', (eb) => eb.steel(3, {digit}).energy(3, {digit}).startAction.tr(1).cards(1));
-          });
+          b.steel(3, {digit}).energy(3, {digit}).br;
+          b.effect('Energy/steel prod. increases may go to either.', (eb) => eb.production((pb) => pb.energy(1)).startEffect.production((pb) => pb.steel(1)).asterix()).br;
+          b.action('Pay 3 steel and 3 energy: +1 TR, draw a card.', (eb) => eb.steel(3, {digit}).energy(3, {digit}).startAction.tr(1).cards(1));
         }),
-        description: 'You also start with 3 steel and 3 energy.',
       },
     });
   }

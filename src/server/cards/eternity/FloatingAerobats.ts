@@ -16,6 +16,7 @@ export class FloatingAerobats extends ActionCard implements IProjectCard {
       tags: [Tag.ANIMAL, Tag.JOVIAN, Tag.VENUS],
       cost: 21,
       resourceType: CardResource.ANIMAL,
+      requirements: {display: 'aerobatFloaters'},
       victoryPoints: {resourcesHere: {}, per: 4},
       action: {
         addResourcesToAnyCard: {count: 1, type: CardResource.FLOATER},

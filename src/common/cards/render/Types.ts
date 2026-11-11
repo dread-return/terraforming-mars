@@ -51,6 +51,8 @@ export function isICardRenderProductionBox(item: ItemType): item is ICardRenderP
 export interface ICardRenderEffect extends CardComponent {
   readonly is: 'effect';
   rows: Array<Array<ItemType>>,
+  /** Eternity: put the result of the action or effect on its own line, below the cause and arrow. */
+  wrap?: boolean,
 }
 
 export function isICardRenderEffect(item: ItemType): item is ICardRenderEffect {

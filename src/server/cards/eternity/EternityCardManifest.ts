@@ -202,7 +202,6 @@ import {TardigradeParthenogenesis} from './TardigradeParthenogenesis';
 import {TechEnabledEnergyHub} from './TechEnabledEnergyHub';
 import {TerraMars} from './TerraMars';
 import {TerraformLobbyism} from './TerraformLobbyism';
-import {TerraformingControlStationE} from './TerraformingControlStationE';
 import {TerraformingMarsCard} from './TerraformingMarsCard';
 import {TharsisPrototypeCity} from './TharsisPrototypeCity';
 import {ThawingGlacier} from './ThawingGlacier';
@@ -235,7 +234,6 @@ import {Wildfires} from './Wildfires';
 import {WingspearsCorp} from './WingspearsCorp';
 import {WobblingAsteroid} from './WobblingAsteroid';
 import {Wormhole} from './Wormhole';
-import {WrenisPinkle} from './WrenisPinkle';
 
 export const ETERNITY_CARD_MANIFEST = new ModuleManifest({
   module: 'eternity',
@@ -364,7 +362,6 @@ export const ETERNITY_CARD_MANIFEST = new ModuleManifest({
     [CardName.SUPERNOVA_ASTEROID]: {Factory: SupernovaAsteroid},
     [CardName.TARDIGRADE_PARTHENOGENESIS]: {Factory: TardigradeParthenogenesis},
     [CardName.TECH_ENABLED_ENERGY_HUB]: {Factory: TechEnabledEnergyHub},
-    [CardName.TERRAFORMING_CONTROL_STATION_E]: {Factory: TerraformingControlStationE, compatibility: 'venus'},
     [CardName.TERRAFORMING_MARS_E]: {Factory: TerraformingMarsCard},
     [CardName.THAWING_GLACIER]: {Factory: ThawingGlacier},
     [CardName.THE_CRASH_OF_ELARA]: {Factory: TheCrashOfElara, compatibility: 'colonies'},
@@ -384,7 +381,6 @@ export const ETERNITY_CARD_MANIFEST = new ModuleManifest({
     [CardName.WILDFIRES]: {Factory: Wildfires},
     [CardName.WOBBLING_ASTEROID]: {Factory: WobblingAsteroid, compatibility: 'venus'},
     [CardName.WORMHOLE]: {Factory: Wormhole},
-    [CardName.WRENIS_PINKLE]: {Factory: WrenisPinkle},
   },
   preludeCards: {
     [CardName.ACADEMIC_HOVER_INSTITUTION]: {Factory: AcademicHoverInstitution, compatibility: 'venus'},

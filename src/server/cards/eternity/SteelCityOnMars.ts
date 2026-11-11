@@ -13,6 +13,7 @@ export class SteelCityOnMars extends Card implements IProjectCard {
       name: CardName.STEEL_CITY_ON_MARS,
       tags: [Tag.CITY, Tag.MARS, Tag.BUILDING],
       cost: 7,
+      requirements: {display: 'maxOneEarthVenusJovian'},
       behavior: {
         production: {energy: -2, megacredits: 3, steel: 1},
         city: {},

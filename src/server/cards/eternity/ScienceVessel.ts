@@ -24,10 +24,13 @@ export class ScienceVessel extends Card implements IProjectCard {
         cardNumber: 'E114',
         renderData: CardRenderer.builder((b) => {
           b.action(undefined, (eb) => eb.energy(1).startAction.resource(CardResource.FLOATER).asterix().cards(1)).br;
+          b.or().br;
           b.action(undefined, (eb) => eb.steel(1).startAction.resource(CardResource.DATA).asterix().titanium(1)).br;
-          b.action('Do one: * = to any card.', (eb) => eb.titanium(1).startAction.resource(CardResource.SCIENCE).asterix().megacredits(1)).br;
+          b.or().br;
+          b.action('Pay 1 energy. Add 1 floater to any card. Draw a card. OR Action: Pay 1 steel. Add 1 data to any card. Gain 1 titanium. OR Action: Pay 1 titanium. Add 1 science resource to any card. Gain 1 M€.', (eb) => eb.titanium(1).startAction.resource(CardResource.SCIENCE).asterix().megacredits(1)).br;
           b.temperature(1).slash().oxygen(1).slash().oceans(1).asterix();
         }),
+        description: 'Increase ANY global parameter one step OR place an ocean tile.',
       },
     });
   }

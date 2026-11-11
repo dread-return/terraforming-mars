@@ -1,15 +1,14 @@
 import {CardName} from '../../../common/cards/CardName';
 import {CardRenderer} from '../render/CardRenderer';
 import {CorporationCard} from '../corporation/CorporationCard';
-import {Eternity} from './Eternity';
 import {ICorporationCard} from '../corporation/ICorporationCard';
 import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
 import {OrOptions} from '../../inputs/OrOptions';
-import {PlayerInput} from '../../PlayerInput';
 import {Resource} from '../../../common/Resource';
 import {SelectCard} from '../../inputs/SelectCard';
 import {SelectOption} from '../../inputs/SelectOption';
+import {Size} from '../../../common/cards/render/Size';
 import {Tag} from '../../../common/cards/Tag';
 import {all} from '../Options';
 
@@ -19,16 +18,16 @@ export class OIS extends CorporationCard implements ICorporationCard {
       name: CardName.OIS,
       tags: [Tag.WILD],
       startingMegaCredits: 50,
-      initialActionText: 'Other players place a card face up',
+      initialActionText: 'Each opponent reveals a card from their hand',
       metadata: {
         cardNumber: 'EC05',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(50).cards(1, {all}).br;
-          b.corpBox('action', (ce) => {
-            ce.action('Take a shown card.', (eb) => eb.empty().startAction.cards(1, {all}).asterix());
-          });
+          b.plainText('You start with 50 M€, and each player draws a card after selecting corps. Then each opponent reveals a card from their hand.').br;
+          b.plainText('Every production phase, each opponent reveals any number of cards. Anyone who can\'t loses 1 TR. The player with the most revealed cards gains').br;
+          b.production((pb) => pb.megacredits(1)).text('OR', {size: Size.SMALL}).megacredits(4).br;
+          b.action('Steal a revealed card from an opponent.', (eb) => eb.empty().startAction.cards(1, {all}).asterix());
         }),
-        description: 'All draw a card. First action: others show a card. Each production: others show a card or -1 TR; most shown: +1 M\u20ac prod. or 4 M\u20ac.',
       },
     });
   }
@@ -46,14 +45,16 @@ export class OIS extends CorporationCard implements ICorporationCard {
   private placeFaceUp(p: IPlayer, cards: ReadonlyArray<{name: string}>) {
     const current = this.faceUpCards(p).map((c) => c.name);
     this.data = {...this.data, faceUp: {...this.data.faceUp, [p.id]: [...current, ...cards.map((c) => c.name)]}};
-    p.game.log('${0} placed ${1} face up', (b) => b.player(p).cards(cards as Array<IProjectCard>));
+    p.game.log('${0} revealed ${1}', (b) => b.player(p).cards(cards as Array<IProjectCard>));
   }
-  private askOne(p: IPlayer) {
+  /** Asks `p` to reveal cards from hand (1, or 1 or more when `any`). False when they have nothing left to reveal. */
+  private ask(p: IPlayer, any: boolean) {
     const cards = this.faceDownCards(p);
     if (cards.length === 0) {
       return false;
     }
-    p.defer(new SelectCard('O.I.S.: place a card from your hand face up (it stays in your hand)', 'Place face up', cards, {min: 1, max: 1}).andThen((selected) => {
+    const title = any ? 'O.I.S.: reveal any number of cards from your hand (at least 1; they stay in your hand)' : 'O.I.S.: reveal a card from your hand (it stays in your hand)';
+    p.defer(new SelectCard(title, 'Reveal', cards, {min: 1, max: any ? cards.length : 1}).andThen((selected) => {
       this.placeFaceUp(p, selected);
       return undefined;
     }));
@@ -67,7 +68,7 @@ export class OIS extends CorporationCard implements ICorporationCard {
   }
   public override initialAction(player: IPlayer) {
     for (const p of player.opponents) {
-      this.askOne(p);
+      this.ask(p, false);
     }
     return undefined;
   }
@@ -75,7 +76,7 @@ export class OIS extends CorporationCard implements ICorporationCard {
     const game = player.game;
     const last = game.gameIsOver();
     for (const p of player.opponents) {
-      if (!this.askOne(p) && !last) {
+      if (!this.ask(p, true) && !last) {
         p.decreaseTerraformRating(1, {log: true});
       }
     }
@@ -100,25 +101,11 @@ export class OIS extends CorporationCard implements ICorporationCard {
           new SelectOption('Gain 4 M€').andThen(() => {
             p.stock.add(Resource.MEGACREDITS, 4, {log: true});
             return undefined;
-          })).setTitle('O.I.S.: you have the most face-up cards'));
+          })).setTitle('O.I.S.: you have the most revealed cards'));
       });
       return undefined;
     });
     return undefined;
-  }
-  /** Once per generation, opponents may place any number of cards face up as an action. */
-  public revealAction(owner: IPlayer, target: IPlayer): PlayerInput | undefined {
-    if (this.data.used[target.id] === owner.game.generation) {
-      return undefined;
-    }
-    const cards = this.faceDownCards(target);
-    if (cards.length === 0) {
-      return undefined;
-    }
-    return new SelectOption('Place cards face up (O.I.S.)').andThen(() => Eternity.selectCardsToReveal(target, cards, 1, (selected) => {
-      this.data = {...this.data, used: {...this.data.used, [target.id]: owner.game.generation}};
-      this.placeFaceUp(target, selected);
-    }));
   }
   public canAct(player: IPlayer) {
     return player.opponents.some((p) => this.faceUpCards(p).length > 0);
@@ -128,7 +115,7 @@ export class OIS extends CorporationCard implements ICorporationCard {
     for (const p of player.opponents) {
       this.faceUpCards(p).forEach((c) => owners.set(c, p));
     }
-    return new SelectCard('Take a face-up card from another player', 'Take', [...owners.keys()]).andThen(([card]) => {
+    return new SelectCard('Steal a revealed card from an opponent', 'Steal', [...owners.keys()]).andThen(([card]) => {
       const from = owners.get(card);
       if (from !== undefined) {
         from.cardsInHand.splice(from.cardsInHand.indexOf(card), 1);

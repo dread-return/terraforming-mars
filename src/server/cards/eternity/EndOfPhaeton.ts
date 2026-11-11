@@ -21,9 +21,8 @@ export class EndOfPhaeton extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E10',
         renderData: CardRenderer.builder((b) => {
-          b.minus().text('Jovian card', {size: Size.SMALL}).asterix().br;
-          b.cards(1).asterix().nbsp.cards(1).text('from discard', {size: Size.SMALL}).br;
-          b.text('Play both free, ignoring requirements.', {size: Size.SMALL, isBold: false});
+          b.minus().tag(Tag.JOVIAN).asterix().br;
+          b.cards(1).asterix().nbsp.cards(1).text('from discard', {size: Size.SMALL});
         }),
         description: 'Requires a non-wild Jovian tag. Remove one of your Jovian-tag cards from the game. Play 1 card from hand and 1 from the discard pile, ignoring requirements and costs.',
       },

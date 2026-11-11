@@ -4,7 +4,6 @@ import {CorporationCard} from '../corporation/CorporationCard';
 import {ICorporationCard} from '../corporation/ICorporationCard';
 import {IPlayer} from '../../IPlayer';
 import {OrOptions} from '../../inputs/OrOptions';
-import {Resource} from '../../../common/Resource';
 import {SelectOption} from '../../inputs/SelectOption';
 import {newCorporationCard} from '../../createCard';
 
@@ -19,9 +18,7 @@ export class ShellCorporation extends CorporationCard implements ICorporationCar
         cardNumber: 'EC19',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(7).br;
-          b.corpBox('effect', (ce) => {
-            ce.effect('As your first action, this becomes a copy of an opponent\'s corporation, or the top card of the corporation deck. Keep these 7 M€ instead of its starting M€.', (eb) => eb.corporation().asterix().startEffect.text('OPP OR TOP'));
-          });
+          b.effect('As your first action, this becomes a copy of an opponent\'s corporation, or the top card of the corporation deck. You get its starting M€ and resources as well as these 7 M€.', (eb) => eb.corporation().asterix().startEffect.text('OPP OR TOP'));
         }),
         description: 'Gain 7 M\u20ac when you reveal this corporation.',
       },
@@ -31,8 +28,7 @@ export class ShellCorporation extends CorporationCard implements ICorporationCar
   private become(player: IPlayer, corp: ICorporationCard) {
     player.game.log('${0} became ${1}', (b) => b.card(this).card(corp));
     player.playCorporationCard(corp);
-    // Shell's 7 M€ replaces the new corporation's starting M€.
-    player.stock.deduct(Resource.MEGACREDITS, Math.min(corp.startingMegaCredits, player.megaCredits));
+    // Shell's 7 M€ stay: the new corporation adds its own starting M€ and resources.
     player.playedCards.remove(this);
   }
   public override initialAction(player: IPlayer) {

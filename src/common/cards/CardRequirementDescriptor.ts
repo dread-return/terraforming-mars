@@ -33,8 +33,10 @@ import {RequirementType} from './RequirementType';
  * offWorldCity: you own a city off Mars. allOceans: every ocean is placed.
  * cardVP: you have at least `count` VP on your cards. generation: it is generation `count` or later.
  * plantProduction: you have plant production. venusHabitat: you have a Venus Habitat (Venus Phase 2).
+ * aerobatFloaters: a Jovian card and a different Venus card with 4 floaters each (Eternity's Floating Aerobats).
+ * maxOneEarthVenusJovian: at most one Earth, Venus or Jovian tag in total (Eternity's Steel City on Mars).
  */
-export type DisplayRequirement = 'offWorldCity' | 'allOceans' | 'cardVP' | 'generation' | 'plantProduction' | 'venusHabitat';
+export type DisplayRequirement = 'offWorldCity' | 'allOceans' | 'cardVP' | 'generation' | 'plantProduction' | 'venusHabitat' | 'aerobatFloaters' | 'maxOneEarthVenusJovian';
 
 export type CardRequirementDescriptor = {
   tag?: Tag,

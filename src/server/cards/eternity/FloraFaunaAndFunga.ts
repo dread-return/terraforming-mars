@@ -1,12 +1,13 @@
 import {CardName} from '../../../common/cards/CardName';
 import {CardRenderer} from '../render/CardRenderer';
+import {CardResource} from '../../../common/CardResource';
 import {EternityUtils} from './EternityUtils';
 import {GlobalParameter} from '../../../common/GlobalParameter';
 import {ICard} from '../ICard';
 import {IPlayer} from '../../IPlayer';
 import {PreludeCard} from '../prelude/PreludeCard';
-import {Size} from '../../../common/cards/render/Size';
 import {Tag} from '../../../common/cards/Tag';
+import {digit} from '../Options';
 
 export class FloraFaunaAndFunga extends PreludeCard {
   constructor() {
@@ -19,7 +20,7 @@ export class FloraFaunaAndFunga extends PreludeCard {
       metadata: {
         cardNumber: 'EP16',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.plants(1)).cards(1, {secondaryTag: Tag.MICROBE}).cards(1, {secondaryTag: Tag.ANIMAL}).br.text('Play them at +/- 4 global requirements (not oceans) with 2 resources each.', {size: Size.SMALL, isBold: false});
+          b.production((pb) => pb.plants(1)).br.cards(1, {secondaryTag: Tag.MICROBE}).resource(CardResource.MICROBE, {amount: 2, digit}).nbsp.cards(1, {secondaryTag: Tag.ANIMAL}).resource(CardResource.ANIMAL, {amount: 2, digit});
         }),
         description: 'Increase your plant production 1 step. Reveal cards until you reveal a microbe card and an animal card; take them. You may play them with global requirements +/- 4 steps (not oceans); when you play each, add 2 of its resources to it.',
       },

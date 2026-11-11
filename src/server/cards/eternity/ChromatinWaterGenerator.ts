@@ -9,7 +9,7 @@ import {IProjectCard} from '../IProjectCard';
 import {PlaceOceanTile} from '../../deferredActions/PlaceOceanTile';
 import {Tag} from '../../../common/cards/Tag';
 import {Units} from '../../../common/Units';
-import {questionmark} from '../render/DynamicVictoryPoints';
+import {tagsSum} from '../render/DynamicVictoryPoints';
 
 export class ChromatinWaterGenerator extends Card implements IProjectCard {
   constructor() {
@@ -22,14 +22,13 @@ export class ChromatinWaterGenerator extends Card implements IProjectCard {
       victoryPoints: 'special',
       metadata: {
         cardNumber: 'E53',
-        victoryPoints: questionmark(),
+        victoryPoints: tagsSum([Tag.SCIENCE, Tag.MICROBE], 1, 3),
         renderData: CardRenderer.builder((b) => {
-          b.action('Spend 1 titanium, plant, heat and energy: place an ocean, add 1 microbe to any card.', (eb) => {
-            eb.titanium(1).plants(1).heat(1).energy(1).startAction.oceans(1).asterix();
-          }).br;
-          b.vpText('1 VP per 3 science/microbe tags.');
+          b.action('Spend 1 titanium, 1 plant, 1 heat and 1 energy to place an ocean and add 1 microbe to any card.', (eb) => {
+            eb.titanium(1).plants(1).heat(1).energy(1).startAction.wrap.oceans(1).resource(CardResource.MICROBE).asterix();
+          });
         }),
-        description: 'Requires that you have a greenery, a microbe tag and 2 science tags.',
+        description: 'Requires that you have a greenery, a microbe tag and 2 science tags. 1 VP per 3 science and/or microbe tags you have.',
       },
     });
   }

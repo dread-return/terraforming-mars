@@ -90,7 +90,7 @@ export class Server {
       pathfinders: createPathfindersModel(game),
       contamination: game.gameOptions.nuclearExpansion ? game.contamination : undefined,
       phase: game.phase,
-      spaces: this.getSpaces(game.board, game.gagarinBase, game.stJosephCathedrals, game.nomadSpace),
+      spaces: this.getSpaces(game.board, game.gagarinBase, game.stJosephCathedrals, game.nomadSpace, this.jellyfishSpaces(game)),
       spectatorId: game.spectatorId,
       step: game.lastSaveId,
       temperature: game.getTemperature(),
@@ -368,11 +368,24 @@ export class Server {
     return undefined;
   }
 
+  /** Eternity: the oceans marked by Jellyfish Farms. */
+  private static jellyfishSpaces(game: IGame): Array<SpaceId> {
+    const result: Array<SpaceId> = [];
+    for (const player of game.players) {
+      const space = (player.tableau.get(CardName.JELLYFISH_FARMS)?.data as {space?: SpaceId} | undefined)?.space;
+      if (space !== undefined) {
+        result.push(space);
+      }
+    }
+    return result;
+  }
+
   private static getSpaces(
     board: Board,
     gagarin: ReadonlyArray<SpaceId> = [],
     cathedrals: ReadonlyArray<SpaceId> = [],
-    nomads: SpaceId | undefined = undefined): Array<SpaceModel> {
+    nomads: SpaceId | undefined = undefined,
+    jellyfish: ReadonlyArray<SpaceId> = []): Array<SpaceModel> {
     const noctisCitySpaceId = board.noctisCitySpaceId;
 
     return board.spaces.map((space) => {
@@ -418,6 +431,9 @@ export class Server {
       }
       if (space.id === nomads) {
         model.nomads = true;
+      }
+      if (jellyfish.includes(space.id)) {
+        model.jellyfish = true;
       }
       if (space.undergroundResources !== undefined) {
         model.undergroundResource = space.undergroundResources;

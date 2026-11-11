@@ -28,9 +28,10 @@ export class MATT38 extends ActionCard implements IProjectCard {
         cardNumber: 'E22',
         renderData: CardRenderer.builder((b) => {
           b.action(undefined, (eb) => eb.empty().startAction.production((pb) => pb.megacredits(1))).br;
-          b.action('Or: -3 M€ prod.: 3 M€, plant prod.', (eb) => eb.production((pb) => pb.megacredits(-3)).startAction.megacredits(3).production((pb) => pb.plants(1))).br;
+          b.action('Increase your M€ production 1 step. OR: decrease your M€ production 3 steps to gain 3 M€ and increase your plant production 1 step.', (eb) => eb.production((pb) => pb.megacredits(-3)).startAction.megacredits(3).production((pb) => pb.plants(1))).br;
           b.production((pb) => pb.minus().energy(1).plus().megacredits(1));
         }),
+        description: 'Requires 2 Mars tags. Decrease your energy production 1 step and increase your M\u20ac production 1 step.',
       },
     });
   }

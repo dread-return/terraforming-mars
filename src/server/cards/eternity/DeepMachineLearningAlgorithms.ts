@@ -8,11 +8,11 @@ export class DeepMachineLearningAlgorithms extends PreludeCard {
     super({
       name: CardName.DEEP_MACHINE_LEARNING_ALGORITHMS,
       tags: [Tag.WILD],
-      victoryPoints: 4,
+      victoryPoints: 3,
       metadata: {
         cardNumber: 'EP10',
         renderData: CardRenderer.builder((b) => {
-          b.vpText('4 VP.');
+          b.br;
         }),
       },
     });

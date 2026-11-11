@@ -24,6 +24,7 @@ export class SteelMonopoly extends Card implements IProjectCard {
           b.effect('Steel is worth 1 M€ more and may pay for the City SP.', (eb) => eb.steel(1).startEffect.plus().megacredits(1).slash().city().asterix()).br;
           b.production((pb) => pb.steel(1));
         }),
+        description: 'Requires 3 building tags. Increase your steel production 1 step.',
       },
     });
   }

@@ -19,10 +19,8 @@ export class DocumentationError extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E09',
         renderData: CardRenderer.builder((b) => {
-          b.text('Each opponent may pay you 5 M€.', {size: Size.SMALL, isBold: false}).br;
-          b.text('Everyone else, and you, shuffle 2 random cards from hand and get 2 back.', {size: Size.SMALL, isBold: false});
+          b.text('Each opponent may pay you 5 M€ to skip this. All players who did not pay (including you) put 2 random cards from hand face down (drawing first if they have fewer than 2), shuffle them, and deal 2 back to each.', {size: Size.SMALL, isBold: false});
         }),
-        description: 'Each opponent may pay you 5 M\u20ac to skip this. All players who did not pay (including you) put 2 random cards from hand face down (drawing first if they have fewer than 2), shuffle them, and deal 2 back to each.',
       },
     });
   }

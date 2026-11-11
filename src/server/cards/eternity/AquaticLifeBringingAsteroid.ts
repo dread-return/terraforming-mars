@@ -5,8 +5,8 @@ import {Card} from '../Card';
 import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
 import {Resource} from '../../../common/Resource';
-import {Size} from '../../../common/cards/render/Size';
 import {Tag} from '../../../common/cards/Tag';
+import {digit} from '../Options';
 
 export class AquaticLifeBringingAsteroid extends Card implements IProjectCard {
   constructor() {
@@ -23,7 +23,9 @@ export class AquaticLifeBringingAsteroid extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E43',
         renderData: CardRenderer.builder((b) => {
-          b.oceans(1).tr(1).br.production((pb) => pb.plants(1)).text('(2 if 5+ oceans)', {size: Size.SMALL}).plants(2);
+          b.production((pb) => pb.plants(1)).or().br;
+          b.oceans(5, {digit}).colon().production((pb) => pb.plants(2)).br;
+          b.oceans(1).tr(1).plants(2);
         }),
         description: 'Place an ocean. Raise your TR 1 step. Increase your plant production 1 step, or 2 steps if there are 5 or more oceans on Mars. Gain 2 plants.',
       },

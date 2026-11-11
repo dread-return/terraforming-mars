@@ -23,7 +23,6 @@ export class SunsetOverArsiaMons extends Card implements IProjectCard {
           b.minus().cards(1).asterix().equals().megacredits(-2).br;
           b.text('Each card you discard as you play this counts as 2 M€ toward its cost.', {size: Size.SMALL, isBold: false});
         }),
-        description: 'Each card you discard as you play this card counts as 2 M\u20ac toward its cost.',
       },
     });
   }

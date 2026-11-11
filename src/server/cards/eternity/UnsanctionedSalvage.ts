@@ -2,9 +2,10 @@ import {CardName} from '../../../common/cards/CardName';
 import {CardRenderer} from '../render/CardRenderer';
 import {CardType} from '../../../common/cards/CardType';
 import {Card} from '../Card';
+import {EternityUtils} from './EternityUtils';
 import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
-import {SelectCard} from '../../inputs/SelectCard';
+import {Size} from '../../../common/cards/render/Size';
 
 export class UnsanctionedSalvage extends Card implements IProjectCard {
   constructor() {
@@ -13,13 +14,11 @@ export class UnsanctionedSalvage extends Card implements IProjectCard {
       name: CardName.UNSANCTIONED_SALVAGE,
       tags: [],
       cost: 1,
-      victoryPoints: -2,
       metadata: {
         cardNumber: 'E36',
         renderData: CardRenderer.builder((b) => {
-          b.text('Take 1 card from the discard pile into your hand.');
+          b.text('Shuffle the discard pile and reveal 3 cards from it. Take 1 into your hand and discard the other 2.', {size: Size.SMALL, isBold: false});
         }),
-        description: 'Return 1 card from the discard pile to your hand.',
       },
     });
   }
@@ -28,12 +27,7 @@ export class UnsanctionedSalvage extends Card implements IProjectCard {
     return player.game.projectDeck.discardPile.length > 0;
   }
   public override bespokePlay(player: IPlayer) {
-    const pile = player.game.projectDeck.discardPile;
-    return new SelectCard('Take a card from the discard pile', 'Take', pile.slice()).andThen(([card]) => {
-      pile.splice(pile.indexOf(card), 1);
-      player.cardsInHand.push(card);
-      player.game.log('${0} took ${1} from the discard pile', (b) => b.player(player).card(card));
-      return undefined;
-    });
+    EternityUtils.junkVenturesDraw(player);
+    return undefined;
   }
 }

@@ -26,7 +26,7 @@ export class HeatFieldManipulator extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E74',
         renderData: CardRenderer.builder((b) => {
-          b.action('Pay 2 heat, 2 M€: name a tag, reveal 4 cards, keep those with it.', (eb) => eb.heat(2, {digit}).megacredits(2).startAction.cards(4, {digit}).asterix()).br;
+          b.action('Pay 2 heat and 2 M€ to name a tag. Reveal the top 4 cards of the deck, take any cards with that tag into your hand, and discard the rest.', (eb) => eb.heat(2, {digit}).megacredits(2).startAction.cards(4, {digit}).asterix()).br;
           b.production((pb) => pb.heat(1));
         }),
         description: 'Requires a Jovian tag and a science tag. Increase your heat production 1 step.',

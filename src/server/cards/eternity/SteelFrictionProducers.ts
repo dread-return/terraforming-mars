@@ -20,20 +20,20 @@ export class SteelFrictionProducers extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E123',
         renderData: CardRenderer.builder((b) => {
+          b.megacredits(5).colon().tr(1).br;
           b.megacredits(6).colon().production((pb) => pb.steel(2)).br;
-          b.megacredits(7).colon().production((pb) => pb.energy(1).heat(1)).br;
-          b.megacredits(5).colon().tr(1);
+          b.megacredits(7).colon().production((pb) => pb.energy(1).heat(1));
         }),
-        description: 'You may do each: pay 6 M\u20ac for +2 steel production; 7 M\u20ac for +1 energy and heat production; 5 M\u20ac for +1 TR.',
+        description: 'You may do each: pay 5 M\u20ac for +1 TR; 6 M\u20ac for +2 steel production; 7 M\u20ac for +1 energy and heat production.',
       },
     });
   }
 
   public override bespokePlay(player: IPlayer) {
     const steps: Array<[number, string, () => void]> = [
+      [5, 'Pay 5 M€ to raise your TR 1 step', () => player.increaseTerraformRating(1)],
       [6, 'Pay 6 M€ to increase your steel production 2 steps', () => player.production.add(Resource.STEEL, 2, {log: true})],
       [7, 'Pay 7 M€ to increase your energy and heat production 1 step', () => player.production.adjust(Units.of({energy: 1, heat: 1}), {log: true})],
-      [5, 'Pay 5 M€ to raise your TR 1 step', () => player.increaseTerraformRating(1)],
     ];
     const ask = (i: number): void => {
       if (i >= steps.length) {

@@ -19,12 +19,10 @@ export class MadNess extends CorporationCard implements ICorporationCard {
         cardNumber: 'EC16',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(29).cards(1).asterix().br;
-          b.corpBox('effect-action', (ce) => {
-            ce.effect('Card buying costs 2 M€ (start too).', (eb) => eb.cards(1).startEffect.megacredits(2));
-            ce.action('Pay 5 M€, discard: +1 prod. per building/power/space/plant tag.', (eb) => eb.megacredits(5).cards(1).asterix().startAction.production((pb) => pb.wild(1)).asterix());
-          });
+          b.effect('Card buying costs 2 M€ (start too).', (eb) => eb.cards(1).startEffect.megacredits(2)).br;
+          b.action('Pay 5 M€ and discard a card from your hand. For each building, power, space or plant tag on it, increase your steel, energy, titanium or plant production 1 step.', (eb) => eb.megacredits(5).cards(1).asterix().startAction.production((pb) => pb.wild(1)).asterix());
         }),
-        description: 'First action: the same with the top deck card (no such tags: +1 M\u20ac prod.).',
+        description: 'You start with 29 M\u20ac. As your first action, discard the top card of the deck. For each building, power, space or plant tag on it, increase your steel, energy, titanium or plant production 1 step. If it has none of these tags, increase your M\u20ac production 1 step.',
       },
     });
   }

@@ -10,6 +10,7 @@ import {SelectCard} from '../../inputs/SelectCard';
 import {SelectOption} from '../../inputs/SelectOption';
 import {Size} from '../../../common/cards/render/Size';
 import {Tag} from '../../../common/cards/Tag';
+import {uppercase} from '../Options';
 
 export class SpaceMadness extends Card implements IProjectCard {
   constructor() {
@@ -22,9 +23,8 @@ export class SpaceMadness extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E120',
         renderData: CardRenderer.builder((b) => {
-          b.text('All other players with a space tag, twice: discard a card OR lose 3 M€.', {size: Size.SMALL, isBold: false});
+          b.text('All OTHER players with a space tag must, twice, discard a card or', {size: Size.SMALL, uppercase}).megacredits(-3);
         }),
-        description: 'All OTHER players who have a space tag must, twice, either discard a card or lose 3 M\u20ac.',
       },
     });
   }

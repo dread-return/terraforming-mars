@@ -25,10 +25,8 @@ export class Tillco40 extends ActiveCorporationCard implements ICorporationCard 
         cardNumber: 'EC22',
         renderData: CardRenderer.builder((b) => {
           b.production((pb) => pb.megacredits(1)).megacredits(39).cards(1).br;
-          b.corpBox('effect-action', (ce) => {
-            ce.effect('Per science tag you play, incl. this: 1 titanium and 2 M€.', (eb) => eb.tag(Tag.SCIENCE).startEffect.titanium(1).megacredits(2));
-            ce.action('Pay 3 M€ to draw a science card.', (eb) => eb.megacredits(3).startAction.cards(1, {secondaryTag: Tag.SCIENCE}));
-          });
+          b.effect('Whenever you play a science tag, including this, gain 1 titanium and 2 M€.', (eb) => eb.tag(Tag.SCIENCE).startEffect.titanium(1).megacredits(2)).br;
+          b.action('Pay 3 M€ to draw a science card.', (eb) => eb.megacredits(3).startAction.cards(1, {secondaryTag: Tag.SCIENCE}));
         }),
         description: 'You start with 1 M\u20ac production and 39 M\u20ac, and draw a card.',
       },

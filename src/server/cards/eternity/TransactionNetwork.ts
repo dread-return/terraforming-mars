@@ -25,7 +25,7 @@ export class TransactionNetwork extends Card implements IProjectCard {
         cardNumber: 'E133',
         victoryPoints: questionmark(),
         renderData: CardRenderer.builder((b) => {
-          b.effect('Anyone discards from hand: 1 floater here.', (eb) => eb.minus().cards(1, {all}).startEffect.resource(CardResource.FLOATER)).br;
+          b.effect('Whenever anyone discards a card from hand, add 1 floater here.', (eb) => eb.minus().cards(1, {all}).startEffect.resource(CardResource.FLOATER)).br;
           b.action('Remove X floaters: 1 M€ per 4.', (eb) => eb.text('X').resource(CardResource.FLOATER).startAction.megacredits(0, {text: 'x/4'})).br;
           b.vpText('2 VP if 20+ floaters here.');
         }),

@@ -29,10 +29,8 @@ export class Thermacorp extends ActiveCorporationCard implements ICorporationCar
         cardNumber: 'EC06',
         renderData: CardRenderer.builder((b) => {
           b.production((pb) => pb.heat(2)).megacredits(31).temperature(1).asterix().br;
-          b.corpBox('action', (ce) => {
-            ce.action('7 heat: raise temperature 1 step, gain 2 M€.', (eb) => eb.heat(7, {digit}).startAction.temperature(1).megacredits(2));
-            ce.action('10 heat: raise your TR 1 step.', (eb) => eb.heat(10, {digit}).startAction.tr(1));
-          });
+          b.action('7 heat: raise temperature 1 step, gain 2 M€.', (eb) => eb.heat(7, {digit}).startAction.temperature(1).megacredits(2)).br;
+          b.action('10 heat: raise your TR 1 step.', (eb) => eb.heat(10, {digit}).startAction.tr(1));
         }),
         description: 'You start with 31 M\u20ac and 2 heat production. First action: raise the temperature.',
       },

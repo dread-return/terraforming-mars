@@ -21,10 +21,8 @@ export class FarmsOfTheFuture extends ActiveCorporationCard implements ICorporat
         cardNumber: 'EC10',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(53).br;
-          b.corpBox('effect-action', (ce) => {
-            ce.effect('When you play a space or science tag, including these, gain a plant.', (eb) => eb.tag(Tag.SPACE).slash().tag(Tag.SCIENCE).startEffect.plants(1));
-            ce.action('Pay 10 M€ to increase your plant production 1 step.', (eb) => eb.megacredits(10).startAction.production((pb) => pb.plants(1)));
-          });
+          b.effect('When you play a space or science tag, including these, gain a plant.', (eb) => eb.tag(Tag.SPACE).slash().tag(Tag.SCIENCE).startEffect.plants(1)).br;
+          b.action('Pay 10 M€ to increase your plant production 1 step.', (eb) => eb.megacredits(10).startAction.production((pb) => pb.plants(1)));
         }),
         description: 'You start with 53 M\u20ac.',
       },

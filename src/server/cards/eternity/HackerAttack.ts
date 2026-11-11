@@ -17,7 +17,7 @@ export class HackerAttack extends PreludeCard {
       metadata: {
         cardNumber: 'EP23',
         renderData: CardRenderer.builder((b) => {
-          b.text('LOOK/REVEAL').production((pb) => pb.megacredits(-2, {all}).nbsp.megacredits(1));
+          b.text('REVEAL').production((pb) => pb.megacredits(-2, {all}).nbsp.megacredits(1));
         }),
         description: 'Opponents reveal their starting hands. All opponents decrease their M\u20ac production 2 steps. Increase your M\u20ac production 1 step.',
       },

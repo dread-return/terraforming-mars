@@ -68,6 +68,7 @@ class CardRenderTile implements ICardRenderTile {
 class CardRenderEffect implements ICardRenderEffect {
   public readonly is = 'effect';
   public rows: Array<Array<ItemType>>;
+  public wrap?: boolean;
 
   constructor(rows: Array<Array<ItemType>>) {
     this.rows = rows;
@@ -693,8 +694,18 @@ class ProductionBoxBuilder extends Builder<CardRenderProductionBox> {
 }
 
 class EffectBuilder extends Builder<CardRenderEffect> {
+  private wrapResult = false;
+  /** Shows the result on its own line, below the cause and the arrow. */
+  public get wrap(): this {
+    this.wrapResult = true;
+    return this;
+  }
   public override build(): CardRenderEffect {
-    return new CardRenderEffect(this._data);
+    const effect = new CardRenderEffect(this._data);
+    if (this.wrapResult) {
+      effect.wrap = true;
+    }
+    return effect;
   }
 }
 

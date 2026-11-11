@@ -2,7 +2,7 @@ import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
 import {IPreludeCard} from '../prelude/IPreludeCard';
 import {DrawCards, DrawOptions} from '../../deferredActions/DrawCards';
-import {LogType, keep} from '../../deferredActions/ChooseCards';
+import {ChooseCards, LogType, keep} from '../../deferredActions/ChooseCards';
 import {SelectCard} from '../../inputs/SelectCard';
 import {SelectProjectCardToPlay} from '../../inputs/SelectProjectCardToPlay';
 import {CardName} from '../../../common/cards/CardName';
@@ -31,6 +31,23 @@ export const UNCOPYABLE_PRELUDES: ReadonlySet<CardName> = new Set([
 
 export class EternityUtils {
   /** Reveal-until draw (keeps every matching card), then run `cb` with the cards drawn. */
+  /** Junk Ventures: shuffle the discard pile, reveal up to 3 cards from it, keep 1 and discard the rest. */
+  public static junkVenturesDraw(player: IPlayer): void {
+    const game = player.game;
+    const deck = game.projectDeck;
+    deck.shuffleDiscardPile();
+    const cards: Array<IProjectCard> = [];
+    for (let i = 0; i < 3; i++) {
+      const card = deck.discardPile.pop();
+      if (card === undefined) {
+        break;
+      }
+      cards.push(card);
+    }
+    if (cards.length > 0) {
+      game.defer(new ChooseCards(player, cards, {keepMax: 1}));
+    }
+  }
   public static drawThen(player: IPlayer, count: number, options: DrawOptions, cb: (cards: ReadonlyArray<IProjectCard>) => void): void {
     player.game.defer(new DrawCards(player, count, options).andThen((cards) => {
       keep(player, cards, [], LogType.DREW_VERBOSE);

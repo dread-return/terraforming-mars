@@ -10,7 +10,6 @@ import {CardResource} from '../../../common/CardResource';
 import {GlobalParameter} from '../../../common/GlobalParameter';
 import {StandardProjectCanPayWith} from '../../../common/cards/Types';
 import {Phase} from '../../../common/Phase';
-import {PlayerInput} from '../../PlayerInput';
 import {OrOptions} from '../../inputs/OrOptions';
 import {SelectOption} from '../../inputs/SelectOption';
 import {SelectCard} from '../../inputs/SelectCard';
@@ -248,22 +247,6 @@ export class Eternity {
     return player.tableau.has(CardName.JOVICORP) ? 1 : 0;
   }
 
-  /** Extra actions offered to a player: O.I.S.'s "reveal cards" action for its opponents. */
-  public static extraActions(player: IPlayer): Array<PlayerInput> {
-    const result: Array<PlayerInput> = [];
-    for (const p of player.game.players) {
-      if (p === player) {
-        continue;
-      }
-      const ois = p.tableau.get(CardName.OIS) as (ICard & {revealAction?: (owner: IPlayer, target: IPlayer) => PlayerInput | undefined}) | undefined;
-      const input = ois?.revealAction?.(p, player);
-      if (input !== undefined) {
-        result.push(input);
-      }
-    }
-    return result;
-  }
-
   /** IOA: free trades with Io. */
   public static colonyTraders(player: IPlayer): Array<IColonyTrader> {
     if (!player.tableau.has(CardName.IOA)) {
@@ -332,14 +315,6 @@ export class Eternity {
     if (corporation.name === CardName.GENERALIST_TERRAFORMA && kept !== 5) {
       throw new InputError('Generalist Terraforma must keep exactly 5 project cards');
     }
-  }
-
-  /** Reveals cards: used by O.I.S. Kept here so the opponents' action can be built without importing the card. */
-  public static selectCardsToReveal(_player: IPlayer, cards: ReadonlyArray<ICard>, min: number, cb: (cards: ReadonlyArray<ICard>) => void): SelectCard<ICard> {
-    return new SelectCard('Place cards from your hand face up (they stay in your hand)', 'Place face up', cards.slice(), {min, max: cards.length}).andThen((selected) => {
-      cb(selected);
-      return undefined;
-    });
   }
 
   /** Administrative Restructure: 1 action per turn for everyone for the rest of the generation. */

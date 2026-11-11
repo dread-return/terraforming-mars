@@ -1,6 +1,6 @@
 <template>
   <div class="card-effect-box">
-    <div class="card-effect-box-row">
+    <div class="card-effect-box-row" :class="{'card-effect-box-row-wrap': effectData.wrap === true}">
       <div v-if="delimiter !== undefined && cause !== undefined" class="card-effect-box-content">
         <div v-for="(rowItem, rowIndex) in cause" class="card-effect-box-item" :key="rowIndex">
           <CardRenderItemComponent v-if="isItem(rowItem)" :item="rowItem" />

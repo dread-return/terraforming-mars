@@ -114,7 +114,7 @@ describe('Eternity corporations', () => {
     expect(player.production.steel).eq(before.steel + 1);
   });
 
-  it('Shell Corporation copies an opponent\'s corporation and keeps 7 M€', () => {
+  it('Shell Corporation copies an opponent\'s corporation and gets its M€ on top of its own 7 M€', () => {
     other.playCorporationCard(new TharsisRepublic());
     const shell = new ShellCorporation();
     player.playCorporationCard(shell);
@@ -123,7 +123,7 @@ describe('Eternity corporations', () => {
     options.options[0].cb(undefined);
     runAllActions(game);
     expect(player.playedCards.corporations().map((c) => c.name)).deep.eq([new TharsisRepublic().name]);
-    expect(player.megaCredits).eq(7);
+    expect(player.megaCredits).eq(7 + new TharsisRepublic().startingMegaCredits);
   });
 
   it('Venusia: heat pays 2 M€ each for standard projects', () => {

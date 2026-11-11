@@ -23,9 +23,9 @@ export class SmallCheats extends Card implements IProjectCard {
         renderData: CardRenderer.builder((b) => {
           b.resource(CardResource.CHEAT, 4).colon().production((pb) => pb.wild(1)).br;
           b.resource(CardResource.CHEAT, 3).colon().megacredits(8).br;
-          b.resource(CardResource.CHEAT, 2).colon().cards(2);
+          b.resource(CardResource.CHEAT, 2).colon().cards(1);
         }),
-        description: 'You may do each: add 4 cheat counters here to increase any production 1 step; add 3 to gain 8 M\u20ac; add 2 to draw 2 cards. -1 VP per 3 cheat counters here.',
+        description: 'You may do each: add 4 cheat counters here to increase any production 1 step; add 3 to gain 8 M\u20ac; add 2 to draw a card. -1 VP per 3 cheat counters here.',
       },
     });
   }
@@ -38,7 +38,7 @@ export class SmallCheats extends Card implements IProjectCard {
     const steps: Array<[string, number, () => void]> = [
       ['Add 4 cheat counters to increase any production 1 step', 4, () => player.defer(prod())],
       ['Add 3 cheat counters to gain 8 M€', 3, () => player.stock.add(Resource.MEGACREDITS, 8, {log: true})],
-      ['Add 2 cheat counters to draw 2 cards', 2, () => player.drawCard(2)],
+      ['Add 2 cheat counters to draw a card', 2, () => player.drawCard(1)],
     ];
     const ask = (i: number): void => {
       if (i >= steps.length) {

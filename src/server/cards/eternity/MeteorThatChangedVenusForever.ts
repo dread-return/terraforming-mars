@@ -6,7 +6,6 @@ import {Card} from '../Card';
 import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
 import {SelectCard} from '../../inputs/SelectCard';
-import {Size} from '../../../common/cards/render/Size';
 import {Tag} from '../../../common/cards/Tag';
 
 export class MeteorThatChangedVenusForever extends Card implements IProjectCard {
@@ -22,7 +21,7 @@ export class MeteorThatChangedVenusForever extends Card implements IProjectCard 
       metadata: {
         cardNumber: 'E29',
         renderData: CardRenderer.builder((b) => {
-          b.venus(2).br.text('Discard up to 2 cards: per card, remove 1 floater from EVERY Venus card in play.', {size: Size.SMALL, isBold: false});
+          b.venus(2).br.minus().resource(CardResource.FLOATER).slash().cards(1, {secondaryTag: Tag.VENUS}).asterix();
         }),
         description: 'Raise Venus 2 steps. Discard up to 2 cards. For each card discarded, remove 1 floater from each card in play with a Venus tag.',
       },

@@ -56,7 +56,21 @@ describe('CardVictoryPoints', () => {
     expect((wrapper.findComponent('[data-test=item]') as VueWrapper<any>).props().item.type).eq('tag');
     expect((wrapper.findComponent('[data-test=item]') as VueWrapper<any>).props().item.tag).eq('science');
   });
-
+  it('Eternity: tags added together', async () => {
+    await wrapper.setProps(prop({
+      item: {type: CardRenderItemType.TAG, tag: Tag.SCIENCE},
+      extraItems: [{type: CardRenderItemType.TAG, tag: Tag.MICROBE}],
+      points: 1,
+      target: 3,
+    }));
+    expect(wrapper.text()).to.equal('1/3+');
+    expect(wrapper.classes()).includes('card-points-multi');
+  });
+  it('Eternity: production box', async () => {
+    await wrapper.setProps(prop({item: {type: CardRenderItemType.ENERGY}, production: true, points: -1, target: 1}));
+    expect(wrapper.text()).to.equal('-1/');
+    expect(wrapper.find('.card-points-production').exists()).is.true;
+  });
 
   function prop(vps: RecursivePartial<CardRenderDynamicVictoryPoints>) {
     return {

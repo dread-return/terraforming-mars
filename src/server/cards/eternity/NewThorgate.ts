@@ -24,10 +24,8 @@ export class NewThorgate extends CorporationCard implements ICorporationCard {
         cardNumber: 'EC17',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(41).production((pb) => pb.energy(1)).asterix().br;
-          b.corpBox('effect', (ce) => {
-            ce.effect('Power cards & Power Plant SP cost 3 M€ less. +3 M€ per Earth tag you play.', (eb) => eb.tag(Tag.POWER).asterix().colon().megacredits(-3).nbsp.tag(Tag.EARTH).startEffect.megacredits(3));
-            ce.effect('Anyone +energy prod.: +2 M€.', (eb) => eb.production((pb) => pb.energy(1, {all})).startEffect.megacredits(2));
-          });
+          b.effect('Power cards & Power Plant SP cost 3 M€ less. +3 M€ per Earth tag you play.', (eb) => eb.tag(Tag.POWER).asterix().colon().megacredits(-3).nbsp.tag(Tag.EARTH).startEffect.megacredits(3)).br;
+          b.effect('Whenever anyone increases energy production, you get 2 M€ per step.', (eb) => eb.production((pb) => pb.energy(1, {all})).startEffect.megacredits(2));
         }),
         description: 'First action: +1 energy production.',
       },

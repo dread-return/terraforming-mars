@@ -19,9 +19,8 @@ export class LeveeBreach extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E83',
         renderData: CardRenderer.builder((b) => {
-          b.text('Move an ocean to an adjacent land space. Gain its placement bonuses, no TR.', {size: Size.SMALL, isBold: false});
+          b.text('Move an ocean tile to an adjacent unoccupied area not reserved for oceans. Gain its placement bonuses, but no TR.', {size: Size.SMALL, isBold: false});
         }),
-        description: 'Move an ocean tile to an adjacent unoccupied area not reserved for oceans. Gain its placement bonuses, but no TR.',
       },
     });
   }

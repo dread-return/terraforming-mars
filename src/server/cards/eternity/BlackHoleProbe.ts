@@ -3,9 +3,9 @@ import {CardRenderer} from '../render/CardRenderer';
 import {CardResource} from '../../../common/CardResource';
 import {CardType} from '../../../common/cards/CardType';
 import {Card} from '../Card';
+import {EternityUtils} from './EternityUtils';
 import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
-import {SelectCard} from '../../inputs/SelectCard';
 import {SelectPaymentDeferred} from '../../deferredActions/SelectPaymentDeferred';
 import {Tag} from '../../../common/cards/Tag';
 
@@ -24,7 +24,7 @@ export class BlackHoleProbe extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E50',
         renderData: CardRenderer.builder((b) => {
-          b.action('Pay 6 M€ (titanium may be used) to take a card of your choice from the discard pile into your hand and add 1 singularity here.', (eb) => {
+          b.action('Pay 6 M€ (titanium may be used) to shuffle the discard pile and reveal 3 cards from it. Take 1 into your hand, discard the other 2, and add 1 singularity here.', (eb) => {
             eb.megacredits(6).super((b) => b.titanium(1)).startAction.cards(1).asterix().resource(CardResource.SINGULARITY);
           }).br;
           b.tr(1);
@@ -39,17 +39,8 @@ export class BlackHoleProbe extends Card implements IProjectCard {
   }
   public action(player: IPlayer) {
     player.game.defer(new SelectPaymentDeferred(player, 6, {canUseTitanium: true}).andThen(() => {
-      const pile = player.game.projectDeck.discardPile;
-      if (pile.length === 0) {
-        return;
-      }
-      player.defer(new SelectCard('Take a card from the discard pile', 'Take', pile.slice()).andThen(([card]) => {
-        pile.splice(pile.indexOf(card), 1);
-        player.cardsInHand.push(card);
-        player.game.log('${0} took ${1} from the discard pile', (b) => b.player(player).card(card));
-        player.addResourceTo(this, {qty: 1, log: true});
-        return undefined;
-      }));
+      EternityUtils.junkVenturesDraw(player);
+      player.addResourceTo(this, {qty: 1, log: true});
     }));
     return undefined;
   }

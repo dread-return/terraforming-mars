@@ -19,10 +19,8 @@ export class ExoplanetBuilders extends CorporationCard implements ICorporationCa
         cardNumber: 'EC01',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(21).production((pb) => pb.megacredits(3).steel(2)).br;
-          b.corpBox('effect-action', (ce) => {
-            ce.effect('All cards cost everyone 2 M€ more per tag.', (eb) => eb.text('each tag').startEffect.plus().megacredits(2));
-            ce.action('This generation, all players gain 1 steel per tag they play.', (eb) => eb.empty().startAction.text('each tag').colon().steel(1, {all}));
-          });
+          b.effect('All cards cost everyone 2 M€ more per tag.', (eb) => eb.text('each tag').startEffect.plus().megacredits(2)).br;
+          b.action('This generation, all players gain 1 steel per tag they play.', (eb) => eb.empty().startAction.text('each tag').colon().steel(1, {all}));
         }),
         description: 'You start with 21 M\u20ac, 3 M\u20ac production and 2 steel production.',
       },

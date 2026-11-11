@@ -23,12 +23,11 @@ export class Venusia extends ActiveCorporationCard implements ICorporationCard {
         cardNumber: 'EC23',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(47).production((pb) => pb.megacredits(-1).heat(2)).br;
-          b.corpBox('effect-action', (ce) => {
-            ce.effect('Heat is worth 2 M€ for standard projects.', (eb) => eb.text('SP').startEffect.heat(1).equals().megacredits(2));
-            ce.action('Raise Venus 1 step.', (eb) => eb.empty().startAction.venus(1));
-          });
+          b.cards(2).nbsp.minus().tr(2).br;
+          b.effect('You may use heat as 2 M€ for standard projects.', (eb) => eb.text('SP').startEffect.heat(1).equals().megacredits(2)).br;
+          b.action('Raise Venus 1 step.', (eb) => eb.empty().startAction.venus(1));
         }),
-        description: 'You start with 47 M\u20ac and -2 TR. Draw 2 cards.',
+        description: 'You start with 47 M\u20ac, -1 M\u20ac production, 2 heat production, and -2 TR. Draw 2 cards.',
       },
     });
   }

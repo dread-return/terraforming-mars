@@ -25,21 +25,19 @@ export class Jovicorp extends CorporationCard implements ICorporationCard {
         cardNumber: 'EC15',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(44).production((pb) => pb.megacredits(1)).br;
-          b.corpBox('effect-action', (ce) => {
-            ce.effect('You may claim milestones for one unit less than normally required.', (eb) => eb.milestone().startEffect.text('-1'));
-            ce.action('Draw a card, steal a floater from an opponent\'s Jovian card, or steal a titanium.', (eb) => eb.empty().startAction.cards(1).slash().resource(CardResource.FLOATER, {all}).slash().titanium(1, {all}));
-          });
+          b.effect('You may claim milestones for one unit less than normally required.', (eb) => eb.milestone().startEffect.text('-1')).br;
+          b.action('Draw a card, steal a floater from an opponent\'s card, or steal a titanium.', (eb) => eb.empty().startAction.cards(1).slash().resource(CardResource.FLOATER, {all}).slash().titanium(1, {all}));
         }),
         description: 'You start with 44 M\u20ac and 1 M\u20ac production.',
       },
     });
   }
 
-  private jovianFloaterCards(player: IPlayer): Array<[IPlayer, ICard]> {
+  private floaterCards(player: IPlayer): Array<[IPlayer, ICard]> {
     const result: Array<[IPlayer, ICard]> = [];
     for (const p of player.opponents) {
       for (const c of p.getResourceCards(CardResource.FLOATER)) {
-        if (c.tags.includes(Tag.JOVIAN) && c.resourceCount > 0 && !c.protectedResources) {
+        if (c.resourceCount > 0 && !c.protectedResources) {
           result.push([p, c]);
         }
       }
@@ -54,10 +52,10 @@ export class Jovicorp extends CorporationCard implements ICorporationCard {
       player.drawCard();
       return undefined;
     })];
-    const sources = this.jovianFloaterCards(player);
+    const sources = this.floaterCards(player);
     const mine = player.getResourceCards(CardResource.FLOATER);
     if (sources.length > 0 && mine.length > 0) {
-      opts.push(new SelectOption('Steal a floater from an opponent\'s Jovian card').andThen(() => {
+      opts.push(new SelectOption('Steal a floater from an opponent\'s card').andThen(() => {
         return new SelectCard('Take a floater from', 'Select', sources.map(([, c]) => c)).andThen(([from]) => {
           const owner = sources.find(([, c]) => c === from)?.[0];
           if (owner === undefined) {

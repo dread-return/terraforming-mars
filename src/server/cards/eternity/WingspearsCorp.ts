@@ -27,10 +27,8 @@ export class WingspearsCorp extends CorporationCard implements ICorporationCard 
         cardNumber: 'EC24',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(38).cards(2, {secondaryTag: Tag.PLANT}).br;
-          b.corpBox('effect-action', (ce) => {
-            ce.effect('After a greenery, your next animal card ignores global reqs.', (eb) => eb.greenery({withO2: false}).startEffect.tag(Tag.ANIMAL).asterix());
-            ce.action('Remove a plant card from play.', (eb) => eb.tag(Tag.PLANT).asterix().startAction.production((pb) => pb.plants(1).megacredits(1)).cards(2, {digit}));
-          });
+          b.effect('After a greenery, your next animal card ignores global reqs.', (eb) => eb.greenery({withO2: false}).startEffect.tag(Tag.ANIMAL).asterix()).br;
+          b.action('Remove from the game one of your cards in play with a plant tag. Increase your plant and M€ production 1 step each, and draw 2 cards.', (eb) => eb.tag(Tag.PLANT).asterix().startAction.production((pb) => pb.plants(1).megacredits(1)).cards(2, {digit}));
         }),
         description: 'First action: draw 2 plant cards.',
       },

@@ -10,7 +10,7 @@ export class ColonizationProject extends PreludeCard {
     super({
       name: CardName.COLONIZATION_PROJECT,
       tags: [Tag.PLANT, Tag.CITY],
-      startingMegacredits: -4,
+      startingMegacredits: -8,
       behavior: {
         greenery: {},
         city: {on: 'isolated'},
@@ -18,18 +18,18 @@ export class ColonizationProject extends PreludeCard {
       metadata: {
         cardNumber: 'EP07',
         renderData: CardRenderer.builder((b) => {
-          b.greenery().city().asterix().megacredits(-4);
+          b.greenery().city().asterix().megacredits(-8);
         }),
-        description: 'Place a greenery tile. Place a city tile not adjacent to any other tile. Pay 4 M\u20ac.',
+        description: 'Place a greenery tile. Place a city tile not adjacent to any other tile. Pay 8 M\u20ac.',
       },
     });
   }
 
   public override bespokeCanPlay(player: IPlayer) {
-    return player.canAfford(4);
+    return player.canAfford(8);
   }
   public override bespokePlay(player: IPlayer) {
-    player.game.defer(new SelectPaymentDeferred(player, 4));
+    player.game.defer(new SelectPaymentDeferred(player, 8));
     return undefined;
   }
 }

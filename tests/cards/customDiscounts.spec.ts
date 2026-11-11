@@ -40,10 +40,9 @@ const NOT_DISPLAYED: ReadonlyArray<CardName> = [
   CardName.NUCLEAR_MARTIAN_SUMMIT,
   CardName.EMF_CONNECTION,
   CardName.CALLISTO_FIELD_ARRAYS,
-  // Eternity: only this generation, only right after the prelude, or once per card for either of two tags.
+  // Eternity: only this generation, only right after the prelude, or depends on the card played.
   CardName.CRYPTO_PONZI_SCHEME,
   CardName.MARS_ROVER_EXPLORING_MISSION,
-  CardName.TERRAFORMING_CONTROL_STATION_E,
   CardName.CASH_CO,
   // Eternity: Greeting Card's discount only applies to the card it revealed, this generation.
   CardName.GREETING_CARD,

@@ -23,9 +23,8 @@ export class HiddenAgendaRevealed extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E18',
         renderData: CardRenderer.builder((b) => {
-          b.text('Reveal your hand. Name a tag. Reveal 12 cards and buy any with that tag.', {size: Size.SMALL, isBold: false});
+          b.text('Reveal your hand. Name a tag. Reveal the top 12 cards of the deck, buy any with that tag at the normal price, and discard the rest.', {size: Size.SMALL, isBold: false});
         }),
-        description: 'It must be generation 8 or earlier. Reveal your hand. Name a tag, reveal 12 cards and buy any of them with that tag at the normal price. Discard the rest.',
       },
     });
   }

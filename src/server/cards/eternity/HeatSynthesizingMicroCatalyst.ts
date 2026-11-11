@@ -22,16 +22,12 @@ export class HeatSynthesizingMicroCatalyst extends Card implements IProjectCard 
       resourceType: CardResource.FLOATER,
       requirements: [{venus: 8}, {temperature: 0}],
       victoryPoints: {resourcesHere: {}, per: 2},
-      behavior: {
-        addResourcesToAnyCard: [{count: 1, type: CardResource.MICROBE}, {count: 1, type: CardResource.FLOATER}],
-      },
       metadata: {
         cardNumber: 'E75',
         renderData: CardRenderer.builder((b) => {
           b.action(undefined, (eb) => eb.heat(5, {digit}).startAction.resource(CardResource.MICROBE, {amount: 3, digit}).asterix()).br;
           b.or().br;
-          b.action('Spend 5 heat for 3 microbes OR 12 heat for 4 floaters, spread over your cards.', (eb) => eb.heat(12, {digit}).startAction.resource(CardResource.FLOATER, {amount: 4, digit}).asterix()).br;
-          b.resource(CardResource.MICROBE).asterix().resource(CardResource.FLOATER).asterix();
+          b.action('Spend 5 heat for 3 microbes OR 12 heat for 4 floaters, spread over your cards.', (eb) => eb.heat(12, {digit}).startAction.resource(CardResource.FLOATER, {amount: 4, digit}).asterix());
         }),
       },
     });

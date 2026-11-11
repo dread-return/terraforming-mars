@@ -4,8 +4,7 @@ import {CardType} from '../../../common/cards/CardType';
 import {Card} from '../Card';
 import {IProjectCard} from '../IProjectCard';
 import {Tag} from '../../../common/cards/Tag';
-import {all} from '../Options';
-import {digit} from '../Options';
+import {all, digit} from '../Options';
 
 export class OverheatedAsteroid extends Card implements IProjectCard {
   constructor() {

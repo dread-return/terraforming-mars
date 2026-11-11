@@ -1,4 +1,5 @@
 import {ActionCard} from '../ActionCard';
+import {AltSecondaryTag} from '../../../common/cards/render/AltSecondaryTag';
 import {CardName} from '../../../common/cards/CardName';
 import {CardRenderer} from '../render/CardRenderer';
 import {CardRequirements} from '../requirements/CardRequirements';
@@ -32,7 +33,7 @@ export class BigCheats extends ActionCard implements IProjectCard {
           b.action('Pay 5 M€: remove a cheat counter anywhere.', (eb) => {
             eb.megacredits(5).startAction.minus().resource(CardResource.CHEAT).asterix();
           }).br;
-          b.cards(1, {secondaryTag: Tag.WILD}).asterix().megacredits(0, {text: 'x/2'});
+          b.cards(1, {secondaryTag: AltSecondaryTag.BLUE}).asterix().megacredits(0, {text: 'x/2'});
         }),
         description: 'Reveal cards until a blue card; take it and gain half its cost (round up). It may ignore tag and global requirements this generation: add a cheat counter here per tag and step ignored.',
       },

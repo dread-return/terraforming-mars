@@ -7,7 +7,6 @@ import {IProjectCard} from '../IProjectCard';
 import {OrOptions} from '../../inputs/OrOptions';
 import {PlayerInput} from '../../PlayerInput';
 import {SelectOption} from '../../inputs/SelectOption';
-import {Size} from '../../../common/cards/render/Size';
 import {Tag} from '../../../common/cards/Tag';
 
 export class InterplanetaryDomain extends Card implements IProjectCard {
@@ -22,8 +21,7 @@ export class InterplanetaryDomain extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'E80',
         renderData: CardRenderer.builder((b) => {
-          b.cards(1, {secondaryTag: Tag.MARS}).cards(1, {secondaryTag: Tag.EARTH}).cards(1, {secondaryTag: Tag.VENUS}).asterix().br;
-          b.text('Each costing less than 25 M€. Play any of them free, ignoring requirements.', {size: Size.SMALL, isBold: false});
+          b.cards(1, {secondaryTag: Tag.MARS}).cards(1, {secondaryTag: Tag.EARTH}).cards(1, {secondaryTag: Tag.VENUS}).asterix();
         }),
         description: 'Requires a Mars, an Earth and a Venus tag. Reveal cards until you reveal a Mars-tag, an Earth-tag and a Venus-tag card that each cost less than 25 M\u20ac. You may play each of them ignoring cost and requirements. Discard the rest.',
       },

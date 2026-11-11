@@ -27,11 +27,11 @@ export class SpaceBears extends ActionCard implements IProjectCard {
       metadata: {
         cardNumber: 'E119',
         renderData: CardRenderer.builder((b) => {
-          b.effect('Your microbe tags: 1 animal here.', (eb) => eb.tag(Tag.MICROBE).startEffect.resource(CardResource.ANIMAL)).br;
+          b.effect('When you play a microbe tag, including this, add 1 animal here.', (eb) => eb.tag(Tag.MICROBE).startEffect.resource(CardResource.ANIMAL)).br;
           b.action('Add an animal to any card.', (eb) => eb.empty().startAction.resource(CardResource.ANIMAL).asterix()).br;
           b.cards(1);
         }),
-        description: 'Draw a card. The effect counts this card.',
+        description: 'Draw a card.',
       },
     });
   }

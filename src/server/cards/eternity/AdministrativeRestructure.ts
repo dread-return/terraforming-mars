@@ -19,7 +19,6 @@ export class AdministrativeRestructure extends Card implements IProjectCard {
         renderData: CardRenderer.builder((b) => {
           b.text('For the rest of this generation, each player takes 1 action per turn instead of 2.', {size: Size.SMALL, isBold: false});
         }),
-        description: 'For the rest of this generation, each player only gets 1 action per turn (instead of 2).',
       },
     });
   }

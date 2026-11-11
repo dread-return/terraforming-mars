@@ -23,10 +23,8 @@ export class MiserVision extends CorporationCard implements ICorporationCard {
         renderData: CardRenderer.builder((b) => {
           b.megacredits(62).production((pb) => pb.megacredits(-1)).br;
           b.text('Production phase: discard all but 1 card.', {size: Size.SMALL, isBold: false}).br;
-          b.corpBox('effect-action', (ce) => {
-            ce.action('Draw 2 cards if your hand is empty.', (eb) => eb.text('0').cards(1).startAction.cards(2));
-            ce.effect('Gain 2 M€ per standard project (not Sell Patents).', (eb) => eb.text('SP').startEffect.megacredits(2));
-          });
+          b.action('Draw 2 cards if your hand is empty.', (eb) => eb.text('0').cards(1).startAction.cards(2)).br;
+          b.effect('Gain 2 M€ per standard project (not Sell Patents).', (eb) => eb.text('SP').startEffect.megacredits(2));
         }),
         description: 'You start with 62 M\u20ac and -1 M\u20ac production.',
       },

@@ -34,7 +34,7 @@
           <div class="card-production-box-row">
             <div class="card-production-box-row-item">
               <div class="card-item-container">
-                <div class="card-resource card-resource-plant"></div>
+                <div v-for="num in (requirement.count ?? 1)" :key="num" class="card-resource card-resource-plant"></div>
               </div>
             </div>
           </div>
@@ -42,6 +42,13 @@
         <div v-else-if="requirement.display === 'venusHabitat'" class="card-tile card-tile-venus-habitat tile-size--req"></div>
         <template v-else-if="requirement.display === 'generation'">
           generation&nbsp;{{ count }}
+        </template>
+        <template v-else-if="requirement.display === 'aerobatFloaters'">
+          4<div class="card-resource card-resource-floater et-req-res"></div><div class="card-resource-tag--S tag-jovian"></div>
+          &nbsp;4<div class="card-resource card-resource-floater et-req-res"></div><div class="card-resource-tag--S tag-venus"></div>*
+        </template>
+        <template v-else-if="requirement.display === 'maxOneEarthVenusJovian'">
+          max&nbsp;1&nbsp;<div class="card-resource-tag--S tag-earth"></div>/<div class="card-resource-tag--S tag-venus"></div>/<div class="card-resource-tag--S tag-jovian"></div>
         </template>
       </template>
       <template v-else>

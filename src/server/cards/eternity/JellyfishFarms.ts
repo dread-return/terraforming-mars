@@ -6,7 +6,6 @@ import {CardResource} from '../../../common/CardResource';
 import {IPlayer} from '../../IPlayer';
 import {PreludeCard} from '../prelude/PreludeCard';
 import {SelectSpace} from '../../inputs/SelectSpace';
-import {Size} from '../../../common/cards/render/Size';
 import {Space} from '../../boards/Space';
 import {Tag} from '../../../common/cards/Tag';
 
@@ -21,9 +20,9 @@ export class JellyfishFarms extends PreludeCard {
       metadata: {
         cardNumber: 'EP28',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.megacredits(3)).oceans(1).asterix().br.text('Anyone placing a tile next to it may add an animal to a card.', {size: Size.SMALL, isBold: false});
+          b.production((pb) => pb.megacredits(3)).oceans(1).tag(Tag.ANIMAL);
         }),
-        description: 'Increase your M\u20ac production 3 steps. Place an ocean tile and put a marker on it. Anyone placing a tile adjacent to this ocean may add an animal to a card.',
+        description: 'Increase your M\u20ac production 3 steps. Place an ocean tile and mark it with an animal tag. Anyone placing a tile adjacent to this ocean may add an animal to a card.',
       },
     });
   }

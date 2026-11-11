@@ -20,9 +20,8 @@ export class ColonyCluster extends Card implements IProjectCard {
         cardNumber: 'E57',
         renderData: CardRenderer.builder((b) => {
           b.colonies(1).colonies(1).asterix().br;
-          b.text('Place a colony and a neutral colony on one tile; collect both placement bonuses.', {size: Size.SMALL, isBold: false});
+          b.text('Place a colony and a neutral colony on the same colony tile. Collect both placement bonuses.', {size: Size.SMALL, isBold: false});
         }),
-        description: 'Place a colony and a neutral colony on the same colony tile. Collect both placement bonuses.',
       },
     });
   }

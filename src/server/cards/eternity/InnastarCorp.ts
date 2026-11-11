@@ -20,10 +20,8 @@ export class InnastarCorp extends CorporationCard implements ICorporationCard {
         cardNumber: 'EC13',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(31).production((pb) => pb.megacredits(2)).br;
-          b.corpBox('effect-action', (ce) => {
-            ce.effect('When you perform a standard project, except selling patents, gain 2 M€.', (eb) => eb.text('SP').startEffect.megacredits(2));
-            ce.action('Perform a standard project for 8 M€ less.', (eb) => eb.empty().startAction.text('SP').megacredits(-8));
-          });
+          b.effect('When you perform a standard project, except selling patents, gain 2 M€.', (eb) => eb.text('SP').startEffect.megacredits(2)).br;
+          b.action('Perform a standard project for 8 M€ less.', (eb) => eb.empty().startAction.text('SP').megacredits(-8));
         }),
         description: 'You start with 31 M\u20ac and 2 M\u20ac production.',
       },

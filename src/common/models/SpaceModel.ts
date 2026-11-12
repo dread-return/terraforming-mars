@@ -5,6 +5,7 @@ import {SpaceType} from '../boards/SpaceType';
 import {SpaceId} from '../Types';
 import {UndergroundResourceToken} from '../underworld/UndergroundResourceToken';
 import {SpaceCube} from '../boards/SpaceCube';
+import {TileUpgrade} from '../domesWilderness/DomesWilderness';
 
 export type SpaceHighlight = undefined | 'noctis' | 'volcanic';
 
@@ -15,6 +16,8 @@ export type SpaceModel = {
   bonus: Array<SpaceBonus>;
   color?: Color;
   tileType?: TileType;
+  /** A dome on a city or a wilderness on a greenery. Absent when the tile has no upgrade. */
+  upgrade?: TileUpgrade;
   cube?: SpaceCube;
   highlight?: SpaceHighlight;
   rotated?: true; // Absent or true

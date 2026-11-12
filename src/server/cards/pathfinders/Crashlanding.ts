@@ -15,6 +15,7 @@ import {SelectOption} from '../../inputs/SelectOption';
 import {Tile} from '../../Tile';
 import {CrashlandingBonus} from '../../pathfinders/CrashlandingBonus';
 import {message} from '../../logs/MessageBuilder';
+import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 
 export class Crashlanding extends Card implements IProjectCard {
   constructor() {
@@ -47,7 +48,7 @@ export class Crashlanding extends Card implements IProjectCard {
   private playableSpaces(player: IPlayer, canAffordOptions?: CanAffordOptions): Array<Space> {
     const board = player.game.board;
     const spaces = board.getAvailableSpacesOnLand(player, canAffordOptions);
-    return spaces.filter((space) => board.getAdjacentSpaces(space).filter(Board.isCitySpace).length <= 1);
+    return spaces.filter((space) => DomesWilderness.countCities(board.getAdjacentSpaces(space).filter(Board.isCitySpace)) <= 1);
   }
 
   public override bespokeCanPlay(player: IPlayer, canAffordOptions: CanAffordOptions): boolean {

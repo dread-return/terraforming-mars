@@ -6,6 +6,8 @@ import {SelectSpace} from '../../../inputs/SelectSpace';
 import {Units} from '../../../../common/Units';
 import {message} from '../../../logs/MessageBuilder';
 import {IdesOfMars} from '../../idesofmars/IdesOfMars';
+import {DomesWilderness} from '../../../domesWilderness/DomesWilderness';
+import {OrOptions} from '../../../inputs/OrOptions';
 
 
 export class ConvertPlants extends StandardActionCard {
@@ -24,6 +26,10 @@ export class ConvertPlants extends StandardActionCard {
   }
 
   public canAct(player: IPlayer): boolean {
+    return this.canPlaceGreenery(player) || DomesWilderness.wildernessSpacesForPlants(player).length > 0;
+  }
+
+  private canPlaceGreenery(player: IPlayer): boolean {
     // Insect Pollinators (Ides of Mars) can make some spaces cheaper.
     if (IdesOfMars.affordableGreenerySpaces(player).length === 0) {
       return false;
@@ -41,7 +47,7 @@ export class ConvertPlants extends StandardActionCard {
   }
 
   public action(player: IPlayer) {
-    return new SelectSpace(
+    const place = this.canPlaceGreenery(player) ? new SelectSpace(
       message('Convert ${0} plants into greenery', (b) => b.number(IdesOfMars.minPlantsForGreenery(player))),
       IdesOfMars.affordableGreenerySpaces(player))
       .andThen((space) => {
@@ -50,6 +56,21 @@ export class ConvertPlants extends StandardActionCard {
         player.game.addGreenery(player, space);
         player.plants -= plants;
         return undefined;
+      }) : undefined;
+
+    // Domes and Wilderness: the plants can upgrade a greenery to a wilderness instead.
+    const wildernessSpaces = DomesWilderness.wildernessSpacesForPlants(player);
+    if (wildernessSpaces.length === 0 && place !== undefined) {
+      return place;
+    }
+    const wilderness = new SelectSpace(message('Convert plants into a wilderness on one of your greeneries'), wildernessSpaces)
+      .andThen((space) => {
+        const plants = IdesOfMars.plantsForGreeneryOn(player, space);
+        this.actionUsed(player);
+        player.plants -= plants;
+        DomesWilderness.upgrade(player, space, 'wilderness');
+        return undefined;
       });
+    return place === undefined ? wilderness : new OrOptions(place, wilderness);
   }
 }

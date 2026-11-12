@@ -7,6 +7,7 @@ import {CardRenderer} from '../render/CardRenderer';
 import {IPlayer} from '../../IPlayer';
 import {PartyName} from '../../../common/turmoil/PartyName';
 import {greeneries} from './RobAntillesRender';
+import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 
 export class TempleOfGaiaAtElysium extends Card implements IProjectCard {
   constructor() {
@@ -36,6 +37,6 @@ export class TempleOfGaiaAtElysium extends Card implements IProjectCard {
   }
 
   public override getVictoryPoints(player: IPlayer) {
-    return Math.floor(player.game.board.getGreeneries(player).length / 3);
+    return Math.floor(DomesWilderness.countGreeneries(player.game.board.getGreeneries(player)) / 3);
   }
 }

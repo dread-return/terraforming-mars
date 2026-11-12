@@ -34,6 +34,8 @@ export type GameOptions = {
   politicalAgendasExtension: AgendaStyle;
   // Turmoil add-on: the six GIGA parties (6 of the 12 parties are drafted), two bonuses and policies per GIGA party, and the chairman reward wheel.
   gigaTurmoil: boolean;
+  /** Domes and Wilderness (Epic): Dome and Wilderness standard projects, plus the option to upgrade a city or greenery instead of placing a new one. */
+  domesWilderness: boolean;
   solarPhaseOption: boolean;
   removeNegativeGlobalEventsOption: boolean;
   moonExpansion: boolean;
@@ -155,6 +157,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   pathfindersExpansion: false,
   politicalAgendasExtension: 'Standard',
   gigaTurmoil: false,
+  domesWilderness: false,
   preludeDraftVariant: false,
   ceosDraftVariant: false,
   preludeExtension: false,

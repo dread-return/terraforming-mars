@@ -12,6 +12,7 @@ import {Resource} from '../../../common/Resource';
 import {Board} from '../../boards/Board';
 import {RobAntillesTiles} from '../robantilles/RobAntillesTiles';
 import {AddResourcesToCard} from '../../deferredActions/AddResourcesToCard';
+import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 
 export class Menagerie extends Card implements IProjectCard {
   constructor() {
@@ -41,7 +42,7 @@ export class Menagerie extends Card implements IProjectCard {
   public override bespokePlay(player: IPlayer) {
     return RobAntillesTiles.place(player, this.name, TileType.MENAGERIE, RobAntillesTiles.ownTiles(player, TileType.GREENERY),
       [SpaceBonus.ANIMAL], 'Select one of your greenery tiles for the Menagerie', (space) => {
-        const greeneries = player.game.board.getAdjacentSpaces(space).filter(Board.isGreenerySpace).length;
+        const greeneries = DomesWilderness.countGreeneries(player.game.board.getAdjacentSpaces(space).filter(Board.isGreenerySpace));
         if (greeneries > 0) {
           player.production.add(Resource.MEGACREDITS, greeneries, {log: true});
           player.game.defer(new AddResourcesToCard(player, CardResource.ANIMAL, {count: greeneries}));

@@ -1382,6 +1382,10 @@ export enum CardName {
   PLANT_INDUSTRY_STANDARD_PROJECT = 'Plant Industry:SP',
   TITANIUM_INDUSTRY_STANDARD_PROJECT = 'Titanium Industry:SP',
   RANDOM_INDUSTRY_STANDARD_PROJECT = 'Random Industry:SP',
+
+  // Domes and Wilderness (Epic)
+  DOME_STANDARD_PROJECT = 'Dome:SP',
+  WILDERNESS_STANDARD_PROJECT = 'Wilderness:SP',
   OVDA_REGIO_MASS_DRIVER = 'Ovda Regio Mass Driver',
   ATMO_SEQUESTER = 'Atmo Sequester',
   SOLAR_WIND_TRAP = 'Solar Wind Trap',

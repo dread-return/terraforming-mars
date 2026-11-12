@@ -171,6 +171,7 @@ export class ApiCreateGame extends Handler {
         // With Giga Turmoil the chairman always chooses the bonus and policy.
         politicalAgendasExtension: gigaTurmoil ? 'Chairman' : gameReq.politicalAgendasExtension,
         gigaTurmoil: gigaTurmoil,
+        domesWilderness: gameReq.domesWilderness === true,
         prelude2Expansion: gameReq.expansions.prelude2,
         preludeDraftVariant: gameReq.preludeDraftVariant,
         preludeExtension: gameReq.expansions.prelude,

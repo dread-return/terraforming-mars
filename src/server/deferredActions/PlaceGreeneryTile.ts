@@ -4,6 +4,7 @@ import {DeferredAction} from './DeferredAction';
 import {Priority} from './Priority';
 import {PlacementType} from '../boards/PlacementType';
 import {Space} from '../boards/Space';
+import {DomesWilderness} from '../domesWilderness/DomesWilderness';
 
 export class PlaceGreeneryTile extends DeferredAction<Space | undefined> {
   constructor(
@@ -17,17 +18,13 @@ export class PlaceGreeneryTile extends DeferredAction<Space | undefined> {
     const board = this.player.game.board;
     const spacesForType = board.getAvailableSpacesForType(this.player, this.on);
     const filtered = board.filterSpacesAroundRedCity(spacesForType);
-    if (filtered.length === 0) {
-      this.cb(undefined);
-      return undefined;
-    }
-
-    return new SelectSpace(this.getTitle(), filtered)
+    const place = filtered.length === 0 ? undefined : new SelectSpace(this.getTitle(), filtered)
       .andThen((space) => {
         this.player.game.addGreenery(this.player, space);
         this.cb(space);
         return undefined;
       });
+    return DomesWilderness.withAlternative(this.player, 'greenery', {on: this.on}, place, this.cb);
   }
 
   private getTitle() {

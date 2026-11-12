@@ -33,6 +33,18 @@ describe('BoardSpaceTile', () => {
     },
   });
 
+  it('draws a dome in place of the city under it', () => {
+    const wrapper = mount({id: '10', tileType: TileType.CITY, spaceType: SpaceType.LAND, upgrade: 'dome'});
+    expect(wrapper.classes()).to.include('board-space-tile--dome');
+    expect(wrapper.classes()).to.not.include('board-space-tile--city');
+  });
+
+  it('draws a wilderness in place of the greenery under it', () => {
+    const wrapper = mount({id: '10', tileType: TileType.GREENERY, spaceType: SpaceType.LAND, upgrade: 'wilderness'});
+    expect(wrapper.classes()).to.include('board-space-tile--wilderness');
+    expect(wrapper.classes()).to.not.include('board-space-tile--greenery');
+  });
+
   it('draws a city on a colony space with the space city tile', () => {
     const wrapper = mount({id: 'c01', tileType: TileType.CITY, spaceType: SpaceType.COLONY});
     expect(wrapper.classes()).to.include('board-space-tile--space-city');

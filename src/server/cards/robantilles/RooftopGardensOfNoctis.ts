@@ -6,6 +6,7 @@ import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
 import {IPlayer} from '../../IPlayer';
 import {cities} from '../render/DynamicVictoryPoints';
+import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 
 export class RooftopGardensOfNoctis extends Card implements IProjectCard {
   constructor() {
@@ -33,6 +34,6 @@ export class RooftopGardensOfNoctis extends Card implements IProjectCard {
   }
 
   public override getVictoryPoints(player: IPlayer) {
-    return player.game.board.getCitiesOnMars(player).length;
+    return DomesWilderness.countCities(player.game.board.getCitiesOnMars(player));
   }
 }

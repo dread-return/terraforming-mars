@@ -1,5 +1,6 @@
 import {IPlayer} from '../../IPlayer';
 import {IAward} from '../IAward';
+import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 
 export class Constructor implements IAward {
   public readonly name = 'Constructor';
@@ -7,6 +8,6 @@ export class Constructor implements IAward {
   public readonly automaDescription = 'Cities + colonies (cubes on Space #7, #10 and Energy #8 each build a colony)';
 
   public getScore(player: IPlayer): number {
-    return player.getColoniesCount() + player.game.board.getCities(player).length;
+    return player.getColoniesCount() + DomesWilderness.countCities(player.game.board.getCities(player));
   }
 }

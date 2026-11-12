@@ -24,6 +24,7 @@ export type GameOptionsModel = {
   ceosDraftVariant: boolean,
   politicalAgendasExtension: AgendaStyle,
   gigaTurmoil: boolean,
+  domesWilderness: boolean,
   removeNegativeGlobalEvents: boolean,
   showOtherPlayersVP: boolean,
   showTimers: boolean,

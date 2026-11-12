@@ -225,6 +225,12 @@ const TILE_CLASSES: Record<TileType, Classes> = {
   [TileType.INDUSTRY_RANDOM]: {
     tile: 'card-tile-industry-random',
   },
+  [TileType.DOME]: {
+    tile: 'card-tile-dome',
+  },
+  [TileType.WILDERNESS]: {
+    tile: 'card-tile-wilderness',
+  },
 };
 
 export default defineComponent({

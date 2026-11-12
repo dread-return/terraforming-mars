@@ -7,6 +7,8 @@ import {Game} from '../../../../src/server/Game';
 import {PoliticalAgendas} from '../../../../src/server/turmoil/PoliticalAgendas';
 import {Reds} from '../../../../src/server/turmoil/parties/Reds';
 import {MAX_OXYGEN_LEVEL} from '../../../../src/common/constants';
+import {SelectSpace} from '../../../../src/server/inputs/SelectSpace';
+import {cast} from '../../../../src/common/utils/utils';
 
 describe('ConvertPlants', () => {
   let card: ConvertPlants;
@@ -41,7 +43,7 @@ describe('ConvertPlants', () => {
     player.plants = 8;
 
     expect(card.canAct(player)).eq(true);
-    const action = card.action(player);
+    const action = cast(card.action(player), SelectSpace);
     expect(action).not.eq(undefined);
     action.cb(action.spaces[0]);
 

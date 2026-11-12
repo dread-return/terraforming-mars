@@ -5,6 +5,7 @@ import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
 import {IPlayer} from '../../IPlayer';
+import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 
 export class Slum extends Card implements IProjectCard {
   constructor() {
@@ -32,6 +33,6 @@ export class Slum extends Card implements IProjectCard {
   }
 
   public override bespokeCanPlay(player: IPlayer) {
-    return player.game.board.getCitiesOnMars().length <= 3;
+    return DomesWilderness.countCities(player.game.board.getCitiesOnMars()) <= 3;
   }
 }

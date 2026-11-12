@@ -21,6 +21,7 @@ import {PartyHooks} from '../turmoil/parties/PartyHooks';
 import {message} from '../logs/MessageBuilder';
 import {Units} from '../../common/Units';
 import {PRODUCTION_MINIMUMS} from '../../common/constants';
+import {DomesWilderness} from '../domesWilderness/DomesWilderness';
 
 export class AresHandler {
   private constructor() {}
@@ -165,7 +166,7 @@ export class AresHandler {
   }
 
   public static computePlacementCosts(player: IPlayer, board: Board, space: Space, subjectToHazardAdjacency: boolean): AdjacencyCost {
-    if (player.tableau.has(CardName.ATHENA)) {
+    if (player.tableau.has(CardName.ATHENA) || DomesWilderness.protectedFromHazards(player, space)) {
       subjectToHazardAdjacency = false;
     }
 

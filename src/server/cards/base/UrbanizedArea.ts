@@ -12,6 +12,7 @@ import {LoseProduction} from '../../deferredActions/LoseProduction';
 import {Resource} from '../../../common/Resource';
 import {MarsBoard} from '../../boards/MarsBoard';
 import {Units} from '../../../common/Units';
+import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 
 export class UrbanizedArea extends Card implements IProjectCard {
   constructor() {
@@ -43,7 +44,7 @@ export class UrbanizedArea extends Card implements IProjectCard {
 
   private getAvailableSpaces(player: IPlayer, canAffordOptions?: CanAffordOptions): ReadonlyArray<Space> {
     return player.game.board.getAvailableSpacesOnLand(player, canAffordOptions)
-      .filter((space) => player.game.board.getAdjacentSpaces(space).filter((adjacentSpace) => Board.isCitySpace(adjacentSpace)).length >= 2);
+      .filter((space) => DomesWilderness.countCities(player.game.board.getAdjacentSpaces(space).filter((adjacentSpace) => Board.isCitySpace(adjacentSpace))) >= 2);
   }
 
   public override bespokeCanPlay(player: IPlayer, canAffordOptions: CanAffordOptions): boolean {

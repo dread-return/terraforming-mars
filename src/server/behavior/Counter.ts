@@ -11,6 +11,7 @@ import {once} from './Lazy';
 import {Turmoil} from '../turmoil/Turmoil';
 import {CardName} from '../../common/cards/CardName';
 import {Tag} from '../../common/cards/Tag';
+import {DomesWilderness} from '../domesWilderness/DomesWilderness';
 
 /**
  * Counts things in game state.
@@ -113,14 +114,14 @@ export class Counter implements ICounter {
       const p = (countable.all === false) ? player : undefined;
       switch (countable.cities.where) {
       case 'offmars':
-        sum += maybeAdjacentSpaces(game.board.getCitiesOffMars(p)).length;
+        sum += DomesWilderness.countCities(maybeAdjacentSpaces(game.board.getCitiesOffMars(p)));
         break;
       case 'onmars':
-        sum += maybeAdjacentSpaces(game.board.getCitiesOnMars(p)).length;
+        sum += DomesWilderness.countCities(maybeAdjacentSpaces(game.board.getCitiesOnMars(p)));
         break;
       case 'everywhere':
       default:
-        sum += maybeAdjacentSpaces(game.board.getCities(p)).length;
+        sum += DomesWilderness.countCities(maybeAdjacentSpaces(game.board.getCities(p)));
       }
     }
 
@@ -134,7 +135,7 @@ export class Counter implements ICounter {
 
     if (countable.greeneries !== undefined) {
       const p = (countable.all === false) ? player : undefined;
-      sum += maybeAdjacentSpaces(game.board.getGreeneries(p)).length;
+      sum += DomesWilderness.countGreeneries(maybeAdjacentSpaces(game.board.getGreeneries(p)));
     }
     if (countable.tag !== undefined) {
       const tag = countable.tag;

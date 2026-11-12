@@ -10,6 +10,7 @@ import {Space} from '../../boards/Space';
 import {Resource} from '../../../common/Resource';
 import {all} from '../Options';
 import {Size} from '@/common/cards/render/Size';
+import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 
 const SPACE_CITIES = [
   SpaceName.GANYMEDE_COLONY,
@@ -95,7 +96,7 @@ export class StarVegas extends Card {
         const id = space.id as SpaceCity;
         const cardName = spaceCityNames[id];
         game.log('${0} placed ${1} on ${2}', (b) => b.player(player).cardName(this.name).cardName(cardName));
-        player.production.add(Resource.MEGACREDITS, (game.board.getCities()).length, {log: true});
+        player.production.add(Resource.MEGACREDITS, DomesWilderness.countCities(game.board.getCities()), {log: true});
         if (space.tile !== undefined) { // Should not happen
           space.tile.card = this.name;
         }

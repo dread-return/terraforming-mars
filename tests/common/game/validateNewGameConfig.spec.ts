@@ -57,6 +57,7 @@ function newGameConfig(overrides: Partial<NewGameConfig> = {}): NewGameConfig {
     aresExtremeVariant: false,
     politicalAgendasExtension: 'Standard',
     gigaTurmoil: false,
+    domesWilderness: false,
     solarPhaseOption: false,
     removeNegativeGlobalEventsOption: false,
     modularMA: false,

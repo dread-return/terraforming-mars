@@ -478,6 +478,11 @@
               </label>
             </template>
 
+            <input type="checkbox" v-model="domesWilderness" id="domesWilderness-checkbox">
+            <label for="domesWilderness-checkbox">
+              <span v-i18n>Domes and Wilderness</span>&nbsp;<span class="tooltip" v-i18n data-tooltip="Adds the Dome (20 M€) and Wilderness (23 M€) standard projects, which upgrade one of your cities or greeneries. Cards and effects that place a city or greenery can upgrade instead.">&#9432;</span>
+            </label>
+
             <input type="checkbox" name="showOtherPlayersVP" v-model="showOtherPlayersVP" id="realTimeVP-checkbox">
             <label for="realTimeVP-checkbox">
               <span v-i18n>Show real-time VP</span>&nbsp;<a :href="wikiUrls.showRealtimeVP" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
@@ -830,6 +835,7 @@ export default defineComponent({
         aresExtremeVariant: this.aresExtremeVariant,
         politicalAgendasExtension: this.politicalAgendasExtension,
         gigaTurmoil: this.gigaTurmoil,
+        domesWilderness: this.domesWilderness,
         undoOption: this.undoOption,
         showTimers: this.showTimers,
         fastModeOption: this.fastModeOption,

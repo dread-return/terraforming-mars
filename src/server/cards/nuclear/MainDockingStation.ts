@@ -7,6 +7,7 @@ import {CardRenderer} from '../render/CardRenderer';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 import {SpaceName} from '../../../common/boards/SpaceName';
+import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 
 export class MainDockingStation extends Card implements IProjectCard {
   constructor() {
@@ -28,7 +29,7 @@ export class MainDockingStation extends Card implements IProjectCard {
   }
 
   public override bespokePlay(player: IPlayer) {
-    const count = player.game.board.getCitiesOnMars(player).length + 1;
+    const count = DomesWilderness.countCities(player.game.board.getCitiesOnMars(player)) + 1;
     player.production.add(Resource.MEGACREDITS, count, {log: true});
     return undefined;
   }

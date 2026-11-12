@@ -12,6 +12,7 @@ import {message} from '../../../logs/MessageBuilder';
 import {PlayerInput} from '../../../PlayerInput';
 import {Priority} from '../../../deferredActions/Priority';
 import {SimpleDeferredAction} from '../../../deferredActions/DeferredAction';
+import {DomesWilderness} from '../../../domesWilderness/DomesWilderness';
 
 /** The influence the player has in Turmoil. */
 export function influenceOf(player: IPlayer): number {
@@ -20,7 +21,7 @@ export function influenceOf(player: IPlayer): number {
 
 /** City tiles the player owns, anywhere on the board. */
 export function citiesOf(player: IPlayer): number {
-  return player.game.board.getCities(player).length;
+  return DomesWilderness.countCities(player.game.board.getCities(player));
 }
 
 /** Tags the player has, as counted by global events (wild tags do not apply, like the other global events). */

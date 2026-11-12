@@ -18,6 +18,7 @@ import {POLITICAL_AGENDAS_MAX_ACTION_USES} from '../../../common/constants';
 import {Board} from '../../boards/Board';
 import {TITLES} from '../../inputs/titles';
 import {message} from '../../logs/MessageBuilder';
+import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 
 export class Greens extends Party implements IParty {
   readonly name = PartyName.GREENS;
@@ -46,7 +47,7 @@ class GreensBonus02 extends Bonus {
 
   getScore(player: IPlayer) {
     const boardSpaces = player.game.board.spaces;
-    const count = boardSpaces.filter((space) => Board.isGreenerySpace(space) && Board.spaceOwnedBy(space, player)).length;
+    const count = DomesWilderness.countGreeneries(boardSpaces.filter((space) => Board.isGreenerySpace(space) && Board.spaceOwnedBy(space, player)));
     return count * 2;
   }
 

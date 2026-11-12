@@ -5,6 +5,7 @@ import {DeferredAction} from './DeferredAction';
 import {Priority} from './Priority';
 import {PlacementType} from '../boards/PlacementType';
 import {Message} from '../../common/logs/Message';
+import {DomesWilderness} from '../domesWilderness/DomesWilderness';
 
 export class PlaceCityTile extends DeferredAction<Space | undefined> {
   constructor(
@@ -22,16 +23,13 @@ export class PlaceCityTile extends DeferredAction<Space | undefined> {
     const spaces = this.options?.spaces || this.player.game.board.getAvailableSpacesForType(this.player, type);
     const title = this.options?.title ?? this.getTitle(type);
 
-    if (spaces.length === 0) {
-      this.cb(undefined);
-      return undefined;
-    }
-    return new SelectSpace(title, spaces)
+    const place = spaces.length === 0 ? undefined : new SelectSpace(title, spaces)
       .andThen((space) => {
         this.player.game.addCity(this.player, space);
         this.cb(space);
         return undefined;
       });
+    return DomesWilderness.withAlternative(this.player, 'city', this.options ?? {}, place, this.cb);
   }
 
   private getTitle(type: PlacementType) {

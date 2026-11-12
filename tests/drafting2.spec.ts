@@ -704,6 +704,7 @@ const stored = {
     'pathfindersExpansion': false,
     'politicalAgendasExtension': 'Standard',
     'gigaTurmoil': false,
+    'domesWilderness': false,
     'preludeDraftVariant': false,
     'preludeExtension': false,
     'prelude2Expansion': false,

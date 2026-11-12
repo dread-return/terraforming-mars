@@ -84,6 +84,8 @@ const tileTypeToCssClass: Record<TileType, string> = {
   [TileType.INDUSTRY_PLANT]: 'industry-plant',
   [TileType.INDUSTRY_TITANIUM]: 'industry-titanium',
   [TileType.INDUSTRY_RANDOM]: 'industry-random',
+  [TileType.DOME]: 'dome',
+  [TileType.WILDERNESS]: 'wilderness',
 };
 
 const tileTypeToCssClassAresOverride = new Map<TileType, string>([
@@ -148,6 +150,8 @@ const descriptions: Record<TileType, string> = {
   [TileType.INDUSTRY_PLANT]: 'Industry: raised your plant production. No adjacency bonus.',
   [TileType.INDUSTRY_TITANIUM]: 'Industry: raised your titanium production. No adjacency bonus.',
   [TileType.INDUSTRY_RANDOM]: 'Industry: raised a production of its owner\'s choice. No adjacency bonus.',
+  [TileType.DOME]: 'Dome: counts as two cities for cards and effects, and as one city when scoring.',
+  [TileType.WILDERNESS]: 'Wilderness: counts as two greeneries for cards and effects, and as one greenery when scoring.',
   [TileType.SEDIMENT]: 'Sediment: any player may place a city here, ignoring placement rules, and gain 3 M€. Adjacency bonus: 1 titanium.',
 };
 
@@ -190,9 +194,20 @@ export default defineComponent({
       // Colony spaces are the off-world city spaces; ids starting with 'v' are the Venus Phase 2 map.
       return this.spaceType === SpaceType.COLONY || this.space.id.startsWith('v');
     },
+    // Domes and Wilderness: a dome or wilderness is drawn in place of the city or greenery under it.
+    upgradeTileType(): TileType | undefined {
+      switch (this.space.upgrade) {
+      case 'dome': return TileType.DOME;
+      case 'wilderness': return TileType.WILDERNESS;
+      default: return undefined;
+      }
+    },
     description(): string {
       if (this.tileType === undefined) {
         return '';
+      }
+      if (this.upgradeTileType !== undefined) {
+        return descriptions[this.upgradeTileType];
       }
       if (this.isSpaceCity) {
         return 'City in space.';
@@ -208,6 +223,9 @@ export default defineComponent({
         }
         if (this.isSpaceCity) {
           cssClass = 'space-city';
+        }
+        if (this.upgradeTileType !== undefined) {
+          cssClass = tileTypeToCssClass[this.upgradeTileType];
         }
         // Special case Crashlanding rotation
         if (this.tileType === TileType.CRASHLANDING && this.space.rotated === true) {

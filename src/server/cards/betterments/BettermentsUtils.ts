@@ -2,6 +2,7 @@ import {IPlayer} from '../../IPlayer';
 import {Space} from '../../boards/Space';
 import {SpaceType} from '../../../common/boards/SpaceType';
 import {Board} from '../../boards/Board';
+import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 
 /**
  * Helpers shared by Corporate Betterments cards.
@@ -28,6 +29,6 @@ export class BettermentsUtils {
   }
 
   public static adjacentGreeneries(player: IPlayer, space: Space): number {
-    return player.game.board.getAdjacentSpaces(space).filter(Board.isGreenerySpace).length;
+    return DomesWilderness.countGreeneries(player.game.board.getAdjacentSpaces(space).filter(Board.isGreenerySpace));
   }
 }

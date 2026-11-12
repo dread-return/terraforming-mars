@@ -1,6 +1,7 @@
 import {IPlayer} from '../../IPlayer';
 import {InequalityRequirement} from './InequalityRequirement';
 import {RequirementType} from '../../../common/cards/RequirementType';
+import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 
 /**
  * Evaluate whether the number of greenery tiles on Mars is at least (or at most) a given value.
@@ -10,6 +11,6 @@ import {RequirementType} from '../../../common/cards/RequirementType';
 export class GreeneriesRequirement extends InequalityRequirement {
   public readonly type = RequirementType.GREENERIES;
   public override getScore(player: IPlayer): number {
-    return player.game.board.getGreeneries(this.all ? undefined : player).length;
+    return DomesWilderness.countGreeneries(player.game.board.getGreeneries(this.all ? undefined : player));
   }
 }

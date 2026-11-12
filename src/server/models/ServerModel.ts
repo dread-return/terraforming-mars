@@ -28,6 +28,7 @@ import {cardsToModel, coloniesToModel} from './ModelUtils';
 import {runId} from '../utils/server-ids';
 import {toName} from '../../common/utils/utils';
 import {MAX_AWARDS, MAX_MILESTONES} from '../../common/constants';
+import {DomesWilderness} from '../domesWilderness/DomesWilderness';
 
 export class Server {
   public static getSimpleGameModel(game: IGame): SimpleGameModel {
@@ -238,7 +239,7 @@ export class Server {
       cardCost: player.cardCost,
       cardDiscount: player.colonies.cardDiscount,
       cardsInHandNbr: player.cardsInHand.length,
-      citiesCount: game.board.getCities(player).length,
+      citiesCount: DomesWilderness.countCities(game.board.getCities(player)),
       coloniesCount: player.getColoniesCount(),
       color: player.color,
       energy: player.energy,
@@ -410,6 +411,9 @@ export class Server {
       if (tileType !== undefined) {
         model.tileType = tileType;
       }
+      if (space.tile?.upgrade !== undefined) {
+        model.upgrade = space.tile.upgrade;
+      }
       if (space.cube !== undefined) {
         model.cube = space.cube;
       }
@@ -492,6 +496,7 @@ export class Server {
       ceosDraftVariant: options.ceosDraftVariant,
       politicalAgendasExtension: options.politicalAgendasExtension,
       gigaTurmoil: options.gigaTurmoil,
+      domesWilderness: options.domesWilderness,
       removeNegativeGlobalEvents: options.removeNegativeGlobalEventsOption,
       showOtherPlayersVP: options.showOtherPlayersVP,
       showTimers: options.showTimers,

@@ -11,6 +11,7 @@ import {SerializedCard} from '../../SerializedCard';
 import {newProjectCard} from '../../createCard';
 import {Size} from '../../../common/cards/render/Size';
 import {uppercase} from '../Options';
+import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 
 export class OrganicWasteRecycling extends Card implements IProjectCard {
   constructor() {
@@ -45,7 +46,7 @@ export class OrganicWasteRecycling extends Card implements IProjectCard {
   }
 
   private cityCount(player: IPlayer) {
-    return player.game.board.getCities(player).length;
+    return DomesWilderness.countCities(player.game.board.getCities(player));
   }
 
   public canAct(player: IPlayer): boolean {

@@ -7,6 +7,7 @@ import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
 import {all} from '../Options';
 import {IPlayer} from '../../IPlayer';
+import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 
 export class NewHolland extends Card implements IProjectCard {
   constructor() {
@@ -40,7 +41,7 @@ export class NewHolland extends Card implements IProjectCard {
   }
 
   public override bespokeCanPlay(player: IPlayer): boolean {
-    return player.game.board.getCitiesOnMars().length >= 4;
+    return DomesWilderness.countCities(player.game.board.getCitiesOnMars()) >= 4;
   }
 }
 

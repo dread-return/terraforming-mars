@@ -99,6 +99,11 @@ export enum TileType {
     INDUSTRY_PLANT, // 67
     INDUSTRY_TITANIUM, // 68
     INDUSTRY_RANDOM, // 69
+
+    // Domes and Wilderness (Epic). Never placed on the board as a tile: a dome or wilderness is stored
+    // as `Tile.upgrade` on the city or greenery under it. These only give the standard projects their art.
+    DOME, // 70
+    WILDERNESS, // 71
   }
 
 export const tileTypeToString: Record<TileType, string> = {
@@ -173,6 +178,8 @@ export const tileTypeToString: Record<TileType, string> = {
   [TileType.INDUSTRY_PLANT]: 'Plant Industry',
   [TileType.INDUSTRY_TITANIUM]: 'Titanium Industry',
   [TileType.INDUSTRY_RANDOM]: 'Random Industry',
+  [TileType.DOME]: 'Dome',
+  [TileType.WILDERNESS]: 'Wilderness',
 } as const;
 
 export const HAZARD_TILES = new Set([TileType.DUST_STORM_MILD, TileType.DUST_STORM_SEVERE, TileType.EROSION_MILD, TileType.EROSION_SEVERE]);

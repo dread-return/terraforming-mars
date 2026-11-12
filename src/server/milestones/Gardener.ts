@@ -1,5 +1,6 @@
 import {BaseMilestone} from './IMilestone';
 import {IPlayer} from '../IPlayer';
+import {DomesWilderness} from '../domesWilderness/DomesWilderness';
 
 export class Gardener extends BaseMilestone {
   public readonly automaDescription = '3+ greenery tiles on board';
@@ -10,6 +11,6 @@ export class Gardener extends BaseMilestone {
       3);
   }
   public getScore(player: IPlayer): number {
-    return player.game.board.getGreeneries(player).length;
+    return DomesWilderness.countGreeneries(player.game.board.getGreeneries(player));
   }
 }

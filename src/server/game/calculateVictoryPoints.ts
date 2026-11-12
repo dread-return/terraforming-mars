@@ -9,6 +9,7 @@ import {VictoryPointsBreakdownBuilder} from './VictoryPointsBreakdownBuilder';
 import {FundedAward} from '../awards/FundedAward';
 import {AwardScorer} from '../awards/AwardScorer';
 import {CardName} from '../../common/cards/CardName';
+import {DomesWilderness} from '../domesWilderness/DomesWilderness';
 
 export function calculateVictoryPoints(player: IPlayer) {
   const builder = new VictoryPointsBreakdownBuilder();
@@ -33,7 +34,7 @@ export function calculateVictoryPoints(player: IPlayer) {
 
   // Apply the Vermin penalty to other players. Vermin owner is penalized by the card itself.
   if (player.game.verminInEffect && playerOwnsVermin === false) {
-    const cities = player.game.board.getCities(player).length;
+    const cities = DomesWilderness.countCities(player.game.board.getCities(player));
     builder.setVictoryPoints('victoryPoints', cities * -1, CardName.VERMIN);
     negativeVP -= cities;
   }

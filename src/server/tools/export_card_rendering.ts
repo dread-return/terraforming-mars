@@ -24,6 +24,7 @@ import {ClientAward, ClientMilestone} from '../../common/ma/ClientMilestoneAward
 import {CardType} from '../../common/cards/CardType';
 import {OneOrArray} from '../../common/utils/types';
 import {globalInitialize} from '../globalInitialize';
+import {GIGA_GLOBAL_EVENTS} from '../turmoil/giga/GigaGlobalEvents';
 
 type Mutable<T> = {
   -readonly [P in keyof T]: T[P];
@@ -125,6 +126,10 @@ class GlobalEventProcessor {
   public static json: Array<ClientGlobalEvent> = [];
   public static makeJson() {
     ALL_MODULE_MANIFESTS.forEach(this.processManifest);
+    // Giga Turmoil's global events are listed with Turmoil.
+    for (const cf of GlobalEventManifest.values(GIGA_GLOBAL_EVENTS)) {
+      GlobalEventProcessor.processGlobalEvent('turmoil', new cf.Factory());
+    }
   }
 
   private static processManifest(manifest: ModuleManifest) {

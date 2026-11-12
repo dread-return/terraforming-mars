@@ -19,13 +19,19 @@ type GlobalEventFactory = new () => IGlobalEvent;
 const ALL_EVENTS = new Map<GlobalEventName, GlobalEventFactory>();
 // A local copy supplied to prevent import cycles
 const ALL_MODULE_MANIFESTS: Array<ModuleManifest> = [];
+// The global events of Giga Turmoil. They are not part of a card module: they join the deck of every game that uses Giga Turmoil.
+let GIGA_EVENTS: GlobalEventManifest = {};
 
 // Only called once during setup. Call with ALL_MODULE_MANIFESTS
-export function initializeGlobalEventDealer(allModuleManifests: Array<ModuleManifest>) {
+export function initializeGlobalEventDealer(allModuleManifests: Array<ModuleManifest>, gigaEvents: GlobalEventManifest = {}) {
   if (ALL_EVENTS.size > 0) {
     return;
   }
   ALL_MODULE_MANIFESTS.push(...allModuleManifests);
+  GIGA_EVENTS = gigaEvents;
+  for (const card of GlobalEventManifest.entries(gigaEvents)) {
+    ALL_EVENTS.set(card[0], card[1].Factory);
+  }
   for (const manifest of allModuleManifests) {
     for (const card of GlobalEventManifest.entries(manifest.globalEvents)) {
       ALL_EVENTS.set(card[0], card[1].Factory);
@@ -92,6 +98,17 @@ export class GlobalEventDealer {
           continue;
         }
         if (isCompatibleWith(factory, game.gameOptions)) {
+          events.push(new factory.Factory());
+        }
+      }
+    }
+    if (gameOptions.turmoilExtension && gameOptions.gigaTurmoil) {
+      for (const card of GlobalEventManifest.entries(GIGA_EVENTS)) {
+        const factory = card[1];
+        if (gameOptions.removeNegativeGlobalEventsOption && factory.negative === true) {
+          continue;
+        }
+        if (isCompatibleWith(factory, gameOptions)) {
           events.push(new factory.Factory());
         }
       }

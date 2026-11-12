@@ -235,7 +235,8 @@ describe('Giga Turmoil', () => {
         finishDraft(game);
         const turmoil = Turmoil.getTurmoil(game);
         expect(turmoil.parties).includes(turmoil.rulingParty);
-        expect(turmoil.dominantParty).eq(turmoil.rulingParty);
+        // The first two global events place neutral delegates, which can change which party is dominant.
+        expect(turmoil.parties).includes(turmoil.dominantParty);
         expect(turmoil.chairman).eq('NEUTRAL');
         const agenda = PoliticalAgendas.currentAgenda(turmoil);
         expect(turmoil.rulingParty.bonuses.map((b) => b.id)).includes(agenda.bonusId);

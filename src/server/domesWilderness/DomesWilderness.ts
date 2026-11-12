@@ -11,6 +11,7 @@ import {OrOptions} from '../inputs/OrOptions';
 import {SelectSpace} from '../inputs/SelectSpace';
 import {PlayerInput} from '../PlayerInput';
 import {UpgradeTile} from '../deferredActions/UpgradeTile';
+import {IndividualTracks} from '../individualTracks/IndividualTracks';
 import {Units} from '../../common/Units';
 import {CardResource} from '../../common/CardResource';
 import {Resource} from '../../common/Resource';
@@ -171,5 +172,8 @@ export class DomesWilderness {
     // Giga's tile hook, which grantUpgradeBonuses runs).
     game.grantUpgradeBonuses(player, space);
     game.triggerForAllCards((p, c) => c.onTilePlaced?.(p, player, space, BoardType.MARS));
+    if (upgrade === 'dome') {
+      IndividualTracks.onCityPlaced(player);
+    }
   }
 }

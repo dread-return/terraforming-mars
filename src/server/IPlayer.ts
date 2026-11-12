@@ -28,6 +28,7 @@ import {OrOptions} from './inputs/OrOptions';
 import {Stock} from './player/Stock';
 import {UnderworldPlayerData} from '../common/underworld/UnderworldPlayerData';
 import {DeltaProjectPlayerModel} from '../common/models/DeltaProjectPlayerModel';
+import {IndividualTracksPlayerModel} from '../common/models/IndividualTracksPlayerModel';
 import {AlliedParty} from '../common/turmoil/Types';
 import {IParty} from './turmoil/parties/IParty';
 import {Message} from '../common/logs/Message';
@@ -194,6 +195,7 @@ export interface IPlayer {
 
   underworldData: UnderworldPlayerData;
   deltaProjectData?: DeltaProjectPlayerModel;
+  individualTracksData?: IndividualTracksPlayerModel;
   readonly alliedParty?: AlliedParty;
 
   tearDown(): void;

@@ -48,6 +48,7 @@ export function defaultCreateGameModel(): CreateGameModel {
     politicalAgendasExtension: 'Standard',
     gigaTurmoil: false,
     domesWilderness: false,
+    individualTracks: false,
     undoOption: false,
     showTimers: true,
     fastModeOption: false,

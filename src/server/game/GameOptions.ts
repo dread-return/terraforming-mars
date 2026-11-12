@@ -36,6 +36,8 @@ export type GameOptions = {
   gigaTurmoil: boolean;
   /** Domes and Wilderness (Epic): Dome and Wilderness standard projects, plus the option to upgrade a city or greenery instead of placing a new one. */
   domesWilderness: boolean;
+  /** Individual global parameter tracks (Epic): each player's markers on the oxygen, temperature, oceans and cities tracks, with rewards along the way. */
+  individualTracks: boolean;
   solarPhaseOption: boolean;
   removeNegativeGlobalEventsOption: boolean;
   moonExpansion: boolean;
@@ -158,6 +160,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   politicalAgendasExtension: 'Standard',
   gigaTurmoil: false,
   domesWilderness: false,
+  individualTracks: false,
   preludeDraftVariant: false,
   ceosDraftVariant: false,
   preludeExtension: false,

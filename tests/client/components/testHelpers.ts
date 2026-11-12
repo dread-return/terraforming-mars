@@ -59,6 +59,7 @@ export function fakeGameOptionsModel(overrides?: RecursivePartial<GameOptionsMod
     politicalAgendasExtension: 'Standard',
     gigaTurmoil: false,
     domesWilderness: false,
+    individualTracks: false,
     removeNegativeGlobalEvents: false,
     showOtherPlayersVP: false,
     showTimers: false,

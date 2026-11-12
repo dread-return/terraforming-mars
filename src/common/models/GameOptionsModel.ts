@@ -25,6 +25,7 @@ export type GameOptionsModel = {
   politicalAgendasExtension: AgendaStyle,
   gigaTurmoil: boolean,
   domesWilderness: boolean,
+  individualTracks: boolean,
   removeNegativeGlobalEvents: boolean,
   showOtherPlayersVP: boolean,
   showTimers: boolean,

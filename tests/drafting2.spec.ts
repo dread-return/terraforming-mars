@@ -705,6 +705,7 @@ const stored = {
     'politicalAgendasExtension': 'Standard',
     'gigaTurmoil': false,
     'domesWilderness': false,
+    'individualTracks': false,
     'preludeDraftVariant': false,
     'preludeExtension': false,
     'prelude2Expansion': false,

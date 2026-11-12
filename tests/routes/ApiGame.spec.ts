@@ -96,6 +96,7 @@ describe('ApiGame', () => {
           'politicalAgendasExtension': 'Standard',
           'gigaTurmoil': false,
           'domesWilderness': false,
+          'individualTracks': false,
           'preludeDraftVariant': false,
           'randomMA': 'No randomization',
           'removeNegativeGlobalEvents': false,

@@ -70,6 +70,8 @@ import {PreludesExpansion} from './preludes/PreludesExpansion';
 import {ChooseCards} from './deferredActions/ChooseCards';
 import {UnderworldPlayerData} from '../common/underworld/UnderworldPlayerData';
 import {DeltaProjectPlayerModel} from '../common/models/DeltaProjectPlayerModel';
+import {IndividualTracksPlayerModel} from '../common/models/IndividualTracksPlayerModel';
+import {IndividualTracks} from './individualTracks/IndividualTracks';
 import {UnderworldExpansion} from './underworld/UnderworldExpansion';
 import {Counter} from './behavior/Counter';
 import {TRSource} from '../common/cards/TRSource';
@@ -174,6 +176,7 @@ export class Player implements IPlayer {
   public trThisGeneration = 0;
   public underworldData: UnderworldPlayerData = UnderworldExpansion.initializePlayer();
   public deltaProjectData?: DeltaProjectPlayerModel;
+  public individualTracksData?: IndividualTracksPlayerModel;
   public standardProjectsThisGeneration: Set<CardName> = new Set();
   public projectCardsThisGeneration: Array<CardName> = [];
   public temporaryGlobalParameterRequirementBonus = 0;
@@ -538,6 +541,7 @@ export class Player implements IPlayer {
   public onGlobalParameterIncrease(parameter: GlobalParameter, steps: number): void {
     // Tracks this player's contribution to global parameters for end-of-game reporting.
     this.globalParameterSteps[parameter] += steps;
+    IndividualTracks.onGlobalParameterIncrease(this, parameter, steps);
   }
 
   public removeResourceFrom(card: ICard, count: number = 1, options?: {removingPlayer? : IPlayer, log?: boolean}): void {
@@ -924,6 +928,7 @@ export class Player implements IPlayer {
   public playCard(selectedCard: IProjectCard, payment?: Payment, cardAction: CardAction = 'add'): void {
     // Eternity: Big Cheats counts the requirements its card ignores.
     Eternity.beforeCardPlayed(this, selectedCard);
+    IndividualTracks.beforeCardPlayed(this, selectedCard);
     if (payment !== undefined) {
       this.pay(payment);
       Nuclear.onProjectCardPaid(this, selectedCard, payment);
@@ -1165,7 +1170,7 @@ export class Player implements IPlayer {
   }
 
   public claimableMilestones(): Array<IMilestone> {
-    if (this.game.allMilestonesClaimed()) {
+    if (this.game.allMilestonesClaimed() && !IndividualTracks.hasExtraClaim(this)) {
       return [];
     }
     const cost = this.milestoneCost();
@@ -1183,6 +1188,9 @@ export class Player implements IPlayer {
 
     const recordClaim = () => {
       this.game.log('${0} claimed ${1} milestone', (b) => b.player(this).milestone(milestone));
+      if (this.game.allMilestonesClaimed()) {
+        IndividualTracks.spendExtraClaim(this);
+      }
       this.game.claimedMilestones.push({
         player: this,
         milestone: milestone,
@@ -1757,7 +1765,7 @@ export class Player implements IPlayer {
 
     // Fund award
     const fundingCost = this.awardFundingCost();
-    if (this.canAfford(fundingCost) && !this.game.allAwardsFunded()) {
+    if (this.canAfford(fundingCost) && (!this.game.allAwardsFunded() || IndividualTracks.hasExtraClaim(this))) {
       const remainingAwards = new OrOptions()
         .setTitle(message('Fund an award (${0} M€)', (b) => b.number(fundingCost)))
         .setButtonLabel('Confirm');
@@ -1977,6 +1985,7 @@ export class Player implements IPlayer {
       result.lastCardPlayed = this.lastCardPlayed;
     }
     result.deltaProject = this.deltaProjectData;
+    result.individualTracks = this.individualTracksData;
     return result;
   }
 
@@ -2046,6 +2055,7 @@ export class Player implements IPlayer {
     player.dealtCeoCards = ceosFromJSON(d.dealtCeoCards);
     player.dealtProjectCards = cardsFromJSON(d.dealtProjectCards);
     player.deltaProjectData = d.deltaProject;
+    player.individualTracksData = d.individualTracks;
     player.cardsInHand = cardsFromJSON(d.cardsInHand);
     // I don't like "as IPreludeCard" but this is pretty safe.
     player.preludeCardsInHand = cardsFromJSON(d.preludeCardsInHand) as Array<IPreludeCard>;

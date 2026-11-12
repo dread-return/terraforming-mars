@@ -98,6 +98,7 @@ import {sanitizeEscapeVelocityOptions} from '@/common/game/escapeVelocity';
 import {ColoniesHandler} from './colonies/ColoniesHandler';
 import {IdesOfMars} from './cards/idesofmars/IdesOfMars';
 import {Nuclear} from './cards/nuclear/Nuclear';
+import {IndividualTracks} from './individualTracks/IndividualTracks';
 import {Eternity} from './cards/eternity/Eternity';
 
 // Can be overridden by tests
@@ -434,6 +435,12 @@ export class Game implements IGame, Logger {
       }
     }
 
+    if (IndividualTracks.enabled(game)) {
+      for (const player of game.players) {
+        player.individualTracksData = IndividualTracks.initialPlayerData();
+      }
+    }
+
     // Failsafe for exceeding corporation pool
     // (I do not think this is necessary any further given how corporation cards are stored now)
     const minCorpsRequired = players.length * gameOptions.startingCorporations;
@@ -702,7 +709,7 @@ export class Game implements IGame, Logger {
   }
 
   public fundAward(player: IPlayer, award: IAward): void {
-    if (this.allAwardsFunded()) {
+    if (this.allAwardsFunded() && !IndividualTracks.spendExtraClaim(player)) {
       throw new Error('All awards already funded');
     }
     this.log('${0} funded ${1} award',
@@ -855,6 +862,7 @@ export class Game implements IGame, Logger {
       player.colonies.cardDiscount = 0; // Iapetus reset hook
       player.runProductionPhase();
     });
+    IndividualTracks.grantLeaderRewards(this);
     this.postProductionPhase();
   }
 
@@ -1457,6 +1465,10 @@ export class Game implements IGame, Logger {
 
       // Nuclear (GIGA): red special tiles take resources from whoever places next to them.
       Nuclear.payResourceMalus(player, space);
+
+      if (CITY_TILES.has(tile.tileType)) {
+        IndividualTracks.onCityPlaced(player);
+      }
 
       if (this.gameOptions.boardName === BoardName.HOLLANDIA) {
         const spaces = this.board.spaces.filter(Board.ownedBy(player));

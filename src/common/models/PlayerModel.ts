@@ -13,6 +13,7 @@ import {Tag} from '../cards/Tag';
 import {UnderworldPlayerData} from '../underworld/UnderworldPlayerData';
 import {GlobalParameter} from '../GlobalParameter';
 import {DeltaProjectPlayerModel} from './DeltaProjectPlayerModel';
+import {IndividualTracksPlayerModel} from './IndividualTracksPlayerModel';
 
 export interface ViewModel {
   game: GameModel;
@@ -47,6 +48,7 @@ export type PublicPlayerModel = {
   coloniesCount: number;
   color: Color;
   deltaProject?: DeltaProjectPlayerModel;
+  individualTracks?: IndividualTracksPlayerModel;
   energy: number;
   energyProduction: number;
   fleetSize: number;

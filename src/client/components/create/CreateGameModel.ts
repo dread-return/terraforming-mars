@@ -43,6 +43,7 @@ export type CreateGameModel = {
   politicalAgendasExtension: AgendaStyle;
   gigaTurmoil: boolean;
   domesWilderness: boolean;
+  individualTracks: boolean;
   preludeDraftVariant: boolean | undefined;
   randomFirstPlayer: boolean;
   randomMA: RandomMAOptionType;

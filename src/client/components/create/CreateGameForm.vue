@@ -483,6 +483,11 @@
               <span v-i18n>Domes and Wilderness</span>&nbsp;<span class="tooltip" v-i18n data-tooltip="Adds the Dome (20 M€) and Wilderness (23 M€) standard projects, which upgrade one of your cities or greeneries. Cards and effects that place a city or greenery can upgrade instead.">&#9432;</span>
             </label>
 
+            <input type="checkbox" v-model="individualTracks" id="individualTracks-checkbox">
+            <label for="individualTracks-checkbox">
+              <span v-i18n>Individual global parameter tracks</span>&nbsp;<span class="tooltip" v-i18n data-tooltip="Each player tracks their own contribution to oxygen, temperature, oceans and cities. Reaching spots on a track gives one-time rewards, and the leader of each track gets a resource every generation and 3 VP at the end.">&#9432;</span>
+            </label>
+
             <input type="checkbox" name="showOtherPlayersVP" v-model="showOtherPlayersVP" id="realTimeVP-checkbox">
             <label for="realTimeVP-checkbox">
               <span v-i18n>Show real-time VP</span>&nbsp;<a :href="wikiUrls.showRealtimeVP" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
@@ -836,6 +841,7 @@ export default defineComponent({
         politicalAgendasExtension: this.politicalAgendasExtension,
         gigaTurmoil: this.gigaTurmoil,
         domesWilderness: this.domesWilderness,
+        individualTracks: this.individualTracks,
         undoOption: this.undoOption,
         showTimers: this.showTimers,
         fastModeOption: this.fastModeOption,

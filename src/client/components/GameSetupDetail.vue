@@ -38,6 +38,7 @@
         <div v-else class="game-config generic" v-i18n>Off</div>
       </li>
       <li v-if="gameOptions.domesWilderness" v-i18n>Domes and Wilderness</li>
+      <li v-if="gameOptions.individualTracks" v-i18n>Individual global parameter tracks</li>
       <li v-if="gameOptions.requiresVenusTrackCompletion" v-i18n>Require terraforming Venus to end the game</li>
       <li v-if="gameOptions.requiresMoonTrackCompletion" v-i18n>Require terraforming The Moon to end the game</li>
       <li v-if="gameOptions.expansions.nuclear && gameOptions.altContaminationTrack" v-i18n>Alt. Contamination track</li>

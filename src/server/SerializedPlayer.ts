@@ -8,6 +8,7 @@ import {GlobalParameter} from '../common/GlobalParameter';
 import {DiscordId} from './server/auth/discord';
 import {UnderworldPlayerData} from '../common/underworld/UnderworldPlayerData';
 import {DeltaProjectPlayerModel} from '../common/models/DeltaProjectPlayerModel';
+import {IndividualTracksPlayerModel} from '../common/models/IndividualTracksPlayerModel';
 
 interface DeprecatedFields {
 }
@@ -36,6 +37,7 @@ export interface SerializedPlayer extends DeprecatedFields{
   dealtPreludeCards: Array<CardName>;
   dealtProjectCards: Array<CardName>;
   deltaProject?: DeltaProjectPlayerModel;
+  individualTracks?: IndividualTracksPlayerModel;
   draftedCards: Array<CardName>;
   draftHand: Array<CardName>,
   energy: number;

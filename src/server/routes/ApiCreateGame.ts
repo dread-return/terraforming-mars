@@ -172,6 +172,7 @@ export class ApiCreateGame extends Handler {
         politicalAgendasExtension: gigaTurmoil ? 'Chairman' : gameReq.politicalAgendasExtension,
         gigaTurmoil: gigaTurmoil,
         domesWilderness: gameReq.domesWilderness === true,
+        individualTracks: gameReq.individualTracks === true,
         prelude2Expansion: gameReq.expansions.prelude2,
         preludeDraftVariant: gameReq.preludeDraftVariant,
         preludeExtension: gameReq.expansions.prelude,

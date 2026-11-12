@@ -52,6 +52,7 @@ export type NewGameConfig = {
   politicalAgendasExtension: AgendaStyle;
   gigaTurmoil: boolean;
   domesWilderness: boolean;
+  individualTracks: boolean;
   solarPhaseOption: boolean;
   removeNegativeGlobalEventsOption: boolean;
   modularMA: boolean;

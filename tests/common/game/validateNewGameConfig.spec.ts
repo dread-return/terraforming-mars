@@ -58,6 +58,7 @@ function newGameConfig(overrides: Partial<NewGameConfig> = {}): NewGameConfig {
     politicalAgendasExtension: 'Standard',
     gigaTurmoil: false,
     domesWilderness: false,
+    individualTracks: false,
     solarPhaseOption: false,
     removeNegativeGlobalEventsOption: false,
     modularMA: false,

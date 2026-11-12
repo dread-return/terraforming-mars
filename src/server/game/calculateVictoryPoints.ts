@@ -5,6 +5,7 @@ import {MoonExpansion} from '../moon/MoonExpansion';
 import {VenusPhase2Expansion} from '../venus2/VenusPhase2Expansion';
 import {PathfindersExpansion} from '../pathfinders/PathfindersExpansion';
 import {DeltaProjectExpansion} from '../delta/DeltaProjectExpansion';
+import {IndividualTracks} from '../individualTracks/IndividualTracks';
 import {VictoryPointsBreakdownBuilder} from './VictoryPointsBreakdownBuilder';
 import {FundedAward} from '../awards/FundedAward';
 import {AwardScorer} from '../awards/AwardScorer';
@@ -84,6 +85,7 @@ export function calculateVictoryPoints(player: IPlayer) {
   VenusPhase2Expansion.calculateVictoryPoints(player, builder);
   PathfindersExpansion.calculateVictoryPoints(player, builder);
   DeltaProjectExpansion.calculateVictoryPoints(player, builder);
+  IndividualTracks.calculateVictoryPoints(player, builder);
 
   // Underworld Score Bribing
   if (player.game.gameOptions.underworldExpansion === true) {

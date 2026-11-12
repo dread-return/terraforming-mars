@@ -29,6 +29,7 @@ import {runId} from '../utils/server-ids';
 import {toName} from '../../common/utils/utils';
 import {MAX_AWARDS, MAX_MILESTONES} from '../../common/constants';
 import {DomesWilderness} from '../domesWilderness/DomesWilderness';
+import {IndividualTracks} from '../individualTracks/IndividualTracks';
 
 export class Server {
   public static getSimpleGameModel(game: IGame): SimpleGameModel {
@@ -166,7 +167,7 @@ export class Server {
         (m) => m.milestone.name === milestone.name,
       );
       let scores: Array<MilestoneScore> = [];
-      if (claimed === undefined && claimedMilestones.length < MAX_MILESTONES) {
+      if (claimed === undefined && (claimedMilestones.length < MAX_MILESTONES || game.players.some(IndividualTracks.hasExtraClaim))) {
         scores = game.players.map((player) => ({
           color: player.color,
           score: milestone.getScore(player),
@@ -193,7 +194,7 @@ export class Server {
       const funded = fundedAwards.find((a) => a.award.name === award.name);
       const scorer = new AwardScorer(game, award);
       let scores: Array<AwardScore> = [];
-      if (fundedAwards.length < MAX_AWARDS || funded !== undefined) {
+      if (fundedAwards.length < MAX_AWARDS || funded !== undefined || game.players.some(IndividualTracks.hasExtraClaim)) {
         scores = game.players.map((player) => ({
           color: player.color,
           score: scorer.get(player),
@@ -308,6 +309,7 @@ export class Server {
     }
 
     model.deltaProject = player.deltaProjectData;
+    model.individualTracks = player.individualTracksData;
 
     return model;
   }
@@ -497,6 +499,7 @@ export class Server {
       politicalAgendasExtension: options.politicalAgendasExtension,
       gigaTurmoil: options.gigaTurmoil,
       domesWilderness: options.domesWilderness,
+      individualTracks: options.individualTracks,
       removeNegativeGlobalEvents: options.removeNegativeGlobalEventsOption,
       showOtherPlayersVP: options.showOtherPlayersVP,
       showTimers: options.showTimers,

@@ -410,8 +410,14 @@ export class Turmoil {
 
   private addNeutralDelegate(partyName: PartyName | undefined, game: IGame) {
     if (partyName) {
-      this.sendDelegateToParty('NEUTRAL', partyName, game);
-      game.log('A neutral delegate was added to the ${0} party', (b) => b.partyName(partyName));
+      let target = partyName;
+      if (!this.isInPlay(partyName)) {
+        // Giga Turmoil: the party was not drafted, so the neutral delegate goes to a random party in play.
+        target = this.parties[game.rng.nextInt(this.parties.length)].name;
+        game.log('The ${0} party is not in this game, so its neutral delegate goes to a random party instead', (b) => b.partyName(partyName));
+      }
+      this.sendDelegateToParty('NEUTRAL', target, game);
+      game.log('A neutral delegate was added to the ${0} party', (b) => b.partyName(target));
     }
   }
 

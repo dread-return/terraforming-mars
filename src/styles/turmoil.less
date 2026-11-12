@@ -221,6 +221,22 @@ each(@giga-parties, {
   }
 });
 
+// The Giga parties' badges on global event cards.
+each(@giga-parties, {
+  .card-party--@{value} {
+    background-image: url("./assets/parties/giga/@{value}.png");
+    background-size: 41px 30px;
+    width: 41px;
+    height: 30px;
+  }
+  .card-party--@{value}-req {
+    background-image: url("./assets/parties/giga/@{value}.png");
+    background-size: 48px 34px;
+    width: 48px;
+    height: 34px;
+  }
+});
+
 .party-badge {
   clip-path: polygon(0 0, 80% 0%, 100% 20%, 100% 100%, 20% 100%, 0% 80%);
   font-family: Prototype, sans-serif;

@@ -232,6 +232,12 @@
               <div class="create-game-expansion-icon expansion-icon-industries"></div>
               <span v-i18n>Industries</span><span></span>&nbsp;<a :href="wikiUrls.industries" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
             </label>
+
+            <input type="checkbox" name="postludes" id="postludes-checkbox" v-model="expansions.postludes">
+            <label for="postludes-checkbox" class="expansion-button">
+              <div class="create-game-expansion-icon expansion-icon-postludes"></div>
+              <span v-i18n>Postludes</span><span></span>&nbsp;<a :href="wikiUrls.postludes" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
+            </label>
           </div>
 
           <div class="create-game-page-column">
@@ -483,9 +489,9 @@
               <span v-i18n>Domes and Wilderness</span>&nbsp;<span class="tooltip" v-i18n data-tooltip="Adds the Dome (20 M€) and Wilderness (23 M€) standard projects, which upgrade one of your cities or greeneries. Cards and effects that place a city or greenery can upgrade instead.">&#9432;</span>
             </label>
 
-            <input type="checkbox" v-model="individualTracks" id="individualTracks-checkbox">
+            <input type="checkbox" v-model="individualTracks" id="individualTracks-checkbox" :disabled="expansions.postludes">
             <label for="individualTracks-checkbox">
-              <span v-i18n>Individual global parameter tracks</span>&nbsp;<span class="tooltip" v-i18n data-tooltip="Each player tracks their own contribution to oxygen, temperature, oceans and cities. Reaching spots on a track gives one-time rewards, and the leader of each track gets a resource every generation and 3 VP at the end.">&#9432;</span>
+              <span v-i18n>Individual global parameter tracks</span>&nbsp;<span class="tooltip" v-i18n data-tooltip="Each player tracks their own contribution to oxygen, temperature, oceans and cities. Reaching spots on a track gives one-time rewards, and the leader of each track gets a resource every generation and 3 VP at the end. Postludes need the tracks, so they turn them on.">&#9432;</span>
             </label>
 
             <input type="checkbox" name="showOtherPlayersVP" v-model="showOtherPlayersVP" id="realTimeVP-checkbox">
@@ -768,6 +774,12 @@ export default defineComponent({
       if (value === true && this.preludeToggled === false && this.uploading === false) {
         this.expansions.prelude = true;
         this.preludeToggled = true;
+      }
+    },
+    'expansions.postludes': function(value: boolean) {
+      // Postludes are gained from the individual tracks, so the tracks come with them.
+      if (value === true) {
+        this.individualTracks = true;
       }
     },
     'expansions.deltaProject': function(value: boolean) {

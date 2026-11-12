@@ -40,7 +40,7 @@ export class CityStandardProject extends StandardProjectCard {
   }
 
   actionEssence(player: IPlayer): void {
-    player.game.defer(new PlaceCityTile(player));
+    player.game.defer(new PlaceCityTile(player, this.placementSpaces === undefined ? undefined : {spaces: this.placementSpaces}));
     player.production.add(Resource.MEGACREDITS, 1);
   }
 }

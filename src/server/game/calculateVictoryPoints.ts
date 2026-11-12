@@ -1,3 +1,4 @@
+import {Postludes} from '../postludes/Postludes';
 import {Phase} from '../../common/Phase';
 import {IPlayer} from '../IPlayer';
 import {Board} from '../boards/Board';
@@ -86,6 +87,7 @@ export function calculateVictoryPoints(player: IPlayer) {
   PathfindersExpansion.calculateVictoryPoints(player, builder);
   DeltaProjectExpansion.calculateVictoryPoints(player, builder);
   IndividualTracks.calculateVictoryPoints(player, builder);
+  Postludes.calculateVictoryPoints(player, builder);
 
   // Underworld Score Bribing
   if (player.game.gameOptions.underworldExpansion === true) {

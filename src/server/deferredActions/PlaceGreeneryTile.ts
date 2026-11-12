@@ -10,13 +10,15 @@ export class PlaceGreeneryTile extends DeferredAction<Space | undefined> {
   constructor(
     player: IPlayer,
     private on: PlacementType = 'greenery',
+    /** Postludes: where the greenery has to go, when something limits it. */
+    private spaces: ReadonlyArray<Space> | undefined = undefined,
   ) {
     super(player, Priority.DEFAULT);
   }
 
   public execute() {
     const board = this.player.game.board;
-    const spacesForType = board.getAvailableSpacesForType(this.player, this.on);
+    const spacesForType = this.spaces ?? board.getAvailableSpacesForType(this.player, this.on);
     const filtered = board.filterSpacesAroundRedCity(spacesForType);
     const place = filtered.length === 0 ? undefined : new SelectSpace(this.getTitle(), filtered)
       .andThen((space) => {

@@ -25,6 +25,7 @@
         <a v-if="gameOptions.expansions.venusphase2" :href="rulebookUrls.venusphase2" class="tooltip" data-tooltip="Venus Phase 2 rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-venusphase2"></div></a>
         <a v-if="gameOptions.expansions.eternity" :href="rulebookUrls.eternity" class="tooltip" data-tooltip="Eternity rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-eternity"></div></a>
         <a v-if="gameOptions.expansions.industries" :href="rulebookUrls.industries" class="tooltip" data-tooltip="Industries rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-industries"></div></a>
+        <a v-if="gameOptions.expansions.postludes" :href="rulebookUrls.postludes" class="tooltip" data-tooltip="Postludes rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-postludes"></div></a>
       </li>
 
       <li><div class="setup-item" v-i18n>Board:</div>

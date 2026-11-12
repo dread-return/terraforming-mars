@@ -1,3 +1,4 @@
+import {Postludes} from '../postludes/Postludes';
 import {CardType} from '../../common/cards/CardType';
 import {GigaHooks} from '../turmoil/giga/GigaHooks';
 import {IPlayer} from '../IPlayer';
@@ -11,6 +12,7 @@ import {IStandardProjectCard} from './IStandardProjectCard';
 import {sum} from '../../common/utils/utils';
 import {Payment} from '../../common/inputs/Payment';
 import {StandardProjectCanPayWith} from '../../common/cards/Types';
+import {Space} from '../boards/Space';
 import {Eternity} from './eternity/Eternity';
 
 type StaticStandardProjectCardProperties = {
@@ -62,7 +64,7 @@ export abstract class StandardProjectCard extends Card implements IStandardProje
   }
 
   protected canPlayOptions(player: IPlayer) {
-    const canPayWith = Eternity.standardProjectPayWith(player, this, this.canPayWith(player));
+    const canPayWith = this.allCanPayWith(player);
     return {
       ...canPayWith,
       cost: Math.max(0, this.getAdjustedCost(player) - Eternity.standardProjectHeatCredit(player, this)),
@@ -90,10 +92,24 @@ export abstract class StandardProjectCard extends Card implements IStandardProje
     return {};
   }
 
+  /** What this standard project accepts as payment, counting Eternity and postlude effects. */
+  private allCanPayWith(player: IPlayer): StandardProjectCanPayWith {
+    return Postludes.standardProjectPayWith(player, this, Eternity.standardProjectPayWith(player, this, this.canPayWith(player)));
+  }
+
+  /**
+   * Set while the project executes when payment with steel or titanium (from Machinery Factory or Metallurgy
+   * Workshop) limits where its tile can go. Tile projects pass it to their placement.
+   */
+  protected placementSpaces: ReadonlyArray<Space> | undefined = undefined;
+
   public payAndExecute(player: IPlayer, payment: Payment): void {
+    const base = Eternity.standardProjectPayWith(player, this, this.canPayWith(player));
+    this.placementSpaces = Postludes.placementSpaces(player, this.name, payment, base);
     player.pay(payment);
     this.projectPlayed(player);
     this.actionEssence(player);
+    this.placementSpaces = undefined;
   }
 
   protected projectPlayed(player: IPlayer) {

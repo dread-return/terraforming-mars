@@ -65,4 +65,8 @@ export enum CardResource {
   TRASH = 'Trash',
   ROOT = 'Root',
   MEDDLING = 'Meddling',
+
+  // Postludes
+  FOOD = 'Food',
+  PROBIOTIC = 'Probiotic',
 }

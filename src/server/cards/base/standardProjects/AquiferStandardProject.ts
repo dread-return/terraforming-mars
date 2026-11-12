@@ -36,6 +36,6 @@ export class AquiferStandardProject extends StandardProjectCard {
   }
 
   actionEssence(player: IPlayer): void {
-    player.game.defer(new PlaceOceanTile(player));
+    player.game.defer(new PlaceOceanTile(player, this.placementSpaces === undefined ? undefined : {spaces: this.placementSpaces}));
   }
 }

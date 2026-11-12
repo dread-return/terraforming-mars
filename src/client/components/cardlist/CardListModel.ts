@@ -48,6 +48,7 @@ const MODULE_ABBREVIATIONS = {
   venusphase2: 'V',
   eternity: 'E',
   industries: 'Ind',
+  postludes: 'Po',
 } satisfies Record<GameModule, string>;
 
 const TYPE_ABBREVIATIONS = {
@@ -119,6 +120,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       venusphase2: true,
       eternity: true,
       industries: true,
+      postludes: true,
     },
     types: {
       event: true,
@@ -198,6 +200,8 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       [CardResource.TRASH]: true,
       [CardResource.ROOT]: true,
       [CardResource.MEDDLING]: true,
+      [CardResource.FOOD]: true,
+      [CardResource.PROBIOTIC]: true,
     },
     searchIndex: SearchIndex.create(),
     namesOnly: true,

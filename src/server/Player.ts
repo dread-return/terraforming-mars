@@ -1,3 +1,4 @@
+import {Postludes} from './postludes/Postludes';
 import * as constants from '../common/constants';
 import {convertEnergyToHeat, energyStorageCapacity, onProductionWithEnergyStorage} from './cards/robantilles/EnergyStorage';
 import {PlayerId} from '../common/Types';
@@ -357,6 +358,7 @@ export class Player implements IPlayer {
     const raiseRating = () => {
       this.terraformRating += steps;
       this.hasIncreasedTerraformRatingThisGeneration = true;
+      Postludes.onTerraformRatingChanged(this);
 
       if (opts.log === true) {
         if (opts.from !== undefined) {

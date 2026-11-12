@@ -10,4 +10,5 @@ export type Tile = {
   rotated?: boolean; // For Crashlanding
   covers?: Tile; // For Ares tiles
   upgrade?: TileUpgrade; // Domes and Wilderness: a dome on a city, a wilderness on a greenery
+  postlude?: CardName; // Postludes: the postlude card sitting on top of this city, greenery or ocean
 }

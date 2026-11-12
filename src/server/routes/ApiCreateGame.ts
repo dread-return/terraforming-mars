@@ -172,7 +172,8 @@ export class ApiCreateGame extends Handler {
         politicalAgendasExtension: gigaTurmoil ? 'Chairman' : gameReq.politicalAgendasExtension,
         gigaTurmoil: gigaTurmoil,
         domesWilderness: gameReq.domesWilderness === true,
-        individualTracks: gameReq.individualTracks === true,
+        // Postludes are gained from the individual tracks, so they turn the tracks on.
+        individualTracks: gameReq.individualTracks === true || gameReq.expansions.postludes === true,
         prelude2Expansion: gameReq.expansions.prelude2,
         preludeDraftVariant: gameReq.preludeDraftVariant,
         preludeExtension: gameReq.expansions.prelude,
@@ -204,6 +205,7 @@ export class ApiCreateGame extends Handler {
         venusPhase2Expansion: gameReq.expansions.venusphase2 === true && gameReq.expansions.venus === true,
         eternityExpansion: gameReq.expansions.eternity ?? false,
         industriesExpansion: gameReq.expansions.industries ?? false,
+        postludesExpansion: gameReq.expansions.postludes ?? false,
         undoOption: gameReq.undoOption,
         venusNextExtension: gameReq.expansions.venus,
       };

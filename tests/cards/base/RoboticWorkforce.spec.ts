@@ -1,4 +1,5 @@
 import {expect} from 'chai';
+import {isPostludeName} from '../../../src/common/postludes/Postludes';
 import {CardName} from '../../../src/common/cards/CardName';
 import {ALL_MODULE_MANIFESTS} from '../../../src/server/cards/AllManifests';
 import {CapitalAres} from '../../../src/server/cards/ares/CapitalAres';
@@ -373,7 +374,8 @@ describe('RoboticWorkforce', () => {
       const cards: CardManifest<ICard> = {...manifest.projectCards, ...manifest.preludeCards, ...manifest.corporationCards};
       for (const [cardName, factory] of CardManifest.entries(cards)) {
         it(cardName, () => {
-          if (cardsToIgnore.includes(cardName)) {
+          // Postludes need an own city, greenery or ocean to upgrade; their production comes from `behavior`.
+          if (cardsToIgnore.includes(cardName) || isPostludeName(cardName)) {
             return;
           }
           const card = new factory!.Factory();

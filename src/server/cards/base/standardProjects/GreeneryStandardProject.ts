@@ -38,6 +38,6 @@ export class GreeneryStandardProject extends StandardProjectCard {
   }
 
   actionEssence(player: IPlayer): void {
-    player.game.defer(new PlaceGreeneryTile(player));
+    player.game.defer(new PlaceGreeneryTile(player, 'greenery', this.placementSpaces));
   }
 }

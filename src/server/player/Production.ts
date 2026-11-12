@@ -1,3 +1,4 @@
+import {Postludes} from '../postludes/Postludes';
 import {LawSuit} from '../cards/promo/LawSuit';
 import {Resource} from '../../common/Resource';
 import {From, isFromPlayer} from '../logs/From';
@@ -49,6 +50,9 @@ export class Production extends BaseStock {
     const delta = (amount >= 0) ? amount : Math.max(amount, -(this[resource] - adj));
     this[resource] += delta;
     GigaHooks.onProductionChanged(this.player, resource, delta);
+    if (delta < 0 && options?.from !== undefined) {
+      Postludes.onLoss(this.player, resource, -delta, /* production */ true);
+    }
 
     if (options?.log === true) {
       this.logUnitDelta(resource, amount, /* production*/ true, options.from, options.stealing);

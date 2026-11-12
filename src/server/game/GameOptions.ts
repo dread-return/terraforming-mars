@@ -57,6 +57,7 @@ export type GameOptions = {
   eternityExpansion: boolean;
   /** Industries (GIGA): industry tiles bought as standard projects, in their own sub-menu. */
   industriesExpansion: boolean;
+  postludesExpansion: boolean;
 
   expansions: Record<Expansion, boolean>,
 
@@ -148,6 +149,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
     venusphase2: false,
     eternity: false,
     industries: false,
+    postludes: false,
   },
   fastModeOption: false,
   includeFanMA: false,
@@ -190,6 +192,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   venusPhase2Expansion: false,
   eternityExpansion: false,
   industriesExpansion: false,
+  postludesExpansion: false,
   automa: false,
   undoOption: false,
   venusNextExtension: false,

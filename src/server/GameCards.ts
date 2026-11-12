@@ -33,6 +33,8 @@ import {VENUS_PHASE_2_CARD_MANIFEST} from './cards/venusphase2/VenusPhase2CardMa
 import {ETERNITY_CARD_MANIFEST} from './cards/eternity/EternityCardManifest';
 import {DOMES_WILDERNESS_CARD_MANIFEST} from './cards/domeswilderness/DomesWildernessCardManifest';
 import {INDUSTRIES_CARD_MANIFEST} from './cards/industries/IndustriesCardManifest';
+import {POSTLUDES_CARD_MANIFEST} from './cards/postludes/PostludesCardManifest';
+import {HELD_OUT_POSTLUDES, isPostludeName} from '../common/postludes/Postludes';
 
 /**
  * Returns the cards available to a game based on its `GameOptions`.
@@ -78,6 +80,7 @@ export class GameCards {
       [gameOptions.eternityExpansion, ETERNITY_CARD_MANIFEST],
       [gameOptions.industriesExpansion, INDUSTRIES_CARD_MANIFEST],
       [gameOptions.domesWilderness, DOMES_WILDERNESS_CARD_MANIFEST],
+      [gameOptions.postludesExpansion, POSTLUDES_CARD_MANIFEST],
     ];
 
     this.moduleManifests = manifests
@@ -99,7 +102,18 @@ export class GameCards {
     if (this.gameOptions.solarisExpansion && !this.gameOptions.bannedCards.includes(CardName.SELF_REPLICATING_ROBOTS)) {
       this.addCustomCards(cards, [CardName.SELF_REPLICATING_ROBOTS]);
     }
-    return cards.filter(isIProjectCard);
+    // Postludes have their own deck.
+    return cards.filter(isIProjectCard).filter((card) => !isPostludeName(card.name));
+  }
+
+  /** The postludes that are dealt in this game. Empty when Postludes are not in the game. */
+  public getPostludeCards(): Array<IProjectCard> {
+    if (!this.gameOptions.postludesExpansion) {
+      return [];
+    }
+    return this.getCards<IProjectCard>('projectCards')
+      .filter(isIProjectCard)
+      .filter((card) => isPostludeName(card.name) && !HELD_OUT_POSTLUDES.has(card.name));
   }
   public getStandardProjects() {
     return this.getCards<IStandardProjectCard>('standardProjects');

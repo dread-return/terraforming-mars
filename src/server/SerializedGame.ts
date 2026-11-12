@@ -1,3 +1,4 @@
+import {SerializedPostludes} from './postludes/Postludes';
 import {SerializedVenusMapData} from './venus2/VenusMapData';
 import {Phase} from '../common/Phase';
 import {SerializedClaimedMilestone} from './milestones/ClaimedMilestone';
@@ -27,6 +28,7 @@ export type SerializedGame = {
     beholdTheEmperor?: boolean;
     board: SerializedBoard;
     ceoDeck: SerializedDeck;
+    postludes?: SerializedPostludes;
     currentSeed: number;
     claimedMilestones: Array<SerializedClaimedMilestone>;
     clonedGamedId?: string;

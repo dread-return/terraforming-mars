@@ -42,6 +42,9 @@ function newGameConfigForTest(): NewGameConfig {
       idesofmars: false,
       nuclear: false,
       venusphase2: false,
+      postludes: false,
+      industries: false,
+      eternity: false,
     },
     boards: [BoardName.THARSIS],
     seed: 0,
@@ -237,6 +240,19 @@ describe('ApiCreateGame', () => {
     const options = await createdGameOptions({expansions, altVenusBoard: true});
     expect(options.venusPhase2Expansion).is.true;
     expect(options.altVenusBoard).is.false;
+  });
+
+  it('Postludes turn the individual tracks on', async () => {
+    const expansions = {...newGameConfigForTest().expansions, postludes: true};
+    const options = await createdGameOptions({expansions, individualTracks: false});
+    expect(options.postludesExpansion).is.true;
+    expect(options.individualTracks).is.true;
+  });
+
+  it('leaves the individual tracks off without Postludes', async () => {
+    const options = await createdGameOptions({individualTracks: false});
+    expect(options.postludesExpansion).is.false;
+    expect(options.individualTracks).is.false;
   });
 
   async function createdEscapeVelocity(escapeVelocity: object) {

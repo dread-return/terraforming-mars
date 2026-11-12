@@ -80,6 +80,7 @@ describe('ApiGame', () => {
             'industries': false,
             'moon': false,
             'pathfinders': false,
+            'postludes': false,
             'prelude': false,
             'prelude2': false,
             'promo': false,

@@ -1,3 +1,4 @@
+import {Postludes, PostludesState} from './postludes/Postludes';
 import * as constants from '../common/constants';
 import {venusLevelAfterSteps, venusStepsBetween} from './venusNext/venusScale';
 import {BeginnerCorporation} from './cards/corporation/BeginnerCorporation';
@@ -137,6 +138,7 @@ export class Game implements IGame, Logger {
   public projectDeck: ProjectDeck;
   public preludeDeck: PreludeDeck;
   public ceoDeck: CeoDeck;
+  public postludes: PostludesState | undefined = undefined;
   public corporationDeck: CorporationDeck;
   public board: MarsBoard;
 
@@ -313,6 +315,7 @@ export class Game implements IGame, Logger {
         venusphase2: partialOptions.venusPhase2Expansion ?? false,
         eternity: partialOptions.eternityExpansion ?? false,
         industries: partialOptions.industriesExpansion ?? false,
+        postludes: partialOptions.postludesExpansion ?? false,
       };
     }
     const gameOptions = {...DEFAULT_GAME_OPTIONS, ...partialOptions};
@@ -347,10 +350,15 @@ export class Game implements IGame, Logger {
     const ceoDeck = new CeoDeck(gameCards.getCeoCards(), [], rng);
     ceoDeck.shuffle();
 
+    // Postludes have their own deck, and the cubes for the spaces where they are gained.
+    const postludes = gameOptions.postludesExpansion ?
+      Postludes.newState(gameCards.getPostludeCards(), players.length, rng) :
+      undefined;
+
     const activePlayer = firstPlayer.id;
 
     const tags = new Set<Tag>();
-    for (const deck of [projectDeck, corporationDeck, preludeDeck, ceoDeck]) {
+    for (const deck of [projectDeck, corporationDeck, preludeDeck, ceoDeck, ...(postludes === undefined ? [] : [postludes.deck])]) {
       for (const card of deck.drawPile) {
         for (const tag of card.tags) {
           tags.add(tag);
@@ -372,6 +380,8 @@ export class Game implements IGame, Logger {
     const name = generateGameName(UnseededRandom.INSTANCE);
     const marsBotPlayer = gameOptions.automa ? AutomaGameSetup.createMarsBotPlayer(id) : undefined;
     const game = new Game(id, name, players, marsBotPlayer, firstPlayer, activePlayer, spectatorId, gameOptions, rng, board, projectDeck, corporationDeck, preludeDeck, ceoDeck, Array.from(tags));
+    game.postludes = postludes;
+    Postludes.attach(game);
     // This evaluation of created time doesn't match what's stored in the database, but that's fine.
     game.createdTime = new Date();
     // Initialize Ares data
@@ -541,6 +551,7 @@ export class Game implements IGame, Logger {
       board: this.board.serialize(),
       claimedMilestones: serializeClaimedMilestones(this.claimedMilestones),
       ceoDeck: this.ceoDeck.serialize(),
+      postludes: this.postludes === undefined ? undefined : Postludes.serialize(this.postludes),
       colonies: this.colonies.map((colony) => colony.serialize()),
       corporationDeck: this.corporationDeck.serialize(),
       createdTimeMs: this.createdTime.getTime(),
@@ -722,6 +733,7 @@ export class Game implements IGame, Logger {
       award: award,
       player: player,
     });
+    Postludes.onAwardFunded(player);
   }
 
   public hasBeenFunded(award: IAward): boolean {
@@ -962,6 +974,7 @@ export class Game implements IGame, Logger {
     this.generation++;
     this.log('Generation ${0}', (b) => b.forNewGeneration().number(this.generation));
     this.setNextFirstPlayer();
+    Postludes.onGenerationStart(this);
 
     this.players.forEach((player) => {
       player.hasIncreasedTerraformRatingThisGeneration = false;
@@ -1507,6 +1520,11 @@ export class Game implements IGame, Logger {
   public grantPlacementBonuses(player: IPlayer, space: Space, coveringExistingTile: boolean = false) {
     if (!coveringExistingTile) {
       this.grantSpaceBonusesAsPlacement(player, space);
+      // Postludes: Amusement Park doubles the bonus of the spaces around it.
+      if (Postludes.doublesPlacementBonus(player, space)) {
+        this.log('${0} gained the placement bonus twice next to ${1}', (b) => b.player(player).cardName(CardName.AMUSEMENT_PARK));
+        this.grantSpaceBonusesAsPlacement(player, space);
+      }
     }
 
     const adjacentOceanCount = this.board.getAdjacentSpaces(space).filter(Board.isOceanSpace).length;
@@ -1549,6 +1567,7 @@ export class Game implements IGame, Logger {
 
     TurmoilHandler.resolveTilePlacementBonuses(player, space.spaceType);
     GigaHooks.onTilePlaced(player, space);
+    Postludes.onTilePlaced(player, space);
 
     if (arcadianCommunityBonus) {
       this.defer(new GainResourcesDeferred(player, Resource.MEGACREDITS, {count: 3}));
@@ -1861,6 +1880,10 @@ export class Game implements IGame, Logger {
 
     const game = new Game(d.id, d.name, players, marsBotPlayer, first, d.activePlayer, d.spectatorId, gameOptions, rng, board, projectDeck, corporationDeck, preludeDeck, ceoDeck, d.tags);
     game.resettable = true;
+    if (gameOptions.postludesExpansion && d.postludes !== undefined) {
+      game.postludes = Postludes.deserialize(d.postludes, rng);
+      Postludes.attach(game);
+    }
     game.spectatorId = d.spectatorId;
     game.createdTime = new Date(d.createdTimeMs);
 

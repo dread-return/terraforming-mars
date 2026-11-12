@@ -1,3 +1,4 @@
+import {PostludesState} from './postludes/Postludes';
 import {MarsBoard} from './boards/MarsBoard';
 import {CardName} from '../common/cards/CardName';
 import {ClaimedMilestone} from './milestones/ClaimedMilestone';
@@ -86,6 +87,8 @@ export interface IGame extends Logger {
   projectDeck: ProjectDeck;
   preludeDeck: PreludeDeck;
   ceoDeck: CeoDeck;
+  /** Postludes: the postlude deck and the silver cubes. Undefined when Postludes are not in the game. */
+  postludes: PostludesState | undefined;
   corporationDeck: CorporationDeck;
   board: MarsBoard;
   activePlayer: IPlayer;

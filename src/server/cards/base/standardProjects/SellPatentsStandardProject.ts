@@ -1,3 +1,4 @@
+import {isPostludeName} from '../../../../common/postludes/Postludes';
 import {IPlayer} from '../../../IPlayer';
 import {CardName} from '../../../../common/cards/CardName';
 import {CardRenderer} from '../../render/CardRenderer';
@@ -23,7 +24,12 @@ export class SellPatentsStandardProject extends StandardProjectCard {
   }
 
   protected override bespokeCanAct(player: IPlayer): boolean {
-    return player.cardsInHand.length > 0;
+    return this.sellable(player).length > 0;
+  }
+
+  // Postludes are sold with their own standard project.
+  private sellable(player: IPlayer): Array<IProjectCard> {
+    return player.cardsInHand.filter((card) => !isPostludeName(card.name));
   }
 
   actionEssence(): void {
@@ -31,11 +37,12 @@ export class SellPatentsStandardProject extends StandardProjectCard {
   }
 
   public action(player: IPlayer): SelectCard<IProjectCard> {
+    const cards = this.sellable(player);
     return new SelectCard(
       'Sell patents',
       'Sell',
-      player.cardsInHand,
-      {max: player.cardsInHand.length, played: false})
+      cards,
+      {max: cards.length, played: false})
       .andThen((cards) => {
         // Eternity: Patent Valuation Adjustment gives 1 M€ more per card.
         player.megaCredits += cards.length * (1 + Eternity.sellPatentsBonus(player));

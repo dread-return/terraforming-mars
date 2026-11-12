@@ -416,6 +416,9 @@ export class Server {
       if (space.tile?.upgrade !== undefined) {
         model.upgrade = space.tile.upgrade;
       }
+      if (space.tile?.postlude !== undefined) {
+        model.postlude = space.tile.postlude;
+      }
       if (space.cube !== undefined) {
         model.cube = space.cube;
       }
@@ -489,6 +492,7 @@ export class Server {
         venusphase2: options.venusPhase2Expansion,
         eternity: options.eternityExpansion,
         industries: options.industriesExpansion,
+        postludes: options.postludesExpansion,
       },
       fastModeOption: options.fastModeOption,
       includedCards: options.includedCards,

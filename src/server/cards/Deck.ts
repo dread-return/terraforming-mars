@@ -10,6 +10,7 @@ import {IPreludeCard} from './prelude/IPreludeCard';
 import {ICeoCard} from './ceos/ICeoCard';
 import {toName} from '../../common/utils/utils';
 import {Named} from '@/common/Types';
+import {isPostludeName} from '../../common/postludes/Postludes';
 
 /**
  * A deck of cards to draw from, and also its discard pile.
@@ -118,6 +119,12 @@ export class Deck<T extends Named<CardName>> {
     this.discardPile.push(...cards);
   }
 
+  /** Puts `cards` back in the draw pile and shuffles it. The discard pile stays where it is. */
+  public returnToDrawPile(...cards: Array<T>): void {
+    this.drawPile.push(...cards);
+    Deck.shuffle(this.drawPile, this.random);
+  }
+
   // For Junk Ventures
   public shuffleDiscardPile(): void {
     Deck.shuffle(this.discardPile, this.random);
@@ -144,11 +151,29 @@ export class CorporationDeck extends Deck<ICorporationCard> {
 }
 
 export class ProjectDeck extends Deck<IProjectCard> {
+  /** Postludes: where discarded postludes go instead of the project discard pile. */
+  public postludeSink: ((card: IProjectCard) => void) | undefined = undefined;
+
   public constructor(deck: Array<IProjectCard>, discarded: Array<IProjectCard>, random: Random) {
     super('project', deck, discarded, random);
   }
 
-  public static deserialize(d: SerializedDeck, random: Random): Deck<IProjectCard> {
+  public override discard(...cards: Array<IProjectCard>): void {
+    const sink = this.postludeSink;
+    if (sink === undefined) {
+      super.discard(...cards);
+      return;
+    }
+    for (const card of cards) {
+      if (isPostludeName(card.name)) {
+        sink(card);
+      } else {
+        super.discard(card);
+      }
+    }
+  }
+
+  public static deserialize(d: SerializedDeck, random: Random): ProjectDeck {
     const deck = cardsFromJSON(d.drawPile);
     const discarded = cardsFromJSON(d.discardPile);
     return new ProjectDeck(deck, discarded, random);
@@ -174,6 +199,18 @@ export class PreludeDeck extends Deck<IPreludeCard> {
     const deck = preludesFromJSON(d.drawPile);
     const discarded = preludesFromJSON(d.discardPile);
     return new PreludeDeck(deck, discarded, random);
+  }
+}
+
+export class PostludeDeck extends Deck<IProjectCard> {
+  public constructor(deck: Array<IProjectCard>, discarded: Array<IProjectCard>, random: Random) {
+    super('postlude', deck, discarded, random);
+  }
+
+  public static deserialize(d: SerializedDeck, random: Random): PostludeDeck {
+    const deck = cardsFromJSON(d.drawPile);
+    const discarded = cardsFromJSON(d.discardPile);
+    return new PostludeDeck(deck, discarded, random);
   }
 }
 

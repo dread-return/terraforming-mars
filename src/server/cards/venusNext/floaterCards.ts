@@ -66,5 +66,8 @@ export const floaterCards: ReadonlySet<CardName> = new Set([
   CardName.METEOR_THAT_CHANGED_VENUS_FOREVER,
   CardName.SCIENCE_VESSEL,
   CardName.WOBBLING_ASTEROID,
+
+  // Postludes
+  CardName.CLOUD_GENERATOR,
 ]);
 

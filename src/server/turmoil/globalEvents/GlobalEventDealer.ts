@@ -87,6 +87,7 @@ export class GlobalEventDealer {
       venusphase2: gameOptions.venusPhase2Expansion,
       eternity: gameOptions.eternityExpansion,
       industries: gameOptions.industriesExpansion,
+      postludes: gameOptions.postludesExpansion,
     };
 
     for (const manifest of ALL_MODULE_MANIFESTS) {

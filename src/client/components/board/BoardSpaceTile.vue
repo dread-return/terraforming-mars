@@ -12,6 +12,8 @@ import {TileType, tileTypeToString} from '@/common/TileType';
 import {SpaceHighlight, SpaceModel} from '@/common/models/SpaceModel';
 import {TileView} from '@/client/components/board/TileView';
 import AdjacencyBonus from '@/client/components/AdjacencyBonus.vue';
+import {CardName} from '@/common/cards/CardName';
+import {postludeSlug} from '@/common/postludes/Postludes';
 
 const tileTypeToCssClass: Record<TileType, string> = {
   [TileType.OCEAN]: 'ocean',
@@ -202,9 +204,16 @@ export default defineComponent({
       default: return undefined;
       }
     },
+    // Postludes: a postlude is drawn in place of the city, greenery or ocean under it.
+    postludeName(): CardName | undefined {
+      return this.space.postlude;
+    },
     description(): string {
       if (this.tileType === undefined) {
         return '';
+      }
+      if (this.postludeName !== undefined) {
+        return `Postlude: ${this.postludeName}. It counts as the tile under it.`;
       }
       if (this.upgradeTileType !== undefined) {
         return descriptions[this.upgradeTileType];
@@ -226,6 +235,9 @@ export default defineComponent({
         }
         if (this.upgradeTileType !== undefined) {
           cssClass = tileTypeToCssClass[this.upgradeTileType];
+        }
+        if (this.postludeName !== undefined) {
+          cssClass = 'postlude-' + postludeSlug(this.postludeName);
         }
         // Special case Crashlanding rotation
         if (this.tileType === TileType.CRASHLANDING && this.space.rotated === true) {

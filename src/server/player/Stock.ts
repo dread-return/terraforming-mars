@@ -1,3 +1,4 @@
+import {Postludes} from '../postludes/Postludes';
 import {LawSuit} from '../cards/promo/LawSuit';
 import {IPlayer} from '../IPlayer';
 import {Resource} from '../../common/Resource';
@@ -42,6 +43,9 @@ export class Stock extends BaseStock {
     }
 
     this[resource] += delta;
+    if (delta < 0 && options?.from !== undefined) {
+      Postludes.onLoss(this.player, resource, -delta, /* production */ false);
+    }
 
     if (options?.log === true) {
       this.logUnitDelta(resource, delta, /* production*/ false, options.from, options.stealing);

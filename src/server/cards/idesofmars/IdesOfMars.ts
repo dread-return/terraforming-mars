@@ -1,3 +1,4 @@
+import {Postludes} from '../../postludes/Postludes';
 import {IPlayer} from '../../IPlayer';
 import {IGame} from '../../IGame';
 import {Space} from '../../boards/Space';
@@ -24,6 +25,10 @@ export class IdesOfMars {
   /** Plants needed to place a greenery from plants on `space`. */
   public static plantsForGreeneryOn(player: IPlayer, space: Space): number {
     let cost = player.plantsNeededForGreenery;
+    // Postludes: Soil Enrichment Lab makes a greenery next to it cost one plant less.
+    if (Postludes.hasSoilLabNextTo(player, space)) {
+      cost -= 1;
+    }
     if (player.tableau.has(CardName.INSECT_POLLINATORS)) {
       const nextToOwnGreenery = player.game.board.getAdjacentSpaces(space)
         .some((adj) => Board.isGreenerySpace(adj) && Board.ownedBy(player)(adj));
@@ -42,7 +47,7 @@ export class IdesOfMars {
 
   /** The fewest plants `player` needs to place a greenery somewhere. */
   public static minPlantsForGreenery(player: IPlayer): number {
-    if (!player.tableau.has(CardName.INSECT_POLLINATORS)) {
+    if (!player.tableau.has(CardName.INSECT_POLLINATORS) && !player.tableau.has(CardName.SOIL_ENRICHMENT_LAB)) {
       return player.plantsNeededForGreenery;
     }
     const spaces = player.game.board.getAvailableSpacesForGreenery(player);

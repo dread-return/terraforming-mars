@@ -1,3 +1,4 @@
+import {Postludes} from '../postludes/Postludes';
 import {Payment} from '../../common/inputs/Payment';
 import {IStandardProjectCard} from '../cards/IStandardProjectCard';
 import {CardAction, IPlayer} from '../IPlayer';
@@ -40,7 +41,7 @@ export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProje
     if (details.overriddenCost === undefined && !card.canAct(this.player)) {
       throw new InputError('You cannot play this standard project');
     }
-    const canPayWith = Eternity.standardProjectPayWith(this.player, card, card.canPayWith(this.player));
+    const canPayWith = Postludes.standardProjectPayWith(this.player, card, Eternity.standardProjectPayWith(this.player, card, card.canPayWith(this.player)));
     const paymentOptions: Partial<PaymentOptions> = {
       heat: this.player.canUseHeatAsMegaCredits,
       energy: this.player.canUseEnergyAsMegaCredits,

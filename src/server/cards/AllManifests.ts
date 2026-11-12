@@ -1,3 +1,4 @@
+import {POSTLUDES_CARD_MANIFEST} from './postludes/PostludesCardManifest';
 import {ARES_CARD_MANIFEST} from './ares/AresCardManifest';
 import {ModuleManifest} from './ModuleManifest';
 import {COLONIES_CARD_MANIFEST} from './colonies/ColoniesCardManifest';
@@ -53,4 +54,5 @@ export const ALL_MODULE_MANIFESTS: Array<ModuleManifest> = [
   INDUSTRIES_CARD_MANIFEST,
   DOMES_WILDERNESS_CARD_MANIFEST,
   DELTA_PROJECT_CARD_MANIFEST,
+  POSTLUDES_CARD_MANIFEST,
 ];

@@ -1,3 +1,4 @@
+import {Postludes} from '../postludes/Postludes';
 import {IGame} from '../IGame';
 import {IPlayer} from '../IPlayer';
 import {Priority} from '../deferredActions/Priority';
@@ -152,7 +153,8 @@ export class IndividualTracks {
     const game = player.game;
     switch (reward) {
     case 'postlude':
-      game.log('${0} reached the Postlude spot on the ${1} track, but Postludes are not in the game yet', (b) => b.player(player).string(track));
+      game.log('${0} reached the Postlude spot on the ${1} track', (b) => b.player(player).string(track));
+      Postludes.gain(player, track);
       break;
     case 'plantProduction':
       player.production.add(Resource.PLANTS, 1, {log: true});

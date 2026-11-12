@@ -253,3 +253,51 @@ describe('MilestoneAwardSelector', () => {
     return chooseMilestonesAndAwards({...DEFAULT_GAME_OPTIONS, ...options});
   }
 });
+
+describe('GIGA fan milestones and awards', () => {
+  const giga = {
+    milestones: ['Businessman', 'G. Capitalist', 'G. Collector', 'Inflater', 'Oxygenator'] as Array<MilestoneName>,
+    awards: ['Forerunner', 'G. Martian', 'Ionizer', 'Microbiologist'] as Array<AwardName>,
+  };
+  const everything = {
+    expansions: {
+      ...DEFAULT_GAME_OPTIONS.expansions,
+      venus: true,
+      pathfinders: true,
+      solaris: true,
+      nuclear: true,
+      industries: true,
+    },
+  };
+
+  it('are only candidates when fan milestones and awards are included', () => {
+    const [milestonesOff, awardsOff] = getCandidates({
+      ...DEFAULT_GAME_OPTIONS, ...everything, randomMA: RandomMAOptionType.UNLIMITED, includeFanMA: false,
+    });
+    expect(intersection(milestonesOff, giga.milestones)).is.empty;
+    expect(intersection(awardsOff, giga.awards)).is.empty;
+
+    const [milestonesOn, awardsOn] = getCandidates({
+      ...DEFAULT_GAME_OPTIONS, ...everything, randomMA: RandomMAOptionType.UNLIMITED, includeFanMA: true,
+    });
+    expect(intersection(milestonesOn, giga.milestones)).has.members(giga.milestones);
+    expect(intersection(awardsOn, giga.awards)).has.members(giga.awards);
+  });
+
+  it('are never candidates in modular games', () => {
+    const [milestones, awards] = getCandidates({
+      ...DEFAULT_GAME_OPTIONS, ...everything, randomMA: RandomMAOptionType.UNLIMITED, modularMA: true, includeFanMA: true,
+    });
+    expect(intersection(milestones, giga.milestones)).is.empty;
+    expect(intersection(awards, giga.awards)).is.empty;
+  });
+
+  it('wait for the expansion they need', () => {
+    const [milestones, awards] = getCandidates({
+      ...DEFAULT_GAME_OPTIONS, randomMA: RandomMAOptionType.UNLIMITED, includeFanMA: true,
+    });
+    // Only Oxygenator, G. Collector, Microbiologist need nothing.
+    expect(intersection(milestones, giga.milestones)).has.members(['G. Collector', 'Oxygenator']);
+    expect(intersection(awards, giga.awards)).has.members(['Microbiologist']);
+  });
+});

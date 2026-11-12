@@ -70,6 +70,11 @@ import {Tycoon10} from './modular/Tycoon10';
 import {Trader} from './modular/Trader';
 import {Tactician4} from './modular/Tactician4';
 import {Briber} from './Briber';
+import {Businessman} from './giga/Businessman';
+import {GCapitalist} from './giga/GCapitalist';
+import {GCollector} from './giga/GCollector';
+import {Inflater} from './giga/Inflater';
+import {Oxygenator} from './giga/Oxygenator';
 
 export const milestoneManifest: MAManifest<MilestoneName, IMilestone> = {
   all: {
@@ -78,6 +83,7 @@ export const milestoneManifest: MAManifest<MilestoneName, IMilestone> = {
     'Briber': {Factory: Briber, random: 'modular'},
     'Builder': {Factory: Builder},
     'Builder7': {Factory: Builder7, random: 'modular'},
+    'Businessman': {Factory: Businessman, compatibility: 'pathfinders', fan: true},
     'C. Forester': {Factory: CForester},
     'Capitalist': {Factory: Capitalist},
     'Coastguard': {Factory: Coastguard, random: 'modular'},
@@ -88,6 +94,8 @@ export const milestoneManifest: MAManifest<MilestoneName, IMilestone> = {
     'Engineer': {Factory: Engineer, random: 'modular'},
     'Farmer': {Factory: Farmer, random: 'modular'},
     'Firestarter': {Factory: Firestarter},
+    'G. Capitalist': {Factory: GCapitalist, compatibility: 'industries', fan: true},
+    'G. Collector': {Factory: GCollector, fan: true},
     'Forester': {Factory: Forester, deprecated: true},
     'Fundraiser': {Factory: Fundraiser, random: 'modular'},
     'Gambler': {Factory: Gambler},
@@ -96,6 +104,7 @@ export const milestoneManifest: MAManifest<MilestoneName, IMilestone> = {
     'Geologist': {Factory: Geologist, random: 'modular'},
     'Hoverlord': {Factory: Hoverlord, compatibility: 'venus'},
     'Hydrologist': {Factory: Hydrologist, random: 'modular'},
+    'Inflater': {Factory: Inflater, compatibility: 'venus', fan: true},
     'Irrigator': {Factory: Irrigator, deprecated: true},
     'Land Specialist': {Factory: LandSpecialist},
     'Landshaper': {Factory: Landshaper, random: 'both'},
@@ -111,6 +120,7 @@ export const milestoneManifest: MAManifest<MilestoneName, IMilestone> = {
     'Minimalist': {Factory: Minimalist},
     'Networker': {Factory: Networker, compatibility: 'ares'},
     'One Giant Step': {Factory: OneGiantStep, compatibility: 'moon'},
+    'Oxygenator': {Factory: Oxygenator, fan: true},
     'Philantropist': {Factory: Philantropist, random: 'modular'},
     'Pioneer': {Factory: Pioneer, compatibility: 'colonies', random: 'both'},
     'Planetologist': {Factory: Planetologist, compatibility: 'venus', random: 'modular'},

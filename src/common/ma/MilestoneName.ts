@@ -98,6 +98,13 @@ export const milestoneNames = [
   'Thawer',
   'Trader',
   'Tycoon10',
+
+  // GIGA fan milestones. Only drawn when 'Include fan Milestones/Awards' is on.
+  'Businessman',
+  'G. Capitalist', // Not Capitalist: that one counts M€
+  'G. Collector',
+  'Inflater',
+  'Oxygenator',
 ] as const;
 
 export type MilestoneName = typeof milestoneNames[number];

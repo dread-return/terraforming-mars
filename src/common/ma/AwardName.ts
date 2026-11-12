@@ -86,6 +86,12 @@ export const awardNames = [
   'Physicist',
   'Politician',
   'Suburbian',
+
+  // GIGA fan awards. Only drawn when 'Include fan Milestones/Awards' is on.
+  'Forerunner',
+  'G. Martian', // Not Martian: that is a milestone
+  'Ionizer',
+  'Microbiologist',
   // 'Zoologist', // Most animal and microbe resources. Currently Zoologist2
 ] as const;
 

@@ -11,6 +11,11 @@ type MAManifestSpec<V> = {
   deprecated?: true;
   /** Drawn in modular games, both types, or (undefined) only non-modular games. */
   random?: 'modular' | 'both';
+  /**
+   * GIGA fan milestone or award. Only drawn when "Include fan Milestones/Awards" is on, and never in modular games
+   * (unless `random` says so).
+   */
+  fan?: true;
 }
 type ExpansionsWithMAs = 'venus' | 'ares' | 'moon' | 'underworld';
 

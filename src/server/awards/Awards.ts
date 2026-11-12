@@ -59,6 +59,10 @@ import {AwardName} from '../../common/ma/AwardName';
 import {MAManifest} from '../ma/MAManifest';
 import {Suburbian} from './modular/Suburbian';
 import {Blacksmith} from './Blacksmith';
+import {Forerunner} from './giga/Forerunner';
+import {GMartian} from './giga/GMartian';
+import {Ionizer} from './giga/Ionizer';
+import {Microbiologist} from './giga/Microbiologist';
 
 export const awardManifest: MAManifest<AwardName, IAward> = {
   all: {
@@ -85,13 +89,16 @@ export const awardManifest: MAManifest<AwardName, IAward> = {
     'Excavator': {Factory: Excavator, compatibility: 'underworld'},
     'Excentric': {Factory: Excentric, random: 'both'},
     'Forecaster': {Factory: Forecaster, random: 'both'},
+    'Forerunner': {Factory: Forerunner, compatibility: 'solaris', fan: true},
     'Founder': {Factory: Founder, random: 'modular'},
     'Full Moon': {Factory: FullMoon, compatibility: 'moon'},
+    'G. Martian': {Factory: GMartian, compatibility: 'pathfinders', fan: true},
     'Highlander': {Factory: Highlander, random: 'modular'},
     'Incorporator': {Factory: Incorporator, random: 'both'},
     'Industrialist': {Factory: Industrialist, random: 'both'},
     'Innovator': {Factory: Innovator},
     'Investor': {Factory: Investor, random: 'modular'},
+    'Ionizer': {Factory: Ionizer, compatibility: 'nuclear', fan: true},
     'Kingpin': {Factory: Kingpin, compatibility: 'underworld'},
     'Landlord': {Factory: Landlord, random: 'both'},
     'Landscaper': {Factory: Landscaper, random: 'modular'},
@@ -99,6 +106,7 @@ export const awardManifest: MAManifest<AwardName, IAward> = {
     'Magnate': {Factory: Magnate, random: 'both'},
     'Manufacturer': {Factory: Manufacturer, random: 'both'},
     'Metropolist': {Factory: Metropolist, random: 'modular'},
+    'Microbiologist': {Factory: Microbiologist, fan: true},
     'Miner': {Factory: Miner, random: 'both'},
     'Mogul': {Factory: Mogul, random: 'modular'},
     'Naturalist': {Factory: Naturalist},

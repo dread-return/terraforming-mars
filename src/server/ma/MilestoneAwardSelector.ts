@@ -167,6 +167,10 @@ export function getCandidates(gameOptions: GameOptions): [Array<MilestoneName>, 
       if (boards.length > 0 && gameOptions.includeFanMA === false) {
         return false;
       }
+      // GIGA fan MAs belong to no board, so the check above does not cover them.
+      if (manifest.all[name].fan === true && gameOptions.includeFanMA === false) {
+        return false;
+      }
       // Modular MAs are not part of our own built random MAs.
       if (random === 'modular') {
         return false;

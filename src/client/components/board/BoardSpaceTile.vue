@@ -183,11 +183,18 @@ export default defineComponent({
     highlight(): SpaceHighlight {
       return this.space.highlight;
     },
+    isSpaceCity(): boolean {
+      if (this.tileType !== TileType.CITY) {
+        return false;
+      }
+      // Colony spaces are the off-world city spaces; ids starting with 'v' are the Venus Phase 2 map.
+      return this.spaceType === SpaceType.COLONY || this.space.id.startsWith('v');
+    },
     description(): string {
       if (this.tileType === undefined) {
         return '';
       }
-      if (this.tileType === TileType.CITY && this.spaceType === SpaceType.COLONY) {
+      if (this.isSpaceCity) {
         return 'City in space.';
       }
       return descriptions[this.tileType];
@@ -198,6 +205,9 @@ export default defineComponent({
         let cssClass: string | undefined = tileTypeToCssClass[this.tileType];
         if ((this.aresExtension || (this.nuclearExpansion && this.tileType === TileType.NUCLEAR_ZONE)) && tileTypeToCssClassAresOverride.has(this.tileType)) {
           cssClass = tileTypeToCssClassAresOverride.get(this.tileType);
+        }
+        if (this.isSpaceCity) {
+          cssClass = 'space-city';
         }
         // Special case Crashlanding rotation
         if (this.tileType === TileType.CRASHLANDING && this.space.rotated === true) {

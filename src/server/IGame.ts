@@ -241,6 +241,11 @@ export interface IGame extends Logger {
    */
   grantPlacementBonuses(player: IPlayer, space: Space, coveringExistingTile?: boolean): void
   /**
+   * Domes and Wilderness: grants everything a tile placed on `space` would collect (space bonus, ocean
+   * adjacency, adjacency bonuses, Turmoil, etc.) for an upgrade of the tile already there.
+   */
+  grantUpgradeBonuses(player: IPlayer, space: Space): void
+  /**
    * Calls f(cardOwner, card) for every card in every player's tableau,
    * in generation order.
    */

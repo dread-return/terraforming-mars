@@ -4,7 +4,6 @@ import {IPlayer} from '../IPlayer';
 import {Board} from '../boards/Board';
 import {Space} from '../boards/Space';
 import {AddResourcesToCard} from '../deferredActions/AddResourcesToCard';
-import {GigaHooks} from '../turmoil/giga/GigaHooks';
 import {PartyHooks} from '../turmoil/parties/PartyHooks';
 import {BoardType} from '../boards/BoardType';
 import {IdesOfMars} from '../cards/idesofmars/IdesOfMars';
@@ -144,7 +143,7 @@ export class DomesWilderness {
   /**
    * Puts a dome on the city, or a wilderness on the greenery, at `space` and gives the standard project's
    * benefits. The upgrade counts as placing a city (dome) or a greenery (wilderness) for every card and
-   * effect. No placement bonuses are collected, since nothing new is placed on the area.
+   * effect, and it collects the area's bonuses, ocean adjacency and adjacency bonuses like any new tile.
    */
   public static upgrade(player: IPlayer, space: Space, upgrade: TileUpgrade): void {
     const game = player.game;
@@ -168,7 +167,9 @@ export class DomesWilderness {
       PartyHooks.applyGreensRulingPolicy(player, space);
     }
 
+    // The upgrade is a new tile on top of the old one, so it collects placement bonuses (including
+    // Giga's tile hook, which grantUpgradeBonuses runs).
+    game.grantUpgradeBonuses(player, space);
     game.triggerForAllCards((p, c) => c.onTilePlaced?.(p, player, space, BoardType.MARS));
-    GigaHooks.onTilePlaced(player, space);
   }
 }

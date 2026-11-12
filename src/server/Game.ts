@@ -1506,6 +1506,20 @@ export class Game implements IGame, Logger {
   }
 
   /**
+   * Domes and Wilderness: an upgrade is a new tile on top of an existing city or greenery, so it collects
+   * the same bonuses as any tile placed there: the area's printed bonus, the ocean adjacency bonus, and
+   * the adjacency bonuses of neighboring tiles. (It pays no adjacency or hazard costs.)
+   */
+  public grantUpgradeBonuses(player: IPlayer, space: Space): void {
+    if (Eternity.skipNextSpaceBonus) {
+      Eternity.skipNextSpaceBonus = false;
+    } else {
+      this.grantPlacementBonuses(player, space);
+    }
+    this.grantTilePlacementBonuses(player, space, space.player === player && player.tableau.has(CardName.ARCADIAN_COMMUNITIES));
+  }
+
+  /**
    * Bonuses that only apply when a tile is actually placed.
    *
    * Mars Nomads moves a token rather than placing a tile, so it collects the placement

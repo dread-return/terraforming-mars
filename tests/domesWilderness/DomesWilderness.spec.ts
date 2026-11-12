@@ -23,6 +23,7 @@ import {Herbivores} from '../../src/server/cards/base/Herbivores';
 import {Tardigrades} from '../../src/server/cards/base/Tardigrades';
 import {Fish} from '../../src/server/cards/base/Fish';
 import {AresHandler} from '../../src/server/ares/AresHandler';
+import {SpaceBonus} from '../../src/common/boards/SpaceBonus';
 import {AresHazards} from '../../src/server/ares/AresHazards';
 import {calculateVictoryPoints} from '../../src/server/game/calculateVictoryPoints';
 
@@ -368,6 +369,60 @@ describe('Domes and Wilderness', () => {
 
       const cost = AresHandler.computePlacementCosts(ares, aresGame.board, target, true);
       expect(cost.production.mild).eq(1);
+    });
+  });
+
+  describe('placement bonuses', () => {
+    // A land space with exactly one printed bonus of the given kind.
+    function spaceWith(bonus: SpaceBonus): Space {
+      return game.board.getAvailableSpacesOnLand(player).find((s) => s.bonus.length === 1 && s.bonus[0] === bonus)!;
+    }
+
+    it('a dome collects the area\'s printed bonus', () => {
+      const space = addCity(player, spaceWith(SpaceBonus.STEEL).id);
+      player.steel = 0;
+
+      buy(game, player, CardName.DOME_STANDARD_PROJECT, space);
+
+      expect(player.steel).eq(1);
+    });
+
+    it('a wilderness collects the area\'s printed bonus', () => {
+      const space = addGreenery(player, spaceWith(SpaceBonus.TITANIUM).id);
+      player.titanium = 0;
+
+      buy(game, player, CardName.WILDERNESS_STANDARD_PROJECT, space);
+
+      expect(player.titanium).eq(1);
+    });
+
+    it('collects the ocean adjacency bonus', () => {
+      const ocean = game.board.getAvailableSpacesForOcean(player)[0];
+      const city = game.board.getAdjacentSpaces(ocean).find((s) => s.spaceType === SpaceType.LAND && s.tile === undefined)!;
+      addCity(player, city.id);
+      city.bonus = [];
+      game.addOcean(player2, ocean);
+      player.megaCredits = 0;
+
+      buy(game, player, CardName.DOME_STANDARD_PROJECT, city);
+
+      // 100 given by buy(), minus 20 for the dome, plus 2 M€ for the adjacent ocean.
+      expect(player.megaCredits).eq(100 - 20 + 2);
+    });
+
+    it('collects adjacency bonuses from neighboring tiles (Ares)', () => {
+      const [aresGame, ares] = testGame(2, {domesWilderness: true, aresExtension: true, aresHazards: false});
+      const city = addCity(ares);
+      city.bonus = [];
+      const neighbor = aresGame.board.getAdjacentSpaces(city).find((s) => s.tile === undefined && s.spaceType === SpaceType.LAND)!;
+      addCity(aresGame.players[1], neighbor.id);
+      neighbor.adjacency = {bonus: [SpaceBonus.STEEL]};
+      ares.steel = 0;
+
+      DomesWilderness.upgrade(ares, city, 'dome');
+      runAllActions(aresGame);
+
+      expect(ares.steel).eq(1);
     });
   });
 

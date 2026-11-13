@@ -241,6 +241,17 @@ describe('CreateGameForm', () => {
     expect(ids.slice(0, 3)).deep.eq(['industries-checkbox', 'domesWilderness-checkbox', 'postludes-checkbox']);
   });
 
+  it('the fan-made title starts the column next to the official expansions', async () => {
+    const wrapper = shallowMount(CreateGameForm, {
+      ...globalConfig,
+    });
+    await wrapper.vm.$nextTick();
+    const grid = wrapper.find('.create-game-expansions-grid');
+    const children = grid.element.children;
+    expect(children[0].classList.contains('create-game-expansions-official')).is.true;
+    expect(children[1].classList.contains('create-game-fan-label')).is.true;
+  });
+
   it('the expansions list wraps into columns of the size set by expansionRows', async () => {
     const wrapper = shallowMount(CreateGameForm, {
       ...globalConfig,

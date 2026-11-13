@@ -17,87 +17,92 @@
 
           <div class="create-game-page-column">
             <h4 v-i18n>Expansions</h4>
-            <!-- The list goes on in another column when it is taller than the screen, see expansionRows. -->
+            <!--
+              The official expansions take the first column. The fan-made ones start the next column, under their title,
+              and go on in more columns when they are taller than the screen, see expansionRows.
+            -->
             <div ref="expansionsGrid" class="create-game-expansions-grid" :style="{'--expansion-rows': expansionRows}">
 
-              <input type="checkbox" name="allOfficialExpansions" id="allOfficialExpansions-checkbox" v-model="allOfficialExpansions">
-              <label for="allOfficialExpansions-checkbox">
-                <span v-i18n>All</span>
-              </label>
+              <div class="create-game-expansions-official" ref="officialExpansions">
+                <input type="checkbox" name="allOfficialExpansions" id="allOfficialExpansions-checkbox" v-model="allOfficialExpansions">
+                <label for="allOfficialExpansions-checkbox">
+                  <span v-i18n>All</span>
+                </label>
 
-              <input type="checkbox" name="corporateEra" id="corporateEra-checkbox" v-model="expansions.corpera">
-              <label for="corporateEra-checkbox" class="expansion-button">
-                <div class="create-game-expansion-icon expansion-icon-CE"></div>
-                <span v-i18n>Corporate Era</span>
-              </label>
+                <input type="checkbox" name="corporateEra" id="corporateEra-checkbox" v-model="expansions.corpera">
+                <label for="corporateEra-checkbox" class="expansion-button">
+                  <div class="create-game-expansion-icon expansion-icon-CE"></div>
+                  <span v-i18n>Corporate Era</span>
+                </label>
 
-              <input type="checkbox" name="prelude" id="prelude-checkbox" v-model="expansions.prelude">
-              <label for="prelude-checkbox" class="expansion-button">
-                <div class="create-game-expansion-icon expansion-icon-prelude"></div>
-                <span v-i18n>Prelude</span>
-              </label>
+                <input type="checkbox" name="prelude" id="prelude-checkbox" v-model="expansions.prelude">
+                <label for="prelude-checkbox" class="expansion-button">
+                  <div class="create-game-expansion-icon expansion-icon-prelude"></div>
+                  <span v-i18n>Prelude</span>
+                </label>
 
-              <input type="checkbox" name="prelude2" id="prelude2-checkbox" v-model="expansions.prelude2">
-              <label for="prelude2-checkbox" class="expansion-button">
-                <div class="create-game-expansion-icon expansion-icon-prelude2"></div>
-                <span v-i18n>Prelude 2</span>
-              </label>
+                <input type="checkbox" name="prelude2" id="prelude2-checkbox" v-model="expansions.prelude2">
+                <label for="prelude2-checkbox" class="expansion-button">
+                  <div class="create-game-expansion-icon expansion-icon-prelude2"></div>
+                  <span v-i18n>Prelude 2</span>
+                </label>
 
-              <input type="checkbox" name="venusNext" id="venusNext-checkbox" v-model="expansions.venus">
-              <label for="venusNext-checkbox" class="expansion-button">
-                <div class="create-game-expansion-icon expansion-icon-venus"></div>
-                <span v-i18n>Venus Next</span>
-              </label>
+                <input type="checkbox" name="venusNext" id="venusNext-checkbox" v-model="expansions.venus">
+                <label for="venusNext-checkbox" class="expansion-button">
+                  <div class="create-game-expansion-icon expansion-icon-venus"></div>
+                  <span v-i18n>Venus Next</span>
+                </label>
 
-              <input type="checkbox" name="colonies" id="colonies-checkbox" v-model="expansions.colonies">
-              <label for="colonies-checkbox" class="expansion-button">
-                <div class="create-game-expansion-icon expansion-icon-colony"></div>
-                <span v-i18n>Colonies</span>
-              </label>
+                <input type="checkbox" name="colonies" id="colonies-checkbox" v-model="expansions.colonies">
+                <label for="colonies-checkbox" class="expansion-button">
+                  <div class="create-game-expansion-icon expansion-icon-colony"></div>
+                  <span v-i18n>Colonies</span>
+                </label>
 
-              <input type="checkbox" name="turmoil" id="turmoil-checkbox" v-model="expansions.turmoil">
-              <label for="turmoil-checkbox" class="expansion-button">
-                <div class="create-game-expansion-icon expansion-icon-turmoil"></div>
-                <span v-i18n>Turmoil</span>
-              </label>
-
-              <template v-if="expansions.turmoil">
-                <input type="checkbox" v-model="gigaTurmoil" id="gigaTurmoil-checkbox">
-                <label for="gigaTurmoil-checkbox">
+                <input type="checkbox" name="turmoil" id="turmoil-checkbox" v-model="expansions.turmoil">
+                <label for="turmoil-checkbox" class="expansion-button">
                   <div class="create-game-expansion-icon expansion-icon-turmoil"></div>
-                  <span v-i18n>Giga Turmoil</span>&nbsp;<span class="tooltip" v-i18n data-tooltip="Adds the six GIGA parties (6 of the 12 parties are drafted). The chairman picks the bonus and policy, and a reward from the chairman wheel.">&#9432;</span>
+                  <span v-i18n>Turmoil</span>
                 </label>
 
-                <input type="checkbox" name="politicalAgendas" id="politicalAgendas-checkbox" :checked="isPoliticalAgendasExtensionEnabled === true" :disabled="gigaTurmoil" @change="politicalAgendasExtensionToggle()">
-                <label for="politicalAgendas-checkbox" :title="gigaTurmoil ? 'Giga Turmoil comes with its own agendas, so they are always on' : undefined">
-                  <div class="create-game-expansion-icon expansion-icon-agendas"></div>
-                  <span v-i18n>Agendas</span>&nbsp;<a href="https://www.notion.so/Political-Agendas-8c6b0b018a884692be29b3ef44b340a9" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
+                <template v-if="expansions.turmoil">
+                  <input type="checkbox" v-model="gigaTurmoil" id="gigaTurmoil-checkbox">
+                  <label for="gigaTurmoil-checkbox">
+                    <div class="create-game-expansion-icon expansion-icon-turmoil"></div>
+                    <span v-i18n>Giga Turmoil</span>&nbsp;<span class="tooltip" v-i18n data-tooltip="Adds the six GIGA parties (6 of the 12 parties are drafted). The chairman picks the bonus and policy, and a reward from the chairman wheel.">&#9432;</span>
+                  </label>
+
+                  <input type="checkbox" name="politicalAgendas" id="politicalAgendas-checkbox" :checked="isPoliticalAgendasExtensionEnabled === true" :disabled="gigaTurmoil" @change="politicalAgendasExtensionToggle()">
+                  <label for="politicalAgendas-checkbox" :title="gigaTurmoil ? 'Giga Turmoil comes with its own agendas, so they are always on' : undefined">
+                    <div class="create-game-expansion-icon expansion-icon-agendas"></div>
+                    <span v-i18n>Agendas</span>&nbsp;<a href="https://www.notion.so/Political-Agendas-8c6b0b018a884692be29b3ef44b340a9" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
+                  </label>
+
+                  <div class="create-game-page-column-row" v-if="isPoliticalAgendasExtensionEnabled">
+                    <div>
+                      <input type="radio" name="agendaStyle" v-model="politicalAgendasExtension" :value="getPoliticalAgendasExtensionAgendaStyle('random')" :disabled="gigaTurmoil" id="randomAgendaStyle-radio">
+                      <label class="label-agendaStyle agendaStyle-random" for="randomAgendaStyle-radio">
+                        <span class="agendas-text" v-i18n>{{ getPoliticalAgendasExtensionAgendaStyle('random') }}</span>
+                      </label>
+                    </div>
+
+                    <div>
+                      <input type="radio" name="agendaStyle" v-model="politicalAgendasExtension" :value="getPoliticalAgendasExtensionAgendaStyle('chairman')" :disabled="gigaTurmoil" id="chairmanAgendaStyle-radio">
+                      <label class="label-agendaStyle agendaStyle-chairman" for="chairmanAgendaStyle-radio">
+                        <span class="agendas-text" v-i18n>{{ getPoliticalAgendasExtensionAgendaStyle('chairman') }}</span>
+                      </label>
+                    </div>
+                  </div>
+                </template>
+
+                <input type="checkbox" name="promo" id="promo-checkbox" v-model="expansions.promo">
+                <label for="promo-checkbox" class="expansion-button">
+                  <div class="create-game-expansion-icon expansion-icon-promo"></div>
+                  <span v-i18n>Promos</span>&nbsp;<a :href="wikiUrls.promo" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
                 </label>
+              </div>
 
-                <div class="create-game-page-column-row" v-if="isPoliticalAgendasExtensionEnabled">
-                  <div>
-                    <input type="radio" name="agendaStyle" v-model="politicalAgendasExtension" :value="getPoliticalAgendasExtensionAgendaStyle('random')" :disabled="gigaTurmoil" id="randomAgendaStyle-radio">
-                    <label class="label-agendaStyle agendaStyle-random" for="randomAgendaStyle-radio">
-                      <span class="agendas-text" v-i18n>{{ getPoliticalAgendasExtensionAgendaStyle('random') }}</span>
-                    </label>
-                  </div>
-
-                  <div>
-                    <input type="radio" name="agendaStyle" v-model="politicalAgendasExtension" :value="getPoliticalAgendasExtensionAgendaStyle('chairman')" :disabled="gigaTurmoil" id="chairmanAgendaStyle-radio">
-                    <label class="label-agendaStyle agendaStyle-chairman" for="chairmanAgendaStyle-radio">
-                      <span class="agendas-text" v-i18n>{{ getPoliticalAgendasExtensionAgendaStyle('chairman') }}</span>
-                    </label>
-                  </div>
-                </div>
-              </template>
-
-              <input type="checkbox" name="promo" id="promo-checkbox" v-model="expansions.promo">
-              <label for="promo-checkbox" class="expansion-button">
-                <div class="create-game-expansion-icon expansion-icon-promo"></div>
-                <span v-i18n>Promos</span>&nbsp;<a :href="wikiUrls.promo" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
-              </label>
-
-              <div class="create-game-subsection-label" v-i18n>Fan-made</div>
+              <div class="create-game-subsection-label create-game-fan-label" v-i18n>Fan-made</div>
 
               <input type="checkbox" name="ares" id="ares-checkbox" v-model="expansions.ares">
               <label for="ares-checkbox" class="expansion-button">
@@ -961,22 +966,29 @@ export default defineComponent({
   },
   methods: {
     /**
-     * Fits the expansions list in the scrolling options panel: as many rows as there is room for, then another column.
-     * It only takes as many columns as fit next to the other option columns, so those stay on screen.
-     * Narrow screens scroll the whole page instead, so the list stays in one column there.
+     * Fits the expansions in the scrolling options panel. The official ones fill the first column; the fan-made ones
+     * start the next column and take as many rows as there is room for, then go on in another column. They only take
+     * as many columns as fit next to the other option columns, so those stay on screen.
+     * Narrow screens scroll the whole page instead, so the list stays in one column there (see create_game_form.less).
      */
     updateExpansionRows() {
       const grid = this.$refs.expansionsGrid as HTMLElement | undefined;
+      const official = this.$refs.officialExpansions as HTMLElement | undefined;
       const panel = grid?.closest('.create-game-options') ?? undefined;
       const column = grid?.parentElement ?? undefined;
       const container = column?.parentElement ?? undefined;
-      if (grid === undefined || panel === undefined || column === undefined || container === undefined) {
+      if (grid === undefined || official === undefined || panel === undefined || column === undefined || container === undefined) {
         return;
       }
       let rows = SINGLE_COLUMN;
       if (window.innerWidth >= WIDE_SCREEN) {
         const room = panel.getBoundingClientRect().bottom - grid.getBoundingClientRect().top - panel.scrollTop;
         const fitRows = Math.floor(room / EXPANSION_BUTTON_HEIGHT);
+        const countItems = (parent: HTMLElement) => Array.from(parent.children).filter((child) => child.tagName !== 'INPUT').length;
+        // The official column spans every row, so there are always enough rows for it.
+        const officialRows = countItems(official);
+        // The fan-made title and buttons, without the official column.
+        const fanItems = countItems(grid) - 1;
 
         // Every column is as wide as the widest button.
         const button = grid.querySelector('label');
@@ -988,9 +1000,9 @@ export default defineComponent({
           }
         }
         const padding = column.offsetWidth - grid.offsetWidth;
-        const maxColumns = columnWidth > 0 ? Math.max(1, Math.floor((container.clientWidth - otherColumns - padding) / columnWidth)) : 1;
-        const items = Array.from(grid.children).filter((child) => child.tagName !== 'INPUT').length;
-        rows = Math.max(MIN_EXPANSION_ROWS, fitRows, Math.ceil(items / maxColumns));
+        const maxColumns = columnWidth > 0 ? Math.floor((container.clientWidth - otherColumns - padding) / columnWidth) : 2;
+        const fanColumns = Math.max(1, maxColumns - 1);
+        rows = Math.max(MIN_EXPANSION_ROWS, officialRows, fitRows, Math.ceil(fanItems / fanColumns));
       }
       if (rows !== this.expansionRows) {
         this.expansionRows = rows;

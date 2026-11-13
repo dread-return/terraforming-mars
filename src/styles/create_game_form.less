@@ -72,13 +72,37 @@
   padding: 20px 10px;
 }
 
-// The expansions fill a column from the top, then go on in the next one. --expansion-rows is set by CreateGameForm.
+// The official expansions fill the first column. The fan-made ones start the second column under their title and
+// go on in the next ones. --expansion-rows is set by CreateGameForm. Narrow screens keep one column (see below).
 .create-game-expansions-grid {
   display: grid;
   grid-auto-flow: column;
   grid-template-rows: repeat(var(--expansion-rows), auto);
   grid-auto-columns: 1fr;
   align-content: start;
+}
+
+.create-game-expansions-official {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  display: flex;
+  flex-direction: column;
+}
+
+.create-game-fan-label {
+  align-self: end;
+  padding: 0 0 8px 4px;
+}
+
+@media (max-width: 1023px) {
+  .create-game-expansions-grid {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .create-game-fan-label {
+    padding-top: 10px;
+  }
 }
 
 .create-game-page-column-row {

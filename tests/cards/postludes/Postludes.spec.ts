@@ -33,6 +33,7 @@ import {Board} from '../../../src/server/boards/Board';
 import {FlightAcademy} from '../../../src/server/cards/postludes/FlightAcademy';
 import {CityProjectLibrary} from '../../../src/server/cards/postludes/CityProjectLibrary';
 import {Asteroid} from '../../../src/server/cards/base/Asteroid';
+import {SteelIndustryStandardProject} from '../../../src/server/cards/industries/IndustryStandardProjects';
 import {AmusementPark} from '../../../src/server/cards/postludes/AmusementPark';
 import {AnimalFarm} from '../../../src/server/cards/postludes/AnimalFarm';
 import {AquaticLifeLaboratory} from '../../../src/server/cards/postludes/AquaticLifeLaboratory';
@@ -721,6 +722,31 @@ describe('Postlude cards', () => {
       install(new MachineryFactory(), space);
       game.board.getAdjacentSpaces(space).forEach((s) => put(s, G, player2));
       expect(Postludes.standardProjectPayWith(player, new GreeneryStandardProject(), {}).steel).is.undefined;
+    });
+
+    it('lets an industry standard project take steel next to the Factory, and only place it there', () => {
+      const [industryGame, industryPlayer] = testGame(2, {postludesExpansion: true, individualTracks: true, industriesExpansion: true});
+      const board = industryGame.board;
+      const space = board.spaces.find((s) =>
+        s.spaceType === SpaceType.LAND && s.tile === undefined &&
+        board.getAdjacentSpaces(s).length === 6 && board.getAdjacentSpaces(s).every((a) => a.spaceType === SpaceType.LAND && a.tile === undefined))!;
+      industryGame.simpleAddTile(industryPlayer, space, {tileType: C});
+      const factory = new MachineryFactory();
+      industryPlayer.playedCards.push(factory);
+      Postludes.place(industryPlayer, factory, space);
+      industryPlayer.playedCards.push(fakeCard({tags: [Tag.POWER]}));
+      const project = new SteelIndustryStandardProject();
+      expect(Postludes.standardProjectPayWith(industryPlayer, project, {}).steel).is.true;
+      industryPlayer.megaCredits = 0;
+      industryPlayer.steel = 20;
+      expect(project.canAct(industryPlayer)).is.true;
+      project.payAndExecute(industryPlayer, {...Payment.EMPTY, steel: 20});
+      runAllActions(industryGame);
+      const select = cast(industryPlayer.popWaitingFor(), SelectSpace);
+      expect(select.spaces.length).is.greaterThan(0);
+      for (const s of select.spaces) {
+        expect(board.getAdjacentSpaces(space)).includes(s);
+      }
     });
 
     it('lets the Greenery standard project take titanium next to the Workshop', () => {

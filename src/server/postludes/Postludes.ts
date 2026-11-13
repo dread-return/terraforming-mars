@@ -27,6 +27,7 @@ import {MoonExpansion} from '../moon/MoonExpansion';
 import {message} from '../logs/MessageBuilder';
 import {VictoryPointsBreakdownBuilder} from '../game/VictoryPointsBreakdownBuilder';
 import {IStandardProjectCard} from '../cards/IStandardProjectCard';
+import {INDUSTRY_STANDARD_PROJECTS} from '../../common/industries/Industries';
 import {StandardProjectCanPayWith} from '../../common/cards/Types';
 import {Payment} from '../../common/inputs/Payment';
 import {POSTLUDE_ADJACENCY} from './PostludeAdjacency';
@@ -366,7 +367,8 @@ export class Postludes {
     case CardName.AQUIFER_STANDARD_PROJECT:
       return player.game.canAddOcean() ? board.getAvailableSpacesForOcean(player) : [];
     default:
-      return [];
+      // Industry tiles go on any free land.
+      return INDUSTRY_STANDARD_PROJECTS.has(project) ? board.getAvailableSpacesOnLand(player) : [];
     }
   }
 

@@ -74,9 +74,11 @@ export abstract class IndustryStandardProject extends StandardProjectCard {
   }
 
   public actionEssence(player: IPlayer): void {
+    // Paying with steel or titanium from Machinery Factory / Metallurgy Workshop limits where the tile can go.
+    const restricted = this.placementSpaces;
     player.game.defer(new PlaceTile(player, {
       tile: {tileType: INDUSTRY_TILE[this.kind]},
-      on: 'land',
+      on: restricted === undefined ? 'land' : () => restricted,
       title: 'Select space for the industry',
     })).andThen((space) => Industries.onPlaced(player, this.kind, space));
   }

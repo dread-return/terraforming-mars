@@ -519,17 +519,13 @@ export class Game implements IGame, Logger {
     return game;
   }
 
-  /** Properly starts the game: first the Giga Turmoil party draft, if it is in use, and then the card draft or research. */
+  /**
+   * Starts the game with the project draft, or initial research phase.
+   *
+   * Giga Turmoil's party draft comes later: once everybody has chosen their initial cards, and before the corporations
+   * and preludes are played. See playerHasPickedCorporationCard.
+   */
   private gotoInitialPhase(): void {
-    if (this.turmoil?.gigaTurmoil === true) {
-      startPartyDraft(this, () => this.gotoInitialPhaseAfterPartyDraft());
-      return;
-    }
-    this.gotoInitialPhaseAfterPartyDraft();
-  }
-
-  /** Starts the game with the project draft, or initial research phase. */
-  private gotoInitialPhaseAfterPartyDraft(): void {
     // Initial Draft
     if (this.gameOptions.initialDraftVariant) {
       this.phase = Phase.INITIALDRAFTING;
@@ -765,11 +761,20 @@ export class Game implements IGame, Logger {
     player.timer.enable();
     const players = this.playersInGenerationOrder;
     if (players.every((p) => p.pickedCorporationCard !== undefined)) {
-      for (const p of players) {
-        // This if clause is necessary because `every` above doesn't help.
-        if (p.pickedCorporationCard) {
-          p.playCorporationCard(p.pickedCorporationCard);
-        }
+      // Giga Turmoil: the parties are drafted after the initial cards are chosen, before anything is played.
+      if (this.turmoil?.awaitingPartyDraft() === true) {
+        startPartyDraft(this, () => this.playPickedCorporations());
+        return;
+      }
+      this.playPickedCorporations();
+    }
+  }
+
+  private playPickedCorporations(): void {
+    for (const p of this.playersInGenerationOrder) {
+      // This if clause is necessary because `every` above doesn't help.
+      if (p.pickedCorporationCard) {
+        p.playCorporationCard(p.pickedCorporationCard);
       }
     }
   }
@@ -1977,7 +1982,7 @@ export class Game implements IGame, Logger {
     // Still in Draft or Research of generation 1
     if (game.generation === 1 && game.turmoil?.partyDraft !== undefined) {
       // Giga Turmoil: still choosing parties.
-      restorePartyDraft(game, () => game.gotoInitialPhaseAfterPartyDraft());
+      restorePartyDraft(game, () => game.playPickedCorporations());
     } else if (game.generation === 1 && players.some((p) => p.playedCards.filter(isICorporationCard).length === 0)) {
       if (game.phase === Phase.INITIALDRAFTING) {
         switch (game.initialDraftIteration) {

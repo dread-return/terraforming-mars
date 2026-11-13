@@ -255,6 +255,11 @@ describe('ApiCreateGame', () => {
     expect(options.individualTracks).is.false;
   });
 
+  it('created games show 3 milestones and 3 awards', async () => {
+    const options = await createdGameOptions({});
+    expect(options.threeMilestonesAndAwards).is.true;
+  });
+
   async function createdEscapeVelocity(escapeVelocity: object) {
     await postConfig({...newGameConfigForTest(), escapeVelocity});
     expect(res.statusCode).eq(statusCode.ok);

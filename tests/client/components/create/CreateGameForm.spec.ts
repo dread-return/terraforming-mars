@@ -207,6 +207,51 @@ describe('CreateGameForm', () => {
     expect(model.altVenusBoard).is.false;
   });
 
+  it('Giga Turmoil and Agendas sit under Turmoil, and Giga Turmoil turns the agendas on', async () => {
+    const wrapper = shallowMount(CreateGameForm, {
+      ...globalConfig,
+    });
+    const model = wrapper.vm as unknown as CreateGameModel;
+    model.expansions.turmoil = false;
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('#gigaTurmoil-checkbox').exists()).is.false;
+    expect(wrapper.find('#politicalAgendas-checkbox').exists()).is.false;
+
+    model.expansions.turmoil = true;
+    await wrapper.vm.$nextTick();
+    const agendas = wrapper.find('#politicalAgendas-checkbox');
+    expect(agendas.exists()).is.true;
+    expect((agendas.element as HTMLInputElement).checked).is.false;
+    expect((agendas.element as HTMLInputElement).disabled).is.false;
+
+    model.gigaTurmoil = true;
+    await wrapper.vm.$nextTick();
+    expect(model.politicalAgendasExtension).eq('Chairman');
+    expect((agendas.element as HTMLInputElement).checked).is.true;
+    expect((agendas.element as HTMLInputElement).disabled).is.true;
+  });
+
+  it('Industries, Domes and Wilderness and Postludes are in the options column, in that order, under the board', () => {
+    const wrapper = shallowMount(CreateGameForm, {
+      ...globalConfig,
+    });
+    const columns = wrapper.findAll('.create-game-page-column');
+    const options = columns.find((column) => column.find('h4').text() === 'Options')!;
+    const ids = options.findAll('input[type="checkbox"]').map((input) => input.attributes('id'));
+    expect(ids.slice(0, 3)).deep.eq(['industries-checkbox', 'domesWilderness-checkbox', 'postludes-checkbox']);
+  });
+
+  it('the expansions list wraps into columns of the size set by expansionRows', async () => {
+    const wrapper = shallowMount(CreateGameForm, {
+      ...globalConfig,
+    });
+    await wrapper.vm.$nextTick();
+    const grid = wrapper.find('.create-game-expansions-grid');
+    expect(grid.exists()).is.true;
+    expect(wrapper.vm.expansionRows).is.at.least(6);
+    expect(grid.attributes('style')).includes(`--expansion-rows: ${wrapper.vm.expansionRows}`);
+  });
+
   it('toggling random milestones and awards leaves manual milestones and awards', () => {
     const wrapper = shallowMount(CreateGameForm, {
       ...globalConfig,

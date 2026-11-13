@@ -38,6 +38,12 @@ export type GameOptions = {
   domesWilderness: boolean;
   /** Individual global parameter tracks (Epic): each player's markers on the oxygen, temperature, oceans and cities tracks, with rewards along the way. */
   individualTracks: boolean;
+  /**
+   * Show 3 milestones and 3 awards instead of the board's set plus the expansions' ones.
+   * Every game created from the create-game page has it (see ApiCreateGame); it is off by default so tests keep the
+   * board's full set.
+   */
+  threeMilestonesAndAwards: boolean;
   solarPhaseOption: boolean;
   removeNegativeGlobalEventsOption: boolean;
   moonExpansion: boolean;
@@ -163,6 +169,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   gigaTurmoil: false,
   domesWilderness: false,
   individualTracks: false,
+  threeMilestonesAndAwards: false,
   preludeDraftVariant: false,
   ceosDraftVariant: false,
   preludeExtension: false,

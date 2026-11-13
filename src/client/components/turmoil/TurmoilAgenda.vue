@@ -3,7 +3,7 @@
     <div @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
       <template v-if="isGiga">
         <span v-if="showPartyBadge" :class="partyBadgeClass" v-i18n></span>
-        <span class="giga-agenda-text" v-i18n>{{ resolvedDescription }}</span>
+        <img :class="gigaIconClass" :src="gigaIconSrc" :alt="resolvedDescription">
       </template>
       <template v-else-if="id === 'mb01'">
         <div class="resource megacredits party-resource">1</div> /
@@ -227,9 +227,10 @@ export default defineComponent({
     };
   },
   computed: {
-    partyBadgeClass(): string {
+    /** The party this agenda belongs to, as used in css classes and file names. */
+    partySlug(): string {
       // Giga Turmoil ids use a capital letter for the party, the rest use lowercase letters. Both name the same party.
-      const partyBadgeSlugs: Record<string, string> = {
+      const partySlugs: Record<string, string> = {
         m: 'mars_first',
         s: 'scientists',
         u: 'unity',
@@ -243,11 +244,24 @@ export default defineComponent({
         c: 'centrists',
         t: 'transhumanists',
       };
-      return 'party-badge party-badge--' + partyBadgeSlugs[this.id[0].toLowerCase()];
+      return partySlugs[this.id[0].toLowerCase()];
     },
-    /** Giga Turmoil bonuses and policies are shown as text. */
+    partyBadgeClass(): string {
+      return 'party-badge party-badge--' + this.partySlug;
+    },
+    /** Giga Turmoil bonuses and policies are shown with their icons from the Epic rulebook. */
     isGiga(): boolean {
       return isGigaAgendaId(this.id);
+    },
+    isBonus(): boolean {
+      return this.id[1] === 'b';
+    },
+    /** e.g. Mp03 is assets/parties/giga/agendas/mars_first-p3.png and Ob01 is spome-b1.png. */
+    gigaIconSrc(): string {
+      return `assets/parties/giga/agendas/${this.partySlug}-${this.id[1]}${Number(this.id.slice(2))}.png`;
+    },
+    gigaIconClass(): string {
+      return this.isBonus ? 'giga-agenda-bonus' : 'giga-agenda-policy';
     },
     resolvedDescription(): string {
       return getAgendaOrThrow(this.id).description;

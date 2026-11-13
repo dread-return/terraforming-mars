@@ -26,7 +26,9 @@ import {Space} from '../../src/server/boards/Space';
 import {PowerPlantStandardProject} from '../../src/server/cards/base/standardProjects/PowerPlantStandardProject';
 import {Tardigrades} from '../../src/server/cards/base/Tardigrades';
 import {CardName} from '../../src/common/cards/CardName';
-import {partiesPerPlayer} from '../../src/server/turmoil/giga/PartyDraft';
+import {partiesPerPlayer, startPartyDraft} from '../../src/server/turmoil/giga/PartyDraft';
+import {SelectInitialCards} from '../../src/server/inputs/SelectInitialCards';
+import {SelectCard} from '../../src/server/inputs/SelectCard';
 import {IProjectCard} from '../../src/server/cards/IProjectCard';
 
 const GIGA_OPTIONS = {turmoilExtension: true, gigaTurmoil: true, politicalAgendasExtension: 'Chairman'} as const;
@@ -74,6 +76,16 @@ function policyOf(game: IGame, partyName: PartyName, id: string) {
 /** A land space with no placement bonus, so tests only see the effect of the policy. */
 function plainSpace(game: IGame, player: TestPlayer): Space {
   return game.board.getAvailableSpacesOnLand(player).find((s) => s.bonus.length === 0)!;
+}
+
+/**
+ * A Giga Turmoil test game with the party draft dealt. testGame skips the initial card selection, which is what
+ * normally starts the draft.
+ */
+function draftGame(count: number): [IGame, ...Array<TestPlayer>] {
+  const result = testGame(count, GIGA_OPTIONS);
+  startPartyDraft(result[0], () => {});
+  return result;
 }
 
 /** Every waiting player takes the first party in their hand, until the draft is over. */
@@ -181,7 +193,7 @@ describe('Giga Turmoil', () => {
     });
 
     it('deals the parties and asks every player to choose', () => {
-      const [game, p1, p2, p3] = testGame(3, GIGA_OPTIONS);
+      const [game, p1, p2, p3] = draftGame(3);
       const draft = Turmoil.getTurmoil(game).partyDraft!;
       expect(draft.hands.map((h) => h.length)).deep.eq([4, 4, 4]);
       expect(new Set(draft.hands.flat()).size).eq(12);
@@ -200,7 +212,7 @@ describe('Giga Turmoil', () => {
     });
 
     it('everybody passes what they have left to the next player', () => {
-      const [game, p1, p2, p3] = testGame(3, GIGA_OPTIONS);
+      const [game, p1, p2, p3] = draftGame(3);
       const draft = Turmoil.getTurmoil(game).partyDraft!;
       const before = draft.hands.map((h) => [...h]);
 
@@ -218,7 +230,7 @@ describe('Giga Turmoil', () => {
 
     for (const count of [1, 2, 3, 4, 5, 6, 7, 8]) {
       it(`puts six different parties in play with ${count} player(s)`, () => {
-        const [game] = testGame(count, GIGA_OPTIONS);
+        const [game] = draftGame(count);
         finishDraft(game);
         const turmoil = Turmoil.getTurmoil(game);
         const names = turmoil.parties.map((p) => p.name);
@@ -231,7 +243,7 @@ describe('Giga Turmoil', () => {
 
     it('chooses the starting party at random from the parties in play, and gives it a bonus and policy', () => {
       for (let i = 0; i < 20; i++) {
-        const [game] = testGame(2, GIGA_OPTIONS);
+        const [game] = draftGame(2);
         finishDraft(game);
         const turmoil = Turmoil.getTurmoil(game);
         expect(turmoil.parties).includes(turmoil.rulingParty);
@@ -246,22 +258,60 @@ describe('Giga Turmoil', () => {
     });
 
     it('draws the first global events once the draft is over', () => {
-      const [game] = testGame(2, GIGA_OPTIONS);
+      const [game] = draftGame(2);
       finishDraft(game);
       const turmoil = Turmoil.getTurmoil(game);
       expect(turmoil.comingGlobalEvent).is.not.undefined;
       expect(turmoil.distantGlobalEvent).is.not.undefined;
     });
 
-    it('the game goes on to the card selection afterwards', () => {
-      const [game, player] = testGame(2, {...GIGA_OPTIONS, skipInitialCardSelection: false});
+    it('starts after everybody chose their initial cards, and plays the corporations after it', () => {
+      const [game, p1, p2] = testGame(2, {...GIGA_OPTIONS, skipInitialCardSelection: false});
+      const turmoil = Turmoil.getTurmoil(game);
+      expect(turmoil.partyDraft).is.undefined;
+      expect(turmoil.awaitingPartyDraft()).is.true;
+
+      for (const player of [p1, p2]) {
+        const selectInitialCards = cast(player.getWaitingFor(), SelectInitialCards);
+        player.process({type: 'initialCards', responses: [
+          {type: 'card', cards: [cast(selectInitialCards.options[0], SelectCard).cards[0].name]},
+          {type: 'card', cards: []},
+        ]});
+        if (player === p1) {
+          // Not everybody has chosen yet.
+          expect(turmoil.partyDraft).is.undefined;
+        }
+      }
+
+      expect(turmoil.partyDraft).is.not.undefined;
+      expect(p1.getWaitingFor()).instanceOf(OrOptions);
+      expect(p1.playedCards.corporations()).is.empty;
+      expect(p2.playedCards.corporations()).is.empty;
+
       finishDraft(game);
-      expect(player.getWaitingFor()).is.not.undefined;
-      expect(game.phase).eq(Phase.RESEARCH);
+      expect(turmoil.awaitingPartyDraft()).is.false;
+      expect(p1.playedCards.corporations()).has.length(1);
+      expect(p2.playedCards.corporations()).has.length(1);
+    });
+
+    it('a game restored in the middle of the draft plays the corporations after it', () => {
+      const [game, p1, p2] = testGame(2, {...GIGA_OPTIONS, skipInitialCardSelection: false});
+      for (const player of [p1, p2]) {
+        const selectInitialCards = cast(player.getWaitingFor(), SelectInitialCards);
+        player.process({type: 'initialCards', responses: [
+          {type: 'card', cards: [cast(selectInitialCards.options[0], SelectCard).cards[0].name]},
+          {type: 'card', cards: []},
+        ]});
+      }
+      const copy = Game.deserialize(game.serialize());
+      finishDraft(copy);
+      for (const player of copy.players) {
+        expect(player.playedCards.corporations()).has.length(1);
+      }
     });
 
     it('serializes and restores the game in the middle of the draft', () => {
-      const [game, p1] = testGame(3, GIGA_OPTIONS);
+      const [game, p1] = draftGame(3);
       p1.process({type: 'or', index: 1, response: {type: 'option'}});
       const draft = Turmoil.getTurmoil(game).partyDraft!;
 

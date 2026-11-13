@@ -301,3 +301,37 @@ describe('GIGA fan milestones and awards', () => {
     expect(intersection(awards, giga.awards)).has.members(['Microbiologist']);
   });
 });
+
+describe('MilestoneAwardSelector, 3 milestones and 3 awards', () => {
+  const three = {...DEFAULT_GAME_OPTIONS, threeMilestonesAndAwards: true};
+
+  it('keeps 3 of the board and expansion milestones and awards', () => {
+    for (let i = 0; i < 20; i++) {
+      const options: GameOptions = {...three, venusNextExtension: true, aresExtension: true, moonExpansion: true};
+      const all = chooseMilestonesAndAwards({...options, threeMilestonesAndAwards: false});
+      const drawn = chooseMilestonesAndAwards(options);
+      expect(drawn.milestones).has.length(3);
+      expect(drawn.awards).has.length(3);
+      // The moon pair is random, so only check the board and the other expansions.
+      const fixed = [...milestoneManifest.boards[BoardName.THARSIS], ...milestoneManifest.expansions['venus'], ...milestoneManifest.expansions['ares'],
+        'One Giant Step', 'Lunarchitect'];
+      for (const name of drawn.milestones) {
+        expect(fixed).includes(name);
+      }
+      expect(all.milestones.length).greaterThan(3);
+    }
+  });
+
+  it('draws 3 of each when randomized', () => {
+    for (const randomMA of [RandomMAOptionType.LIMITED, RandomMAOptionType.UNLIMITED]) {
+      const drawn = chooseMilestonesAndAwards({...three, randomMA, venusNextExtension: true});
+      expect(drawn.milestones).has.length(3);
+      expect(drawn.awards).has.length(3);
+    }
+  });
+
+  it('is off by default, so the board keeps its full set', () => {
+    const drawn = chooseMilestonesAndAwards(DEFAULT_GAME_OPTIONS);
+    expect(drawn.milestones).deep.eq(milestoneManifest.boards[BoardName.THARSIS]);
+  });
+});

@@ -174,6 +174,8 @@ export class ApiCreateGame extends Handler {
         domesWilderness: gameReq.domesWilderness === true,
         // Postludes are gained from the individual tracks, so they turn the tracks on.
         individualTracks: gameReq.individualTracks === true || gameReq.expansions.postludes === true,
+        // This fork always shows 3 milestones and 3 awards.
+        threeMilestonesAndAwards: true,
         prelude2Expansion: gameReq.expansions.prelude2,
         preludeDraftVariant: gameReq.preludeDraftVariant,
         preludeExtension: gameReq.expansions.prelude,

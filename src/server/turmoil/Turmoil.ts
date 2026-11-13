@@ -1,4 +1,4 @@
-import {GIGA_PARTIES, OFFICIAL_PARTIES, PartyName} from '../../common/turmoil/PartyName';
+import {GIGA_PARTIES, GIGA_PARTIES_IN_PLAY, OFFICIAL_PARTIES, PartyName} from '../../common/turmoil/PartyName';
 import {IParty} from './parties/IParty';
 import {MarsFirst} from './parties/MarsFirst';
 import {Scientists} from './parties/Scientists';
@@ -202,6 +202,11 @@ export class Turmoil {
 
     this.onAgendaSelected(game);
     this.initGlobalEvent(game);
+  }
+
+  /** Giga Turmoil: true until the party draft has chosen the parties in play. */
+  public awaitingPartyDraft(): boolean {
+    return this.gigaTurmoil && this.parties.length > GIGA_PARTIES_IN_PLAY;
   }
 
   public static getTurmoil(game: IGame): Turmoil {

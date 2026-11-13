@@ -64,7 +64,8 @@ export function chooseMilestonesAndAwards(gameOptions: GameOptions): DrawnMilest
     drawnMilestonesAndAwards.awards.push(...awards);
   }
 
-  const requiredQty = gameOptions.venusNextExtension ? 6 : 5;
+  // This fork shows 3 milestones and 3 awards (as many as can be claimed and funded), see threeMilestonesAndAwards.
+  const requiredQty = gameOptions.threeMilestonesAndAwards ? MILESTONES_AWARDS_SHOWN : (gameOptions.venusNextExtension ? 6 : 5);
 
   switch (gameOptions.randomMA) {
   case RandomMAOptionType.NONE:
@@ -100,6 +101,13 @@ export function chooseMilestonesAndAwards(gameOptions: GameOptions): DrawnMilest
         push(['Lunarchitect'], ['Full Moon']);
       }
     }
+    // Keep 3 of each, chosen at random from the board's own and the expansions' milestones and awards.
+    if (gameOptions.threeMilestonesAndAwards) {
+      drawnMilestonesAndAwards = {
+        milestones: pickSome(drawnMilestonesAndAwards.milestones, MILESTONES_AWARDS_SHOWN),
+        awards: pickSome(drawnMilestonesAndAwards.awards, MILESTONES_AWARDS_SHOWN),
+      };
+    }
     break;
 
   case RandomMAOptionType.LIMITED:
@@ -123,6 +131,20 @@ export function chooseMilestonesAndAwards(gameOptions: GameOptions): DrawnMilest
   }
 
   return drawnMilestonesAndAwards;
+}
+
+/** How many milestones, and how many awards, a game shows. Exported for tests. */
+export const MILESTONES_AWARDS_SHOWN = 3;
+
+/** `count` entries of `list` at random, in their original order. */
+function pickSome<T>(list: ReadonlyArray<T>, count: number): Array<T> {
+  if (list.length <= count) {
+    return [...list];
+  }
+  const chosen = [...list];
+  inplaceShuffle(chosen, UnseededRandom.INSTANCE);
+  const keep = new Set(chosen.slice(0, count));
+  return list.filter((entry) => keep.has(entry));
 }
 
 /** Boards with no volcanic spaces. Exported for tests. */

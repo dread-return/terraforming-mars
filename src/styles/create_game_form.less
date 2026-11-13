@@ -72,6 +72,15 @@
   padding: 20px 10px;
 }
 
+// The expansions fill a column from the top, then go on in the next one. --expansion-rows is set by CreateGameForm.
+.create-game-expansions-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(var(--expansion-rows), auto);
+  grid-auto-columns: 1fr;
+  align-content: start;
+}
+
 .create-game-page-column-row {
   display: flex;
   flex-flow: row nowrap;
@@ -117,6 +126,12 @@
 .create-game-page-column .expansion-button {
   text-align: left;
   justify-content: left;
+}
+
+// A choice another option has made for you (Agendas with Giga Turmoil, the tracks with Postludes).
+.create-game-page-column input:disabled + label {
+  opacity: 0.6;
+  cursor: default;
 }
 
 .create-game-page-column label:hover {

@@ -25,6 +25,7 @@ import {Phase} from '../../src/common/Phase';
 import {Luna} from '../../src/server/colonies/Luna';
 import {Tardigrades} from '../../src/server/cards/base/Tardigrades';
 import {GIGA_PARTIES_IN_PLAY} from '../../src/common/turmoil/PartyName';
+import {startPartyDraft} from '../../src/server/turmoil/giga/PartyDraft';
 
 const OPTIONS = {
   turmoilExtension: true,
@@ -142,6 +143,7 @@ describe('Giga global events', () => {
 
     it('the Giga events are in the deck after the party draft, and the first ones put neutral delegates on parties in play', () => {
       const [game] = testGame(2, OPTIONS);
+      startPartyDraft(game, () => {});
       for (let i = 0; i < 20 && Turmoil.getTurmoil(game).partyDraft !== undefined; i++) {
         for (const player of game.players) {
           if (Turmoil.getTurmoil(game).partyDraft?.waiting.includes(player.id)) {

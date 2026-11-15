@@ -129,6 +129,13 @@
       </div>
       <br>
     </section>
+    <section v-show="visibleInfrastructureCards.length > 0" class="card-list-cards-list">
+      <h2 v-i18n>Infrastructures</h2>
+      <div class="cardbox" v-for="card in visibleInfrastructureCards" :key="card" v-memo="[card, tallCards]">
+        <Card :card="{'name': card}" :autoTall="tallCards" />
+      </div>
+      <br>
+    </section>
     <section v-show="visibleStandardProjectCards.length > 0" class="card-list-cards-list">
       <h2 v-i18n>Standard Projects</h2>
       <div class="cardbox" v-for="card in visibleStandardProjectCards" :key="card" v-memo="[card, tallCards]">
@@ -195,6 +202,7 @@
 
 <script lang="ts">
 
+import {isInfrastructureCopy} from '@/common/highOrbit/HighOrbit';
 import {defineComponent} from 'vue';
 import {CardType} from '@/common/cards/CardType';
 import {CardName} from '@/common/cards/CardName';
@@ -281,6 +289,7 @@ export default defineComponent({
         CardType.CORPORATION,
         CardType.STANDARD_PROJECT,
         CardType.CEO,
+        CardType.INFRASTRUCTURE,
         'colonyTiles',
         'globalEvents',
         'milestones',
@@ -330,6 +339,11 @@ export default defineComponent({
     },
     visibleStandardProjectCards(): Array<CardName> {
       return this.getAllStandardProjectCards().filter((c) => this.showCard(c));
+    },
+    // High Orbit: one card per stack (copies 2 to 6 are identical).
+    visibleInfrastructureCards(): Array<CardName> {
+      return this.sort(getCards(byType(CardType.INFRASTRUCTURE)).map(toName).filter((c) => !isInfrastructureCopy(c)))
+        .filter((c) => this.showCard(c));
     },
     visibleGlobalEvents(): Array<GlobalEventName> {
       if (!this.types.globalEvents) {

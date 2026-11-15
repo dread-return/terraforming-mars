@@ -493,6 +493,7 @@ export class Server {
         eternity: options.eternityExpansion,
         industries: options.industriesExpansion,
         postludes: options.postludesExpansion,
+        highorbit: options.highOrbitExpansion,
       },
       fastModeOption: options.fastModeOption,
       includedCards: options.includedCards,

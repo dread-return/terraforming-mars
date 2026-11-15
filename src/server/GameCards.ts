@@ -34,7 +34,8 @@ import {ETERNITY_CARD_MANIFEST} from './cards/eternity/EternityCardManifest';
 import {DOMES_WILDERNESS_CARD_MANIFEST} from './cards/domeswilderness/DomesWildernessCardManifest';
 import {INDUSTRIES_CARD_MANIFEST} from './cards/industries/IndustriesCardManifest';
 import {POSTLUDES_CARD_MANIFEST} from './cards/postludes/PostludesCardManifest';
-import {HELD_OUT_POSTLUDES, isPostludeName} from '../common/postludes/Postludes';
+import {HIGH_ORBIT_CARD_MANIFEST} from './cards/highorbit/HighOrbitCardManifest';
+import {HELD_OUT_POSTLUDES, HIGH_ORBIT_POSTLUDES, isPostludeName} from '../common/postludes/Postludes';
 
 /**
  * Returns the cards available to a game based on its `GameOptions`.
@@ -81,6 +82,7 @@ export class GameCards {
       [gameOptions.industriesExpansion, INDUSTRIES_CARD_MANIFEST],
       [gameOptions.domesWilderness, DOMES_WILDERNESS_CARD_MANIFEST],
       [gameOptions.postludesExpansion, POSTLUDES_CARD_MANIFEST],
+      [gameOptions.highOrbitExpansion, HIGH_ORBIT_CARD_MANIFEST],
     ];
 
     this.moduleManifests = manifests
@@ -113,7 +115,9 @@ export class GameCards {
     }
     return this.getCards<IProjectCard>('projectCards')
       .filter(isIProjectCard)
-      .filter((card) => isPostludeName(card.name) && !HELD_OUT_POSTLUDES.has(card.name));
+      .filter((card) => isPostludeName(card.name) && !HELD_OUT_POSTLUDES.has(card.name))
+      // Ore Refinery needs the infrastructure tag and ore from High Orbit.
+      .filter((card) => this.gameOptions.highOrbitExpansion || !HIGH_ORBIT_POSTLUDES.has(card.name));
   }
   public getStandardProjects() {
     return this.getCards<IStandardProjectCard>('standardProjects');

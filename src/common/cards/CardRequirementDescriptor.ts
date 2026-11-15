@@ -36,7 +36,7 @@ import {RequirementType} from './RequirementType';
  * aerobatFloaters: a Jovian card and a different Venus card with 4 floaters each (Eternity's Floating Aerobats).
  * maxOneEarthVenusJovian: at most one Earth, Venus or Jovian tag in total (Eternity's Steel City on Mars).
  */
-export type DisplayRequirement = 'offWorldCity' | 'allOceans' | 'cardVP' | 'generation' | 'plantProduction' | 'venusHabitat' | 'aerobatFloaters' | 'maxOneEarthVenusJovian';
+export type DisplayRequirement = 'offWorldCity' | 'allOceans' | 'cardVP' | 'generation' | 'plantProduction' | 'venusHabitat' | 'aerobatFloaters' | 'maxOneEarthVenusJovian' | 'spaceOverInfrastructure';
 
 export type CardRequirementDescriptor = {
   tag?: Tag,

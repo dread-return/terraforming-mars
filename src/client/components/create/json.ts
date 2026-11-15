@@ -30,3 +30,4 @@ export const VENUS_PHASE_2_EXPANSION = 'venusPhase2Expansion';
 export const ETERNITY_EXPANSION = 'eternityExpansion';
 export const INDUSTRIES_EXPANSION = 'industriesExpansion';
 export const POSTLUDES_EXPANSION = 'postludesExpansion';
+export const HIGH_ORBIT_EXPANSION = 'highOrbitExpansion';

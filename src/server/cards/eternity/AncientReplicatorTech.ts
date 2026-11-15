@@ -37,6 +37,10 @@ export class AncientReplicatorTech extends Card implements IProjectCard {
       if (playedCard === this || !isIActionCard(playedCard)) {
         continue;
       }
+      // High Orbit: silver (infrastructure) cards never count as blue cards.
+      if (playedCard.type === CardType.INFRASTRUCTURE) {
+        continue;
+      }
       if (isIHasCheckLoops(playedCard) && playedCard.getCheckLoops() >= 2) {
         continue;
       }

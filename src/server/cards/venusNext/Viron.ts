@@ -1,3 +1,4 @@
+import {CardType} from '../../../common/cards/CardType';
 import {CorporationCard} from '../corporation/CorporationCard';
 import {IPlayer} from '../../IPlayer';
 import {Tag} from '../../../common/cards/Tag';
@@ -38,6 +39,10 @@ export class Viron extends CorporationCard implements ICorporationCard {
         continue;
       }
       if (!isIActionCard(playedCard)) {
+        continue;
+      }
+      // High Orbit: silver (infrastructure) cards never count as blue cards.
+      if (playedCard.type === CardType.INFRASTRUCTURE) {
         continue;
       }
       if (isIHasCheckLoops(playedCard) && playedCard.getCheckLoops() >= 2) {

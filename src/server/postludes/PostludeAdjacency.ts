@@ -25,4 +25,6 @@ export const POSTLUDE_ADJACENCY: Readonly<Partial<Record<CardName, PostludeAdjac
   [CardName.SPORT_DIVING_SCHOOL]: {stock: Resource.MEGACREDITS, count: 2},
   [CardName.WATER_RECYCLE_COMPLEX]: {cardResource: CardResource.MICROBE},
   [CardName.SKY_ELEVATOR]: {standardResource: 1},
+  // Ore Refinery (needs High Orbit): 1 ore on any card.
+  [CardName.ORE_REFINERY]: {cardResource: CardResource.ORE},
 };

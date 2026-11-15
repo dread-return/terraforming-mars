@@ -1,4 +1,5 @@
 import {PostludesState} from './postludes/Postludes';
+import {HighOrbitState} from './highOrbit/HighOrbit';
 import {MarsBoard} from './boards/MarsBoard';
 import {CardName} from '../common/cards/CardName';
 import {ClaimedMilestone} from './milestones/ClaimedMilestone';
@@ -89,6 +90,8 @@ export interface IGame extends Logger {
   ceoDeck: CeoDeck;
   /** Postludes: the postlude deck and the silver cubes. Undefined when Postludes are not in the game. */
   postludes: PostludesState | undefined;
+  /** High Orbit: the six infrastructure stacks and this generation's cubes. Undefined when High Orbit is not in the game. */
+  highOrbit: HighOrbitState | undefined;
   corporationDeck: CorporationDeck;
   board: MarsBoard;
   activePlayer: IPlayer;

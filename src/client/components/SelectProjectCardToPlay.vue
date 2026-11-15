@@ -103,6 +103,7 @@ export default defineComponent({
         'seeds',
         'graphene',
         'kuiperAsteroids',
+        'propellantOre',
         'auroraiData',
         'spireScience',
         'megacredits',
@@ -239,6 +240,7 @@ export default defineComponent({
         case 'microbes':
         case 'lunaArchivesScience':
         case 'graphene':
+        case 'propellantOre':
           return false;
         default: throw new Error('Unknown unit ' + unit);
         }
@@ -270,6 +272,9 @@ export default defineComponent({
         case 'graphene':
           return this.tags.includes(Tag.SPACE) ||
             this.tags.includes(Tag.CITY);
+        // High Orbit: Propellant Depot ore pays for Venus, Moon and Jovian cards.
+        case 'propellantOre':
+          return this.tags.includes(Tag.VENUS) || this.tags.includes(Tag.MOON) || this.tags.includes(Tag.JOVIAN);
         case 'kuiperAsteroids':
         case 'auroraiData':
         case 'spireScience':

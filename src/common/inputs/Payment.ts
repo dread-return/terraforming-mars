@@ -44,6 +44,7 @@ export const DEFAULT_PAYMENT_VALUES = {
   auroraiData: DATA_VALUE,
   graphene: GRAPHENE_VALUE,
   kuiperAsteroids: 1,
+  propellantOre: 2,
 } satisfies Record<SpendableResource, number>;
 
 export namespace Payment {
@@ -62,6 +63,7 @@ export namespace Payment {
     auroraiData: 0,
     graphene: 0,
     kuiperAsteroids: 0,
+    propellantOre: 0,
   } as const;
 
   export function of(payment: Partial<Payment>) : Payment {
@@ -79,6 +81,7 @@ export namespace Payment {
       titanium: payment.titanium ?? 0,
       graphene: payment.graphene ?? 0,
       kuiperAsteroids: payment.kuiperAsteroids ?? 0,
+      propellantOre: payment.propellantOre ?? 0,
       plants: payment.plants ?? 0,
     };
   }
@@ -98,6 +101,7 @@ export namespace Payment {
     auroraiData: ':cr:data:',
     graphene: ':cr:graphene:',
     kuiperAsteroids: ':cr:asteroid:',
+    propellantOre: ':cr:ore:',
   } satisfies Record<SpendableResource, string>;
 
   const SORTED_FOR_LOG = SPENDABLE_RESOURCES.toSorted(reversed(comparing((key) => DEFAULT_PAYMENT_VALUES[key])));

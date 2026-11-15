@@ -49,6 +49,7 @@ const MODULE_ABBREVIATIONS = {
   eternity: 'E',
   industries: 'Ind',
   postludes: 'Po',
+  highorbit: 'Ho',
 } satisfies Record<GameModule, string>;
 
 const TYPE_ABBREVIATIONS = {
@@ -61,6 +62,7 @@ const TYPE_ABBREVIATIONS = {
   [CardType.STANDARD_PROJECT]: 's',
   [CardType.STANDARD_ACTION]: 'S',
   [CardType.PROXY]: '*',
+  [CardType.INFRASTRUCTURE]: 'i',
   colonyTiles: 'C',
   globalEvents: 'e',
   milestones: 'm',
@@ -90,6 +92,7 @@ const TAG_ABBREVIATIONS = {
   [Tag.GALACTIC]: 'i',
   [Tag.RADIOACTIVE]: 'j',
   [Tag.MERCURY]: 'k',
+  [Tag.INFRASTRUCTURE]: 'n',
 } satisfies Record<TagOption, string>;
 
 export function hashToModel(windowLocationHash: string): CardListModel {
@@ -121,6 +124,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       eternity: true,
       industries: true,
       postludes: true,
+      highorbit: true,
     },
     types: {
       event: true,
@@ -131,6 +135,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       standard_project: true,
       standard_action: false,
       proxy: false,
+      infrastructure: true,
       globalEvents: true,
       colonyTiles: true,
       milestones: true,
@@ -156,6 +161,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       galactic: true,
       radioactive: true,
       mercury: true,
+      infrastructure: true,
       wild: true,
       event: true,
       clone: true,

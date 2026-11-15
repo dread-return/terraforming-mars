@@ -7,7 +7,7 @@ import {addCity, addGreenery, runAllActions} from '../TestingUtils';
 import {cast} from '../../src/common/utils/utils';
 import {SelectCard} from '../../src/server/inputs/SelectCard';
 import {Postludes} from '../../src/server/postludes/Postludes';
-import {POSTLUDE_CARD_NAMES, HELD_OUT_POSTLUDES, isPostludeName, POSTLUDE_SELL_VALUE} from '../../src/common/postludes/Postludes';
+import {POSTLUDE_CARD_NAMES, HELD_OUT_POSTLUDES, HIGH_ORBIT_POSTLUDES, isPostludeName, POSTLUDE_SELL_VALUE} from '../../src/common/postludes/Postludes';
 import {CardName} from '../../src/common/cards/CardName';
 import {SellPostludesStandardProject} from '../../src/server/cards/postludes/SellPostludesStandardProject';
 import {SellPatentsStandardProject} from '../../src/server/cards/base/standardProjects/SellPatentsStandardProject';
@@ -34,7 +34,8 @@ describe('Postludes', () => {
 
   it('turns on its own deck, without the held-out cards', () => {
     const deck = game.postludes!.deck;
-    expect(deck.drawPile.length + deck.discardPile.length).eq(POSTLUDE_CARD_NAMES.length - HELD_OUT_POSTLUDES.size);
+    // Ore Refinery joins only with High Orbit.
+    expect(deck.drawPile.length + deck.discardPile.length).eq(POSTLUDE_CARD_NAMES.length - HELD_OUT_POSTLUDES.size - HIGH_ORBIT_POSTLUDES.size);
     for (const card of deck.drawPile) {
       expect(isPostludeName(card.name)).is.true;
     }

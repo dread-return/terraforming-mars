@@ -49,5 +49,7 @@ export interface IProjectCard extends ICard {
 export function isIProjectCard(card: ICard): card is IProjectCard {
   return card.type === CardType.AUTOMATED ||
     card.type === CardType.ACTIVE ||
-    card.type === CardType.EVENT;
+    card.type === CardType.EVENT ||
+    // High Orbit silver cards are played like project cards, but bought from their stacks.
+    card.type === CardType.INFRASTRUCTURE;
 }

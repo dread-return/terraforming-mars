@@ -209,6 +209,15 @@ export function isDeltaProjectInputResponse(response: InputResponse): response i
   return response.type === 'deltaProject' && matches(response, ['type', 'amount']);
 }
 
+export interface SelectInfrastructureResponse {
+  type: 'infrastructure',
+  card: CardName;
+}
+
+export function isSelectInfrastructureResponse(response: InputResponse): response is SelectInfrastructureResponse {
+  return response.type === 'infrastructure' && matches(response, ['type', 'card']);
+}
+
 export type InputResponse =
   AndOptionsResponse |
   OrOptionsResponse |
@@ -230,4 +239,5 @@ export type InputResponse =
   SelectPolicyResponse |
   SelectResourceResponse |
   SelectResourcesResponse |
-  SelectClaimedUndergroundTokenResponse;
+  SelectClaimedUndergroundTokenResponse |
+  SelectInfrastructureResponse;

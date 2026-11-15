@@ -1,3 +1,4 @@
+import {HighOrbit} from './highOrbit/HighOrbit';
 import {Postludes} from './postludes/Postludes';
 import * as constants from '../common/constants';
 import {convertEnergyToHeat, energyStorageCapacity, onProductionWithEnergyStorage} from './cards/robantilles/EnergyStorage';
@@ -544,6 +545,7 @@ export class Player implements IPlayer {
     // Tracks this player's contribution to global parameters for end-of-game reporting.
     this.globalParameterSteps[parameter] += steps;
     IndividualTracks.onGlobalParameterIncrease(this, parameter, steps);
+    HighOrbit.onGlobalParameterIncrease(this, parameter, steps);
   }
 
   public removeResourceFrom(card: ICard, count: number = 1, options?: {removingPlayer? : IPlayer, log?: boolean}): void {
@@ -835,6 +837,7 @@ export class Player implements IPlayer {
       auroraiData: card.type === CardType.STANDARD_PROJECT,
       graphene: card.tags.includes(Tag.CITY) || card.tags.includes(Tag.SPACE),
       kuiperAsteroids: card.name === CardName.AQUIFER_STANDARD_PROJECT || card.name === CardName.ASTEROID_STANDARD_PROJECT,
+      propellantOre: HighOrbit.canPayWithPropellantOre(card),
     };
   }
 
@@ -890,6 +893,10 @@ export class Player implements IPlayer {
   }
 
   public getSpendable(SpendableResource: SpendableCardResource): number {
+    // High Orbit: every copy of Propellant Depot holds ore.
+    if (SpendableResource === 'propellantOre') {
+      return HighOrbit.propellantOre(this);
+    }
     return this.resourcesOnCard(CARD_FOR_SPENDABLE_RESOURCE[SpendableResource]);
   }
 
@@ -911,6 +918,10 @@ export class Player implements IPlayer {
     for (const resource of SPENDABLE_CARD_RESOURCES) {
       const count = payment[resource];
       if (count === 0) {
+        continue;
+      }
+      if (resource === 'propellantOre') {
+        HighOrbit.spendPropellantOre(this, count);
         continue;
       }
       const name = CARD_FOR_SPENDABLE_RESOURCE[resource];
@@ -1464,6 +1475,7 @@ export class Player implements IPlayer {
       auroraiData: options?.auroraiData ?? false,
       graphene: options?.graphene ?? false,
       kuiperAsteroids: options?.kuiperAsteroids ?? false,
+      propellantOre: options?.propellantOre ?? false,
     };
 
     // HOOK: Luna Trade Federation
@@ -1739,6 +1751,12 @@ export class Player implements IPlayer {
       action.options.push(new SelectProjectCardToPlay(this, playableCards));
     }
 
+    // High Orbit: another player's Spacetek action.
+    const spacetek = HighOrbit.spacetekOptions(this);
+    if (spacetek !== undefined) {
+      action.options.push(spacetek);
+    }
+
     // Trade with colonies
     const coloniesTradeAction = this.colonies.coloniesTradeAction();
     if (coloniesTradeAction !== undefined) {
@@ -1777,8 +1795,20 @@ export class Player implements IPlayer {
       action.options.push(remainingAwards);
     }
 
+    // High Orbit: the Infrastructures menu sits right above the standard projects.
+    const infrastructures = HighOrbit.infrastructureOption(this);
+    if (infrastructures !== undefined) {
+      action.options.push(infrastructures);
+    }
+
     // Standard Projects
     action.options.push(this.getStandardProjectOption());
+
+    // High Orbit: Planetary Engineering Corps' discounted standard projects.
+    const pecOption = HighOrbit.pecOption(this);
+    if (pecOption !== undefined) {
+      action.options.push(pecOption);
+    }
 
     // Pass
     action.options.push(this.passOption());

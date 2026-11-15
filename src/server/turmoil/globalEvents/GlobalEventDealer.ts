@@ -88,6 +88,7 @@ export class GlobalEventDealer {
       eternity: gameOptions.eternityExpansion,
       industries: gameOptions.industriesExpansion,
       postludes: gameOptions.postludesExpansion,
+      highorbit: gameOptions.highOrbitExpansion,
     };
 
     for (const manifest of ALL_MODULE_MANIFESTS) {

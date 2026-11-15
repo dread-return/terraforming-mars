@@ -15,6 +15,12 @@ type EternityLogo = {slug: string, lines: ReadonlyArray<string>};
  * Fonts and colours are in src/styles/eternity.less (`.et-logo-<slug>`).
  */
 export const ETERNITY_LOGOS: Partial<Record<CardName, EternityLogo>> = {
+  // High Orbit corporations use the same mechanism (styles in src/styles/highorbit.less).
+  [CardName.LAGRANGE_COLLECTIVE]: {slug: 'ho-lagrange', lines: ['Lagrange', 'Collective']},
+  [CardName.PLANETARY_ENGINEERING_CORPS]: {slug: 'ho-pec', lines: ['Planetary', 'Engineering Corps']},
+  [CardName.TROJAN_SPACE_LOGISTICS]: {slug: 'ho-trojan', lines: ['TROJAN SPACE', 'LOGISTICS']},
+  [CardName.SPACETEK]: {slug: 'ho-spacetek', lines: ['SPACETEK']},
+  [CardName.JUDGES_OF_CHANGE]: {slug: 'ho-judges', lines: ['JUDGES OF CHANGE']},
   [CardName.ASTRO_SOILS]: {slug: 'astro-soils', lines: ['Astro Soils']},
   [CardName.BAMBOO_BUILDINGS]: {slug: 'bamboo', lines: ['BamBoo', 'Buildings']},
   [CardName.CASH_CO]: {slug: 'cash-co', lines: ['C.A.S.H. CO']},

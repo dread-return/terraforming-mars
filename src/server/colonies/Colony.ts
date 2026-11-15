@@ -1,3 +1,4 @@
+import {HighOrbit} from '../highOrbit/HighOrbit';
 import {AddResourcesToCard} from '../deferredActions/AddResourcesToCard';
 import {ColonyBenefit} from '../../common/colonies/ColonyBenefit';
 import {DeferredAction, SimpleDeferredAction} from '../deferredActions/DeferredAction';
@@ -176,6 +177,8 @@ export abstract class Colony implements IColony {
     if (player.tableau.has(CardName.VENUS_TRADE_HUB)) {
       player.stock.add(Resource.MEGACREDITS, 3, {log: true});
     }
+    // High Orbit: Comsat.
+    HighOrbit.onTrade(player);
 
     // !== false because default is true.
     if (options.decreaseTrackAfterTrade !== false) {

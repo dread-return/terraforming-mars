@@ -1,3 +1,4 @@
+import {CardType} from '../../common/cards/CardType';
 import {IGame} from '../IGame';
 import {IPlayer} from '../IPlayer';
 import {DeltaProjectPlayerModel} from '../../common/models/DeltaProjectPlayerModel';
@@ -235,6 +236,10 @@ export class DeltaProjectExpansion {
     const result: Array<IActionCard & ICard> = [];
     for (const playedCard of player.tableau) {
       if (!isIActionCard(playedCard)) {
+        continue;
+      }
+      // High Orbit: silver (infrastructure) cards never count as blue cards.
+      if (playedCard.type === CardType.INFRASTRUCTURE) {
         continue;
       }
       if (isIHasCheckLoops(playedCard) && playedCard.getCheckLoops() >= 2) {

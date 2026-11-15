@@ -77,7 +77,10 @@ export const POSTLUDE_CARD_NAMES: ReadonlyArray<CardName> = [
 ];
 
 /** Postludes that are in the game's data but never dealt. */
-export const HELD_OUT_POSTLUDES: ReadonlySet<CardName> = new Set([CardName.ORE_REFINERY]);
+export const HELD_OUT_POSTLUDES: ReadonlySet<CardName> = new Set([]);
+
+/** Postludes dealt only when High Orbit (the infrastructure tag and ore) is in the game. */
+export const HIGH_ORBIT_POSTLUDES: ReadonlySet<CardName> = new Set([CardName.ORE_REFINERY]);
 
 const NAMES = new Set<CardName>(POSTLUDE_CARD_NAMES);
 

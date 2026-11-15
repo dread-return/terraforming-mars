@@ -1,4 +1,5 @@
 import {SerializedPostludes} from './postludes/Postludes';
+import {SerializedHighOrbit} from './highOrbit/HighOrbit';
 import {SerializedVenusMapData} from './venus2/VenusMapData';
 import {Phase} from '../common/Phase';
 import {SerializedClaimedMilestone} from './milestones/ClaimedMilestone';
@@ -29,6 +30,7 @@ export type SerializedGame = {
     board: SerializedBoard;
     ceoDeck: SerializedDeck;
     postludes?: SerializedPostludes;
+    highOrbit?: SerializedHighOrbit;
     currentSeed: number;
     claimedMilestones: Array<SerializedClaimedMilestone>;
     clonedGamedId?: string;

@@ -1,3 +1,4 @@
+import {INFRASTRUCTURE_DESIGNS} from '../../common/highOrbit/HighOrbit';
 import {CardName} from '../../common/cards/CardName';
 
 export class MoonCards {
@@ -10,5 +11,10 @@ export class MoonCards {
     CardName.NANOTECH_INDUSTRIES,
     CardName.APPLIED_SCIENCE,
     CardName.SPIRE,
+    // High Orbit (every copy of the silver cards).
+    ...INFRASTRUCTURE_DESIGNS
+      .filter((d) => d.name === CardName.OBSERVATORY || d.name === CardName.PROBE || d.name === CardName.SCIENCE_FACILITY)
+      .flatMap((d) => d.copies),
+    CardName.JUDGES_OF_CHANGE,
   ]);
 }

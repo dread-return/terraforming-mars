@@ -78,6 +78,7 @@ const ORDER: Array<InterfaceTagsType> = [
   Tag.GALACTIC,
   Tag.RADIOACTIVE,
   Tag.MERCURY,
+  Tag.INFRASTRUCTURE,
   'separator',
   Tag.EVENT,
   SpecialTags.NONE,
@@ -111,6 +112,7 @@ const isInGame = (tag: InterfaceTagsType, game: GameModel): boolean => {
   case Tag.GALACTIC:
   case Tag.RADIOACTIVE:
   case Tag.MERCURY:
+  case Tag.INFRASTRUCTURE:
     return game.tags.includes(tag);
   }
   return true;

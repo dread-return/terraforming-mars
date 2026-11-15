@@ -38,6 +38,8 @@ export const SPENDABLE_CARD_RESOURCES = [
   'graphene',
   // Asteroids is a Kuiper Cooperative resource that pays for aquifer and asteroid standard projects.
   'kuiperAsteroids',
+  // High Orbit: ore on Propellant Depot pays 2 M€ each for cards with Venus, Moon or Jovian tags.
+  'propellantOre',
 ] as const;
 
 export const SPENDABLE_RESOURCES = [...SPENDABLE_STANDARD_RESOURCES, ...SPENDABLE_CARD_RESOURCES] as const;
@@ -58,4 +60,5 @@ export const CARD_FOR_SPENDABLE_RESOURCE = {
   auroraiData: CardName.AURORAI,
   graphene: CardName.CARBON_NANOSYSTEMS,
   kuiperAsteroids: CardName.KUIPER_COOPERATIVE,
+  propellantOre: CardName.PROPELLANT_DEPOT,
 } satisfies Record<SpendableCardResource, CardName>;

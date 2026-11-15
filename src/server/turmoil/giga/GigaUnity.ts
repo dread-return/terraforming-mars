@@ -12,10 +12,10 @@ const BONUS_A = new MegacreditBonus('Ub01', PartyName.UNITY,
   'Gain 1 M€ for every planet tag you have, except Mars',
   (player) => player.tags.count(Tag.VENUS, 'raw') + player.tags.count(Tag.EARTH, 'raw') + player.tags.count(Tag.JOVIAN, 'raw'));
 
-// Held: the infrastructure tag does not exist yet, so for now this counts space tags and titanium production.
+// Epic p. 15: space tags, infrastructure tags (High Orbit) and titanium production.
 const BONUS_B = new MegacreditBonus('Ub02', PartyName.UNITY,
-  'Gain 1 M€ for every space tag and titanium production you have (infrastructure tags are not in the game yet)',
-  (player) => player.tags.count(Tag.SPACE, 'raw') + player.production.titanium);
+  'Gain 1 M€ for every space tag, infrastructure tag and titanium production you have',
+  (player) => player.tags.count(Tag.SPACE, 'raw') + player.tags.count(Tag.INFRASTRUCTURE, 'raw') + player.production.titanium);
 
 const POLICY_1: IPolicy = {
   id: 'Up01',

@@ -34,6 +34,7 @@ import SelectResource from '@/client/components/SelectResource.vue';
 import SelectResources from '@/client/components/SelectResources.vue';
 import SelectClaimedUndergroundToken from '@/client/components/SelectClaimedUndergroundToken.vue';
 import DeltaProjectInput from '@/client/components/delta/DeltaProjectInput.vue';
+import SelectInfrastructure from '@/client/components/highOrbit/SelectInfrastructure.vue';
 
 // Shared contract every input component must satisfy. `playerinput` and
 // `onsave` are narrowed to the discriminated variant whose `type` matches K.
@@ -73,6 +74,7 @@ const inputComponents = {
   'resources': SelectResources,
   'claimedUndergroundToken': SelectClaimedUndergroundToken,
   'deltaProject': DeltaProjectInput,
+  'infrastructure': SelectInfrastructure,
 } satisfies InputComponentRegistry;
 
 export default defineComponent({

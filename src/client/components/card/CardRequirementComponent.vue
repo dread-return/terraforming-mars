@@ -47,6 +47,9 @@
           4<div class="card-resource card-resource-floater et-req-res"></div><div class="card-resource-tag--S tag-jovian"></div>
           &nbsp;4<div class="card-resource card-resource-floater et-req-res"></div><div class="card-resource-tag--S tag-venus"></div>*
         </template>
+        <template v-else-if="requirement.display === 'spaceOverInfrastructure'">
+          <div class="card-resource-tag--S tag-space"></div>&nbsp;&gt;&nbsp;<div class="card-resource-tag--S tag-infrastructure"></div>
+        </template>
         <template v-else-if="requirement.display === 'maxOneEarthVenusJovian'">
           max&nbsp;1&nbsp;<div class="card-resource-tag--S tag-earth"></div>/<div class="card-resource-tag--S tag-venus"></div>/<div class="card-resource-tag--S tag-jovian"></div>
         </template>

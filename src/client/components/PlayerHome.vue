@@ -254,7 +254,7 @@ export default defineComponent({
         .concat(playerView.cardsInHand);
     },
     activeTableauCount(): number {
-      return getCardsByType(this.thisPlayer.tableau, [CardType.ACTIVE]).length;
+      return getCardsByType(this.thisPlayer.tableau, [CardType.ACTIVE, CardType.INFRASTRUCTURE]).length;
     },
     automatedTableauCount(): number {
       return getCardsByType(this.thisPlayer.tableau, [CardType.AUTOMATED, CardType.PRELUDE]).length;
@@ -263,7 +263,8 @@ export default defineComponent({
       return getCardsByType(this.thisPlayer.tableau, [CardType.EVENT]).length;
     },
     activeTableauCards(): Array<CardModel> {
-      const cards = getCardsByType(this.thisPlayer.tableau, [CardType.ACTIVE, CardType.PRELUDE]);
+      // High Orbit silver cards sit with the blue ones.
+      const cards = getCardsByType(this.thisPlayer.tableau, [CardType.ACTIVE, CardType.INFRASTRUCTURE, CardType.PRELUDE]);
       return [...sortActiveCards(cards.filter((c) => this.isActive(c)))];
     },
     automatedTableauCards(): Array<CardModel> {
@@ -338,7 +339,7 @@ export default defineComponent({
     },
     isActive(cardModel: CardModel): boolean {
       const card = getCardOrThrow(cardModel.name);
-      return card.type === CardType.ACTIVE || card.hasAction;
+      return card.type === CardType.ACTIVE || card.type === CardType.INFRASTRUCTURE || card.hasAction;
     },
     isNotActive(cardModel: CardModel): boolean {
       return !getCardOrThrow(cardModel.name).hasAction;

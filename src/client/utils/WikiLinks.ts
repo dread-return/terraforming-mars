@@ -27,6 +27,7 @@ export const RULEBOOK_URLS: Record<GameModule, string> = {
   venusphase2: 'https://boardgamegeek.com/thread/2293920/terraforming-mars-giga-expansion-ares-pathfinder-b',
   eternity: 'https://boardgamegeek.com/thread/2680823/tm-eternity-cards-expansion',
   industries: 'https://boardgamegeek.com/thread/2293920/terraforming-mars-giga-expansion-ares-pathfinder-b',
+  highorbit: 'https://boardgamegeek.com/thread/2067254/high-orbit-space-infrastructure-fan-full-deck-expa',
   postludes: 'https://boardgamegeek.com/thread/2297598/postlude-new-standard-projects-or-special-projects',
 };
 

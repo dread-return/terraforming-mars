@@ -43,6 +43,7 @@ function newGameConfigForTest(): NewGameConfig {
       nuclear: false,
       venusphase2: false,
       postludes: false,
+      highorbit: false,
       industries: false,
       eternity: false,
     },

@@ -258,6 +258,12 @@
               <span v-i18n>Postludes</span><span></span>&nbsp;<a :href="wikiUrls.postludes" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
             </label>
 
+            <input type="checkbox" name="highorbit" id="highorbit-checkbox" v-model="expansions.highorbit">
+            <label for="highorbit-checkbox" class="expansion-button">
+              <div class="create-game-expansion-icon expansion-icon-highorbit"></div>
+              <span v-i18n>High Orbit</span><span></span>&nbsp;<span class="tooltip" v-i18n data-tooltip="Infrastructures (Epic rules): six stacks of silver cards bought with titanium from a menu above the standard projects, plus five corporations.">&#9432;</span>
+            </label>
+
             <label for="startingCorpNum-checkbox">
               <input type="number" class="create-game-corporations-count" value="2" min="1" :max="6" v-model="startingCorporations" id="startingCorpNum-checkbox">
               <span v-i18n>Starting Corporations</span>

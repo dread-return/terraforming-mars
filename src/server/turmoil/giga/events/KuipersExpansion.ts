@@ -5,7 +5,8 @@ import {PartyName} from '../../../../common/turmoil/PartyName';
 import {CardRenderer} from '../../../cards/render/CardRenderer';
 import {IPlayer} from '../../../IPlayer';
 import {Size} from '../../../../common/cards/render/Size';
-import {influenceOf, gainOre} from './GigaEventHelpers';
+import {influenceOf, gainOre, tagsOf} from './GigaEventHelpers';
+import {Tag} from '../../../../common/cards/Tag';
 
 export class KuipersExpansion extends GlobalEvent implements IGlobalEvent {
   constructor() {
@@ -15,13 +16,13 @@ export class KuipersExpansion extends GlobalEvent implements IGlobalEvent {
       revealedDelegate: PartyName.EMPOWER,
       currentDelegate: PartyName.SPOME,
       renderData: CardRenderer.builder((b) => {
-        b.steel(1).slash().titanium(1).slash().influence({size: Size.SMALL});
+        b.steel(1).slash().titanium(1).slash().tag(Tag.INFRASTRUCTURE).influence({size: Size.SMALL});
       }),
     });
   }
 
-  // TODO(Leo): there is no infrastructure tag yet, so only influence counts for now.
+  // Infrastructure = infrastructure tags (High Orbit). Without High Orbit only influence counts.
   public override bespokeResolvePlayer(player: IPlayer) {
-    gainOre(player, influenceOf(player), this);
+    gainOre(player, tagsOf(player, Tag.INFRASTRUCTURE) + influenceOf(player), this);
   }
 }

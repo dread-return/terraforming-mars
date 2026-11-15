@@ -71,6 +71,7 @@ const DESCRIPTIONS: Record<SpendableResource, string> = {
   megacredits: 'M€',
   floaters: 'Floaters',
   graphene: 'Graphene',
+  propellantOre: 'Ore',
   lunaArchivesScience: 'Science',
   microbes: 'Microbes',
   plants: 'Plants',

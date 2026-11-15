@@ -1,3 +1,4 @@
+import {HighOrbit} from '../highOrbit/HighOrbit';
 import {Postludes} from '../postludes/Postludes';
 import {LawSuit} from '../cards/promo/LawSuit';
 import {Resource} from '../../common/Resource';
@@ -73,5 +74,6 @@ export class Production extends BaseStock {
     }
     Eternity.onProductionGain(this.player, resource, amount);
     Eternity.onProductionIncrease(this.player, resource, amount);
+    HighOrbit.onProductionIncrease(this.player, resource, amount);
   }
 }

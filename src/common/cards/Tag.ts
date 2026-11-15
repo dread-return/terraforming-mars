@@ -16,6 +16,8 @@ export enum Tag {
     GALACTIC = 'galactic',
     RADIOACTIVE = 'radioactive',
     MERCURY = 'mercury',
+    // High Orbit
+    INFRASTRUCTURE = 'infrastructure',
     WILD = 'wild',
     EVENT = 'event',
     CLONE = 'clone',
@@ -38,6 +40,7 @@ export const ALL_TAGS = [
   Tag.GALACTIC,
   Tag.RADIOACTIVE,
   Tag.MERCURY,
+  Tag.INFRASTRUCTURE,
   Tag.CITY,
   Tag.WILD,
   Tag.EVENT,

@@ -64,6 +64,8 @@ export type GameOptions = {
   /** Industries (GIGA): industry tiles bought as standard projects, in their own sub-menu. */
   industriesExpansion: boolean;
   postludesExpansion: boolean;
+  /** High Orbit (Epic rules): infrastructure (silver) cards bought from six stacks, and five corporations. */
+  highOrbitExpansion: boolean;
 
   expansions: Record<Expansion, boolean>,
 
@@ -156,6 +158,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
     eternity: false,
     industries: false,
     postludes: false,
+    highorbit: false,
   },
   fastModeOption: false,
   includeFanMA: false,
@@ -200,6 +203,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   eternityExpansion: false,
   industriesExpansion: false,
   postludesExpansion: false,
+  highOrbitExpansion: false,
   automa: false,
   undoOption: false,
   venusNextExtension: false,

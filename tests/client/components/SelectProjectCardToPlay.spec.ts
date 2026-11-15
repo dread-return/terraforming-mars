@@ -728,7 +728,7 @@ describe('SelectProjectCardToPlay', () => {
       ],
       paymentOptions: {},
       floaters: 0, graphene: 0, kuiperAsteroids: 0, lunaArchivesScience: 0,
-      microbes: 0, seeds: 0, auroraiData: 0, spireScience: 0,
+      microbes: 0, seeds: 0, auroraiData: 0, spireScience: 0, propellantOre: 0,
     };
     const playerView: Partial<PlayerViewModel> = {
       id: 'playerid-foo',
@@ -804,6 +804,7 @@ describe('SelectProjectCardToPlay', () => {
       seeds: 0,
       auroraiData: 0,
       spireScience: 0,
+      propellantOre: 0,
       ...playerInputFields,
     };
     if (options !== undefined) {

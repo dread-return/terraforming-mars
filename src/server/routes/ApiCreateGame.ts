@@ -208,6 +208,7 @@ export class ApiCreateGame extends Handler {
         eternityExpansion: gameReq.expansions.eternity ?? false,
         industriesExpansion: gameReq.expansions.industries ?? false,
         postludesExpansion: gameReq.expansions.postludes ?? false,
+        highOrbitExpansion: gameReq.expansions.highorbit ?? false,
         undoOption: gameReq.undoOption,
         venusNextExtension: gameReq.expansions.venus,
       };

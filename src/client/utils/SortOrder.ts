@@ -15,7 +15,7 @@ export const SORT_OPTIONS: ReadonlyArray<{key: SortKey, label: string}> = [
   {key: 'vp', label: 'VP'},
 ];
 
-const TYPE_ORDER: ReadonlyArray<CardType> = [CardType.CORPORATION, CardType.PRELUDE, CardType.AUTOMATED, CardType.ACTIVE, CardType.EVENT];
+const TYPE_ORDER: ReadonlyArray<CardType> = [CardType.CORPORATION, CardType.PRELUDE, CardType.AUTOMATED, CardType.ACTIVE, CardType.INFRASTRUCTURE, CardType.EVENT];
 const RESOURCE_ORDER: ReadonlyArray<CardResource> = Object.values(CardResource);
 
 function cost(card: CardModel): number {

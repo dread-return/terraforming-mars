@@ -2,7 +2,7 @@
   <div class="card-container filterDiv hover-hide-res" :class="cardClasses">
     <div class="card-content-wrapper" v-i18n @mouseover="hovering = true" @mouseleave="hovering = false">
       <div v-if="!isStandardProject" class="card-cost-and-tags">
-        <CardCost :amount="cost" :newCost="reducedCost" />
+        <CardCost :amount="cost" :newCost="reducedCost" :titanium="isInfrastructure" />
         <div v-if="showPlayerCube" :class="playerCubeClass"></div>
         <CardHelp v-if="helpText !== undefined" :name="card.name" :helpText="helpText" :hovering="hovering" />
         <CardTags :tags="tags" />
@@ -126,10 +126,14 @@ export default defineComponent({
       return tags;
     },
     cost(): number | undefined {
-      return this.isProjectCard ? this.cardInstance.cost : undefined;
+      return this.isProjectCard || this.isInfrastructure ? this.cardInstance.cost : undefined;
     },
     reducedCost(): number | undefined {
       return this.isProjectCard ? this.card.calculatedCost : undefined;
+    },
+    // High Orbit silver cards cost titanium.
+    isInfrastructure(): boolean {
+      return this.cardType === CardType.INFRASTRUCTURE;
     },
     cardType(): CardType {
       return this.cardInstance.type;

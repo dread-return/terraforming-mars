@@ -72,6 +72,7 @@ export abstract class SelectCardToPlay<T extends IProjectCard | IStandardProject
       seeds: player.getSpendable('seeds'),
       graphene: player.getSpendable('graphene'),
       kuiperAsteroids: player.getSpendable('kuiperAsteroids'),
+      propellantOre: player.getSpendable('propellantOre'),
       auroraiData: player.getSpendable('auroraiData'),
       spireScience: player.getSpendable('spireScience'),
     };

@@ -1,4 +1,5 @@
 import {Postludes, PostludesState} from './postludes/Postludes';
+import {HighOrbit, HighOrbitState} from './highOrbit/HighOrbit';
 import * as constants from '../common/constants';
 import {venusLevelAfterSteps, venusStepsBetween} from './venusNext/venusScale';
 import {BeginnerCorporation} from './cards/corporation/BeginnerCorporation';
@@ -139,6 +140,7 @@ export class Game implements IGame, Logger {
   public preludeDeck: PreludeDeck;
   public ceoDeck: CeoDeck;
   public postludes: PostludesState | undefined = undefined;
+  public highOrbit: HighOrbitState | undefined = undefined;
   public corporationDeck: CorporationDeck;
   public board: MarsBoard;
 
@@ -316,6 +318,7 @@ export class Game implements IGame, Logger {
         eternity: partialOptions.eternityExpansion ?? false,
         industries: partialOptions.industriesExpansion ?? false,
         postludes: partialOptions.postludesExpansion ?? false,
+        highorbit: partialOptions.highOrbitExpansion ?? false,
       };
     }
     const gameOptions = {...DEFAULT_GAME_OPTIONS, ...partialOptions};
@@ -366,6 +369,11 @@ export class Game implements IGame, Logger {
       }
     }
 
+    // High Orbit: infrastructure cards are not in a deck, but their tag is in the game.
+    if (gameOptions.highOrbitExpansion) {
+      tags.add(Tag.INFRASTRUCTURE);
+    }
+
     if (players.length === 1) {
       gameOptions.draftVariant = false;
       gameOptions.initialDraftVariant = false;
@@ -382,6 +390,9 @@ export class Game implements IGame, Logger {
     const game = new Game(id, name, players, marsBotPlayer, firstPlayer, activePlayer, spectatorId, gameOptions, rng, board, projectDeck, corporationDeck, preludeDeck, ceoDeck, Array.from(tags));
     game.postludes = postludes;
     Postludes.attach(game);
+    if (gameOptions.highOrbitExpansion) {
+      game.highOrbit = HighOrbit.newState(gameOptions, rng);
+    }
     // This evaluation of created time doesn't match what's stored in the database, but that's fine.
     game.createdTime = new Date();
     // Initialize Ares data
@@ -548,6 +559,7 @@ export class Game implements IGame, Logger {
       claimedMilestones: serializeClaimedMilestones(this.claimedMilestones),
       ceoDeck: this.ceoDeck.serialize(),
       postludes: this.postludes === undefined ? undefined : Postludes.serialize(this.postludes),
+      highOrbit: this.highOrbit === undefined ? undefined : HighOrbit.serialize(this.highOrbit),
       colonies: this.colonies.map((colony) => colony.serialize()),
       corporationDeck: this.corporationDeck.serialize(),
       createdTimeMs: this.createdTime.getTime(),
@@ -797,6 +809,12 @@ export class Game implements IGame, Logger {
       this.overrideFirstPlayer(kept);
       return;
     }
+    // High Orbit: Planetary Outpost takes the first player marker for the next generation.
+    const outpostOwner = HighOrbit.nextFirstPlayer(this);
+    if (outpostOwner !== undefined) {
+      this.overrideFirstPlayer(outpostOwner);
+      return;
+    }
     const spaceWargamesOwner = this.getCardPlayerOrUndefined(CardName.SPACE_WARGAMES);
     if (spaceWargamesOwner) {
       const spaceWargames = spaceWargamesOwner.tableau.get(CardName.SPACE_WARGAMES);
@@ -980,6 +998,7 @@ export class Game implements IGame, Logger {
     this.log('Generation ${0}', (b) => b.forNewGeneration().number(this.generation));
     this.setNextFirstPlayer();
     Postludes.onGenerationStart(this);
+    HighOrbit.onGenerationStart(this);
 
     this.players.forEach((player) => {
       player.hasIncreasedTerraformRatingThisGeneration = false;
@@ -1888,6 +1907,9 @@ export class Game implements IGame, Logger {
     if (gameOptions.postludesExpansion && d.postludes !== undefined) {
       game.postludes = Postludes.deserialize(d.postludes, rng);
       Postludes.attach(game);
+    }
+    if (gameOptions.highOrbitExpansion && d.highOrbit !== undefined) {
+      game.highOrbit = HighOrbit.deserialize(d.highOrbit);
     }
     game.spectatorId = d.spectatorId;
     game.createdTime = new Date(d.createdTimeMs);

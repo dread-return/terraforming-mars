@@ -1,3 +1,4 @@
+import {CardType} from '../../../../common/cards/CardType';
 import {IGlobalEvent} from '../../globalEvents/IGlobalEvent';
 import {GlobalEvent} from '../../globalEvents/GlobalEvent';
 import {GlobalEventName} from '../../../../common/turmoil/globalEvents/GlobalEventName';
@@ -17,6 +18,10 @@ function actionCards(player: IPlayer): Array<IActionCard & ICard> {
   const result: Array<IActionCard & ICard> = [];
   for (const card of player.tableau) {
     if (!isIActionCard(card)) {
+      continue;
+    }
+    // High Orbit: silver (infrastructure) cards are not active (blue) cards.
+    if (card.type === CardType.INFRASTRUCTURE) {
       continue;
     }
     if (isIHasCheckLoops(card) && card.getCheckLoops() >= 2) {

@@ -73,6 +73,8 @@ export default defineComponent({
       case CardType.STANDARD_PROJECT:
       case CardType.STANDARD_ACTION:
         return 'background-color-standard-project';
+      case CardType.INFRASTRUCTURE:
+        return 'background-color-infrastructure';
       default:
         return undefined;
       }

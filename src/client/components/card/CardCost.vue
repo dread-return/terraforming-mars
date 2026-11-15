@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card-cost" :class="{'visibility-hidden': amount === undefined}">{{ amount }}</div>
+    <div class="card-cost" :class="{'visibility-hidden': amount === undefined, 'card-cost--titanium': titanium}">{{ amount }}</div>
     <template v-if="displayTwoCosts">
       <div class="card-cost-transition"></div>
       <div class="card-old-cost">{{ newCost }}</div>
@@ -23,6 +23,11 @@ export default defineComponent({
     newCost: {
       type: Number as () => number | undefined,
       default: undefined,
+    },
+    // High Orbit: silver cards cost titanium.
+    titanium: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {

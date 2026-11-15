@@ -1,3 +1,4 @@
+import {InfrastructureSectorModel} from '../highOrbit/HighOrbit';
 import {CardModel} from './CardModel';
 import {ColonyModel} from './ColonyModel';
 import {Color, ColorWithNeutral} from '../Color';
@@ -54,6 +55,8 @@ export type SelectProjectCardToPlayModel = BaseInputModel & {
   seeds: number;
   graphene: number;
   kuiperAsteroids: number;
+  /** High Orbit: ore on Propellant Depot (2 M€ each for Venus, Moon and Jovian cards). */
+  propellantOre: number;
   auroraiData: number;
   spireScience: number;
 }
@@ -87,6 +90,7 @@ export type SelectPaymentModel = BaseInputModel & {
   floaters: 0,
   microbes: 0,
   graphene: 0,
+  propellantOre: 0,
 }
 
 export type SelectPlayerModel = BaseInputModel & {
@@ -104,6 +108,13 @@ export type SelectAmountModel = BaseInputModel & {
   min: number;
   max: number;
   maxByDefault: boolean;
+}
+
+/** High Orbit: the Infrastructures menu. */
+export type SelectInfrastructureModel = BaseInputModel & {
+  type: 'infrastructure';
+  sectors: Array<InfrastructureSectorModel>;
+  titanium: number;
 }
 
 export type DeltaProjectInputModel = BaseInputModel & {
@@ -175,4 +186,5 @@ export type PlayerInputModel =
   SelectResourceModel |
   SelectResourcesModel |
   SelectClaimedUndergroundTokenModel |
-  DeltaProjectInputModel;
+  DeltaProjectInputModel |
+  SelectInfrastructureModel;

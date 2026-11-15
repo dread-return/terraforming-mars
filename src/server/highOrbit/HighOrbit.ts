@@ -15,8 +15,10 @@ import {
   InfrastructureSectorModel,
   infrastructureDesign,
   MAX_INFRASTRUCTURE_COPIES,
+  PLANETARY_TAGS,
 } from '../../common/highOrbit/HighOrbit';
 import {Deck} from '../cards/Deck';
+import {highOrbitStandardProjectPayWith} from './HighOrbitPayWith';
 import {IActionCard, ICard, isIActionCard} from '../cards/ICard';
 import {IProjectCard} from '../cards/IProjectCard';
 import {newProjectCard} from '../createCard';
@@ -32,6 +34,14 @@ import {message} from '../logs/MessageBuilder';
 import {PlanetaryEngineeringCorps} from '../cards/highorbit/PlanetaryEngineeringCorps';
 import {Spacetek} from '../cards/highorbit/Spacetek';
 import {GlobalParameter} from '../../common/GlobalParameter';
+import {isOreConverter} from '../cards/highorbit/InfrastructureCard';
+import {IColony} from '../colonies/IColony';
+import {MAX_COLONY_TRACK_POSITION} from '../../common/constants';
+import {Phase} from '../../common/Phase';
+import {SimpleDeferredAction} from '../deferredActions/DeferredAction';
+import {Priority} from '../deferredActions/Priority';
+import {SelectAmount} from '../inputs/SelectAmount';
+import {StandardProjectCanPayWith} from '../../common/cards/Types';
 
 /** Which six stacks are in the game, and which sections already have a player cube this generation. */
 export type HighOrbitState = {
@@ -44,8 +54,13 @@ export type SerializedHighOrbit = HighOrbitState;
 /** Stacks that need another expansion. */
 const COMPATIBILITY: Partial<Record<CardName, (options: GameOptions) => boolean>> = {
   [CardName.COMSAT]: (options) => options.coloniesExtension,
-  [CardName.FREIGHTER]: (options) => options.coloniesExtension,
+  [CardName.FREIGHTERS]: (options) => options.coloniesExtension,
+  [CardName.MOONSAT]: (options) => options.moonExpansion,
+  [CardName.VENUS_SAT]: (options) => options.venusNextExtension,
+  // TODO(Leo): agents are not in the game, so Spysat is never dealt.
+  [CardName.SPYSAT]: () => false,
 };
+
 
 /**
  * High Orbit infrastructures, with the Epic rules (MEGA.pdf, printed p. 21).
@@ -104,6 +119,13 @@ export class HighOrbit {
       },
       used: {...(d.used ?? {})},
     };
+  }
+
+  /** Hooks the project deck so Salvage Depot sees discards. Call after `game.highOrbit` and the deck exist. */
+  public static attach(game: IGame): void {
+    if (game.highOrbit !== undefined) {
+      game.projectDeck.onDiscard = (cards) => HighOrbit.onProjectCardsDiscarded(game, cards);
+    }
   }
 
   /** At the end of the generation, all player cubes leave the sections. */
@@ -184,7 +206,8 @@ export class HighOrbit {
     if (remaining.length === 0) {
       return 'No copies left';
     }
-    if (player.titanium < design.cost) {
+    // Orbital Shipyard ore counts as titanium here.
+    if (player.titanium + HighOrbit.shipyardOre(player) < design.cost) {
       return 'Not enough titanium';
     }
     if (!HighOrbit.meetsSpaceRequirement(player)) {
@@ -209,10 +232,29 @@ export class HighOrbit {
   }
 
   /**
-   * Buy the top copy of a stack: place the player's cube on its section, pay titanium, play the card.
-   * Buying ends the turn.
+   * Starts buying from a stack. With ore on Orbital Shipyard (worth 1 titanium each here) the player first says
+   * how much of it to use; otherwise the purchase happens at once.
    */
-  public static buy(player: IPlayer, design: InfrastructureDesign): IProjectCard {
+  public static startPurchase(player: IPlayer, design: InfrastructureDesign): PlayerInput | undefined {
+    const ore = HighOrbit.shipyardOre(player);
+    const min = Math.max(0, design.cost - player.titanium);
+    const max = Math.min(ore, design.cost);
+    if (max > min) {
+      return new SelectAmount(message('How much Orbital Shipyard ore to spend on ${0}? (1 titanium each)', (b) => b.cardName(design.name)), 'Buy', min, max)
+        .andThen((amount) => {
+          HighOrbit.buy(player, design, amount);
+          return undefined;
+        });
+    }
+    HighOrbit.buy(player, design, min);
+    return undefined;
+  }
+
+  /**
+   * Buy the top copy of a stack: place the player's cube on its section, pay titanium (and `shipyardOre` ore from
+   * Orbital Shipyard in place of titanium), play the card. Buying ends the turn.
+   */
+  public static buy(player: IPlayer, design: InfrastructureDesign, shipyardOre: number = 0): IProjectCard {
     const game = player.game;
     const state = game.highOrbit;
     const reason = HighOrbit.disabledReason(player, design);
@@ -228,9 +270,16 @@ export class HighOrbit {
     if (card === undefined) {
       throw new Error(`Card ${name} not found`);
     }
+    const ore = Math.min(shipyardOre, design.cost);
+    if (design.cost - ore > player.titanium) {
+      throw new Error('Not enough titanium');
+    }
     state.used[category] = player.id;
     game.log('${0} put a cube on the ${1} infrastructures and bought ${2}', (b) => b.player(player).string(INFRASTRUCTURE_CATEGORY_TITLES[category]).card(card));
-    player.playCard(card, Payment.of({titanium: design.cost}));
+    if (ore > 0) {
+      HighOrbit.spendShipyardOre(player, ore);
+    }
+    player.playCard(card, Payment.of({titanium: design.cost - ore}));
     HighOrbit.endTurn(player);
     return card;
   }
@@ -313,31 +362,14 @@ export class HighOrbit {
     }
   }
 
-  /** Planetary Outpost: whoever played one last generation is first player this generation. */
-  public static nextFirstPlayer(game: IGame): IPlayer | undefined {
-    for (const player of game.players) {
-      for (const card of HighOrbit.ownedCopies(player, CardName.PLANETARY_OUTPOST)) {
-        if (card.generationUsed === game.generation - 1) {
-          return player;
-        }
-      }
-    }
-    return undefined;
+  /** Ore on every copy of a design the player owns. */
+  private static oreOn(player: IPlayer, base: CardName): number {
+    return HighOrbit.ownedCopies(player, base).reduce((sum, card) => sum + card.resourceCount, 0);
   }
 
-  /** Planetary Outpost: only one can be played per generation. */
-  public static planetaryOutpostPlayedThisGeneration(game: IGame): boolean {
-    return game.players.some((p) => HighOrbit.ownedCopies(p, CardName.PLANETARY_OUTPOST).some((c) => c.generationUsed === game.generation));
-  }
-
-  /** Ore on every Propellant Depot the player owns. It pays 2 M€ each for cards with Venus, Moon or Jovian tags. */
-  public static propellantOre(player: IPlayer): number {
-    return HighOrbit.ownedCopies(player, CardName.PROPELLANT_DEPOT).reduce((sum, card) => sum + card.resourceCount, 0);
-  }
-
-  public static spendPropellantOre(player: IPlayer, count: number): void {
+  private static spendOreOn(player: IPlayer, base: CardName, count: number): void {
     let left = count;
-    for (const card of HighOrbit.ownedCopies(player, CardName.PROPELLANT_DEPOT)) {
+    for (const card of HighOrbit.ownedCopies(player, base)) {
       const take = Math.min(left, card.resourceCount);
       if (take > 0) {
         player.removeResourceFrom(card, take, {log: true});
@@ -345,12 +377,35 @@ export class HighOrbit {
       }
     }
     if (left > 0) {
-      throw new Error('Not enough ore on Propellant Depot');
+      throw new Error(`Not enough ore on ${base}`);
     }
   }
 
+  /** Ore on every Propellant Depot the player owns. It pays 2 M€ each for cards with a planetary tag. */
+  public static propellantOre(player: IPlayer): number {
+    return HighOrbit.oreOn(player, CardName.PROPELLANT_DEPOT);
+  }
+
+  public static spendPropellantOre(player: IPlayer, count: number): void {
+    HighOrbit.spendOreOn(player, CardName.PROPELLANT_DEPOT, count);
+  }
+
   public static canPayWithPropellantOre(card: {tags: ReadonlyArray<Tag>}): boolean {
-    return card.tags.includes(Tag.VENUS) || card.tags.includes(Tag.MOON) || card.tags.includes(Tag.JOVIAN);
+    return card.tags.some((tag) => PLANETARY_TAGS.includes(tag));
+  }
+
+  /** Ore on every Orbital Shipyard: 1 titanium for infrastructures, 3 M€ for the Build Colony standard project. */
+  public static shipyardOre(player: IPlayer): number {
+    return HighOrbit.oreOn(player, CardName.ORBITAL_SHIPYARD);
+  }
+
+  public static spendShipyardOre(player: IPlayer, count: number): void {
+    HighOrbit.spendOreOn(player, CardName.ORBITAL_SHIPYARD, count);
+  }
+
+  /** Orbital Shipyard ore pays for the Build Colony standard project. */
+  public static standardProjectPayWith(player: IPlayer, card: ICard, base: StandardProjectCanPayWith): StandardProjectCanPayWith {
+    return highOrbitStandardProjectPayWith(player, card, base);
   }
 
   /** Total ore on the player's cards (Ore Refinery VP). */
@@ -382,10 +437,7 @@ export class HighOrbit {
     if (player.game.highOrbit === undefined) {
       return undefined;
     }
-    return new SelectInfrastructure(player).andThen((design) => {
-      HighOrbit.buy(player, design);
-      return undefined;
-    });
+    return new SelectInfrastructure(player).andThen((design) => HighOrbit.startPurchase(player, design));
   }
 
   /** Planetary Engineering Corps: the discounted standard project menu. */
@@ -447,5 +499,133 @@ export class HighOrbit {
         owner.stock.add(Resource.TITANIUM, amount, {log: true, from: {card}});
       }
     }
+  }
+
+  // ---- Free ore conversions ----------------------------------------------------------------------------------
+
+  /**
+   * "N ore here can be converted at any time" (Asteroid Mine, Auto Factory, Space Trading Station): an entry in the
+   * action menu that does not use up an action, so it can be taken as often as the ore allows.
+   */
+  public static oreConversionOption(player: IPlayer): PlayerInput | undefined {
+    const options: Array<SelectOption> = [];
+    for (const card of player.tableau) {
+      if (card.type !== CardType.INFRASTRUCTURE || !isOreConverter(card)) {
+        continue;
+      }
+      for (const conversion of card.oreConversions) {
+        const max = Math.floor(card.resourceCount / conversion.ore);
+        if (max < 1) {
+          continue;
+        }
+        const run = (times: number) => {
+          player.freeActionTaken = true;
+          player.removeResourceFrom(card, times * conversion.ore, {log: false});
+          player.game.log('${0} converted ${1} ore on ${2}', (b) => b.player(player).number(times * conversion.ore).card(card));
+          conversion.apply(player, times);
+          return undefined;
+        };
+        options.push(new SelectOption(message('${0}: ${1}', (b) => b.card(card).string(conversion.title)), 'Convert').andThen(() => {
+          if (max === 1) {
+            return run(1);
+          }
+          return new SelectAmount(message('How many times? (${0})', (b) => b.string(conversion.title)), 'Convert', 1, max, true).andThen(run);
+        }));
+      }
+    }
+    if (options.length === 0) {
+      return undefined;
+    }
+    return new OrOptions(...options).setTitle('Convert ore (free action)');
+  }
+
+  // ---- Freighters ---------------------------------------------------------------------------------------------
+
+  /** Freighters: when you trade, you may spend 1 ore on each Freighters to raise that colony's track 1 step. */
+  public static freightersBeforeTrade(player: IPlayer, colony: IColony): PlayerInput | undefined {
+    const withOre = HighOrbit.ownedCopies(player, CardName.FREIGHTERS).filter((card) => card.resourceCount > 0);
+    const room = MAX_COLONY_TRACK_POSITION - colony.trackPosition;
+    const max = Math.min(withOre.length, room);
+    if (max <= 0) {
+      return undefined;
+    }
+    return new SelectAmount(
+      message('Spend ore on Freighters to raise the ${0} track before trading? (1 ore and 1 step per Freighters card)', (b) => b.colony(colony)),
+      'Confirm', 0, max)
+      .andThen((amount) => {
+        for (const card of withOre.slice(0, amount)) {
+          player.removeResourceFrom(card, 1, {log: true});
+        }
+        if (amount > 0) {
+          colony.increaseTrack(amount);
+          player.game.log('${0} raised the ${1} track ${2} step(s) with Freighters', (b) => b.player(player).colony(colony).number(amount));
+        }
+        return undefined;
+      });
+  }
+
+  // ---- Salvage Depot ------------------------------------------------------------------------------------------
+
+  private static salvageSuppressed = false;
+
+  /** Runs `fn` without Salvage Depot reacting to the cards it discards. */
+  public static withoutSalvage(fn: () => void): void {
+    const before = HighOrbit.salvageSuppressed;
+    HighOrbit.salvageSuppressed = true;
+    try {
+      fn();
+    } finally {
+      HighOrbit.salvageSuppressed = before;
+    }
+  }
+
+  /** Called by the project deck whenever cards go to the discard pile. */
+  public static onProjectCardsDiscarded(game: IGame, cards: ReadonlyArray<IProjectCard>): void {
+    if (game.highOrbit === undefined || HighOrbit.salvageSuppressed || game.phase !== Phase.ACTION || cards.length === 0) {
+      return;
+    }
+    const owners = game.players.filter((p) => HighOrbit.oreOn(p, CardName.SALVAGE_DEPOT) > 0);
+    if (owners.length === 0) {
+      return;
+    }
+    const pending = HighOrbit.pendingDiscards.get(game);
+    if (pending !== undefined) {
+      pending.push(...cards);
+      return;
+    }
+    const batch: Array<IProjectCard> = [...cards];
+    HighOrbit.pendingDiscards.set(game, batch);
+    // Once the current action has finished discarding, each owner may take one of the discarded cards.
+    game.defer(new SimpleDeferredAction(owners[0], () => {
+      HighOrbit.pendingDiscards.delete(game);
+      for (const owner of owners) {
+        owner.defer(() => HighOrbit.salvageOffer(owner, batch));
+      }
+      return undefined;
+    }, Priority.BACK_OF_THE_LINE));
+  }
+
+  private static pendingDiscards = new WeakMap<IGame, Array<IProjectCard>>();
+
+  private static salvageOffer(player: IPlayer, batch: ReadonlyArray<IProjectCard>): PlayerInput | undefined {
+    const game = player.game;
+    const available = batch.filter((card) => game.projectDeck.discardPile.includes(card));
+    if (available.length === 0 || HighOrbit.oreOn(player, CardName.SALVAGE_DEPOT) === 0) {
+      return undefined;
+    }
+    return new OrOptions(
+      new SelectOption(message('Spend 1 ore on Salvage Depot to draw 1 of the ${0} discarded cards at random', (b) => b.number(available.length)), 'Draw').andThen(() => {
+        HighOrbit.spendOreOn(player, CardName.SALVAGE_DEPOT, 1);
+        const card = available[Math.floor(game.rng.nextInt(available.length))];
+        const idx = game.projectDeck.discardPile.indexOf(card);
+        if (idx >= 0) {
+          game.projectDeck.discardPile.splice(idx, 1);
+          player.cardsInHand.push(card);
+          game.log('${0} drew a discarded card with Salvage Depot', (b) => b.player(player));
+        }
+        return undefined;
+      }),
+      new SelectOption('Do not use Salvage Depot').andThen(() => undefined),
+    ).setTitle('Salvage Depot');
   }
 }

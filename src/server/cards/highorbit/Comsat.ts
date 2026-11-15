@@ -7,7 +7,7 @@ export class Comsat extends InfrastructureCard {
   constructor(copy: number = 1) {
     super(CardName.COMSAT, copy, {
       metadata: {
-        cardNumber: 'HO31',
+        cardNumber: 'INF01',
         renderData: CardRenderer.builder((b) => {
           b.effect('Every time you perform a trade action, gain 1 M€.', (eb) => eb.trade().startEffect.megacredits(1));
         }),

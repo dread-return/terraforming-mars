@@ -48,6 +48,7 @@
 </template>
 
 <script lang="ts">
+import {PLANETARY_TAGS} from '@/common/highOrbit/HighOrbit';
 import {defineComponent} from 'vue';
 import {SpendableResource} from '@/common/inputs/Spendable';
 import Card from '@/client/components/card/Card.vue';
@@ -104,6 +105,7 @@ export default defineComponent({
         'graphene',
         'kuiperAsteroids',
         'propellantOre',
+        'shipyardOre',
         'auroraiData',
         'spireScience',
         'megacredits',
@@ -233,6 +235,9 @@ export default defineComponent({
           return canPayWith.seeds === true;
         case 'kuiperAsteroids':
           return canPayWith.kuiperAsteroids === true;
+        // High Orbit: Orbital Shipyard ore pays for the Build Colony standard project.
+        case 'shipyardOre':
+          return canPayWith.shipyardOre === true;
         case 'floaters':
           // Venus Phase 2: Venus standard projects take floaters from any card.
           return canPayWith.floaters === true;
@@ -272,9 +277,10 @@ export default defineComponent({
         case 'graphene':
           return this.tags.includes(Tag.SPACE) ||
             this.tags.includes(Tag.CITY);
-        // High Orbit: Propellant Depot ore pays for Venus, Moon and Jovian cards.
+        // High Orbit: Propellant Depot ore pays for cards with a planetary tag.
         case 'propellantOre':
-          return this.tags.includes(Tag.VENUS) || this.tags.includes(Tag.MOON) || this.tags.includes(Tag.JOVIAN);
+          return PLANETARY_TAGS.some((tag) => this.tags.includes(tag));
+        case 'shipyardOre':
         case 'kuiperAsteroids':
         case 'auroraiData':
         case 'spireScience':

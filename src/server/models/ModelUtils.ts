@@ -1,3 +1,4 @@
+import {highOrbitStandardProjectPayWith} from '../highOrbit/HighOrbitPayWith';
 import {Postludes} from '../postludes/Postludes';
 import {NEUTRAL_COLONY_ID} from '../colonies/NeutralColony';
 import {CardModel} from '../../common/models/CardModel';
@@ -55,7 +56,7 @@ export function cardsToModel(
       cloneTag: isICloneTagCard(card) ? card.cloneTag : undefined,
     };
     if (isIStandardProjectCard(card)) {
-      model.standardProjectCanPayWith = Postludes.standardProjectPayWith(player, card, Eternity.standardProjectPayWith(player, card, card.canPayWith(player)));
+      model.standardProjectCanPayWith = highOrbitStandardProjectPayWith(player, card, Postludes.standardProjectPayWith(player, card, Eternity.standardProjectPayWith(player, card, card.canPayWith(player))));
     }
     if (card.isDisabled) {
       model.isDisabled = true;

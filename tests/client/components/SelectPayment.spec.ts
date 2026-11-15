@@ -315,7 +315,7 @@ describe('SelectPayment', () => {
           amount: 10,
           paymentOptions: {steel: true},
           auroraiData: 0, kuiperAsteroids: 0, seeds: 0, spireScience: 0,
-          floaters: 0, microbes: 0, graphene: 0, propellantOre: 0,
+          floaters: 0, microbes: 0, graphene: 0, propellantOre: 0, shipyardOre: 0,
           reserveUnits: undefined,
         },
         onsave: () => {

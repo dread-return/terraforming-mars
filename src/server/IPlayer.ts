@@ -104,6 +104,8 @@ export interface IPlayer {
 
   // This generation / this round
   actionsTakenThisRound: number;
+  /** High Orbit: the action just taken was free (an ore conversion). */
+  freeActionTaken: boolean;
   lastCardPlayed: CardName | undefined;
   pendingInitialActions: Array<ICorporationCard>;
 

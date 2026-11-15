@@ -1,3 +1,4 @@
+import {highOrbitStandardProjectPayWith} from '../highOrbit/HighOrbitPayWith';
 import {Postludes} from '../postludes/Postludes';
 import {Payment} from '../../common/inputs/Payment';
 import {IStandardProjectCard} from '../cards/IStandardProjectCard';
@@ -41,7 +42,7 @@ export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProje
     if (details.overriddenCost === undefined && !card.canAct(this.player)) {
       throw new InputError('You cannot play this standard project');
     }
-    const canPayWith = Postludes.standardProjectPayWith(this.player, card, Eternity.standardProjectPayWith(this.player, card, card.canPayWith(this.player)));
+    const canPayWith = highOrbitStandardProjectPayWith(this.player, card, Postludes.standardProjectPayWith(this.player, card, Eternity.standardProjectPayWith(this.player, card, card.canPayWith(this.player))));
     const paymentOptions: Partial<PaymentOptions> = {
       heat: this.player.canUseHeatAsMegaCredits,
       energy: this.player.canUseEnergyAsMegaCredits,
@@ -52,6 +53,7 @@ export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProje
       auroraiData: this.player.tableau.has(CardName.AURORAI),
       spireScience: this.player.tableau.has(CardName.SPIRE),
       kuiperAsteroids: canPayWith.kuiperAsteroids ? this.player.tableau.has(CardName.KUIPER_COOPERATIVE) : false,
+      shipyardOre: canPayWith.shipyardOre === true,
     };
 
     const reserveUnits = details.reserveUnits;

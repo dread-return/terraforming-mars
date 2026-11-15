@@ -10,7 +10,7 @@ export class WeatherSatellite extends InfrastructureCard {
   constructor(copy: number = 1) {
     super(CardName.WEATHER_SATELLITE, copy, {
       metadata: {
-        cardNumber: 'HO36',
+        cardNumber: 'INF07',
         renderData: CardRenderer.builder((b) => {
           b.effect('Whenever you raise the temperature or oxygen 1 step, or place an ocean, gain 1 M€.', (eb) => {
             eb.temperature(1).slash().oxygen(1).slash().oceans(1).startEffect.megacredits(1);

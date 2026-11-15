@@ -1,4 +1,6 @@
 import {CardName} from '../../../common/cards/CardName';
+import {Tag} from '../../../common/cards/Tag';
+import {AddResourcesToCard} from '../../deferredActions/AddResourcesToCard';
 import {CardResource} from '../../../common/CardResource';
 import {Resource} from '../../../common/Resource';
 import {CardRenderer} from '../render/CardRenderer';
@@ -13,16 +15,17 @@ import {InfrastructureCard} from './InfrastructureCard';
 export class ScienceFacility extends InfrastructureCard implements IActionCard {
   constructor(copy: number = 1) {
     super(CardName.SCIENCE_FACILITY, copy, {
+      tags: [Tag.SCIENCE],
       resourceType: CardResource.SCIENCE,
       victoryPoints: 1,
       metadata: {
-        cardNumber: 'HO57',
+        cardNumber: 'INF20',
         renderData: CardRenderer.builder((b) => {
-          b.action(undefined, (eb) => eb.energy(1).titanium(1).startAction.resource(CardResource.SCIENCE)).br;
+          b.action(undefined, (eb) => eb.titanium(1).energy(1).startAction.resource(CardResource.SCIENCE).asterix()).br;
           b.or().nbsp.action(undefined, (eb) => {
             eb.resource(CardResource.SCIENCE).startAction.text('4').cards(1).asterix();
           }).br;
-          b.plainText('(Action: spend 1 energy and 1 titanium to add 1 science here, OR spend 1 science here to look at the top 4 cards and keep 1.)');
+          b.plainText('(Action: spend 1 titanium and 1 energy to add a science resource to ANY card, OR spend 1 science here to draw 4 cards, keep 1 and discard the rest.)');
         }),
       },
     });
@@ -37,13 +40,13 @@ export class ScienceFacility extends InfrastructureCard implements IActionCard {
   }
 
   public action(player: IPlayer): PlayerInput | undefined {
-    const add = new SelectOption('Spend 1 energy and 1 titanium to add a science resource here').andThen(() => {
+    const add = new SelectOption('Spend 1 titanium and 1 energy to add a science resource to any card').andThen(() => {
       player.stock.deduct(Resource.ENERGY, 1);
       player.stock.deduct(Resource.TITANIUM, 1);
-      player.addResourceTo(this, {qty: 1, log: true});
+      player.game.defer(new AddResourcesToCard(player, CardResource.SCIENCE, {count: 1}));
       return undefined;
     });
-    const look = new SelectOption('Spend a science resource here to look at the top 4 cards and keep 1').andThen(() => {
+    const look = new SelectOption('Spend a science resource here to draw 4 cards and keep 1').andThen(() => {
       player.removeResourceFrom(this, 1, {log: true});
       player.game.defer(DrawCards.keepSome(player, 4, {keepMax: 1}));
       return undefined;

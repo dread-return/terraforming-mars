@@ -40,6 +40,7 @@ export class SelectPayment extends BasePlayerInput<Payment> {
       microbes: 0,
       graphene: 0,
       propellantOre: 0,
+      shipyardOre: 0,
     };
   }
 

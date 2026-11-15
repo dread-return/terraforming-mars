@@ -40,6 +40,8 @@ export const SPENDABLE_CARD_RESOURCES = [
   'kuiperAsteroids',
   // High Orbit: ore on Propellant Depot pays 2 M€ each for cards with Venus, Moon or Jovian tags.
   'propellantOre',
+  // High Orbit: ore on Orbital Shipyard pays 3 M€ each for the Build Colony standard project.
+  'shipyardOre',
 ] as const;
 
 export const SPENDABLE_RESOURCES = [...SPENDABLE_STANDARD_RESOURCES, ...SPENDABLE_CARD_RESOURCES] as const;
@@ -61,4 +63,5 @@ export const CARD_FOR_SPENDABLE_RESOURCE = {
   graphene: CardName.CARBON_NANOSYSTEMS,
   kuiperAsteroids: CardName.KUIPER_COOPERATIVE,
   propellantOre: CardName.PROPELLANT_DEPOT,
+  shipyardOre: CardName.ORBITAL_SHIPYARD,
 } satisfies Record<SpendableCardResource, CardName>;

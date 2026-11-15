@@ -38,6 +38,8 @@ export type StandardProjectCanPayWith = {
   /** Eternity (Venusia): heat pays for standard projects at this rate. */
   heat?: boolean,
   heatValue?: number,
+  /** High Orbit: ore on Orbital Shipyard (3 M€ each) for the Build Colony standard project. */
+  shipyardOre?: boolean,
 }
 
 /**

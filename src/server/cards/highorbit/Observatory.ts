@@ -19,7 +19,7 @@ export class Observatory extends InfrastructureCard implements IActionCard {
       resourceType: CardResource.SCIENCE,
       victoryPoints: {resourcesHere: {}},
       metadata: {
-        cardNumber: 'HO09',
+        cardNumber: 'INF17',
         renderData: CardRenderer.builder((b) => {
           b.action('Discard 3 cards from your hand. Add a science resource here for each science tag on them, plus one.', (eb) => {
             eb.text('-3').cards(1).startAction.resource(CardResource.SCIENCE).slash().tag(Tag.SCIENCE).text('+1');

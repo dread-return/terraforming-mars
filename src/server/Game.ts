@@ -392,6 +392,7 @@ export class Game implements IGame, Logger {
     Postludes.attach(game);
     if (gameOptions.highOrbitExpansion) {
       game.highOrbit = HighOrbit.newState(gameOptions, rng);
+      HighOrbit.attach(game);
     }
     // This evaluation of created time doesn't match what's stored in the database, but that's fine.
     game.createdTime = new Date();
@@ -807,12 +808,6 @@ export class Game implements IGame, Logger {
     const kept = Eternity.keptFirstPlayer(this);
     if (kept !== undefined) {
       this.overrideFirstPlayer(kept);
-      return;
-    }
-    // High Orbit: Planetary Outpost takes the first player marker for the next generation.
-    const outpostOwner = HighOrbit.nextFirstPlayer(this);
-    if (outpostOwner !== undefined) {
-      this.overrideFirstPlayer(outpostOwner);
       return;
     }
     const spaceWargamesOwner = this.getCardPlayerOrUndefined(CardName.SPACE_WARGAMES);
@@ -1910,6 +1905,7 @@ export class Game implements IGame, Logger {
     }
     if (gameOptions.highOrbitExpansion && d.highOrbit !== undefined) {
       game.highOrbit = HighOrbit.deserialize(d.highOrbit);
+      HighOrbit.attach(game);
     }
     game.spectatorId = d.spectatorId;
     game.createdTime = new Date(d.createdTimeMs);

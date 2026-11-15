@@ -3,27 +3,24 @@ import {Tag} from '../../../common/cards/Tag';
 import {CardResource} from '../../../common/CardResource';
 import {CardRenderer} from '../render/CardRenderer';
 import {IPlayer} from '../../IPlayer';
-import {IActionCard} from '../ICard';
+import {ICard} from '../ICard';
 import {AddResourcesToCard} from '../../deferredActions/AddResourcesToCard';
-import {Resource} from '../../../common/Resource';
 import {InfrastructureCard} from './InfrastructureCard';
 
 /**
- * Epic version: science tag, science resources instead of data.
- * Action: spend 1 M€ to discard the top card of the deck. A science tag on it adds a science resource to any card;
- * a space tag repeats the process.
+ * Epic: Effect: when you play a science or space tag, discard the top card of the deck; if it has a science tag,
+ * add a science resource to any card. Once per science or space tag played. 1 VP per 2 science here.
  */
-export class Probe extends InfrastructureCard implements IActionCard {
+export class Probe extends InfrastructureCard {
   constructor(copy: number = 1) {
     super(CardName.PROBE, copy, {
-      tags: [Tag.SCIENCE],
       resourceType: CardResource.SCIENCE,
       victoryPoints: {resourcesHere: {}, per: 2},
       metadata: {
-        cardNumber: 'HO61',
+        cardNumber: 'INF04',
         renderData: CardRenderer.builder((b) => {
-          b.action('Spend 1 M€: discard the top card of the deck. Science tag: add a science resource to ANY card. Space tag: repeat.', (eb) => {
-            eb.megacredits(1).startAction.cards(1).asterix();
+          b.effect('When you play a science or space tag, discard the top card of the deck. If it has a science tag, add a science resource to ANY card.', (eb) => {
+            eb.tag(Tag.SCIENCE).slash().tag(Tag.SPACE).startEffect.cards(1, {secondaryTag: Tag.SCIENCE}).colon().resource(CardResource.SCIENCE).asterix();
           }).br;
           b.vpText('1 VP for every 2 science resources on this card.');
         }),
@@ -31,26 +28,18 @@ export class Probe extends InfrastructureCard implements IActionCard {
     });
   }
 
-  public canAct(player: IPlayer): boolean {
-    return player.megaCredits >= 1;
-  }
-
-  public action(player: IPlayer) {
+  public onCardPlayed(player: IPlayer, card: ICard) {
+    const count = card.tags.filter((tag) => tag === Tag.SCIENCE || tag === Tag.SPACE).length;
     const game = player.game;
-    player.stock.deduct(Resource.MEGACREDITS, 1);
-    // A space tag repeats the process; stop when the deck runs out.
-    for (let i = 0; i < 500; i++) {
-      const card = game.projectDeck.draw(game);
-      if (card === undefined) {
+    for (let i = 0; i < count; i++) {
+      const top = game.projectDeck.draw(game);
+      if (top === undefined) {
         break;
       }
-      game.projectDeck.discard(card);
-      game.log('${0} discarded ${1} with ${2}', (b) => b.player(player).card(card).card(this));
-      if (card.tags.includes(Tag.SCIENCE)) {
+      game.projectDeck.discard(top);
+      game.log('${0} discarded ${1} with ${2}', (b) => b.player(player).card(top).card(this));
+      if (top.tags.includes(Tag.SCIENCE)) {
         game.defer(new AddResourcesToCard(player, CardResource.SCIENCE, {count: 1}));
-      }
-      if (!card.tags.includes(Tag.SPACE)) {
-        break;
       }
     }
     return undefined;

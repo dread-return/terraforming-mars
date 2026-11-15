@@ -115,8 +115,12 @@ export class Deck<T extends Named<CardName>> {
     return result;
   }
 
+  /** Called after cards go to the discard pile (High Orbit's Salvage Depot listens on the project deck). Not saved. */
+  public onDiscard: ((cards: ReadonlyArray<T>) => void) | undefined = undefined;
+
   public discard(...cards: Array<T>): void {
     this.discardPile.push(...cards);
+    this.onDiscard?.(cards);
   }
 
   /** Puts `cards` back in the draw pile and shuffles it. The discard pile stays where it is. */

@@ -512,6 +512,33 @@ describe('SelectProjectCardToPlay', () => {
     expect(saveResponse.payment).deep.eq(Payment.of({graphene: 7, megacredits: 2}));
   });
 
+  it('High Orbit: Orbital Shipyard ore pays 3 M€ each for Build Colony', async () => {
+    // Build Colony costs 17. 5 M€ and 4 ore (12 M€) cover it.
+    const wrapper = setupCardForPurchase(
+      CardName.BUILD_COLONY_STANDARD_PROJECT, 17,
+      {megacredits: 5},
+      {shipyardOre: 4},
+      {canPayWith: {shipyardOre: true}});
+
+    const tester = new PaymentTester(wrapper);
+    await tester.nextTick();
+    tester.expectPayment({megacredits: 5, shipyardOre: 4});
+
+    await tester.clickSave();
+    expect(saveResponse.payment).deep.eq(Payment.of({shipyardOre: 4, megacredits: 5}));
+  });
+
+  it('High Orbit: Orbital Shipyard ore does not pay for project cards', async () => {
+    const wrapper = setupCardForPurchase(
+      CardName.ASTEROID_MINING, 30,
+      {megacredits: 30, titanium: 0},
+      {shipyardOre: 4});
+
+    const tester = new PaymentTester(wrapper);
+    await tester.nextTick();
+    tester.expectPayment({megacredits: 30});
+  });
+
   it('initial setup allows for steel and titanium when using Last Resort Ingenuity', async () => {
     // Earth Office costs 1, but has no building tag or space tag.
     const wrapper = setupCardForPurchase(
@@ -728,7 +755,7 @@ describe('SelectProjectCardToPlay', () => {
       ],
       paymentOptions: {},
       floaters: 0, graphene: 0, kuiperAsteroids: 0, lunaArchivesScience: 0,
-      microbes: 0, seeds: 0, auroraiData: 0, spireScience: 0, propellantOre: 0,
+      microbes: 0, seeds: 0, auroraiData: 0, spireScience: 0, propellantOre: 0, shipyardOre: 0,
     };
     const playerView: Partial<PlayerViewModel> = {
       id: 'playerid-foo',
@@ -805,6 +832,7 @@ describe('SelectProjectCardToPlay', () => {
       auroraiData: 0,
       spireScience: 0,
       propellantOre: 0,
+      shipyardOre: 0,
       ...playerInputFields,
     };
     if (options !== undefined) {

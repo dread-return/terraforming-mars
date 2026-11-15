@@ -57,6 +57,8 @@ export type SelectProjectCardToPlayModel = BaseInputModel & {
   kuiperAsteroids: number;
   /** High Orbit: ore on Propellant Depot (2 M€ each for Venus, Moon and Jovian cards). */
   propellantOre: number;
+  /** High Orbit: ore on Orbital Shipyard (3 M€ each for the Build Colony standard project). */
+  shipyardOre: number;
   auroraiData: number;
   spireScience: number;
 }
@@ -91,6 +93,7 @@ export type SelectPaymentModel = BaseInputModel & {
   microbes: 0,
   graphene: 0,
   propellantOre: 0,
+  shipyardOre: 0,
 }
 
 export type SelectPlayerModel = BaseInputModel & {

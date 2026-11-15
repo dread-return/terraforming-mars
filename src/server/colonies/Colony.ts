@@ -133,6 +133,17 @@ export abstract class Colony implements IColony {
     * @param decreaseTrackAfterTrade when false, the track does not decrease after trading.
     */
   public trade(player: IPlayer, tradeOptions: TradeOptions = {}, bonusTradeOffset = 0): void {
+    // High Orbit: Freighters may raise the track before the trade.
+    const freighters = HighOrbit.freightersBeforeTrade(player, this);
+    if (freighters !== undefined) {
+      player.game.defer(new SimpleDeferredAction(player, () => freighters))
+        .andThen(() => this.tradeAfterFreighters(player, tradeOptions, bonusTradeOffset));
+      return;
+    }
+    this.tradeAfterFreighters(player, tradeOptions, bonusTradeOffset);
+  }
+
+  private tradeAfterFreighters(player: IPlayer, tradeOptions: TradeOptions, bonusTradeOffset: number): void {
     const tradeOffset = player.colonies.tradeOffset + bonusTradeOffset;
     const maxPossibleTrackPosition = Math.min(this.trackPosition + tradeOffset, MAX_COLONY_TRACK_POSITION);
     const steps = maxPossibleTrackPosition - this.trackPosition;

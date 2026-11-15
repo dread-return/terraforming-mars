@@ -15,9 +15,9 @@ export class OrbitalHeadquarters extends InfrastructureCard {
         stock: {megacredits: 10},
       },
       metadata: {
-        cardNumber: 'HO04',
+        cardNumber: 'INF18',
         renderData: CardRenderer.builder((b) => {
-          b.effect('When you play a tag that matches a tag on your corporation, gain 1 M€.', (eb) => eb.text('corp tag').startEffect.megacredits(1)).br;
+          b.effect('Whenever you play a card with a tag matching one of your corporations, gain 1 M€.', (eb) => eb.text('corp tag').startEffect.megacredits(1)).br;
           b.megacredits(10);
         }),
         description: 'Gain 10 M€. Max 1 per player.',
@@ -38,9 +38,9 @@ export class OrbitalHeadquarters extends InfrastructureCard {
         }
       }
     }
-    const count = card.tags.filter((tag) => corpTags.has(tag)).length;
-    if (count > 0) {
-      player.stock.add(Resource.MEGACREDITS, count, {log: true, from: {card: this}});
+    // Epic: 1 M€ per card, however many tags match.
+    if (card.tags.some((tag) => corpTags.has(tag))) {
+      player.stock.add(Resource.MEGACREDITS, 1, {log: true, from: {card: this}});
     }
     return undefined;
   }

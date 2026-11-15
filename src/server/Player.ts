@@ -133,6 +133,8 @@ export class Player implements IPlayer {
 
   // This generation / this round
   public actionsTakenThisRound: number = 0;
+  /** High Orbit: set by a free action (ore conversion) so it doesn't count as one of the turn's actions. Not saved. */
+  public freeActionTaken: boolean = false;
   public actionsThisGeneration: Set<CardName> = new Set();
   public lastCardPlayed: CardName | undefined;
   public pendingInitialActions: Array<ICorporationCard> = [];
@@ -838,6 +840,7 @@ export class Player implements IPlayer {
       graphene: card.tags.includes(Tag.CITY) || card.tags.includes(Tag.SPACE),
       kuiperAsteroids: card.name === CardName.AQUIFER_STANDARD_PROJECT || card.name === CardName.ASTEROID_STANDARD_PROJECT,
       propellantOre: HighOrbit.canPayWithPropellantOre(card),
+      shipyardOre: false,
     };
   }
 
@@ -897,6 +900,9 @@ export class Player implements IPlayer {
     if (SpendableResource === 'propellantOre') {
       return HighOrbit.propellantOre(this);
     }
+    if (SpendableResource === 'shipyardOre') {
+      return HighOrbit.shipyardOre(this);
+    }
     return this.resourcesOnCard(CARD_FOR_SPENDABLE_RESOURCE[SpendableResource]);
   }
 
@@ -922,6 +928,10 @@ export class Player implements IPlayer {
       }
       if (resource === 'propellantOre') {
         HighOrbit.spendPropellantOre(this, count);
+        continue;
+      }
+      if (resource === 'shipyardOre') {
+        HighOrbit.spendShipyardOre(this, count);
         continue;
       }
       const name = CARD_FOR_SPENDABLE_RESOURCE[resource];
@@ -1476,6 +1486,7 @@ export class Player implements IPlayer {
       graphene: options?.graphene ?? false,
       kuiperAsteroids: options?.kuiperAsteroids ?? false,
       propellantOre: options?.propellantOre ?? false,
+      shipyardOre: options?.shipyardOre ?? false,
     };
 
     // HOOK: Luna Trade Federation
@@ -1680,6 +1691,11 @@ export class Player implements IPlayer {
   }
 
   private incrementActionsTaken(): void {
+    // High Orbit: ore conversions are free actions.
+    if (this.freeActionTaken) {
+      this.freeActionTaken = false;
+      return;
+    }
     this.actionsTakenThisRound++;
     this.actionsTakenThisGame++;
   }
@@ -1793,6 +1809,12 @@ export class Player implements IPlayer {
         .filter((award: IAward) => this.game.hasBeenFunded(award) === false)
         .map((award: IAward) => this.fundAward(award));
       action.options.push(remainingAwards);
+    }
+
+    // High Orbit: free ore conversions (Asteroid Mine, Auto Factory, Space Trading Station).
+    const oreConversions = HighOrbit.oreConversionOption(this);
+    if (oreConversions !== undefined) {
+      action.options.push(oreConversions);
     }
 
     // High Orbit: the Infrastructures menu sits right above the standard projects.

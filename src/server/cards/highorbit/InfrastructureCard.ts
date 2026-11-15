@@ -5,6 +5,7 @@ import {infrastructureDesign} from '../../../common/highOrbit/HighOrbit';
 import {ActionCard, StaticActionCardProperties} from '../ActionCard';
 import {Card, StaticCardProperties} from '../Card';
 import {IProjectCard} from '../IProjectCard';
+import {IPlayer} from '../../IPlayer';
 
 export type InfrastructureProperties = Omit<StaticCardProperties, 'name' | 'type' | 'cost'>;
 export type InfrastructureActionProperties = Omit<StaticActionCardProperties, 'name' | 'type' | 'cost'>;
@@ -47,4 +48,22 @@ export abstract class InfrastructureActionCard extends ActionCard implements IPr
   constructor(base: CardName, copy: number, properties: InfrastructureActionProperties) {
     super(infrastructureProperties(base, copy, properties));
   }
+}
+
+/** "N ore here can be converted at any time into ...": a free action, as often as the ore allows. */
+export type OreConversion = {
+  /** Shown in the free-action menu, e.g. "2 ore → 1 energy and 1 heat". */
+  title: string;
+  /** Ore spent per conversion. */
+  ore: number;
+  /** Gives the player the result of `times` conversions. */
+  apply: (player: IPlayer, times: number) => void;
+};
+
+export interface IOreConverter {
+  readonly oreConversions: ReadonlyArray<OreConversion>;
+}
+
+export function isOreConverter(card: object): card is IOreConverter {
+  return Array.isArray((card as Partial<IOreConverter>).oreConversions);
 }

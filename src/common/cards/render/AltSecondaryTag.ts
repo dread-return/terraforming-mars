@@ -8,6 +8,8 @@ export enum AltSecondaryTag {
   TURMOIL = 'turmoil',
   FLOATER = 'floater',
   BLUE = 'blue',
+  // Epic Corporations: green (automated) cards.
+  GREEN = 'green',
   NO_TAGS = 'no_tags',
 
   MOON_MINING_RATE = 'moon-mine',

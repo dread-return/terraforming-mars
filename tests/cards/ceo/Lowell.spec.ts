@@ -44,7 +44,8 @@ describe('Lowell', () => {
     runAllActions(game);
 
     const selectCard = cast(player.popWaitingFor(), SelectCard<ICeoCard>);
-    selectCard.cb([selectCard.cards[0]]);
+    // Pick a CEO other than Lowell itself (the deck order depends on the RNG).
+    selectCard.cb([selectCard.cards.find((c) => c.name !== card.name)!]);
 
     expect(player.playedCards.ceos()).has.length(1);
     expect(player.playedCards.get(card.name)).is.undefined;

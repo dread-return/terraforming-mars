@@ -675,12 +675,17 @@ export class Player implements IPlayer {
     } else if (energyStorageCapacity(this) > 0) {
       onProductionWithEnergyStorage(this);
     } else {
-      convertEnergyToHeat(this, this.energy);
+      // Epic Corporations: Mega ThermoElectric and MeissnerVolt keep their energy.
+      if (!EpicHooks.keepsEnergy(this)) {
+        convertEnergyToHeat(this, this.energy);
+      }
       this.finishProductionPhase();
     }
   }
 
   public finishProductionPhase() {
+    // Epic Corporations: ECME empties its stock (after energy became heat) before producing.
+    EpicHooks.beforeProduction(this);
     // Eternity: Price Manipulation Subsidies turns this generation's other production into 2 M€ each.
     if (Eternity.priceManipulationActive(this.game)) {
       const p = this.production;
@@ -1237,6 +1242,7 @@ export class Player implements IPlayer {
         player: this,
         milestone: milestone,
       });
+      EpicHooks.onMilestoneOrAward(this);
       // VanAllen CEO Hook for Milestones
       const vanAllen = this.game.getCardPlayerOrUndefined(CardName.VANALLEN);
       if (vanAllen !== undefined) {
@@ -1845,6 +1851,12 @@ export class Player implements IPlayer {
         .filter((award: IAward) => this.game.hasBeenFunded(award) === false)
         .map((award: IAward) => this.fundAward(award));
       action.options.push(remainingAwards);
+    }
+
+    // Epic Corporations: free conversions (Nitrogen'r'us, Prefab-U-Haus).
+    const epicFree = EpicHooks.freeActionOption(this);
+    if (epicFree !== undefined) {
+      action.options.push(epicFree);
     }
 
     // High Orbit: free ore conversions (Asteroid Mine, Auto Factory, Space Trading Station).

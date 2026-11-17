@@ -108,6 +108,39 @@ import {Thermex} from './Thermex';
 import {Toyitsu} from './Toyitsu';
 import {TrueMarsFoundation} from './TrueMarsFoundation';
 import {TwinCitiesOfHelium} from './TwinCitiesOfHelium';
+import {ACE} from './ACE';
+import {AstroAlliance} from './AstroAlliance';
+import {ChanceSynergetics} from './ChanceSynergetics';
+import {Cryo} from './Cryo';
+import {DNAgency} from './DNAgency';
+import {DiscardedMatter} from './DiscardedMatter';
+import {ECMECorporation} from './ECMECorporation';
+import {EdgarsIndustries} from './EdgarsIndustries';
+import {ElonLabs} from './ElonLabs';
+import {EvoAcademies} from './EvoAcademies';
+import {HHCommerce} from './HHCommerce';
+import {Helix} from './Helix';
+import {JanuaryComputationalNetwork} from './JanuaryComputationalNetwork';
+import {LandmarkAchievements} from './LandmarkAchievements';
+import {Lorean} from './Lorean';
+import {MINE} from './MINE';
+import {Marsanto} from './Marsanto';
+import {MediumGrounds} from './MediumGrounds';
+import {MegaThermoElectric} from './MegaThermoElectric';
+import {MeissnerVolt} from './MeissnerVolt';
+import {NitrogenRUs} from './NitrogenRUs';
+import {OlympusMonsConsulting} from './OlympusMonsConsulting';
+import {OmegaCorporation} from './OmegaCorporation';
+import {PaxUtopia} from './PaxUtopia';
+import {PolyPlantae} from './PolyPlantae';
+import {PrefabUHaus} from './PrefabUHaus';
+import {Quash} from './Quash';
+import {RODAssociation} from './RODAssociation';
+import {Redux} from './Redux';
+import {ResourcefulCollective} from './ResourcefulCollective';
+import {StorytellerInc} from './StorytellerInc';
+import {TalosFoundation} from './TalosFoundation';
+import {VenusianPowerAndGas} from './VenusianPowerAndGas';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -229,5 +262,39 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.TOYITSU]: {Factory: Toyitsu},
     [CardName.TRUE_MARS_FOUNDATION]: {Factory: TrueMarsFoundation, compatibility: 'pathfinders'},
     [CardName.TWIN_CITIES_OF_HELIUM]: {Factory: TwinCitiesOfHelium},
+    // Batch 3
+    [CardName.ACE]: {Factory: ACE},
+    [CardName.ASTRO_ALLIANCE]: {Factory: AstroAlliance, compatibility: 'venus'},
+    [CardName.CHANCE_SYNERGETICS]: {Factory: ChanceSynergetics},
+    [CardName.DISCARDED_MATTER]: {Factory: DiscardedMatter},
+    [CardName.DNAGENCY]: {Factory: DNAgency},
+    [CardName.ECME_CORPORATION]: {Factory: ECMECorporation},
+    [CardName.EDGARS_INDUSTRIES]: {Factory: EdgarsIndustries},
+    [CardName.ELON_LABS]: {Factory: ElonLabs},
+    [CardName.EVO_ACADEMIES]: {Factory: EvoAcademies},
+    [CardName.JANUARY_COMPUTATIONAL_NETWORK]: {Factory: JanuaryComputationalNetwork},
+    [CardName.MINE_EPIC]: {Factory: MINE},
+    [CardName.MARSANTO]: {Factory: Marsanto},
+    [CardName.MEGA_THERMOELECTRIC]: {Factory: MegaThermoElectric},
+    [CardName.MEISSNERVOLT]: {Factory: MeissnerVolt},
+    [CardName.OLYMPUS_MONS_CONSULTING]: {Factory: OlympusMonsConsulting, compatibility: 'pathfinders'},
+    [CardName.OMEGA_CORPORATION]: {Factory: OmegaCorporation},
+    [CardName.PAX_UTOPIA]: {Factory: PaxUtopia},
+    [CardName.POLY_PLANTAE]: {Factory: PolyPlantae},
+    [CardName.QUASH]: {Factory: Quash},
+    [CardName.REDUX]: {Factory: Redux},
+    [CardName.RESOURCEFUL_COLLECTIVE]: {Factory: ResourcefulCollective},
+    [CardName.STORYTELLER_INC]: {Factory: StorytellerInc},
+    [CardName.VENUSIAN_POWER_AND_GAS]: {Factory: VenusianPowerAndGas, compatibility: 'venus'},
+    [CardName.MEDIUM_GROUNDS]: {Factory: MediumGrounds},
+    [CardName.HELIX]: {Factory: Helix},
+    [CardName.HH_COMMERCE]: {Factory: HHCommerce},
+    [CardName.ROD_ASSOCIATION]: {Factory: RODAssociation},
+    [CardName.TALOS_FOUNDATION]: {Factory: TalosFoundation},
+    [CardName.NITROGEN_R_US]: {Factory: NitrogenRUs},
+    [CardName.PREFAB_U_HAUS]: {Factory: PrefabUHaus},
+    [CardName.CRYO]: {Factory: Cryo},
+    [CardName.LOREAN]: {Factory: Lorean},
+    [CardName.LANDMARK_ACHIEVEMENTS]: {Factory: LandmarkAchievements},
   },
 });

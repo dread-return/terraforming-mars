@@ -18,6 +18,10 @@ import {AddResourcesToCard} from '../../deferredActions/AddResourcesToCard';
 import {IGlobalEvent} from '../../turmoil/globalEvents/IGlobalEvent';
 import {IStandardProjectCard} from '../IStandardProjectCard';
 import {StandardProjectCanPayWith} from '../../../common/cards/Types';
+import {SelectAmount} from '../../inputs/SelectAmount';
+import {PlaceCityTile} from '../../deferredActions/PlaceCityTile';
+import {PlayerInput} from '../../PlayerInput';
+import {EpicUtils} from './EpicUtils';
 
 /** True Mars Foundation: the tag sets a player can mark (one per action). */
 export const TRUE_MARS_FOUNDATION_SETS: ReadonlyArray<ReadonlyArray<Tag>> = [
@@ -180,6 +184,22 @@ export class EpicHooks {
       }
     }
 
+    // M.I.N.E.: anyone raising steel production may get +1 M€ production; M.I.N.E. gets +1 titanium production.
+    if (resource === Resource.STEEL && delta > 0) {
+      for (const p of game.players) {
+        if (p.tableau.has(CardName.MINE_EPIC)) {
+          p.defer(new OrOptions(
+            new SelectOption(`M.I.N.E.: give ${player.name} +1 M€ production and gain +1 titanium production`, 'Do it').andThen(() => {
+              player.production.add(Resource.MEGACREDITS, 1, {log: true});
+              p.production.add(Resource.TITANIUM, 1, {log: true});
+              return undefined;
+            }),
+            new SelectOption('M.I.N.E.: do nothing', 'Skip').andThen(() => undefined),
+          ));
+        }
+      }
+    }
+
     // Other players' corporations.
     for (const p of game.players) {
       if (p.id === player.id) {
@@ -208,6 +228,10 @@ export class EpicHooks {
     const game = player.game;
     if (game === undefined) {
       return;
+    }
+    // Marsanto: gaining plants also gains that many M€.
+    if (resource === Resource.PLANTS && delta > 0 && player.tableau.has(CardName.MARSANTO)) {
+      player.stock.add(Resource.MEGACREDITS, delta, {log: true});
     }
     if (delta >= 2 && game.phase === Phase.ACTION) {
       for (const p of game.players) {
@@ -363,6 +387,97 @@ export class EpicHooks {
       return base;
     }
     return {...base, steel: true, titanium: true};
+  }
+
+  /** Mega ThermoElectric and MeissnerVolt: energy does not turn into heat in the production phase. */
+  public static keepsEnergy(player: IPlayer): boolean {
+    return player.tableau.has(CardName.MEGA_THERMOELECTRIC) || player.tableau.has(CardName.MEISSNERVOLT);
+  }
+
+  /** Called after energy became heat and before resources are produced. */
+  public static beforeProduction(player: IPlayer): void {
+    // ECME: lose every base resource except M€; +1 temperature per 8 heat lost.
+    if (!player.tableau.has(CardName.ECME_CORPORATION)) {
+      return;
+    }
+    const heat = player.heat;
+    const lost = player.steel + player.titanium + player.plants + player.energy + heat;
+    player.steel = 0;
+    player.titanium = 0;
+    player.plants = 0;
+    player.energy = 0;
+    player.heat = 0;
+    if (lost > 0) {
+      player.game.log('${0} removed ${1} base resources (ECME)', (b) => b.player(player).number(lost));
+    }
+    let steps = Math.floor(heat / 8);
+    while (steps > 0 && player.game.getTemperature() < 8) {
+      player.game.increaseTemperature(player, 1);
+      steps--;
+    }
+  }
+
+  /** Called when a player claims a milestone or funds an award. */
+  public static onMilestoneOrAward(player: IPlayer): void {
+    for (const p of player.game.players) {
+      const landmark = p.tableau.get(CardName.LANDMARK_ACHIEVEMENTS);
+      if (landmark === undefined) {
+        continue;
+      }
+      if (p.id !== player.id) {
+        p.drawCard(2);
+      } else {
+        const data = dataOf<{free?: boolean}>(landmark);
+        if (data.free === true) {
+          data.free = false; // Its own free award isn't bought.
+        } else {
+          p.increaseTerraformRating(1, {log: true});
+        }
+      }
+    }
+  }
+
+  /** ROD Association: selling patents gives resources for their tags. */
+  public static onPatentsSold(player: IPlayer, cards: ReadonlyArray<IProjectCard>): void {
+    if (player.tableau.has(CardName.ROD_ASSOCIATION) && cards.length > 0) {
+      EpicUtils.rodGain(player, cards);
+    }
+  }
+
+  /** Cryo (temperature) and Lorean (any): ignore maximum global requirements. */
+  public static ignoresMaxRequirement(player: IPlayer, parameter: GlobalParameter): boolean {
+    if (player.tableau.has(CardName.LOREAN)) {
+      return true;
+    }
+    return parameter === GlobalParameter.TEMPERATURE && player.tableau.has(CardName.CRYO);
+  }
+
+  /** Free conversions that don't use an action (Nitrogen'r'us, Prefab-U-Haus). */
+  public static freeActionOption(player: IPlayer): PlayerInput | undefined {
+    const options: Array<SelectOption> = [];
+    if (player.tableau.has(CardName.NITROGEN_R_US) && player.titanium >= 3 && player.canAfford({cost: 0, tr: {tr: 1}})) {
+      const max = Math.floor(player.titanium / 3);
+      const run = (times: number) => {
+        player.freeActionTaken = true;
+        player.stock.deduct(Resource.TITANIUM, 3 * times, {log: true});
+        player.increaseTerraformRating(times, {log: true});
+        return undefined;
+      };
+      options.push(new SelectOption('Nitrogen\'r\'us: 3 titanium → +1 TR', 'Convert').andThen(() =>
+        max === 1 ? run(1) : new SelectAmount('How many times?', 'Convert', 1, max, false).andThen(run)));
+    }
+    if (player.tableau.has(CardName.PREFAB_U_HAUS) && player.steel >= 8 && player.game.board.getAvailableSpacesForCity(player).length > 0) {
+      options.push(new SelectOption('Prefab-U-Haus: 8 steel → place a city', 'Build').andThen(() => {
+        player.freeActionTaken = true;
+        player.stock.deduct(Resource.STEEL, 8, {log: true});
+        player.game.defer(new PlaceCityTile(player));
+        return undefined;
+      }));
+    }
+    if (options.length === 0) {
+      return undefined;
+    }
+    return new OrOptions(...options).setTitle('Free conversions (Epic corporations)');
   }
 
   /** Called at the start of each generation. */

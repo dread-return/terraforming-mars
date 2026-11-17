@@ -5,6 +5,7 @@ import {CardName} from '../../../common/cards/CardName';
 import {IProjectCard} from '../IProjectCard';
 import {CardResource} from '../../../common/CardResource';
 import {Eternity} from '../eternity/Eternity';
+import {EpicHooks} from '../epic/EpicHooks';
 
 
 /**
@@ -25,6 +26,10 @@ export abstract class GlobalParameterRequirement extends InequalityRequirement {
       return true;
     }
     if (Eternity.ignoresGlobalRequirement(player, card)) {
+      return true;
+    }
+    // Epic Corporations: Cryo and Lorean ignore maximum requirements.
+    if (this.max && EpicHooks.ignoresMaxRequirement(player, this.parameter)) {
       return true;
     }
     const eternityBonus = Eternity.globalRequirementBonus(player, card, this.parameter);

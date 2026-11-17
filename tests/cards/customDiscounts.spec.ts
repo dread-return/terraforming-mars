@@ -58,6 +58,8 @@ const NOT_DISPLAYED: ReadonlyArray<CardName> = [
   CardName.TEO,
   CardName.TRUE_MARS_FOUNDATION,
   CardName.TWIN_CITIES_OF_HELIUM,
+  CardName.CHANCE_SYNERGETICS,
+  CardName.MEDIUM_GROUNDS,
 ];
 
 describe('customDiscounts', () => {

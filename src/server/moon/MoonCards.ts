@@ -18,5 +18,6 @@ export class MoonCards {
     CardName.JUDGES_OF_CHANGE,
     // Epic Corporations
     CardName.HEYER_EDUCATION,
+    CardName.HELIX,
   ]);
 }

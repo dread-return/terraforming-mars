@@ -765,6 +765,7 @@ export class Game implements IGame, Logger {
       player: player,
     });
     Postludes.onAwardFunded(player);
+    EpicHooks.onMilestoneOrAward(player);
   }
 
   public hasBeenFunded(award: IAward): boolean {

@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Space} from '../../boards/Space';
 import {Board} from '../../boards/Board';
@@ -25,11 +26,19 @@ export class Aquatix extends CorporationCard implements ICorporationCard {
 
       metadata: {
         cardNumber: 'EP-AQX',
-        description: 'You start with 45 M€. As your first action, place an ocean tile.',
+        description: 'You start with 45 M€. First action: place an ocean tile.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(45).oceans(1).br;
-          b.effect('Your ocean requirements are +2 or -2 steps, your choice in each case. When any ocean tile is placed, increase your M€ production 1 step.', (eb) => {
-            eb.oceans(1, {all}).startEffect.production((pb) => pb.megacredits(1)).text('ocean req. +/-2');
+          b.br.br;
+          b.megacredits(45).oceans(1);
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.effect(undefined, (eb) => {
+              eb.oceans(1, {size: Size.SMALL, all}).startEffect.production((pb) => pb.megacredits(1));
+            });
+            ce.vSpace(Size.SMALL);
+            ce.effect('When any ocean tile is placed, increase your M€ production 1 step. Your ocean requirements are +/-2 steps.', (eb) => {
+              eb.empty().startEffect.oceans(1, {size: Size.SMALL}).text('req +/-2', {size: Size.SMALL});
+            });
           });
         }),
       },

@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Space} from '../../boards/Space';
 import {Board} from '../../boards/Board';
@@ -19,9 +20,13 @@ export class Sirenia extends CorporationCard implements ICorporationCard {
         cardNumber: 'EP-SIR',
         description: 'You start with 50 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(50).br;
-          b.effect('Each time you place a city tile, increase your energy production 1 step for each ocean tile adjacent to it.', (eb) => {
-            eb.city().oceans(1).asterix().startEffect.production((pb) => pb.energy(1));
+          b.br.br;
+          b.megacredits(50);
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('When you place a city tile, increase your energy production 1 step for each ocean next to it.', (eb) => {
+              eb.city({size: Size.SMALL}).startEffect.production((pb) => pb.energy(1)).slash().oceans(1, {size: Size.SMALL}).asterix();
+            });
           });
         }),
       },

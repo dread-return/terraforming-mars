@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {CardResource} from '../../../common/CardResource';
 import {OrOptions} from '../../inputs/OrOptions';
@@ -22,9 +23,17 @@ export class Protogen extends ActiveCorporationCard implements ICorporationCard 
         cardNumber: 'EP-PTG',
         description: 'You start with 53 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(53).br;
-          b.action('Add 2 microbes to this card OR move ALL microbes from this card to one other card.', (eb) => {
-            eb.empty().startAction.resource(CardResource.MICROBE, 2).asterix();
+          b.br.br;
+          b.megacredits(53);
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.action(undefined, (eb) => {
+              eb.empty().startAction.resource(CardResource.MICROBE, 2);
+            });
+            ce.vSpace(Size.SMALL);
+            ce.action('Add 2 microbes here, OR move all microbes here to another card.', (eb) => {
+              eb.resource(CardResource.MICROBE, {text: 'x'}).startAction.resource(CardResource.MICROBE, {text: 'x'}).asterix();
+            });
           });
         }),
       },

@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {Resource} from '../../../common/Resource';
@@ -21,9 +22,13 @@ export class ShinraTechnologies extends CorporationCard implements ICorporationC
         cardNumber: 'EP-SHI',
         description: 'You start with 2 energy production and 42 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.energy(2)).megacredits(42).br;
-          b.effect('When you play a power tag, including this one, increase your M€ production 1 step.', (eb) => {
-            eb.tag(Tag.POWER).startEffect.production((pb) => pb.megacredits(1));
+          b.br.br;
+          b.production((pb) => pb.energy(2)).nbsp.megacredits(42);
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('When you play a power tag, including this, increase your M€ production 1 step.', (eb) => {
+              eb.tag(Tag.POWER).startEffect.production((pb) => pb.megacredits(1));
+            });
           });
         }),
       },

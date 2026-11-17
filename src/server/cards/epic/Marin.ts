@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Space} from '../../boards/Space';
 import {Board} from '../../boards/Board';
@@ -20,9 +21,13 @@ export class Marin extends CorporationCard implements ICorporationCard {
         cardNumber: 'EP-MRN',
         description: 'You start with 47 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(47).br;
-          b.effect('Whenever an ocean tile is placed, collect 1 M€ and 2 plants.', (eb) => {
-            eb.oceans(1, {all}).startEffect.megacredits(1).plants(2);
+          b.br.br;
+          b.megacredits(47);
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('When any ocean tile is placed, gain 1 M€ and 2 plants.', (eb) => {
+              eb.oceans(1, {size: Size.SMALL, all}).startEffect.megacredits(1).plants(2);
+            });
           });
         }),
       },

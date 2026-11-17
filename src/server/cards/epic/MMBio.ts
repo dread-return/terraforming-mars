@@ -3,6 +3,8 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {digit} from '../Options';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {CardResource} from '../../../common/CardResource';
@@ -24,12 +26,17 @@ export class MMBio extends ActiveCorporationCard implements ICorporationCard {
         cardNumber: 'EP-MMB',
         description: 'You start with 42 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(42).br;
-          b.effect('When you play a plant or microbe card, including this, add 2 microbes to THIS card.', (eb) => {
-            eb.tag(Tag.MICROBE).slash().tag(Tag.PLANT).startEffect.resource(CardResource.MICROBE, 2);
-          }).br;
-          b.action('Remove 4 of your microbes from anywhere to gain 4 plants.', (eb) => {
-            eb.resource(CardResource.MICROBE, 4).asterix().startAction.plants(4);
+          b.br.br;
+          b.megacredits(42);
+          b.corpBox('effect-action', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.effect('When you play a plant or microbe card, including this, add 2 microbes here.', (eb) => {
+              eb.tag(Tag.MICROBE).slash().tag(Tag.PLANT).startEffect.resource(CardResource.MICROBE, 2);
+            });
+            ce.vSpace(Size.SMALL);
+            ce.action('Remove 4 of your microbes from anywhere to gain 4 plants.', (eb) => {
+              eb.resource(CardResource.MICROBE, 4).asterix().startAction.plants(4, {digit});
+            });
           });
         }),
       },

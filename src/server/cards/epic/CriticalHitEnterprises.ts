@@ -3,6 +3,8 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {all} from '../Options';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {CardType} from '../../../common/cards/CardType';
@@ -20,9 +22,13 @@ export class CriticalHitEnterprises extends CorporationCard implements ICorporat
         cardNumber: 'EP-CHE',
         description: 'You start with 39 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(39).br;
-          b.effect('Whenever you play an event card with "Asteroid" in the name, or the ASTEROID standard project, a player with more TR than you loses 1 TR.', (eb) => {
-            eb.tag(Tag.EVENT).asterix().slash().plate('Asteroid').startEffect.minus().tr(1, {all: true});
+          b.br.br;
+          b.megacredits(39);
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('When you play an "Asteroid" event or the ASTEROID project, a player with more TR loses 1 TR.', (eb) => {
+              eb.plate('Asteroid').asterix().startEffect.minus().tr(1, {all});
+            });
           });
         }),
       },

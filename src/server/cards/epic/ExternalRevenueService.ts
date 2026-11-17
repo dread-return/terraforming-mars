@@ -3,6 +3,8 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {all, digit} from '../Options';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 
@@ -21,9 +23,13 @@ export class ExternalRevenueService extends ActiveCorporationCard implements ICo
         cardNumber: 'EP-ERS',
         description: 'You start with 42 M€ and 1 M€ production.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(42).production((pb) => pb.megacredits(1)).br;
-          b.action('Every other player loses 1 M€ for every 20 M€ they have. Gain the total amount lost by all players.', (eb) => {
-            eb.text('-1 per 20').startAction.megacredits(1).text('x');
+          b.br.br;
+          b.megacredits(42).production((pb) => pb.megacredits(1));
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Every other player loses 1 M€ for every 20 M€ they have. Gain the total amount lost.', (eb) => {
+              eb.empty().startAction.minus().megacredits(1, {all}).slash().megacredits(20, {all, digit}).nbsp.plus().megacredits(1, {text: 'x'});
+            });
           });
         }),
       },

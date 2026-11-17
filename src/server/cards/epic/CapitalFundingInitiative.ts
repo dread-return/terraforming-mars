@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 import {OrOptions} from '../../inputs/OrOptions';
@@ -21,12 +22,17 @@ export class CapitalFundingInitiative extends ActiveCorporationCard implements I
         cardNumber: 'EP-CFI',
         description: 'You start with 38 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(38).br;
-          b.action('Gain 1 M€ per opponent.', (eb) => {
-            eb.empty().startAction.megacredits(1).slash().text('opponent');
-          }).br;
-          b.action('OR pay an opponent 4 M€ to raise your TR 1 step.', (eb) => {
-            eb.megacredits(4).asterix().startAction.tr(1);
+          b.br.br;
+          b.megacredits(38);
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.action(undefined, (eb) => {
+              eb.empty().startAction.megacredits(1).slash().text('opponent', {size: Size.SMALL});
+            });
+            ce.vSpace(Size.SMALL);
+            ce.action('Gain 1 M€ per opponent, OR pay an opponent 4 M€ to raise your TR 1 step.', (eb) => {
+              eb.megacredits(4).asterix().startAction.tr(1);
+            });
           });
         }),
       },

@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 
@@ -22,11 +23,15 @@ export class ThePigfartsInitiative extends ActiveCorporationCard implements ICor
 
       metadata: {
         cardNumber: 'EP-PIG',
-        description: 'You start with 35 M€. As your first action, take the City standard project for no cost.',
+        description: 'You start with 35 M€. First action: the City standard project, for free.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(35).city().production((pb) => pb.megacredits(1)).br;
-          b.action('Pay 3 M€ to draw cards equal to the number of cities you own. Keep one and discard the rest.', (eb) => {
-            eb.megacredits(3).startAction.cards(1).slash().city().asterix();
+          b.br.br;
+          b.megacredits(35).plate('City').asterix();
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Pay 3 M€ to draw 1 card per city you own. Keep one and discard the rest.', (eb) => {
+              eb.megacredits(3).startAction.cards(1).slash().city({size: Size.SMALL}).asterix();
+            });
           });
         }),
       },

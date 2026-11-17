@@ -3,6 +3,8 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {AltSecondaryTag} from '../../../common/cards/render/AltSecondaryTag';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {Space} from '../../boards/Space';
@@ -23,9 +25,13 @@ export class AquarinEnt extends CorporationCard implements ICorporationCard {
         cardNumber: 'EP-AQE',
         description: 'You start with 40 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(40).br;
-          b.effect('Whenever an ocean tile is placed, or when you play a card that requires oceans, increase your energy or M€ production 1 step.', (eb) => {
-            eb.oceans(1, {all}).slash().text('ocean req.').startEffect.production((pb) => pb.energy(1)).or().production((pb) => pb.megacredits(1));
+          b.br.br;
+          b.megacredits(40);
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('When any ocean is placed, or you play a card that requires oceans, +1 energy or M€ production.', (eb) => {
+              eb.oceans(1, {size: Size.SMALL, all}).slash().cards(1, {secondaryTag: AltSecondaryTag.REQ, size: Size.SMALL}).startEffect.production((pb) => pb.energy(1).or().megacredits(1));
+            });
           });
         }),
       },

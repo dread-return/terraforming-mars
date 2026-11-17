@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 import {OrOptions} from '../../inputs/OrOptions';
@@ -24,9 +25,17 @@ export class Troidco extends ActiveCorporationCard implements ICorporationCard {
         cardNumber: 'EP-TRO',
         description: 'You start with 51 M€ and 2 steel production.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(51).production((pb) => pb.steel(2)).br;
-          b.action('Pay equal numbers of M€ and steel to gain that many titanium, OR pay any number of titanium to gain that many M€ and steel.', (eb) => {
-            eb.text('X').megacredits(1).steel(1).startAction.text('X').titanium(1).nbsp.or().nbsp.text('X').titanium(1).colon().text('X').megacredits(1).steel(1);
+          b.br.br;
+          b.megacredits(51).production((pb) => pb.steel(2));
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.action(undefined, (eb) => {
+              eb.megacredits(1, {text: 'x'}).text('x').steel(1).startAction.text('x').titanium(1);
+            });
+            ce.vSpace(Size.SMALL);
+            ce.action('Pay X M€ and X steel for X titanium, OR pay X titanium for X M€ and X steel.', (eb) => {
+              eb.text('x').titanium(1).startAction.megacredits(1, {text: 'x'}).text('x').steel(1);
+            });
           });
         }),
       },

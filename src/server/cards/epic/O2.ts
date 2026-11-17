@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {CardType} from '../../../common/cards/CardType';
@@ -20,9 +21,17 @@ export class O2 extends CorporationCard implements ICorporationCard {
         cardNumber: 'EP-O2',
         description: 'You start with 39 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(39).br;
-          b.effect('Whenever a player plays a building tag and the oxygen is 7% or lower, collect 1 M€. Whenever a player plays a NON-EVENT space tag, collect 1 M€.', (eb) => {
-            eb.tag(Tag.BUILDING, {all}).text('max 7%').colon().megacredits(1).nbsp.tag(Tag.SPACE, {all}).asterix().startEffect.megacredits(1);
+          b.br.br;
+          b.megacredits(39);
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.effect(undefined, (eb) => {
+              eb.tag(Tag.BUILDING, {all}).text('max 7%', {size: Size.SMALL}).startEffect.megacredits(1);
+            });
+            ce.vSpace(Size.SMALL);
+            ce.effect('Any building tag while oxygen is 7% or less: gain 1 M€. Any non-event space tag: gain 1 M€.', (eb) => {
+              eb.tag(Tag.SPACE, {all}).asterix().startEffect.megacredits(1);
+            });
           });
         }),
       },

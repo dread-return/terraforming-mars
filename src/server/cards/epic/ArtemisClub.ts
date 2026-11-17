@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {CardResource} from '../../../common/CardResource';
 import {IPlayer} from '../../IPlayer';
 import {RemoveResourcesFromCard} from '../../deferredActions/RemoveResourcesFromCard';
@@ -25,11 +26,15 @@ export class ArtemisClub extends ActiveCorporationCard implements ICorporationCa
 
       metadata: {
         cardNumber: 'EP-ART',
-        description: 'You start with 43 M€. As your first action, reveal cards until you reveal a card with an animal tag. Take it into hand and discard the rest. 1 VP per animal here.',
+        description: 'You start with 43 M€. First action: reveal cards until an animal tag, and take it. 1 VP per animal here.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(43).cards(1, {secondaryTag: Tag.ANIMAL}).br;
-          b.action('Remove 1 animal from any card to add 1 animal to this card.', (eb) => {
-            eb.resource(CardResource.ANIMAL, {all}).asterix().startAction.resource(CardResource.ANIMAL);
+          b.br.br;
+          b.megacredits(43).cards(1, {secondaryTag: Tag.ANIMAL});
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Remove 1 animal from any card to add 1 animal to this card.', (eb) => {
+              eb.resource(CardResource.ANIMAL, {all}).startAction.resource(CardResource.ANIMAL);
+            });
           });
         }),
       },

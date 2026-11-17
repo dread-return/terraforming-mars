@@ -3,6 +3,8 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {all, digit} from '../Options';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {CardType} from '../../../common/cards/CardType';
@@ -27,12 +29,17 @@ export class Pallas extends ActiveCorporationCard implements ICorporationCard {
         cardNumber: 'EP-PAL',
         description: 'You start with 36 M€ and 4 titanium.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(36).titanium(4).br;
-          b.effect('When you play a space event card, gain 1 titanium.', (eb) => {
-            eb.tag(Tag.EVENT).tag(Tag.SPACE).startEffect.titanium(1);
-          }).br;
-          b.action('Spend 4 titanium to raise the temperature 1 step and remove up to 2 plants from any player.', (eb) => {
-            eb.titanium(4).startAction.temperature(1).minus().plants(2, {all: true});
+          b.br.br;
+          b.megacredits(36).titanium(4, {digit});
+          b.corpBox('effect-action', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.effect('When you play a space event, gain 1 titanium.', (eb) => {
+              eb.tag(Tag.SPACE).tag(Tag.EVENT).startEffect.titanium(1);
+            });
+            ce.vSpace(Size.SMALL);
+            ce.action('Spend 4 titanium: raise the temperature 1 step and remove up to 2 plants from anyone.', (eb) => {
+              eb.titanium(4, {digit}).startAction.temperature(1).minus().plants(2, {all});
+            });
           });
         }),
       },

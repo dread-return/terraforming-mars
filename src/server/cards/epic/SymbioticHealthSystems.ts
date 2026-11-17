@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {Space} from '../../boards/Space';
@@ -25,14 +26,19 @@ export class SymbioticHealthSystems extends CorporationCard implements ICorporat
 
       metadata: {
         cardNumber: 'EP-SHS',
-        description: 'You start with 36 M€. As your first action, place a city tile.',
+        description: 'You start with 36 M€. First action: place a city tile.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(36).city().br;
-          b.effect('Whenever you play a microbe tag or place a city tile, place 1 microbe on this card.', (eb) => {
-            eb.tag(Tag.MICROBE).slash().city().startEffect.resource(CardResource.MICROBE);
-          }).br;
-          b.effect('Whenever you play a science tag, remove up to 2 microbes from this card and receive 3 M€ per microbe removed.', (eb) => {
-            eb.tag(Tag.SCIENCE).startEffect.megacredits(3).slash().resource(CardResource.MICROBE).text('max 2');
+          b.br.br;
+          b.megacredits(36).city();
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.effect(undefined, (eb) => {
+              eb.tag(Tag.MICROBE).slash().city({size: Size.SMALL}).startEffect.resource(CardResource.MICROBE);
+            });
+            ce.vSpace(Size.SMALL);
+            ce.effect('Microbe tag or city: add a microbe here. Science tag: remove up to 2 here for 3 M€ each.', (eb) => {
+              eb.tag(Tag.SCIENCE).startEffect.minus().resource(CardResource.MICROBE).colon().megacredits(3).asterix();
+            });
           });
         }),
       },

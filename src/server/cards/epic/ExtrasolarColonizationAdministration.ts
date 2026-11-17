@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 import {IStandardProjectCard} from '../IStandardProjectCard';
@@ -25,14 +26,19 @@ export class ExtrasolarColonizationAdministration extends ActiveCorporationCard 
 
       metadata: {
         cardNumber: 'EP-ECA',
-        description: 'You start with 42 M€. As your first action, draw 2 cards.',
+        description: 'You start with 42 M€. First action: draw 2 cards.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(42).cards(2).br;
-          b.action('Sell 1 patent for 3 M€.', (eb) => {
-            eb.cards(1).startAction.megacredits(3);
-          }).br;
-          b.effect('After you pay for a standard project, except selling patents, you gain 3 M€.', (eb) => {
-            eb.plate('Standard projects').startEffect.megacredits(3);
+          b.br.br;
+          b.megacredits(42).cards(2);
+          b.corpBox('effect-action', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.effect('After you pay for a standard project, except selling patents, gain 3 M€.', (eb) => {
+              eb.plate('Standard projects').asterix().startEffect.megacredits(3);
+            });
+            ce.vSpace(Size.SMALL);
+            ce.action('Sell 1 patent for 3 M€.', (eb) => {
+              eb.cards(1).startAction.megacredits(3);
+            });
           });
         }),
       },

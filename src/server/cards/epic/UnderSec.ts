@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 
@@ -20,12 +21,17 @@ export class UnderSec extends ActiveCorporationCard implements ICorporationCard 
         cardNumber: 'EP-UND',
         description: 'You start with 46 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(46).br;
-          b.effect('Each time you play a science tag, including this, look at the top card and either buy it or discard it.', (eb) => {
-            eb.tag(Tag.SCIENCE).startEffect.cards(1).asterix();
-          }).br;
-          b.action('Draw a card.', (eb) => {
-            eb.empty().startAction.cards(1);
+          b.br.br;
+          b.megacredits(46);
+          b.corpBox('effect-action', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.effect('When you play a science tag, including this, look at the top card and either buy it or discard it.', (eb) => {
+              eb.tag(Tag.SCIENCE).startEffect.cards(1).asterix();
+            });
+            ce.vSpace(Size.SMALL);
+            ce.action('Draw a card.', (eb) => {
+              eb.empty().startAction.cards(1);
+            });
           });
         }),
       },

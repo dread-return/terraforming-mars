@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {IProjectCard} from '../IProjectCard';
 import {Resource} from '../../../common/Resource';
@@ -23,11 +24,15 @@ export class PRG extends ActiveCorporationCard implements ICorporationCard {
 
       metadata: {
         cardNumber: 'EP-PRG',
-        description: 'You start with 42 M€. As your first action, draw 2 cards.',
+        description: 'You start with 42 M€. First action: draw 2 cards.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(42).cards(2).br;
-          b.action('Discard a card from your hand which you do not have enough M€ to play, to gain 5 M€ and draw a card.', (eb) => {
-            eb.cards(1).asterix().startAction.megacredits(5).cards(1);
+          b.br.br;
+          b.megacredits(42).cards(2);
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Discard a card from your hand that you can\'t afford, to gain 5 M€ and draw a card.', (eb) => {
+              eb.cards(1).asterix().startAction.megacredits(5).cards(1);
+            });
           });
         }),
       },

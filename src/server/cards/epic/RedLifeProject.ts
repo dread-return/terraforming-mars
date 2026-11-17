@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {CardResource} from '../../../common/CardResource';
@@ -28,12 +29,17 @@ export class RedLifeProject extends ActiveCorporationCard implements ICorporatio
         cardNumber: 'EP-RLP',
         description: 'You start with 34 M€ and 1 plant production.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(34).production((pb) => pb.plants(1)).br;
-          b.effect('When you play an animal or plant tag, including these 2, add an animal to this card.', (eb) => {
-            eb.tag(Tag.ANIMAL).slash().tag(Tag.PLANT).startEffect.resource(CardResource.ANIMAL);
-          }).br;
-          b.action('Move up to 3 animals from this card to ANOTHER card, or remove up to 3 animals from this card to gain 4 M€ each.', (eb) => {
-            eb.resource(CardResource.ANIMAL, 3).startAction.resource(CardResource.ANIMAL, 3).asterix().or().megacredits(4).text('each');
+          b.br;
+          b.megacredits(34).production((pb) => pb.plants(1));
+          b.corpBox('effect-action', (ce) => {
+            ce.vSpace(Size.TINY);
+            ce.effect('Animal/plant tag: add an animal here.', (eb) => {
+              eb.tag(Tag.ANIMAL).slash().tag(Tag.PLANT).startEffect.resource(CardResource.ANIMAL);
+            });
+            ce.vSpace(Size.TINY);
+            ce.action('Move up to 3 animals here to another card, OR remove up to 3 for 4 M€ each.', (eb) => {
+              eb.resource(CardResource.ANIMAL, {text: 'x'}).startAction.resource(CardResource.ANIMAL, {text: 'x'}).asterix().or().megacredits(1, {text: '4x'});
+            });
           });
         }),
       },

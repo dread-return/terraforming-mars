@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {CardResource} from '../../../common/CardResource';
 
 export class HeyerEducation extends ActiveCorporationCard implements ICorporationCard {
@@ -23,9 +24,13 @@ export class HeyerEducation extends ActiveCorporationCard implements ICorporatio
         cardNumber: 'EP-HEY',
         description: 'You start with 48 M€. 1 VP for every 2 science resources on this card.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(48).br;
-          b.action('Spend 4 M€ to place a science resource on any card.', (eb) => {
-            eb.megacredits(4).startAction.resource(CardResource.SCIENCE).asterix();
+          b.br.br;
+          b.megacredits(48);
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Spend 4 M€ to add a science resource to ANY card.', (eb) => {
+              eb.megacredits(4).startAction.resource(CardResource.SCIENCE).asterix();
+            });
           });
         }),
       },

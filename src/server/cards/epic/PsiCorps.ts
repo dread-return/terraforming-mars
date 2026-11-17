@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {PreludesExpansion} from '../../preludes/PreludesExpansion';
 
@@ -21,11 +22,15 @@ export class PsiCorps extends ActiveCorporationCard implements ICorporationCard 
 
       metadata: {
         cardNumber: 'EP-PSI',
-        description: 'You start with 38 M€. As your first action, draw a Prelude card and play it.',
+        description: 'You start with 38 M€. First action: draw a Prelude card and play it.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(38).prelude().asterix().br;
-          b.action('Spend 2 M€ to draw a card.', (eb) => {
-            eb.megacredits(2).startAction.cards(1);
+          b.br.br;
+          b.megacredits(38).prelude().asterix();
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Spend 2 M€ to draw a card.', (eb) => {
+              eb.megacredits(2).startAction.cards(1);
+            });
           });
         }),
       },

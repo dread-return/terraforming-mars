@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 import {SelectAmount} from '../../inputs/SelectAmount';
@@ -22,9 +23,13 @@ export class Feastfair extends ActiveCorporationCard implements ICorporationCard
         cardNumber: 'EP-FEA',
         description: 'You start with 40 M€ and 1 plant production.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(40).production((pb) => pb.plants(1)).br;
-          b.action('Trade up to 3 plants for 4 M€ each.', (eb) => {
-            eb.text('X').plants(1).asterix().startAction.text('4X').megacredits(1);
+          b.br.br;
+          b.megacredits(40).production((pb) => pb.plants(1));
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Sell up to 3 plants for 4 M€ each.', (eb) => {
+              eb.text('x').plants(1).asterix().startAction.megacredits(1, {text: '4x'});
+            });
           });
         }),
       },

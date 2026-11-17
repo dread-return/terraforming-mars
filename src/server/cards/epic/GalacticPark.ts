@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {Resource} from '../../../common/Resource';
@@ -21,9 +22,17 @@ export class GalacticPark extends CorporationCard implements ICorporationCard {
         cardNumber: 'EP-GAP',
         description: 'You start with 40 M€ and 1 plant production.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(40).production((pb) => pb.plants(1)).br;
-          b.effect('When you play a plant tag, gain 2 M€. When you play an animal tag, including this, increase your M€ production 1 step.', (eb) => {
-            eb.tag(Tag.PLANT).colon().megacredits(2).nbsp.tag(Tag.ANIMAL).startEffect.production((pb) => pb.megacredits(1));
+          b.br.br;
+          b.megacredits(40).production((pb) => pb.plants(1));
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.effect(undefined, (eb) => {
+              eb.tag(Tag.PLANT).startEffect.megacredits(2);
+            });
+            ce.vSpace(Size.SMALL);
+            ce.effect('When you play a plant tag, gain 2 M€; an animal tag, including this, +1 M€ production.', (eb) => {
+              eb.tag(Tag.ANIMAL).startEffect.production((pb) => pb.megacredits(1));
+            });
           });
         }),
       },

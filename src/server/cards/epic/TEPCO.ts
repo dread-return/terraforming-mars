@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {CardResource} from '../../../common/CardResource';
 import {Resource} from '../../../common/Resource';
@@ -27,11 +28,15 @@ export class TEPCO extends ActiveCorporationCard implements ICorporationCard {
 
       metadata: {
         cardNumber: 'EP-TEP',
-        description: 'You start with 2 energy production and 41 M€. 1 VP per 4 radiation on this card.',
+        description: 'You start with 2 energy production and 41 M€. 1 VP per 4 radiation here.',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.energy(2)).megacredits(41).br;
-          b.action('Decrease any of your productions 1 step to add 2 radiation to any card.', (eb) => {
-            eb.production((pb) => pb.minus().wild(1)).startAction.resource(CardResource.RADIATION, 2).asterix();
+          b.br.br;
+          b.production((pb) => pb.energy(2)).nbsp.megacredits(41);
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Decrease any of your productions 1 step to add 2 radiation to ANY card.', (eb) => {
+              eb.production((pb) => pb.minus().wild(1)).startAction.resource(CardResource.RADIATION, 2).asterix();
+            });
           });
         }),
       },

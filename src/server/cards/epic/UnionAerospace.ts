@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 import {SelectAmount} from '../../inputs/SelectAmount';
@@ -22,9 +23,13 @@ export class UnionAerospace extends ActiveCorporationCard implements ICorporatio
         cardNumber: 'EP-UAC',
         description: 'You start with 3 energy production and 45 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.energy(3)).megacredits(45).br;
-          b.action('Spend any amount of energy to gain that amount plus 2 M€.', (eb) => {
-            eb.text('X').energy(1).startAction.text('X+2').megacredits(1);
+          b.br.br;
+          b.production((pb) => pb.energy(3)).nbsp.megacredits(45);
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Spend any amount of energy to gain that much M€ plus 2.', (eb) => {
+              eb.text('x').energy(1).startAction.megacredits(1, {text: 'x+2'});
+            });
           });
         }),
       },

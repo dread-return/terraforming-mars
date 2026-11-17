@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 
@@ -20,9 +21,13 @@ export class CoreConductionSystems extends CorporationCard implements ICorporati
         cardNumber: 'EP-CCS',
         description: 'You start with 40 M€ and 2 heat production.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(40).production((pb) => pb.heat(2)).br;
-          b.effect('Whenever you gain steps of heat or energy production, including this, gain that many heat or energy resources.', (eb) => {
-            eb.production((pb) => pb.heat(1)).slash().production((pb) => pb.energy(1)).startEffect.heat(1).slash().energy(1);
+          b.br.br;
+          b.megacredits(40).production((pb) => pb.heat(2));
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('When you gain heat or energy production, also gain that many heat or energy.', (eb) => {
+              eb.production((pb) => pb.heat(1).slash().energy(1)).startEffect.heat(1).slash().energy(1);
+            });
           });
         }),
       },

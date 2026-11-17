@@ -3,6 +3,8 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {digit} from '../Options';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 
@@ -17,9 +19,13 @@ export class SoukaiSyndicate extends CorporationCard implements ICorporationCard
         cardNumber: 'EP-SOU',
         description: 'You start with 80 M€. Decrease your TR 10 steps.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(80).minus().tr(10).br;
-          b.effect('During each production phase, your TR counts x1.5 for M€ income (rounded down).', (eb) => {
-            eb.text('Production').startEffect.megacredits(1).text('+1.5x').tr(1);
+          b.br.br;
+          b.megacredits(80).minus().tr(10, {digit});
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('In the production phase, your TR counts x1.5 for your M€ income (rounded down).', (eb) => {
+              eb.tr(1).startEffect.megacredits(1, {text: '1.5'});
+            });
           });
         }),
       },

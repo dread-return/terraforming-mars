@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {Resource} from '../../../common/Resource';
@@ -21,9 +22,13 @@ export class SolarVoyager extends CorporationCard implements ICorporationCard {
         cardNumber: 'EP-SOV',
         description: 'You start with 43 M€ and 2 M€ production.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(43).production((pb) => pb.megacredits(2)).br;
-          b.effect('When you play a Venus, Mercury or Jovian tag, including these, collect 2 M€.', (eb) => {
-            eb.tag(Tag.VENUS).tag(Tag.MERCURY).tag(Tag.JOVIAN).startEffect.megacredits(2);
+          b.br.br;
+          b.megacredits(43).production((pb) => pb.megacredits(2));
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('When you play a Venus, Mercury or Jovian tag, including these, gain 2 M€.', (eb) => {
+              eb.tag(Tag.VENUS).tag(Tag.MERCURY).tag(Tag.JOVIAN).startEffect.megacredits(2);
+            });
           });
         }),
       },

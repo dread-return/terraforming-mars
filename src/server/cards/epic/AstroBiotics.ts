@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {IStandardProjectCard} from '../IStandardProjectCard';
 
@@ -20,11 +21,15 @@ export class AstroBiotics extends CorporationCard implements ICorporationCard {
 
       metadata: {
         cardNumber: 'EP-ASB',
-        description: 'You start with 52 M€. Reveal cards until you reveal 2 cards with plant tags. Take them into hand and discard the rest.',
+        description: 'You start with 52 M€. Reveal cards until 2 plant tags, and take them.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(52).cards(2, {secondaryTag: Tag.PLANT}).br;
-          b.effect('When you play a plant tag, or the greenery standard project, you pay 3 M€ less for it.', (eb) => {
-            eb.tag(Tag.PLANT).slash().greenery().asterix().startEffect.megacredits(-3);
+          b.br.br;
+          b.megacredits(52).cards(2, {secondaryTag: Tag.PLANT});
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('When you play a plant tag, or the GREENERY standard project, you pay 3 M€ less for it.', (eb) => {
+              eb.tag(Tag.PLANT).slash().plate('Greenery').startEffect.megacredits(-3);
+            });
           });
         }),
       },

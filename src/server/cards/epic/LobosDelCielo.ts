@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {CardResource} from '../../../common/CardResource';
 import {Resource} from '../../../common/Resource';
@@ -24,11 +25,15 @@ export class LobosDelCielo extends ActiveCorporationCard implements ICorporation
 
       metadata: {
         cardNumber: 'EP-LDC',
-        description: 'You start with 41 M€. As your first action, reveal cards until you reveal 2 cards with Venus tags. Take them into hand and discard the rest.',
+        description: 'You start with 41 M€. First action: reveal cards until 2 Venus tags, and take them.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(41).cards(2, {secondaryTag: Tag.VENUS}).br;
-          b.action('Remove a floater from any card and gain 1 M€. If you removed it from a card you own, gain 3 M€ instead.', (eb) => {
-            eb.resource(CardResource.FLOATER, {all}).startAction.megacredits(1).slash().megacredits(3).asterix();
+          b.br.br;
+          b.megacredits(41).cards(2, {secondaryTag: Tag.VENUS});
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Remove a floater from any card for 1 M€ (3 M€ if the card is yours).', (eb) => {
+              eb.resource(CardResource.FLOATER, {all}).startAction.megacredits(1).slash().megacredits(3).asterix();
+            });
           });
         }),
       },

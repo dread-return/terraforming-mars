@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {Resource} from '../../../common/Resource';
@@ -23,14 +24,19 @@ export class Genecraft extends CorporationCard implements ICorporationCard {
 
       metadata: {
         cardNumber: 'EP-GEN',
-        description: 'You start with 30 M€. As your first action, reveal cards until you reveal a microbe tag. Take that card into hand and discard the rest.',
+        description: 'You start with 30 M€. First action: reveal cards until a microbe tag, and take it.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(30).cards(1, {secondaryTag: Tag.MICROBE}).br;
-          b.effect('When any player plays a microbe tag, increase your M€ production 1 step.', (eb) => {
-            eb.tag(Tag.MICROBE, {all}).startEffect.production((pb) => pb.megacredits(1));
-          }).br;
-          b.effect('When you play a card with a microbe tag, you pay 2 M€ less for it.', (eb) => {
-            eb.tag(Tag.MICROBE).startEffect.megacredits(-2);
+          b.br.br;
+          b.megacredits(30).cards(1, {secondaryTag: Tag.MICROBE});
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.effect(undefined, (eb) => {
+              eb.tag(Tag.MICROBE, {all}).startEffect.production((pb) => pb.megacredits(1));
+            });
+            ce.vSpace(Size.SMALL);
+            ce.effect('When anyone plays a microbe tag, +1 M€ production. Your microbe cards cost 2 M€ less.', (eb) => {
+              eb.tag(Tag.MICROBE).startEffect.megacredits(-2);
+            });
           });
         }),
       },

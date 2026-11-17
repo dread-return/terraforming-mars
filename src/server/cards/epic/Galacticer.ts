@@ -3,10 +3,11 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {Resource} from '../../../common/Resource';
-import {all} from '../Options';
+import {all, digit} from '../Options';
 
 export class Galacticer extends CorporationCard implements ICorporationCard {
   constructor() {
@@ -22,11 +23,15 @@ export class Galacticer extends CorporationCard implements ICorporationCard {
 
       metadata: {
         cardNumber: 'EP-GAL',
-        description: 'You start with 45 M€. As your first action, reveal cards until you reveal a card with a galactic tag. Take it into hand and discard the rest.',
+        description: 'You start with 45 M€. First action: reveal cards until a galactic tag, and take it.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(45).cards(1, {secondaryTag: Tag.GALACTIC}).br;
-          b.effect('Whenever anyone plays a card with a galactic tag, gain 10 M€ and draw 2 cards.', (eb) => {
-            eb.tag(Tag.GALACTIC, {all}).startEffect.megacredits(10).cards(2);
+          b.br.br;
+          b.megacredits(45).cards(1, {secondaryTag: Tag.GALACTIC});
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('When anyone plays a galactic tag, gain 10 M€ and draw 2 cards.', (eb) => {
+              eb.tag(Tag.GALACTIC, {all}).startEffect.megacredits(10, {digit}).cards(2);
+            });
           });
         }),
       },

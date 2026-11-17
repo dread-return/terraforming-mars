@@ -3,6 +3,8 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {digit} from '../Options';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {Resource} from '../../../common/Resource';
@@ -21,9 +23,13 @@ export class Catnip extends CorporationCard implements ICorporationCard {
         cardNumber: 'EP-CAT',
         description: 'You start with 38 M€ and 8 steel.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(38).steel(8).br;
-          b.effect('When you play a building tag, including this, gain 1 plant.', (eb) => {
-            eb.tag(Tag.BUILDING).startEffect.plants(1);
+          b.br.br;
+          b.megacredits(38).steel(8, {digit});
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('When you play a building tag, including this, gain 1 plant.', (eb) => {
+              eb.tag(Tag.BUILDING).startEffect.plants(1);
+            });
           });
         }),
       },

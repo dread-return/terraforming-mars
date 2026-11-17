@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {CardResource} from '../../../common/CardResource';
@@ -29,12 +30,17 @@ export class Cultured extends ActiveCorporationCard implements ICorporationCard 
         cardNumber: 'EP-CUL',
         description: 'You start with 43 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(43).br;
-          b.effect('When you play a card with a science tag, including this one, add 1 microbe to this card.', (eb) => {
-            eb.tag(Tag.SCIENCE).startEffect.resource(CardResource.MICROBE);
-          }).br;
-          b.action('Spend 3 microbes here to raise the oxygen or temperature 1 step.', (eb) => {
-            eb.resource(CardResource.MICROBE, 3).startAction.oxygen(1).or().temperature(1);
+          b.br.br;
+          b.megacredits(43);
+          b.corpBox('effect-action', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.effect('When you play a science tag, including this, add 1 microbe here.', (eb) => {
+              eb.tag(Tag.SCIENCE).startEffect.resource(CardResource.MICROBE);
+            });
+            ce.vSpace(Size.SMALL);
+            ce.action('Spend 3 microbes here to raise the oxygen or temperature 1 step.', (eb) => {
+              eb.resource(CardResource.MICROBE, 3).startAction.oxygen(1).or().temperature(1);
+            });
           });
         }),
       },

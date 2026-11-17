@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Board} from '../../boards/Board';
 import {Resource} from '../../../common/Resource';
@@ -22,11 +23,15 @@ export class ArtographersCollective extends ActiveCorporationCard implements ICo
 
       metadata: {
         cardNumber: 'EP-AGC',
-        description: 'You start with 40 M€. As your first action, place an ocean tile.',
+        description: 'You start with 40 M€. First action: place an ocean tile.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(40).oceans(1).br;
-          b.action('Gain 1 energy for each of YOUR greenery tiles adjacent to an ocean tile.', (eb) => {
-            eb.empty().startAction.energy(1).slash().greenery().oceans(1).asterix();
+          b.br.br;
+          b.megacredits(40).oceans(1);
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Gain 1 energy for each of YOUR greenery tiles adjacent to an ocean tile.', (eb) => {
+              eb.empty().startAction.energy(1).slash().greenery({size: Size.SMALL}).oceans(1, {size: Size.SMALL}).asterix();
+            });
           });
         }),
       },

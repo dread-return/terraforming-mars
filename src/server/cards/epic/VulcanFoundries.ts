@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {CardResource} from '../../../common/CardResource';
@@ -24,11 +25,15 @@ export class VulcanFoundries extends CorporationCard implements ICorporationCard
 
       metadata: {
         cardNumber: 'EP-VUL',
-        description: 'You start with 1 energy production, 1 heat production and 37 M€. 1 VP per 3 radiation here.',
+        description: 'You start with 1 energy and 1 heat production, and 37 M€. 1 VP per 3 radiation here.',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.energy(1).heat(1)).megacredits(37).br;
-          b.effect('Power tags cost 1 M€ less. When you play a power tag, gain 1 heat and add 1 radiation to any card.', (eb) => {
-            eb.tag(Tag.POWER).startEffect.megacredits(-1).heat(1).resource(CardResource.RADIATION).asterix();
+          b.br.br;
+          b.production((pb) => pb.energy(1).heat(1)).nbsp.megacredits(37);
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('Power tags cost 1 M€ less. When you play one, gain 1 heat and add 1 radiation to ANY card.', (eb) => {
+              eb.tag(Tag.POWER).startEffect.megacredits(-1).heat(1).resource(CardResource.RADIATION).asterix();
+            });
           });
         }),
       },

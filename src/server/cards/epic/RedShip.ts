@@ -2,6 +2,8 @@ import {ActiveCorporationCard} from '../corporation/CorporationCard';
 import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {CardRenderer} from '../render/CardRenderer';
+import {all} from '../Options';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 import {Board, isSpecialTileSpace} from '../../boards/Board';
@@ -18,9 +20,13 @@ export class RedShip extends ActiveCorporationCard implements ICorporationCard {
         cardNumber: 'EP-RSH',
         description: 'You start with 48 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(48).br;
-          b.action('Gain 2 M€ per city tile or special tile that is adjacent to at least one ocean.', (eb) => {
-            eb.empty().startAction.megacredits(2).slash().city({all: true}).specialTile({all: true}).oceans(1).asterix();
+          b.br.br;
+          b.megacredits(48);
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Gain 2 M€ per city or special tile adjacent to at least one ocean.', (eb) => {
+              eb.empty().startAction.megacredits(2).slash().cityorSpecialTile({all}).oceans(1, {size: Size.SMALL}).asterix();
+            });
           });
         }),
       },

@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {CardResource} from '../../../common/CardResource';
 import {AddResourcesToCard} from '../../deferredActions/AddResourcesToCard';
@@ -24,11 +25,15 @@ export class GrowBit extends ActiveCorporationCard implements ICorporationCard {
 
       metadata: {
         cardNumber: 'EP-GRB',
-        description: 'You start with 41 M€. As your first action, reveal cards until you reveal a card with a data symbol. Take it into hand and discard the rest. 1 VP per 3 data here.',
+        description: 'You start with 41 M€. First action: reveal cards until a data card, and take it. 1 VP per 3 data here.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(41).cards(1).asterix().br;
-          b.action('If there are 6 or fewer greeneries in play, add 1 data to ANY card. With 7 or more, add 2 data to ANY card instead.', (eb) => {
-            eb.text('6-').greenery().startAction.resource(CardResource.DATA).asterix().nbsp.text('7+').greenery().colon().resource(CardResource.DATA, 2).asterix();
+          b.br.br;
+          b.megacredits(41).cards(1).asterix();
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Add 1 data to ANY card (2 data from 7 greeneries in play).', (eb) => {
+              eb.empty().startAction.resource(CardResource.DATA).asterix().slash().resource(CardResource.DATA, 2).asterix();
+            });
           });
         }),
       },

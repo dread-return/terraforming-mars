@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {Resource} from '../../../common/Resource';
@@ -22,11 +23,15 @@ export class OphirPlanumNurseryGardens extends CorporationCard implements ICorpo
 
       metadata: {
         cardNumber: 'EP-OPN',
-        description: 'You start with 38 M€, 1 plant and 1 plant production. 1 VP for every 2 plant tags you own.',
+        description: 'You start with 38 M€, 1 plant and 1 plant production. 1 VP per 2 plant tags you have.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(38).plants(1).production((pb) => pb.plants(1)).br;
-          b.effect('When any plant tag is played, gain 1 plant.', (eb) => {
-            eb.tag(Tag.PLANT, {all}).startEffect.plants(1);
+          b.br.br;
+          b.megacredits(38).plants(1).production((pb) => pb.plants(1));
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('When any plant tag is played, gain 1 plant.', (eb) => {
+              eb.tag(Tag.PLANT, {all}).startEffect.plants(1);
+            });
           });
         }),
       },

@@ -4,6 +4,7 @@ import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {questionmark} from '../render/DynamicVictoryPoints';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 import {Board} from '../../boards/Board';
@@ -25,11 +26,15 @@ export class PurNKleen extends CorporationCard implements ICorporationCard {
 
       metadata: {
         cardNumber: 'EP-PNK',
-        description: 'You start with 44 M€. As your first action, place an ocean tile. 1 VP for each ocean tile adjacent to each of your cities.',
+        description: 'You start with 44 M€. First action: place an ocean tile. 1 VP per ocean next to each of your cities.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(44).oceans(1).br;
-          b.effect('After you pay for the AQUIFER standard project, you gain 3 M€.', (eb) => {
-            eb.plate('Aquifer').startEffect.megacredits(3);
+          b.br.br;
+          b.megacredits(44).oceans(1);
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('After you pay for the AQUIFER standard project, gain 3 M€.', (eb) => {
+              eb.plate('Aquifer').startEffect.megacredits(3);
+            });
           });
         }),
         victoryPoints: questionmark(),

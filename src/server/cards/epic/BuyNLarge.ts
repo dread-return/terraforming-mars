@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 import {IStandardProjectCard} from '../IStandardProjectCard';
@@ -19,9 +20,13 @@ export class BuyNLarge extends CorporationCard implements ICorporationCard {
         cardNumber: 'EP-BNL',
         description: 'You start with 37 M€ and 1 production each of 2 different resources of your choice.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(37).production((pb) => pb.wild(1).wild(1)).asterix().br;
-          b.effect('When you play a standard project, gain 1 M€.', (eb) => {
-            eb.plate('Standard projects').startEffect.megacredits(1);
+          b.br.br;
+          b.megacredits(37).production((pb) => pb.wild(1).wild(1)).asterix();
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.effect('When you play a standard project, gain 1 M€.', (eb) => {
+              eb.plate('Standard projects').startEffect.megacredits(1);
+            });
           });
         }),
       },

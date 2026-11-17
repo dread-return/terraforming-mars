@@ -2,6 +2,7 @@ import {CorporationCard} from '../corporation/CorporationCard';
 import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Space} from '../../boards/Space';
 import {Board} from '../../boards/Board';
@@ -22,9 +23,17 @@ export class HydroSol extends CorporationCard implements ICorporationCard {
         cardNumber: 'EP-HYS',
         description: 'You start with 44 M€ and 2 M€ production.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(44).production((pb) => pb.megacredits(2)).br;
-          b.effect('When any ocean tile is placed next to one of your tiles, gain 2 M€. When you place an ocean tile, increase your M€ production 1 step.', (eb) => {
-            eb.oceans(1, {all}).emptyTile().asterix().colon().megacredits(2).nbsp.oceans(1).startEffect.production((pb) => pb.megacredits(1));
+          b.br.br;
+          b.megacredits(44).production((pb) => pb.megacredits(2));
+          b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.effect(undefined, (eb) => {
+              eb.oceans(1, {size: Size.SMALL, all}).asterix().startEffect.megacredits(2);
+            });
+            ce.vSpace(Size.SMALL);
+            ce.effect('Any ocean next to your tiles: gain 2 M€. Your ocean tiles: +1 M€ production.', (eb) => {
+              eb.oceans(1, {size: Size.SMALL}).startEffect.production((pb) => pb.megacredits(1));
+            });
           });
         }),
       },

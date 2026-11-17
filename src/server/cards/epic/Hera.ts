@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {CardType} from '../../../common/cards/CardType';
@@ -33,12 +34,17 @@ export class Hera extends ActiveCorporationCard implements ICorporationCard {
         cardNumber: 'EP-HER',
         description: 'You start with 40 M€. 1 VP per 3 fighters here.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(40).br;
-          b.effect('When anyone plays a space event card or uses the ASTEROID standard project, add 1 fighter to this card.', (eb) => {
-            eb.tag(Tag.SPACE, {all}).tag(Tag.EVENT, {all}).slash().plate('Asteroid').startEffect.resource(CardResource.FIGHTER);
-          }).br;
-          b.action('Spend 1 fighter here to gain 1 steel or 1 titanium.', (eb) => {
-            eb.resource(CardResource.FIGHTER).startAction.steel(1).or().titanium(1);
+          b.br;
+          b.megacredits(40);
+          b.corpBox('effect-action', (ce) => {
+            ce.vSpace(Size.SMALL);
+            ce.effect('Anyone plays a space event or the ASTEROID project: add a fighter here.', (eb) => {
+              eb.tag(Tag.SPACE, {all}).tag(Tag.EVENT, {all}).asterix().startEffect.resource(CardResource.FIGHTER);
+            });
+            ce.vSpace(Size.SMALL);
+            ce.action('Spend 1 fighter here for 1 steel or 1 titanium.', (eb) => {
+              eb.resource(CardResource.FIGHTER).startAction.steel(1).or().titanium(1);
+            });
           });
         }),
       },

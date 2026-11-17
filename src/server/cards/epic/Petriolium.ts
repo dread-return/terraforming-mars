@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 import {SelectAmount} from '../../inputs/SelectAmount';
@@ -22,9 +23,13 @@ export class Petriolium extends ActiveCorporationCard implements ICorporationCar
         cardNumber: 'EP-PET',
         description: 'You start with 34 M€ and 2 plant production.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(34).production((pb) => pb.plants(2)).br;
-          b.action('Spend any amount of plants to gain twice that many energy.', (eb) => {
-            eb.text('X').plants(1).startAction.text('2X').energy(1);
+          b.br.br;
+          b.megacredits(34).production((pb) => pb.plants(2));
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Spend any number of plants to gain twice that many energy.', (eb) => {
+              eb.text('x').plants(1).startAction.text('2x').energy(1);
+            });
           });
         }),
       },

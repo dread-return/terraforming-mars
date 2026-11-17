@@ -3,6 +3,7 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
+import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {CardResource} from '../../../common/CardResource';
 import {Resource} from '../../../common/Resource';
@@ -24,11 +25,15 @@ export class MicroMassSystems extends ActiveCorporationCard implements ICorporat
 
       metadata: {
         cardNumber: 'EP-MMS',
-        description: 'You start with 1 M€ production, 1 steel production and 30 M€. 1 VP per 2 power tags you have.',
+        description: 'You start with 1 M€ and 1 steel production, and 30 M€. 1 VP per 2 power tags you have.',
         renderData: CardRenderer.builder((b) => {
-          b.production((pb) => pb.megacredits(1).steel(1)).megacredits(30).br;
-          b.action('Gain 1 titanium, or add 1 radiation to another card.', (eb) => {
-            eb.empty().startAction.titanium(1).or().resource(CardResource.RADIATION).asterix();
+          b.br.br;
+          b.production((pb) => pb.megacredits(1).steel(1)).nbsp.megacredits(30);
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
+            ce.action('Gain 1 titanium, or add 1 radiation to another card.', (eb) => {
+              eb.empty().startAction.titanium(1).or().resource(CardResource.RADIATION).asterix();
+            });
           });
         }),
       },

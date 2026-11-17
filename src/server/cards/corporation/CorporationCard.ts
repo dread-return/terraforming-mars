@@ -49,7 +49,7 @@ export abstract class ActiveCorporationCard extends CorporationCard implements I
     return true;
   }
 
-  public bespokeAction(_player: IPlayer) {
+  public bespokeAction(_player: IPlayer): PlayerInput | undefined {
     return undefined;
   }
 }

@@ -198,6 +198,10 @@ describe('Giga global events', () => {
       const seen = new Set<PartyName>();
       for (let i = 0; i < 40; i++) {
         const [game] = setup(PartyName.MARS, PartyName.GREENS);
+        // Games are seeded the same way; advance the RNG so each iteration samples a different party.
+        for (let j = 0; j < i; j++) {
+          game.rng.next();
+        }
         const turmoil = Turmoil.getTurmoil(game);
         const absent = BOARD_ORDER.find((name) => !turmoil.isInPlay(name))!;
         const count = (name: PartyName) => turmoil.getPartyByName(name).delegates.get('NEUTRAL');
@@ -205,7 +209,8 @@ describe('Giga global events', () => {
 
         sendEvent(game, absent);
 
-        const changed = turmoil.parties.filter((p) => count(p.name) === before.get(p.name)! + 1);
+        // >= because the event's delegate and the reveal's delegate can land on the same party.
+        const changed = turmoil.parties.filter((p) => count(p.name) >= before.get(p.name)! + 1);
         // The reveal of the first event also puts a neutral delegate on one party in play.
         expect(changed.length, absent).is.greaterThan(0);
         expect(turmoil.getPartyByName(absent).delegates.size).eq(0);

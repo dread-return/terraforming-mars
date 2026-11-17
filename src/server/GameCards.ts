@@ -36,6 +36,7 @@ import {INDUSTRIES_CARD_MANIFEST} from './cards/industries/IndustriesCardManifes
 import {POSTLUDES_CARD_MANIFEST} from './cards/postludes/PostludesCardManifest';
 import {HIGH_ORBIT_CARD_MANIFEST} from './cards/highorbit/HighOrbitCardManifest';
 import {MERCURY_CARD_MANIFEST} from './cards/mercury/MercuryCardManifest';
+import {EPIC_CARD_MANIFEST} from './cards/epic/EpicCardManifest';
 import {IActCard, isActCard} from './mercury/ActCard';
 import {HELD_OUT_ACTS} from '../common/mercury/MercuryCards';
 import {HELD_OUT_POSTLUDES, HIGH_ORBIT_POSTLUDES, isPostludeName} from '../common/postludes/Postludes';
@@ -60,6 +61,9 @@ export class GameCards {
     this.gameOptions = gameOptions;
 
     const manifests: Array<[boolean, ModuleManifest]> = [
+      // Epic Corporations are part of Corporate Era in this fork. They're listed first so that
+      // unshuffled decks (tests) still deal the official corporations first.
+      [gameOptions.corporateEra, EPIC_CARD_MANIFEST],
       [true, BASE_CARD_MANIFEST],
       [gameOptions.corporateEra, CORP_ERA_CARD_MANIFEST],
       [gameOptions.preludeExtension, PRELUDE_CARD_MANIFEST],

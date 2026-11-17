@@ -9,6 +9,7 @@ import {message} from './logs/MessageBuilder';
 import {IPreludeCard} from './cards/prelude/IPreludeCard';
 import {ICeoCard} from './cards/ceos/ICeoCard';
 import {Eternity} from './cards/eternity/Eternity';
+import {EpicHooks} from './cards/epic/EpicHooks';
 
 export type DraftType = 'none' | 'initial' | 'prelude' | 'ceos' | 'standard';
 
@@ -227,7 +228,8 @@ class StandardDraft extends Draft {
       return 5;
     }
 
-    return 4;
+    // Epic Corporations: Leviathan looks at one more card.
+    return 4 + EpicHooks.extraResearchCards(player);
   }
 
   override cardsToKeep(player: IPlayer): number {
@@ -236,6 +238,9 @@ class StandardDraft extends Draft {
         return 2;
       }
       if (player.tableau.has(CardName.MARS_MATHS) || player.tableau.has(CardName.GREAT_FACE_OF_CYDONIA)) {
+        return 2;
+      }
+      if (EpicHooks.extraResearchCards(player) > 0) {
         return 2;
       }
     }

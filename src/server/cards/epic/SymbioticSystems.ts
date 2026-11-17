@@ -1,0 +1,41 @@
+import {CorporationCard} from '../corporation/CorporationCard';
+import {ICorporationCard} from '../corporation/ICorporationCard';
+import {CardName} from '../../../common/cards/CardName';
+import {Tag} from '../../../common/cards/Tag';
+import {questionmark} from '../render/DynamicVictoryPoints';
+import {CardRenderer} from '../render/CardRenderer';
+import {IPlayer} from '../../IPlayer';
+
+const TAGS = [Tag.EARTH, Tag.VENUS, Tag.JOVIAN];
+
+export class SymbioticSystems extends CorporationCard implements ICorporationCard {
+  constructor() {
+    super({
+      name: CardName.SYMBIOTIC_SYSTEMS,
+      tags: [Tag.EARTH, Tag.SPACE],
+      startingMegaCredits: 50,
+      victoryPoints: 'special',
+      cardDiscount: [
+        {tag: Tag.EARTH, amount: 1, per: 'card'},
+        {tag: Tag.VENUS, amount: 1, per: 'card'},
+        {tag: Tag.JOVIAN, amount: 1, per: 'card'},
+      ],
+
+      metadata: {
+        cardNumber: 'EP-SYS',
+        description: 'You start with 50 M€. 1 VP for each set of Earth, Venus and Jovian tags you have in play.',
+        renderData: CardRenderer.builder((b) => {
+          b.megacredits(50).br;
+          b.effect('Cards with an Earth, Venus or Jovian tag cost 1 M€ less.', (eb) => {
+            eb.tag(Tag.EARTH).slash().tag(Tag.VENUS).slash().tag(Tag.JOVIAN).startEffect.megacredits(-1);
+          });
+        }),
+        victoryPoints: questionmark(),
+      },
+    });
+  }
+
+  public override getVictoryPoints(player: IPlayer): number {
+    return Math.min(...TAGS.map((tag) => player.tags.count(tag, 'raw')));
+  }
+}

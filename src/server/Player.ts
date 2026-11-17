@@ -92,6 +92,7 @@ import {Eternity} from './cards/eternity/Eternity';
 import {Mercury} from './mercury/Mercury';
 import {mercuryCanUseSteel} from './mercury/MercuryCards';
 import {IActCard, isActCard} from './mercury/ActCard';
+import {EpicHooks} from './cards/epic/EpicHooks';
 
 const THROW_STATE_ERRORS = Boolean(process.env.THROW_STATE_ERRORS);
 const DEFAULT_GLOBAL_PARAMETER_STEPS = {
@@ -552,6 +553,7 @@ export class Player implements IPlayer {
     this.globalParameterSteps[parameter] += steps;
     IndividualTracks.onGlobalParameterIncrease(this, parameter, steps);
     HighOrbit.onGlobalParameterIncrease(this, parameter, steps);
+    EpicHooks.onGlobalParameterIncrease(this, parameter, steps);
   }
 
   public removeResourceFrom(card: ICard, count: number = 1, options?: {removingPlayer? : IPlayer, log?: boolean}): void {
@@ -1098,6 +1100,7 @@ export class Player implements IPlayer {
         const action = card.action(this);
         this.defer(action);
         this.actionsThisGeneration.add(card.name);
+        EpicHooks.onCardAction(this, card);
         return undefined;
       });
   }

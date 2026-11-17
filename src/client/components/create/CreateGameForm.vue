@@ -480,6 +480,7 @@
 
             <input type="checkbox" v-model="domesWilderness" id="domesWilderness-checkbox">
             <label for="domesWilderness-checkbox">
+              <div class="create-game-expansion-icon expansion-icon-domeswilderness"></div>
               <span v-i18n>Domes and Wilderness</span>&nbsp;<span class="tooltip" v-i18n data-tooltip="Adds the Dome (20 M€) and Wilderness (23 M€) standard projects, which upgrade one of your cities or greeneries. Cards and effects that place a city or greenery can upgrade instead.">&#9432;</span>
             </label>
 

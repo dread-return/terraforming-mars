@@ -106,6 +106,7 @@ import {IdesOfMars} from './cards/idesofmars/IdesOfMars';
 import {Nuclear} from './cards/nuclear/Nuclear';
 import {IndividualTracks} from './individualTracks/IndividualTracks';
 import {Eternity} from './cards/eternity/Eternity';
+import {EpicHooks} from './cards/epic/EpicHooks';
 
 // Can be overridden by tests
 let createGameLog: () => Array<LogMessage> = () => [];
@@ -960,7 +961,9 @@ export class Game implements IGame, Logger {
     this.drainQueue(() => {
       ColoniesHandler.endGeneration(this);
       UnderworldExpansion.endGeneration(this);
-      this.gotoTurmoilPhase();
+      // Epic Corporations: Ares Technology reorders the global events (may ask its owner).
+      EpicHooks.beforeTurmoilPhase(this);
+      this.drainQueue(() => this.gotoTurmoilPhase());
     });
   }
 
@@ -1020,6 +1023,7 @@ export class Game implements IGame, Logger {
     Postludes.onGenerationStart(this);
     HighOrbit.onGenerationStart(this);
     Mercury.onGenerationStart(this);
+    EpicHooks.onGenerationStart(this);
 
     this.players.forEach((player) => {
       player.hasIncreasedTerraformRatingThisGeneration = false;

@@ -16,6 +16,7 @@ import {Payment} from '../../common/inputs/Payment';
 import {StandardProjectCanPayWith} from '../../common/cards/Types';
 import {Space} from '../boards/Space';
 import {Eternity} from './eternity/Eternity';
+import {EpicHooks} from './epic/EpicHooks';
 
 type StaticStandardProjectCardProperties = {
   name: CardName,
@@ -96,7 +97,7 @@ export abstract class StandardProjectCard extends Card implements IStandardProje
 
   /** What this standard project accepts as payment, counting Eternity and postlude effects. */
   private allCanPayWith(player: IPlayer): StandardProjectCanPayWith {
-    return mercuryStandardProjectPayWith(player, this, highOrbitStandardProjectPayWith(player, this, Postludes.standardProjectPayWith(player, this, Eternity.standardProjectPayWith(player, this, this.canPayWith(player)))));
+    return mercuryStandardProjectPayWith(player, this, highOrbitStandardProjectPayWith(player, this, Postludes.standardProjectPayWith(player, this, Eternity.standardProjectPayWith(player, this, EpicHooks.standardProjectPayWith(player, this, this.canPayWith(player))))));
   }
 
   /**
@@ -106,7 +107,7 @@ export abstract class StandardProjectCard extends Card implements IStandardProje
   protected placementSpaces: ReadonlyArray<Space> | undefined = undefined;
 
   public payAndExecute(player: IPlayer, payment: Payment): void {
-    const base = Eternity.standardProjectPayWith(player, this, this.canPayWith(player));
+    const base = Eternity.standardProjectPayWith(player, this, EpicHooks.standardProjectPayWith(player, this, this.canPayWith(player)));
     this.placementSpaces = Postludes.placementSpaces(player, this.name, payment, base);
     player.pay(payment);
     this.projectPlayed(player);

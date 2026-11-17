@@ -49,6 +49,15 @@ const NOT_DISPLAYED: ReadonlyArray<CardName> = [
   // Mercury vs Mars: one discount for several tags (or for placing a colony), not per tag.
   CardName.BIOCOMPUTERS,
   CardName.GANYMEDIAN_ALLIANCE,
+  // Epic Corporations: depends on the temperature, the card's tags or VP, or only this generation / the next card.
+  CardName.BLIZZCORP,
+  CardName.EARTH_FIRST,
+  CardName.IMPERIO_SOLAR_MARCIANO,
+  CardName.MARABOUT_SHIRITORI,
+  CardName.OUROBOROS,
+  CardName.TEO,
+  CardName.TRUE_MARS_FOUNDATION,
+  CardName.TWIN_CITIES_OF_HELIUM,
 ];
 
 describe('customDiscounts', () => {

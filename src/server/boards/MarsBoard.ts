@@ -263,6 +263,12 @@ export class MarsBoard extends Board {
 
     // Spaces next to tiles you own
     if (spacesForGreenery.length > 0) {
+      // Epic Corporations: Oasis may also place greeneries next to no other tile.
+      if (player.tableau.has(CardName.OASIS)) {
+        const isolated = availableLandSpaces.filter((space) =>
+          !spacesForGreenery.includes(space) && !this.getAdjacentSpaces(space).some((adj) => MarsBoard.hasRealTile(adj)));
+        return [...spacesForGreenery, ...isolated];
+      }
       return spacesForGreenery;
     }
     // Place anywhere if no space owned

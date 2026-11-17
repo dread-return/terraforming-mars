@@ -249,6 +249,7 @@ function richGame(): [IGame, TestPlayer, TestPlayer] {
     corporateEra: true,
     venusNextExtension: true, coloniesExtension: true, preludeExtension: true,
     nuclearExpansion: true, solarisExpansion: true, promoCardsOption: true,
+    turmoilExtension: true, pathfindersExpansion: true, mercuryExpansion: true,
   });
   setTemperature(game, 0);
   setOxygenLevel(game, 8);

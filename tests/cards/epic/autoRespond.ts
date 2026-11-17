@@ -20,6 +20,7 @@ import {SelectProductionToLose} from '../../../src/server/inputs/SelectProductio
 import {Payment} from '../../../src/common/inputs/Payment';
 import {Units} from '../../../src/common/Units';
 import {Resource} from '../../../src/common/Resource';
+import {SelectParty} from '../../../src/server/inputs/SelectParty';
 
 /** Answers whatever the player is asked with the first sensible choice. */
 export function autoRespond(game: IGame, player: TestPlayer, first?: PlayerInput | undefined, depth = 0): void {
@@ -92,6 +93,9 @@ function answer(player: TestPlayer, input: PlayerInput): PlayerInput | undefined
   }
   if (input instanceof SelectStandardProjectToPlay) {
     return undefined;
+  }
+  if (input instanceof SelectParty) {
+    return input.cb(input.parties[0]) ?? undefined;
   }
   throw new Error('Unhandled input ' + input.constructor.name);
 }

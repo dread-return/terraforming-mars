@@ -12,6 +12,7 @@ import {PlayCardMetadata, SelectCardToPlay} from './SelectCardToPlay';
 import {VenusPhase2Expansion} from '../venus2/VenusPhase2Expansion';
 import {SelectProjectCardToPlayModel} from '../../common/models/PlayerInputModel';
 import {Eternity} from '../cards/eternity/Eternity';
+import {EpicHooks} from '../cards/epic/EpicHooks';
 
 export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProjectCard> {
   constructor(
@@ -42,7 +43,7 @@ export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProje
     if (details.overriddenCost === undefined && !card.canAct(this.player)) {
       throw new InputError('You cannot play this standard project');
     }
-    const canPayWith = highOrbitStandardProjectPayWith(this.player, card, Postludes.standardProjectPayWith(this.player, card, Eternity.standardProjectPayWith(this.player, card, card.canPayWith(this.player))));
+    const canPayWith = highOrbitStandardProjectPayWith(this.player, card, Postludes.standardProjectPayWith(this.player, card, Eternity.standardProjectPayWith(this.player, card, EpicHooks.standardProjectPayWith(this.player, card, card.canPayWith(this.player)))));
     const paymentOptions: Partial<PaymentOptions> = {
       heat: this.player.canUseHeatAsMegaCredits,
       energy: this.player.canUseEnergyAsMegaCredits,

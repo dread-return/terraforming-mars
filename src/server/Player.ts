@@ -578,6 +578,8 @@ export class Player implements IPlayer {
             .card(card));
       }
 
+      EpicHooks.onCardResourceRemoved(this, card, removingPlayer);
+
       // Lawsuit hook
       if (removingPlayer !== undefined && removingPlayer !== this && this.removingPlayers.includes(removingPlayer.id) === false) {
         this.removingPlayers.push(removingPlayer.id);
@@ -764,7 +766,13 @@ export class Player implements IPlayer {
       // TODO(kberg): Using .execute to rely on directly calling setWaitingFor is not great.
       // It's because all players is drafting at the same time. Once again, the server isn't ideal
       // when it comes to handling multiple players at once.
-      const action = new ChooseCards(this, cards, {paying: true, keepMax: selectable}).execute();
+      const action = new ChooseCards(this, cards, {
+        paying: true,
+        keepMax: selectable,
+        // Epic Corporations: Logos Research & Development, Lazarus Laboratories.
+        freeCards: EpicHooks.freeResearchCards(this),
+        keepOneDiscardFree: EpicHooks.keepsDiscardedResearchCard(this),
+      }).execute();
 
       // ChooseCards.execute returns an action with an andThen set. That means
       // this has to wrap it around and do clever things.
@@ -825,6 +833,8 @@ export class Player implements IPlayer {
     cost += Nuclear.cardCostAdjustment(this, card);
     // Eternity: Astral Bog, Exoplanet Builders, Mars Conservationists.
     cost += Eternity.cardCostAdjustment(this, card);
+    // Epic Corporations: NOJO, True Mars Foundation.
+    cost += EpicHooks.cardCostAdjustment(this, card);
 
     return Math.max(cost, 0);
   }
@@ -1413,6 +1423,9 @@ export class Player implements IPlayer {
 
   public canPlay(card: IProjectCard): boolean {
     card.additionalProjectCosts = undefined;
+    if (EpicHooks.cannotPlay(this, card)) {
+      return false;
+    }
     const options = this.affordOptionsForCard(card);
     const canAfford = this.canAffordInternal(options);
     if (!canAfford.canAfford) {

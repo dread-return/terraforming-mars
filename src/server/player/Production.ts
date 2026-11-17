@@ -10,6 +10,7 @@ import {CardName} from '../../common/cards/CardName';
 import {Units} from '../../common/Units';
 import {Eternity} from '../cards/eternity/Eternity';
 import {GigaHooks} from '../turmoil/giga/GigaHooks';
+import {EpicHooks} from '../cards/epic/EpicHooks';
 
 export class Production extends BaseStock {
   constructor(player: IPlayer) {
@@ -27,6 +28,10 @@ export class Production extends BaseStock {
   }
 
   public override canAdjust(units: Units): boolean {
+    // Epic Corporations: Cheap Chispa decreases energy production 1 step less.
+    if (units.energy < 0 && this.player.tableau.has(CardName.CHEAP_CHISPA)) {
+      units = {...units, energy: units.energy + 1};
+    }
     if (units.energy < 0 && this.energy + units.energy < 0 && this.player.tableau.has(CardName.ORC_TURBINES)) {
       const shortfall = -(this.energy + units.energy);
       return super.canAdjust({...units, energy: -this.energy, heat: units.heat - 2 * shortfall});
@@ -39,6 +44,10 @@ export class Production extends BaseStock {
     amount : number,
     options? : { log: boolean, from? : From, stealing?: boolean},
   ) {
+    amount = EpicHooks.adjustProductionChange(this.player, resource, amount);
+    if (amount === 0) {
+      return;
+    }
     const shortfall = this.orcShortfall(resource, amount, options?.from);
     if (shortfall > 0 && this.heat >= 2 * shortfall) {
       this.add(Resource.HEAT, -2 * shortfall, options);
@@ -75,5 +84,6 @@ export class Production extends BaseStock {
     Eternity.onProductionGain(this.player, resource, amount);
     Eternity.onProductionIncrease(this.player, resource, amount);
     HighOrbit.onProductionIncrease(this.player, resource, amount);
+    EpicHooks.onProductionChange(this.player, resource, delta, options?.from);
   }
 }

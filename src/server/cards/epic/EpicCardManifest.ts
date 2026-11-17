@@ -68,6 +68,46 @@ import {UnderSec} from './UnderSec';
 import {UnionAerospace} from './UnionAerospace';
 import {VulcanFoundries} from './VulcanFoundries';
 import {WeylandYutaniCorp} from './WeylandYutaniCorp';
+import {AcquireUnlimited} from './AcquireUnlimited';
+import {AdvancedMiningAssociation} from './AdvancedMiningAssociation';
+import {AquatechCorp} from './AquatechCorp';
+import {AresSecurity} from './AresSecurity';
+import {AresTechnology} from './AresTechnology';
+import {AresUnion} from './AresUnion';
+import {Aria} from './Aria';
+import {AstraMechanika} from './AstraMechanika';
+import {Blizzcorp} from './Blizzcorp';
+import {ChaangFuelsInc} from './ChaangFuelsInc';
+import {CheapChispa} from './CheapChispa';
+import {Cloudmind} from './Cloudmind';
+import {CoeurlIndustries} from './CoeurlIndustries';
+import {ColonialOne} from './ColonialOne';
+import {DevWright} from './DevWright';
+import {DubaiColonyInitiative} from './DubaiColonyInitiative';
+import {EarthFirst} from './EarthFirst';
+import {EtherEnterprise} from './EtherEnterprise';
+import {HermeticOrderOfMarsEpic} from './HermeticOrderOfMarsEpic';
+import {ImperioSolarMarciano} from './ImperioSolarMarciano';
+import {LazarusLaboratories} from './LazarusLaboratories';
+import {LogosResearchAndDevelopment} from './LogosResearchAndDevelopment';
+import {MaraboutShiritori} from './MaraboutShiritori';
+import {NOJO} from './NOJO';
+import {Neptune} from './Neptune';
+import {NewTech} from './NewTech';
+import {Oasis} from './Oasis';
+import {OpportunisticConsortium} from './OpportunisticConsortium';
+import {OrbitalEye} from './OrbitalEye';
+import {Ouroboros} from './Ouroboros';
+import {Pathfinder} from './Pathfinder';
+import {PolitiCorp} from './PolitiCorp';
+import {PrincessLtd} from './PrincessLtd';
+import {SolarEnterprises} from './SolarEnterprises';
+import {SpartansSecurity} from './SpartansSecurity';
+import {TEO} from './TEO';
+import {Thermex} from './Thermex';
+import {Toyitsu} from './Toyitsu';
+import {TrueMarsFoundation} from './TrueMarsFoundation';
+import {TwinCitiesOfHelium} from './TwinCitiesOfHelium';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -148,5 +188,46 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.UNION_AEROSPACE]: {Factory: UnionAerospace},
     [CardName.VULCAN_FOUNDRIES]: {Factory: VulcanFoundries},
     [CardName.WEYLAND_YUTANI_CORP]: {Factory: WeylandYutaniCorp},
+    // Batch 2
+    [CardName.ACQUIRE_UNLIMITED]: {Factory: AcquireUnlimited},
+    [CardName.ADVANCED_MINING_ASSOCIATION]: {Factory: AdvancedMiningAssociation, compatibility: 'pathfinders'},
+    [CardName.AQUATECH_CORP]: {Factory: AquatechCorp},
+    [CardName.ARES_SECURITY]: {Factory: AresSecurity},
+    [CardName.ARES_TECHNOLOGY]: {Factory: AresTechnology, compatibility: 'turmoil'},
+    [CardName.ARES_UNION]: {Factory: AresUnion},
+    [CardName.ARIA]: {Factory: Aria},
+    [CardName.ASTRA_MECHANIKA]: {Factory: AstraMechanika},
+    [CardName.BLIZZCORP]: {Factory: Blizzcorp, compatibility: 'pathfinders'},
+    [CardName.CHAANG_FUELS_INC]: {Factory: ChaangFuelsInc, compatibility: 'colonies'},
+    [CardName.CHEAP_CHISPA]: {Factory: CheapChispa},
+    [CardName.CLOUDMIND]: {Factory: Cloudmind},
+    [CardName.COEURL_INDUSTRIES]: {Factory: CoeurlIndustries},
+    [CardName.COLONIAL_ONE]: {Factory: ColonialOne, compatibility: 'colonies'},
+    [CardName.DEV_WRIGHT]: {Factory: DevWright},
+    [CardName.DUBAI_COLONY_INITIATIVE]: {Factory: DubaiColonyInitiative},
+    [CardName.EARTH_FIRST]: {Factory: EarthFirst},
+    [CardName.ETHER_ENTERPRISE]: {Factory: EtherEnterprise, compatibility: ['colonies', 'mercury']},
+    [CardName.HERMETIC_ORDER_OF_MARS_EPIC]: {Factory: HermeticOrderOfMarsEpic, compatibility: 'pathfinders'},
+    [CardName.IMPERIO_SOLAR_MARCIANO]: {Factory: ImperioSolarMarciano, compatibility: 'pathfinders'},
+    [CardName.LAZARUS_LABORATORIES]: {Factory: LazarusLaboratories},
+    [CardName.LOGOS_RESEARCH_AND_DEVELOPMENT]: {Factory: LogosResearchAndDevelopment},
+    [CardName.MARABOUT_SHIRITORI]: {Factory: MaraboutShiritori},
+    [CardName.NEPTUNE]: {Factory: Neptune},
+    [CardName.NEW_TECH]: {Factory: NewTech},
+    [CardName.NOJO]: {Factory: NOJO},
+    [CardName.OASIS]: {Factory: Oasis},
+    [CardName.OPPORTUNISTIC_CONSORTIUM]: {Factory: OpportunisticConsortium},
+    [CardName.ORBITAL_EYE]: {Factory: OrbitalEye},
+    [CardName.OUROBOROS]: {Factory: Ouroboros},
+    [CardName.PATHFINDER]: {Factory: Pathfinder, compatibility: 'pathfinders'},
+    [CardName.POLITICORP]: {Factory: PolitiCorp, compatibility: 'turmoil'},
+    [CardName.PRINCESS_LTD]: {Factory: PrincessLtd},
+    [CardName.SOLAR_ENTERPRISES]: {Factory: SolarEnterprises, compatibility: 'colonies'},
+    [CardName.SPARTANS_SECURITY]: {Factory: SpartansSecurity},
+    [CardName.TEO]: {Factory: TEO},
+    [CardName.THERMEX]: {Factory: Thermex},
+    [CardName.TOYITSU]: {Factory: Toyitsu},
+    [CardName.TRUE_MARS_FOUNDATION]: {Factory: TrueMarsFoundation, compatibility: 'pathfinders'},
+    [CardName.TWIN_CITIES_OF_HELIUM]: {Factory: TwinCitiesOfHelium},
   },
 });

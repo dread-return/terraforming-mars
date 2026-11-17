@@ -104,6 +104,9 @@ export enum TileType {
     // as `Tile.upgrade` on the city or greenery under it. These only give the standard projects their art.
     DOME, // 70
     WILDERNESS, // 71
+
+    // Mercury vs Mars
+    BOREHOLES, // 72
   }
 
 export const tileTypeToString: Record<TileType, string> = {
@@ -180,6 +183,7 @@ export const tileTypeToString: Record<TileType, string> = {
   [TileType.INDUSTRY_RANDOM]: 'Random Industry',
   [TileType.DOME]: 'Dome',
   [TileType.WILDERNESS]: 'Wilderness',
+  [TileType.BOREHOLES]: 'Boreholes',
 } as const;
 
 export const HAZARD_TILES = new Set([TileType.DUST_STORM_MILD, TileType.DUST_STORM_SEVERE, TileType.EROSION_MILD, TileType.EROSION_SEVERE]);

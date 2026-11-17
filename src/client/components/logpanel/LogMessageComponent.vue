@@ -73,6 +73,7 @@ const cardTypeToCss: Record<CardType, string | undefined> = {
   standard_action: 'background-color-standard-project',
   proxy: undefined,
   infrastructure: 'background-color-infrastructure',
+  act: 'background-color-act',
 };
 
 export default defineComponent({

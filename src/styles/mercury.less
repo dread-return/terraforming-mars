@@ -1,0 +1,130 @@
+// Mercury vs Mars (fan expansion by Aphi): the Mercury board, Act cards and assets.
+
+.expansion-icon-mercury {
+  background-image: url(./assets/expansion_icons/expansion_icon_mercury.png);
+}
+
+// Boreholes special tile (Geological Drilling).
+.board-space-tile--boreholes {
+  background: url(./assets/mercury/tile_boreholes.png);
+  background-size: 44px 51px;
+}
+
+.card-tile-boreholes {
+  filter: none;
+  width: 44px;
+  height: 51px;
+  background-size: 44px 51px;
+  background-image: url(./assets/mercury/tile_boreholes.png);
+}
+
+// Asset and Act card icons on cards.
+.card-mercury-asset {
+  display: inline-block;
+  width: 30px;
+  height: 26px;
+  margin: 0 2px;
+  background: url(./assets/mercury/asset.png) no-repeat center / 30px 26px;
+  vertical-align: middle;
+}
+
+.card-mercury-act {
+  display: inline-block;
+  width: 32px;
+  height: 26px;
+  margin: 0 2px;
+  border-radius: 3px;
+  background: url(./assets/mercury/act_card.png) no-repeat center / 32px 26px;
+  vertical-align: middle;
+}
+
+// Act cards. Treaties are gold, Rivalries steel grey.
+.background-color-act-treaty {
+  background: linear-gradient(-60deg, #b8892b 10%, #f3d77a, #b8892b 90%);
+  color: #2b1d00;
+}
+
+.background-color-act-rivalry {
+  background: linear-gradient(-60deg, #5b5f66 10%, #b5bac2, #5b5f66 90%);
+  color: #111;
+}
+
+.background-color-act {
+  background: #d9b75a;
+  color: #2b1d00;
+}
+
+.card-container.card-act-treaty {
+  border-color: #c79a35;
+}
+
+.card-container.card-act-rivalry {
+  border-color: #6f747c;
+}
+
+// Acts have no cost, but keep the row so the title stays in place.
+.card-act-treaty .card-cost, .card-act-rivalry .card-cost {
+  visibility: hidden;
+}
+
+.card-act-treaty .card-cost-and-tags, .card-act-rivalry .card-cost-and-tags {
+  min-height: 46px;
+}
+
+// The assets an Act needs, with a handshake, at the bottom of the card.
+.card-act-steps {
+  position: absolute;
+  bottom: 8px;
+  left: 40px;
+  padding: 2px 8px 2px 26px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 15px;
+  color: #2b1d00;
+  background: #f3d77a url(./assets/mercury/asset.png) no-repeat 5px center / 16px 14px;
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.4);
+}
+
+.card-act-rivalry .card-act-steps {
+  background-color: #c9ced6;
+  color: #111;
+}
+
+// Mercury vs Mars colony build bonuses.
+.mercury-build-bonus {
+  display: flex;
+  align-items: center;
+  margin: 6px 0 0 2px;
+  color: white;
+  font-weight: bold;
+  .card-mercury-asset {
+    width: 22px;
+    height: 19px;
+    background-size: 22px 19px;
+  }
+}
+
+// Shadow Colonies has 8 track steps; narrow the cells so they fit the tile.
+.colony-grid-container.colony-grid-wide > div {
+  width: 45px;
+}
+.colony-grid-container2.colony-grid-wide {
+  gap: 0.2rem;
+  > div {
+    width: 43px;
+  }
+}
+
+// The Asteroid Belt trade row: several small icons per step.
+.colony-grid-container2.asteroid-belt-trade > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  .resource {
+    margin: 1px;
+  }
+  .resource + .resource {
+    margin-left: -6px;
+  }
+}

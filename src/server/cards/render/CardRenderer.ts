@@ -469,6 +469,16 @@ abstract class Builder<T> {
     return this._appendToRow(item);
   }
 
+  /** Mercury vs Mars: an asset, added to an Act card in development. */
+  public asset(count: number = 1, options?: ItemOptions) {
+    return this._appendToRow(new CardRenderItem(CardRenderItemType.ASSET, count, options));
+  }
+
+  /** Mercury vs Mars: an Act card. */
+  public actCard(count: number = 1, options?: ItemOptions) {
+    return this._appendToRow(new CardRenderItem(CardRenderItemType.ACT_CARD, count, options));
+  }
+
   public corruptionShield() {
     const item = new CardRenderItem(CardRenderItemType.CORRUPTION_SHIELD);
     return this._appendToRow(item);

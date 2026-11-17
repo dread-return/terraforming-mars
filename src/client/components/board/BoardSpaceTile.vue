@@ -88,6 +88,7 @@ const tileTypeToCssClass: Record<TileType, string> = {
   [TileType.INDUSTRY_RANDOM]: 'industry-random',
   [TileType.DOME]: 'dome',
   [TileType.WILDERNESS]: 'wilderness',
+  [TileType.BOREHOLES]: 'boreholes',
 };
 
 const tileTypeToCssClassAresOverride = new Map<TileType, string>([
@@ -154,6 +155,7 @@ const descriptions: Record<TileType, string> = {
   [TileType.INDUSTRY_RANDOM]: 'Industry: raised a production of its owner\'s choice. No adjacency bonus.',
   [TileType.DOME]: 'Dome: counts as two cities for cards and effects, and as one city when scoring.',
   [TileType.WILDERNESS]: 'Wilderness: counts as two greeneries for cards and effects, and as one greenery when scoring.',
+  [TileType.BOREHOLES]: 'Boreholes: placing a tile next to it gives 1 asset.',
   [TileType.SEDIMENT]: 'Sediment: any player may place a city here, ignoring placement rules, and gain 3 M€. Adjacency bonus: 1 titanium.',
 };
 

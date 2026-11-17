@@ -69,5 +69,11 @@ export const floaterCards: ReadonlySet<CardName> = new Set([
 
   // Postludes
   CardName.CLOUD_GENERATOR,
+
+  // Mercury vs Mars
+  CardName.FLOATER_TECHNOLOGY_EXCHANGE,
+  CardName.OUTTER_PLANETS_UNION,
+  CardName.RARE_ASTEROID_HUNTING,
+  CardName.SEIZURE_OF_ILLEGAL_FLOATERS,
 ]);
 

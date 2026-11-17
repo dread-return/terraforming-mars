@@ -82,6 +82,7 @@ describe('ApiGame', () => {
             'pathfinders': false,
             'postludes': false,
             'highorbit': false,
+            'mercury': false,
             'prelude': false,
             'prelude2': false,
             'promo': false,

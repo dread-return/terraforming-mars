@@ -19,14 +19,21 @@ describe('Ides of Mars manifest', () => {
     const [game] = testGame(3, {idesofmarsExpansion: true, coloniesExtension: true, turmoilExtension: true, venusNextExtension: true});
     const inGame = idesCardsInGame(game).map((c) => c.name);
     expect(inGame).has.length(60);
-    // Held back until the Mercury module is added.
+    // Mercurial Laboratory only joins with Mercury vs Mars.
     expect(inGame).does.not.include(CardName.MERCURIAL_LABORATORY);
+  });
+
+  it('Mercurial Laboratory joins with Mercury vs Mars', () => {
+    const [game] = testGame(3, {idesofmarsExpansion: true, coloniesExtension: true, turmoilExtension: true, venusNextExtension: true, mercuryExpansion: true});
+    const inGame = idesCardsInGame(game).map((c) => c.name);
+    expect(inGame).has.length(61);
+    expect(inGame).includes(CardName.MERCURIAL_LABORATORY);
   });
 
   it('cards needing other expansions stay out without them', () => {
     const [game] = testGame(2, {idesofmarsExpansion: true});
     const inGame = idesCardsInGame(game).map((c) => c.name);
-    // 12 cards need Colonies, Turmoil or Venus (Air Transport Company now too); Mercurial Laboratory is held back.
+    // 12 cards need Colonies, Turmoil or Venus (Air Transport Company now too); Mercurial Laboratory needs Mercury vs Mars.
     expect(inGame).has.length(61 - 13);
     expect(inGame).does.not.include(CardName.AIR_TRANSPORT_COMPANY);
     expect(inGame).does.not.include(CardName.SPACE_PIRATES);

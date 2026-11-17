@@ -25,6 +25,7 @@ import {CardType} from '../../common/cards/CardType';
 import {OneOrArray} from '../../common/utils/types';
 import {globalInitialize} from '../globalInitialize';
 import {GIGA_GLOBAL_EVENTS} from '../turmoil/giga/GigaGlobalEvents';
+import {isActCard} from '../mercury/ActCard';
 
 type Mutable<T> = {
   -readonly [P in keyof T]: T[P];
@@ -109,6 +110,9 @@ class CardProcessor {
     if (card.requirements) {
       clientCard.requirements = card.requirements;
     }
+    if (isActCard(card)) {
+      clientCard.act = {kind: card.kind, steps: [card.steps[0], card.steps[1]]};
+    }
     if (Units.isUnits(production)) {
       clientCard.productionBox = production;
     }
@@ -190,6 +194,8 @@ class ColoniesProcessor {
       colony: metadata.colony,
       shouldIncreaseTrack: metadata.shouldIncreaseTrack,
       expansion: metadata.expansion,
+      maxTrackPosition: metadata.maxTrackPosition,
+      colonySpaces: metadata.colonySpaces,
     };
 
     ColoniesProcessor.json.push(clientMetadata);

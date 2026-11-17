@@ -9,6 +9,7 @@ import {CountableVictoryPoints} from './CountableVictoryPoints';
 import {Tag} from './Tag';
 import {CardDiscount} from './Types';
 import {OneOrArray} from '../utils/types';
+import {ActKind} from '../mercury/Mercury';
 
 export type ClientCard = Readonly<{
   name: CardName;
@@ -26,4 +27,6 @@ export type ClientCard = Readonly<{
   cardCost?: number; // Corporation
   compatibility: Array<Expansion>;
   hasAction: boolean; // For Prelude 2 preludes with actions. Can be used for more, of course.
+  /** Mercury vs Mars Act cards: Treaty or Rivalry, and the assets needed on each track. */
+  act?: {kind: ActKind, steps: [number, number]};
 }>

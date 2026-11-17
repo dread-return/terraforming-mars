@@ -24,4 +24,8 @@ export const SpaceName = {
 
   // Nuclear (GIGA)
   MAIN_DOCKING_STATION: 'c80',
+
+  // Mercury vs Mars: the reserved areas on the Mercury board
+  NEW_POMPEII: 'c81',
+  SHADOW_FOREST: 'c82',
 } as const;

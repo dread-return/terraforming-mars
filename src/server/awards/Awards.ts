@@ -63,6 +63,9 @@ import {Forerunner} from './giga/Forerunner';
 import {GMartian} from './giga/GMartian';
 import {Ionizer} from './giga/Ionizer';
 import {Microbiologist} from './giga/Microbiologist';
+import {Tycoonist} from './mercury/Tycoonist';
+import {Daedalus} from './mercury/Daedalus';
+import {Colonist} from './mercury/Colonist';
 
 export const awardManifest: MAManifest<AwardName, IAward> = {
   all: {
@@ -107,6 +110,9 @@ export const awardManifest: MAManifest<AwardName, IAward> = {
     'Manufacturer': {Factory: Manufacturer, random: 'both'},
     'Metropolist': {Factory: Metropolist, random: 'modular'},
     'Microbiologist': {Factory: Microbiologist, fan: true},
+    'Tycoonist': {Factory: Tycoonist, compatibility: 'mercury'},
+    'Daedalus': {Factory: Daedalus, compatibility: 'mercury'},
+    'Colonist': {Factory: Colonist, compatibility: 'mercury'},
     'Miner': {Factory: Miner, random: 'both'},
     'Mogul': {Factory: Mogul, random: 'modular'},
     'Naturalist': {Factory: Naturalist},

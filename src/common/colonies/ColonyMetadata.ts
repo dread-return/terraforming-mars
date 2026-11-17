@@ -33,6 +33,10 @@ export type ColonyMetadata = Readonly<{
    * to move up the track.
    */
   shouldIncreaseTrack: 'yes' | 'no' | 'ask'
+  /** The last step of the trade track. Default is MAX_COLONY_TRACK_POSITION (6). Shadow Colonies has 8 steps. */
+  maxTrackPosition?: number,
+  /** Colony spaces in all, including a reserved 4th space that only some cards can use (Mercury vs Mars). */
+  colonySpaces?: number,
 }>;
 
 type InputBenefit<T extends Benefit<any, any>> = {
@@ -54,6 +58,8 @@ export type InputColonyMetadata = {
   expansion?: Expansion,
 } & Partial<{
   shouldIncreaseTrack: ColonyMetadata['shouldIncreaseTrack'],
+  maxTrackPosition: number,
+  colonySpaces: number,
 }>;
 
 const DEFAULT_BUILD_QUANTITY = [1, 1, 1];

@@ -8,6 +8,7 @@ import {Priority} from './Priority';
 import {Message} from '../../common/logs/Message';
 import {message} from '../logs/MessageBuilder';
 import {Eternity} from '../cards/eternity/Eternity';
+import {Mercury} from '../mercury/Mercury';
 
 export type Options = {
   count?: number;
@@ -16,6 +17,11 @@ export type Options = {
   robotCards?: boolean;
   filter?(card: ICard): boolean;
   log?: boolean;
+  /**
+   * Mercury vs Mars: resources from a colony tile never go to Market Colonies.
+   * Without this, resources that no card of yours can take go to Market Colonies for assets.
+   */
+  fromColony?: boolean;
 }
 
 export class AddResourcesToCard extends DeferredAction {
@@ -54,11 +60,15 @@ export class AddResourcesToCard extends DeferredAction {
 
   public execute() {
     const cards = this.getCards();
+    const qty = this.options.count ?? 1;
     if (cards.length === 0) {
+      // Mercury vs Mars: resources you cannot use may go to Market Colonies, for 1 asset each.
+      if (qty > 0 && this.options.fromColony !== true && Mercury.acceptsOnMarket(this.player.game, this.resourceType)) {
+        Mercury.putOnMarket(this.player, this.resourceType, qty);
+      }
       return undefined;
     }
 
-    const qty = this.options.count ?? 1;
     if (qty === 0) {
       return undefined;
     }

@@ -13,4 +13,6 @@ export const expansionSpaceColonies = [
   {name: SpaceName.VENERA_BASE, expansion: 'pathfinders', card: CardName.VENERA_BASE},
   {name: SpaceName.SIDERALIS, expansion: 'solaris', card: CardName.SIDERALIS},
   {name: SpaceName.MAIN_DOCKING_STATION, expansion: 'nuclear', card: CardName.MAIN_DOCKING_STATION},
+  {name: SpaceName.NEW_POMPEII, expansion: 'mercury', card: CardName.NEW_POMPEII},
+  {name: SpaceName.SHADOW_FOREST, expansion: 'mercury', card: CardName.FLORA_EXPERIMENTS},
 ] as const;

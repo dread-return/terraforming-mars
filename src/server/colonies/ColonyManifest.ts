@@ -23,6 +23,7 @@ import {IapetusII} from '../cards/pathfinders/IapetusII';
 import {Deimos} from './Deimos';
 import {Terra} from '../cards/community/Terra';
 import {Kuiper} from '../cards/community/Kuiper';
+import {AsteroidBelt, MarketColonies, ShadowColonies} from '../mercury/MercuryColonyTiles';
 // import {LeavittII} from '../cards/pathfinders/LeavittII';
 
 export interface IColonyFactory<T> {
@@ -62,7 +63,16 @@ export const PATHFINDERS_COLONIES_TILES: Array<IColonyFactory<Colony>> = [
   {colonyName: ColonyName.IAPETUS_II, Factory: IapetusII},
 ];
 
-export const ALL_COLONIES_TILES = [...BASE_COLONIES_TILES, ...COMMUNITY_COLONIES_TILES, ...PATHFINDERS_COLONIES_TILES];
+/** Mercury vs Mars. Market Colonies is not dealt: it joins every Mercury game. */
+export const MERCURY_COLONIES_TILES: Array<IColonyFactory<Colony>> = [
+  {colonyName: ColonyName.SHADOW_COLONIES, Factory: ShadowColonies},
+  {colonyName: ColonyName.ASTEROID_BELT, Factory: AsteroidBelt},
+];
+
+export const ALL_COLONIES_TILES = [
+  ...BASE_COLONIES_TILES, ...COMMUNITY_COLONIES_TILES, ...PATHFINDERS_COLONIES_TILES, ...MERCURY_COLONIES_TILES,
+  {colonyName: ColonyName.MARKET_COLONIES, Factory: MarketColonies},
+];
 
 export function getColonyModule(name: ColonyName): GameModule {
   if (COMMUNITY_COLONIES_TILES.some((f) => f.colonyName === name)) {
@@ -70,6 +80,9 @@ export function getColonyModule(name: ColonyName): GameModule {
   }
   if (PATHFINDERS_COLONIES_TILES.some((f) => f.colonyName === name)) {
     return 'pathfinders';
+  }
+  if (name === ColonyName.MARKET_COLONIES || MERCURY_COLONIES_TILES.some((f) => f.colonyName === name)) {
+    return 'mercury';
   }
   return 'colonies';
 }

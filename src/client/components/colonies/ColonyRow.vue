@@ -1,6 +1,6 @@
 <template>
-  <div class="colony-grid-container">
-    <ColonySpace v-for="idx in [0, 1, 2, 3, 4, 5, 6]"
+  <div class="colony-grid-container" :class="{'colony-grid-wide': positions.length > 7}" :style="{gridTemplateColumns: `repeat(${positions.length}, auto)`}">
+    <ColonySpace v-for="idx in positions"
       :key="idx"
       :idx="idx"
       :metadata="metadata"
@@ -33,6 +33,14 @@ export default defineComponent({
     },
     fadeMarker: {
       type: Boolean,
+    },
+  },
+  computed: {
+    // Shadow Colonies (Mercury vs Mars) has 8 steps; Market Colonies has only its 4 colony spaces.
+    positions(): Array<number> {
+      const last = this.metadata.maxTrackPosition ?? 6;
+      const count = Math.max(last + 1, this.metadata.colonySpaces ?? 0);
+      return Array.from({length: this.metadata.name === 'Market Colonies' ? 4 : count}, (_, i) => i);
     },
   },
 });

@@ -46,6 +46,7 @@ function newGameConfig(overrides: Partial<NewGameConfig> = {}): NewGameConfig {
       venusphase2: false,
       postludes: false,
       highorbit: false,
+      mercury: false,
       industries: false,
       eternity: false,
     },

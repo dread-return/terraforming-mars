@@ -93,6 +93,12 @@ export function chooseMilestonesAndAwards(gameOptions: GameOptions): DrawnMilest
     if (gameOptions.aresExtension) {
       push(milestoneManifest.expansions['ares'], awardManifest.expansions['ares']);
     }
+    if (gameOptions.mercuryExpansion) {
+      // Mercury vs Mars: one of its milestones and one of its awards, at random. Solarist needs Pathfinders.
+      const milestones: Array<MilestoneName> = gameOptions.pathfindersExpansion ? ['Solarist', 'Opportunist', 'Starman'] : ['Opportunist', 'Starman'];
+      const awards: Array<AwardName> = ['Tycoonist', 'Daedalus', 'Colonist'];
+      push([milestones[Math.floor(Math.random() * milestones.length)]], [awards[Math.floor(Math.random() * awards.length)]]);
+    }
     if (gameOptions.moonExpansion) {
       // One MA will reward moon tags, the other will reward moon tiles.
       if (Math.random() > 0.5) {

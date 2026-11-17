@@ -40,6 +40,7 @@ const CARD_TYPES_WITHOUT_COST: ReadonlyArray<CardType> = [
   CardType.PRELUDE,
   CardType.CEO,
   CardType.STANDARD_ACTION,
+  CardType.ACT,
 ] as const;
 
 /* Properties that are the same internally and externally */

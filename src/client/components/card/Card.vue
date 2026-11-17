@@ -18,6 +18,7 @@
     <CardResourceCounter v-if="hasResourceType" :amount="resourceAmount" :type="resourceType" />
     <CardVictoryPoints v-if="cardMetadata.victoryPoints" :victoryPoints="cardMetadata.victoryPoints" />
     <CardExtraContent :card="card" />
+    <div v-if="actSteps !== undefined" class="card-act-steps" :title="actStepsTitle" data-test="act-steps">{{ actSteps }}</div>
     <slot></slot>
   </div>
 </template>
@@ -27,6 +28,7 @@
 import {defineComponent} from 'vue';
 
 import {CardModel} from '@/common/models/CardModel';
+import {translateText} from '@/client/directives/i18n';
 import CardTitle from './CardTitle.vue';
 import CardResourceCounter from './CardResourceCounter.vue';
 import CardCost from './CardCost.vue';
@@ -138,6 +140,23 @@ export default defineComponent({
     cardType(): CardType {
       return this.cardInstance.type;
     },
+    // Mercury vs Mars: the assets an Act needs, one number for a Treaty, one per player for a Rivalry.
+    actSteps(): string | undefined {
+      const act = this.cardInstance.act;
+      if (act === undefined) {
+        return undefined;
+      }
+      return act.kind === 'treaty' ? `${act.steps[0]}` : `${act.steps[0]} / ${act.steps[1]}`;
+    },
+    actStepsTitle(): string {
+      const act = this.cardInstance.act;
+      if (act === undefined) {
+        return '';
+      }
+      return act.kind === 'treaty' ?
+        translateText('Assets needed to resolve this Treaty') :
+        translateText('Assets needed to win this Rivalry: initiator / challenged player');
+    },
     cardClasses(): string {
       const classes = [];
       classes.push('card-' + this.card.name.toLowerCase().replaceAll(' ', '-'));
@@ -150,6 +169,10 @@ export default defineComponent({
 
       if (this.isStandardProject) {
         classes.push('card-standard-project');
+      }
+      // Mercury vs Mars Act cards: gold for Treaties, steel grey for Rivalries.
+      if (this.cardType === CardType.ACT) {
+        classes.push(this.cardInstance.act?.kind === 'rivalry' ? 'card-act-rivalry' : 'card-act-treaty');
       }
       if (this.autoTall) {
         classes.push('card-auto-tall');

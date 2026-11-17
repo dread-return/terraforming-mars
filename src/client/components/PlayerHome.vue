@@ -75,6 +75,13 @@
         <SortableCards v-show="isVisible('HAND')" :playerId="playerView.id" :cards="allCardsInHand" v-model:sortOrder="handSortOrder" />
       </div>
 
+      <div class="player_home_block player_home_block--hand" v-if="playerView.actCardsInHand !== undefined && playerView.actCardsInHand.length > 0" data-test="act-cards-in-hand">
+        <DynamicTitle title="Act Cards In Hand" :color="thisPlayer.color" />
+        <div v-for="card in playerView.actCardsInHand" :key="card.name" class="cardbox">
+          <Card :card="card" />
+        </div>
+      </div>
+
       <div class="player_home_block player_home_block--cards">
         <div class="hiding-card-button-row">
           <DynamicTitle title="Played Cards" :color="thisPlayer.color" />
@@ -139,7 +146,7 @@
       </div>
       <div class="player_home_colony_cont">
         <div class="player_home_colony" v-for="colony in game.colonies" :key="colony.name">
-          <Colony :colony="colony" :active="colony.isActive" />
+          <Colony :colony="colony" :active="colony.isActive" :market="game.mercury?.market" />
         </div>
       </div>
     </div>
@@ -257,7 +264,7 @@ export default defineComponent({
       return getCardsByType(this.thisPlayer.tableau, [CardType.ACTIVE, CardType.INFRASTRUCTURE]).length;
     },
     automatedTableauCount(): number {
-      return getCardsByType(this.thisPlayer.tableau, [CardType.AUTOMATED, CardType.PRELUDE]).length;
+      return getCardsByType(this.thisPlayer.tableau, [CardType.AUTOMATED, CardType.PRELUDE, CardType.ACT]).length;
     },
     eventTableauCount(): number {
       return getCardsByType(this.thisPlayer.tableau, [CardType.EVENT]).length;
@@ -268,7 +275,7 @@ export default defineComponent({
       return [...sortActiveCards(cards.filter((c) => this.isActive(c)))];
     },
     automatedTableauCards(): Array<CardModel> {
-      const cards = getCardsByType(this.thisPlayer.tableau, [CardType.AUTOMATED, CardType.PRELUDE]);
+      const cards = getCardsByType(this.thisPlayer.tableau, [CardType.AUTOMATED, CardType.PRELUDE, CardType.ACT]);
       return cards.filter((c) => this.isNotActive(c));
     },
     eventTableauCards(): Array<CardModel> {

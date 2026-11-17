@@ -10,7 +10,7 @@
 
     <!-- show the large title on top -->
     <div class="colony-card-title-div">
-      <span class="colony-card-title-span" :class="colony.name + '-title'">{{ colony.name }}</span>
+      <span class="colony-card-title-span" :class="colony.name.replaceAll(' ', '-') + '-title'">{{ colony.name }}</span>
     </div>
 
     <div class="colony-content">
@@ -61,6 +61,11 @@
       <div v-if="colony.name === ColonyName.TERRA" class="terra-colony-bonus">
         <div class="resource megacredits">1</div> / 3&nbsp;<span class="tag tag-earth red-outline" style="transform:scale(0.8);margin-top:-4px;"></span>
       </div>
+      <!-- Mercury vs Mars colonies -->
+      <template v-if="metadata.colony.type === ColonyBenefit.GAIN_ASSETS">
+        <div class="card-mercury-asset"></div>
+      </template>
+      <div v-if="metadata.colony.type === ColonyBenefit.GAIN_STANDARD_RESOURCE" class="resource wild">?</div>
       <span class="colony-background-color">
         <template v-if="colony.name !== ColonyName.TITANIA"><span v-i18n>Bonus</span></template>
         <template v-else><span v-i18n>Colony Fee</span></template>
@@ -109,12 +114,21 @@
         v-i18n>Trade Income: Erode X adjacent spaces</span>
       <span v-else-if="colony.name === ColonyName.TERRA" class="colony-background-color" style="margin-left: 3px; -webkit-text-stroke: .3px gray"
         v-i18n>Trade Income: WGT raises global parameter</span>
+      <template v-else-if="colony.name === ColonyName.MARKET_COLONIES">
+        <span class="colony-background-color" v-i18n>Trade Income: take up to 3 of one kind (+1 per trade boost)</span>
+        <br>
+        <span class="mercury-colony-text" data-test="market-stock">
+          <span v-i18n>Microbes</span> {{ marketCount('microbe') }} · <span v-i18n>Floaters</span> {{ marketCount('floater') }} · <span v-i18n>Data</span> {{ marketCount('data') }} · <span v-i18n>Other</span> {{ marketCount('other') }}
+        </span>
+      </template>
+      <span v-else-if="colony.name === ColonyName.SHADOW_COLONIES" class="colony-background-color" v-i18n>Trade Income: assets</span>
+      <span v-else-if="colony.name === ColonyName.ASTEROID_BELT" class="colony-background-color" v-i18n>Trade Income (see the tooltip)</span>
       <span v-else class="colony-background-color" v-i18n>Trade Income</span>
 
       <!-- Show the spaces for the player cubes and the white cube -->
       <ColonyRow :metadata="metadata" :colony="colony" :fadeMarker="fadeMarker" />
-      <!-- show the numbers underneath the colony row -->
-      <ColonyTradeRow :metadata="metadata" />
+      <!-- show the numbers underneath the colony row (Market Colonies has no track) -->
+      <ColonyTradeRow v-if="colony.name !== ColonyName.MARKET_COLONIES" :metadata="metadata" />
     </div>
     <!-- </div> -->
   </div>
@@ -134,6 +148,7 @@ import {getColonyOrThrow} from '@/client/colonies/ClientColonyManifest';
 import {ColonyBenefit} from '@/common/colonies/ColonyBenefit';
 import {Resource} from '@/common/Resource';
 import {translateText} from '@/client/directives/i18n';
+import {MarketResource} from '@/common/mercury/Mercury';
 
 export default defineComponent({
   name: 'Colony',
@@ -141,6 +156,11 @@ export default defineComponent({
     colony: {
       type: Object as () => ColonyModel,
       required: true,
+    },
+    // Mercury vs Mars: the resources on Market Colonies.
+    market: {
+      type: Object as () => Record<MarketResource, number> | undefined,
+      default: undefined,
     },
     active: {
       type: Boolean,
@@ -167,7 +187,7 @@ export default defineComponent({
       return this.active === false ? 'inactiveColony' : '';
     },
     backgroundClass(): string {
-      return this.colony.name.replace(' ', '-') + '-background';
+      return this.colony.name.replaceAll(' ', '-') + '-background';
     },
     tooltip(): string {
       const descriptions = [this.metadata.build, this.metadata.trade, this.metadata.colony].map((b) => b.description);
@@ -185,6 +205,11 @@ ${titles[2]}: ${translateText(descriptions[2])}`;
     },
     Resource(): typeof Resource {
       return Resource;
+    },
+  },
+  methods: {
+    marketCount(column: MarketResource): number {
+      return this.market?.[column] ?? 0;
     },
   },
 });

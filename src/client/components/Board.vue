@@ -20,6 +20,8 @@
       <BoardSpace v-if="hasSpace(SpaceName.VENERA_BASE)" :space="getSpace(SpaceName.VENERA_BASE)" text="Venera Base" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.SIDERALIS)" :space="getSpace(SpaceName.SIDERALIS)" text="Sideralis" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.MAIN_DOCKING_STATION)" :space="getSpace(SpaceName.MAIN_DOCKING_STATION)" text="Main Docking Station" :tileView="tileView" />
+      <BoardSpace v-if="hasSpace(SpaceName.NEW_POMPEII)" :space="getSpace(SpaceName.NEW_POMPEII)" text="New Pompeii (Mercury)" :tileView="tileView" />
+      <BoardSpace v-if="hasSpace(SpaceName.SHADOW_FOREST)" :space="getSpace(SpaceName.SHADOW_FOREST)" text="Shadow Forest (Mercury)" :tileView="tileView" />
     </div>
 
     <div class="global-numbers" :class="{'global-numbers--large': isLargeBoard, 'global-numbers--venus2': venusPhase2Track}">

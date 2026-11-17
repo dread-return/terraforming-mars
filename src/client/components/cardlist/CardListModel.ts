@@ -50,6 +50,7 @@ const MODULE_ABBREVIATIONS = {
   industries: 'Ind',
   postludes: 'Po',
   highorbit: 'Ho',
+  mercury: 'M',
 } satisfies Record<GameModule, string>;
 
 const TYPE_ABBREVIATIONS = {
@@ -63,6 +64,7 @@ const TYPE_ABBREVIATIONS = {
   [CardType.STANDARD_ACTION]: 'S',
   [CardType.PROXY]: '*',
   [CardType.INFRASTRUCTURE]: 'i',
+  [CardType.ACT]: 'A',
   colonyTiles: 'C',
   globalEvents: 'e',
   milestones: 'm',
@@ -125,6 +127,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       industries: true,
       postludes: true,
       highorbit: true,
+      mercury: true,
     },
     types: {
       event: true,
@@ -142,6 +145,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       awards: true,
       ceo: true,
       agendas: true,
+      act: true,
     },
     tags: {
       building: true,

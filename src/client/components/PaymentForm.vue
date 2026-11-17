@@ -67,6 +67,7 @@ const DESCRIPTIONS: Record<SpendableResource, string> = {
   seeds: 'Seeds',
   auroraiData: 'Data',
   kuiperAsteroids: 'Asteroids',
+  hephaestusAsteroids: 'Asteroids',
   spireScience: 'Science',
   megacredits: 'M€',
   floaters: 'Floaters',

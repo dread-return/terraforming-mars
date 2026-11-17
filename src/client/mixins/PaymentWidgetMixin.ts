@@ -135,6 +135,7 @@ export const PaymentWidgetMixin = defineComponent({
         auroraiData: this.playerinput.auroraiData,
         graphene: this.playerinput.graphene,
         kuiperAsteroids: this.playerinput.kuiperAsteroids,
+        hephaestusAsteroids: this.playerinput.type === 'projectCard' ? this.playerinput.hephaestusAsteroids : 0,
         propellantOre: this.playerinput.propellantOre,
         shipyardOre: this.playerinput.shipyardOre,
       };

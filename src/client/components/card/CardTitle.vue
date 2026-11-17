@@ -15,6 +15,7 @@ import {CardType} from '@/common/cards/CardType';
 import CardCorporationLogo from '@/client/components/card/CardCorporationLogo.vue';
 import {CardName} from '@/common/cards/CardName';
 import {fitTextWhenReady} from '@/client/utils/textFit';
+import {getCard} from '@/client/cards/ClientCardManifest';
 
 type Refs = {
   // Only rendered for non-corporation cards (corporations show a logo instead).
@@ -75,6 +76,8 @@ export default defineComponent({
         return 'background-color-standard-project';
       case CardType.INFRASTRUCTURE:
         return 'background-color-infrastructure';
+      case CardType.ACT:
+        return getCard(this.title)?.act?.kind === 'rivalry' ? 'background-color-act-rivalry' : 'background-color-act-treaty';
       default:
         return undefined;
       }

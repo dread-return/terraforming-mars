@@ -1,7 +1,7 @@
 import {IColony} from './IColony';
 import {ColonyName} from '../../common/colonies/ColonyName';
 import {Random} from '../../common/utils/Random';
-import {ALL_COLONIES_TILES, BASE_COLONIES_TILES, COMMUNITY_COLONIES_TILES, PATHFINDERS_COLONIES_TILES} from './ColonyManifest';
+import {ALL_COLONIES_TILES, BASE_COLONIES_TILES, COMMUNITY_COLONIES_TILES, MERCURY_COLONIES_TILES, PATHFINDERS_COLONIES_TILES} from './ColonyManifest';
 import {GameOptions} from '../game/GameOptions';
 import {comparing} from '../../common/utils/Ordering';
 import {toName} from '../../common/utils/utils';
@@ -28,6 +28,10 @@ export class ColonyDealer {
     if (gameOptions.moonExpansion && !this.gameOptions.pathfindersExpansion) {
       // Leavitt II isn't built yet but this is pre-emptive
       colonyTiles.filter((c) => c.colonyName !== ColonyName.LEAVITT_II);
+    }
+    // Mercury vs Mars: Shadow Colonies and The Asteroid Belt join the random colonies.
+    if (gameOptions.mercuryExpansion) {
+      colonyTiles = colonyTiles.concat(MERCURY_COLONIES_TILES);
     }
     if (!gameOptions.venusNextExtension) {
       colonyTiles = colonyTiles.filter((c) => c.colonyName !== ColonyName.VENUS);
@@ -62,7 +66,7 @@ export class ColonyDealer {
     const customColonies = this.gameOptions.customColoniesList;
     let colonies = this.gameColonies;
     if (customColonies.length > 0) {
-      colonies = ALL_COLONIES_TILES.filter((c) => customColonies.includes(c.colonyName)).map((cf) => new cf.Factory());
+      colonies = ALL_COLONIES_TILES.filter((c) => customColonies.includes(c.colonyName) && c.colonyName !== ColonyName.MARKET_COLONIES).map((cf) => new cf.Factory());
     }
 
     const count = (players + 2) +

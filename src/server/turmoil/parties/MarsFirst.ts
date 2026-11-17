@@ -22,10 +22,12 @@ export class MarsFirst extends Party implements IParty {
 
 class MarsFirstBonus01 extends Bonus {
   readonly id = 'mb01' as const;
-  readonly description = 'Gain 1 M€ for each building tag you have';
+  readonly description = 'Gain 1 M€ for each building tag you have (and each Mars tag, with Mercury vs Mars)';
 
   getScore(player: IPlayer) {
-    return player.tags.count(Tag.BUILDING, 'raw');
+    // Mercury vs Mars Turmoil overlay: Mars First also supports Mars tags.
+    const mars = player.game.gameOptions.mercuryExpansion ? player.tags.count(Tag.MARS, 'raw') : 0;
+    return player.tags.count(Tag.BUILDING, 'raw') + mars;
   }
 
   grantForPlayer(player: IPlayer): void {

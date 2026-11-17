@@ -55,6 +55,8 @@ export type SelectProjectCardToPlayModel = BaseInputModel & {
   seeds: number;
   graphene: number;
   kuiperAsteroids: number;
+  /** Mercury vs Mars: asteroids on Hephaestus Nets (6 M€ each for Mars and Venus cards). */
+  hephaestusAsteroids: number;
   /** High Orbit: ore on Propellant Depot (2 M€ each for Venus, Moon and Jovian cards). */
   propellantOre: number;
   /** High Orbit: ore on Orbital Shipyard (3 M€ each for the Build Colony standard project). */

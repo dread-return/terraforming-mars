@@ -51,7 +51,7 @@
       </div>
       <div class="player_home_colony_cont">
         <div class="player_home_colony" v-for="colony in spectator.game.colonies" :key="colony.name">
-          <Colony :colony="colony" :active="colony.isActive" />
+          <Colony :colony="colony" :active="colony.isActive" :market="game.mercury?.market" />
         </div>
       </div>
     </div>

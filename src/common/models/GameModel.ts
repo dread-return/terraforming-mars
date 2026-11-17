@@ -14,6 +14,7 @@ import {SpectatorId} from '../Types';
 import {ColonyName} from '../colonies/ColonyName';
 import {GlobalParameter} from '../GlobalParameter';
 import {Tag} from '../cards/Tag';
+import {MercuryModel} from '../mercury/Mercury';
 
 export type DeckSizeModel = {
   drawPile: number;
@@ -35,6 +36,8 @@ export type GameModel = {
   colonies: ReadonlyArray<ColonyModel>;
   // Nuclear (GIGA) contamination track; undefined when Nuclear is not in the game.
   contamination: number | undefined;
+  /** Mercury vs Mars: Acts in development, the Mercury track and Market Colonies. Absent without it. */
+  mercury?: MercuryModel;
   discardedColonies: ReadonlyArray<ColonyName>;
   deckSize: number;
   discardPileSize: number;

@@ -1,4 +1,5 @@
 import {highOrbitStandardProjectPayWith} from '../highOrbit/HighOrbitPayWith';
+import {mercuryStandardProjectPayWith} from '../mercury/MercuryCards';
 import {Postludes} from '../postludes/Postludes';
 import {CardType} from '../../common/cards/CardType';
 import {GigaHooks} from '../turmoil/giga/GigaHooks';
@@ -95,7 +96,7 @@ export abstract class StandardProjectCard extends Card implements IStandardProje
 
   /** What this standard project accepts as payment, counting Eternity and postlude effects. */
   private allCanPayWith(player: IPlayer): StandardProjectCanPayWith {
-    return highOrbitStandardProjectPayWith(player, this, Postludes.standardProjectPayWith(player, this, Eternity.standardProjectPayWith(player, this, this.canPayWith(player))));
+    return mercuryStandardProjectPayWith(player, this, highOrbitStandardProjectPayWith(player, this, Postludes.standardProjectPayWith(player, this, Eternity.standardProjectPayWith(player, this, this.canPayWith(player)))));
   }
 
   /**

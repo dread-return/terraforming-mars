@@ -7,6 +7,8 @@ type MAManifestSpec<V> = {
   Factory: new () => V;
   /** If set, the module this MA needs to function. */
   compatibility?: Expansion;
+  /** A second module this MA needs (Solarist needs Mercury vs Mars and Pathfinders). */
+  alsoNeeds?: Expansion;
   /** When true, do not include in any new games when picking randomly. */
   deprecated?: true;
   /** Drawn in modular games, both types, or (undefined) only non-modular games. */
@@ -28,8 +30,10 @@ export type MAManifest<K extends string, V> = {
 }
 
 export function isCompatible<T extends string>(name: T, manifest: MAManifest<T, any>, gameOptions: GameOptions) {
+  const spec = manifest.all[name];
+  const needed = [spec.compatibility, spec.alsoNeeds].filter((e) => e !== undefined);
   for (const expansion of EXPANSIONS) {
-    if (manifest.all[name].compatibility === expansion) {
+    if (needed.includes(expansion)) {
       if (gameOptions.expansions[expansion] !== true) {
         return false;
       }

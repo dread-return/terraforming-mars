@@ -1,5 +1,6 @@
 import {PostludesState} from './postludes/Postludes';
 import {HighOrbitState} from './highOrbit/HighOrbit';
+import {MercuryState} from './mercury/Mercury';
 import {MarsBoard} from './boards/MarsBoard';
 import {CardName} from '../common/cards/CardName';
 import {ClaimedMilestone} from './milestones/ClaimedMilestone';
@@ -92,6 +93,8 @@ export interface IGame extends Logger {
   postludes: PostludesState | undefined;
   /** High Orbit: the six infrastructure stacks and this generation's cubes. Undefined when High Orbit is not in the game. */
   highOrbit: HighOrbitState | undefined;
+  /** Mercury vs Mars: Act cards, assets, the Mercury track and Market Colonies. */
+  mercury: MercuryState | undefined;
   corporationDeck: CorporationDeck;
   board: MarsBoard;
   activePlayer: IPlayer;

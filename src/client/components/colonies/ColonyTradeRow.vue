@@ -1,5 +1,5 @@
 <template>
-  <div class="colony-grid-container2"><!--  style="margin-top:55px;"  if VENUS -->
+  <div class="colony-grid-container2" :class="{'colony-grid-wide': (metadata.maxTrackPosition ?? 6) > 6, 'asteroid-belt-trade': metadata.name === ColonyName.ASTEROID_BELT}" :style="{gridTemplateColumns: `repeat(${(metadata.maxTrackPosition ?? 6) + 1}, auto)`}"><!--  style="margin-top:55px;"  if VENUS -->
     <template v-if="metadata.name === ColonyName.MERCURY">
       <div><div class="production-box mercury-production-box"><div class="production heat"></div></div></div>
       <div><div class="production-box mercury-production-box"><div class="production heat"></div></div></div>
@@ -65,7 +65,16 @@
       </div>
 
     </template>
-    <template v-else v-for="idx in range(7)" :key="idx">
+    <template v-else-if="metadata.name === ColonyName.ASTEROID_BELT">
+      <div><div class="resource wild">?</div></div>
+      <div><div class="resource wild">2?</div></div>
+      <div><div class="production-box"><div class="production steel"></div></div></div>
+      <div><div class="resource asteroid"></div></div>
+      <div><div class="resource asteroid"></div><div class="resource titanium"></div></div>
+      <div><div class="resource asteroid"></div><div class="resource wild">*</div></div>
+      <div><div class="resource asteroid"></div><div class="resource asteroid"></div><div class="resource wild">*</div></div>
+    </template>
+    <template v-else v-for="idx in range((metadata.maxTrackPosition ?? 6) + 1)" :key="idx">
       <div>{{ metadata.trade.quantity[idx] }}</div>
     </template>
   </div>

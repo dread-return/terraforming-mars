@@ -104,6 +104,7 @@ export default defineComponent({
         'seeds',
         'graphene',
         'kuiperAsteroids',
+        'hephaestusAsteroids',
         'propellantOre',
         'shipyardOre',
         'auroraiData',
@@ -246,6 +247,7 @@ export default defineComponent({
         case 'lunaArchivesScience':
         case 'graphene':
         case 'propellantOre':
+        case 'hephaestusAsteroids':
           return false;
         default: throw new Error('Unknown unit ' + unit);
         }
@@ -280,6 +282,9 @@ export default defineComponent({
         // High Orbit: Propellant Depot ore pays for cards with a planetary tag.
         case 'propellantOre':
           return PLANETARY_TAGS.some((tag) => this.tags.includes(tag));
+        // Mercury vs Mars: Hephaestus Nets asteroids pay for Mars and Venus cards.
+        case 'hephaestusAsteroids':
+          return this.tags.includes(Tag.MARS) || this.tags.includes(Tag.VENUS);
         case 'shipyardOre':
         case 'kuiperAsteroids':
         case 'auroraiData':

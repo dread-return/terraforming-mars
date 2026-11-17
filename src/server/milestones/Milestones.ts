@@ -75,6 +75,9 @@ import {GCapitalist} from './giga/GCapitalist';
 import {GCollector} from './giga/GCollector';
 import {Inflater} from './giga/Inflater';
 import {Oxygenator} from './giga/Oxygenator';
+import {Solarist} from './mercury/Solarist';
+import {Opportunist} from './mercury/Opportunist';
+import {Starman} from './mercury/Starman';
 
 export const milestoneManifest: MAManifest<MilestoneName, IMilestone> = {
   all: {
@@ -121,6 +124,9 @@ export const milestoneManifest: MAManifest<MilestoneName, IMilestone> = {
     'Networker': {Factory: Networker, compatibility: 'ares'},
     'One Giant Step': {Factory: OneGiantStep, compatibility: 'moon'},
     'Oxygenator': {Factory: Oxygenator, fan: true},
+    'Solarist': {Factory: Solarist, compatibility: 'mercury', alsoNeeds: 'pathfinders'},
+    'Opportunist': {Factory: Opportunist, compatibility: 'mercury'},
+    'Starman': {Factory: Starman, compatibility: 'mercury'},
     'Philantropist': {Factory: Philantropist, random: 'modular'},
     'Pioneer': {Factory: Pioneer, compatibility: 'colonies', random: 'both'},
     'Planetologist': {Factory: Planetologist, compatibility: 'venus', random: 'modular'},

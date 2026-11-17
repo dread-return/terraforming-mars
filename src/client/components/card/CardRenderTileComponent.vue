@@ -231,6 +231,9 @@ const TILE_CLASSES: Record<TileType, Classes> = {
   [TileType.WILDERNESS]: {
     tile: 'card-tile-wilderness',
   },
+  [TileType.BOREHOLES]: {
+    tile: 'card-tile-boreholes',
+  },
 };
 
 export default defineComponent({

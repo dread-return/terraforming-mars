@@ -121,7 +121,7 @@ export const IDES_OF_MARS_CARD_MANIFEST = new ModuleManifest({
     [CardName.WATER_CLEANING_BACTERIA]: {Factory: WaterCleaningBacteria},
     [CardName.OVERCONSUMPTION_BENEFITS]: {Factory: OverconsumptionBenefits},
     // Held out of the deck until the GIGA Mercury module is added (Leo, 2026-11-08).
-    [CardName.MERCURIAL_LABORATORY]: {Factory: MercurialLaboratory, instantiate: false},
+    [CardName.MERCURIAL_LABORATORY]: {Factory: MercurialLaboratory, compatibility: 'mercury'},
     [CardName.IN_VIVO_TESTING]: {Factory: InVivoTesting},
     [CardName.WATER_RETAINERS]: {Factory: WaterRetainers},
     [CardName.SLUM]: {Factory: Slum},

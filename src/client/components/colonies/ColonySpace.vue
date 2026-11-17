@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BuildBenefit v-if="idx <= 2" :metadata="metadata" :idx="idx" />
+    <BuildBenefit v-if="idx <= lastColonySpace" :metadata="metadata" :idx="idx" />
     <div v-if="player !== undefined" class="occupied-colony-space">
       <div :class="`board-cube colony-cube board-cube--${player}`"></div>
     </div>
@@ -42,6 +42,10 @@ export default defineComponent({
   computed: {
     ColonyName(): typeof ColonyName {
       return ColonyName;
+    },
+    // Mercury vs Mars colonies have a reserved 4th colony space.
+    lastColonySpace(): number {
+      return (this.metadata.colonySpaces ?? 3) - 1;
     },
   },
 });

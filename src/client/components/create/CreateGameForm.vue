@@ -234,6 +234,12 @@
                 <div class="create-game-expansion-icon expansion-icon-eternity"></div>
                 <span v-i18n>Eternity</span><span></span>&nbsp;<a :href="wikiUrls.eternity" class="tooltip" v-i18n data-tooltip="Link opens in a new tab/window" target="_blank">&#9432;</a>
               </label>
+
+              <input type="checkbox" name="mercury" id="mercury-checkbox" v-model="expansions.mercury">
+              <label for="mercury-checkbox" class="expansion-button">
+                <div class="create-game-expansion-icon expansion-icon-mercury"></div>
+                <span v-i18n>Mercury vs Mars</span><span></span>&nbsp;<span class="tooltip" v-i18n data-tooltip="Fan expansion: the Mercury board (Market Colonies, Mercury track), Act cards (Treaties and Rivalries) developed with assets, 40 project cards, 4 corporations and 4 preludes. Needs Colonies and Turmoil, which are ticked with it.">&#9432;</span>
+              </label>
             </div>
           </div>
 
@@ -782,6 +788,21 @@ export default defineComponent({
       if (value === false) {
         this.politicalAgendasExtension = 'Standard';
         this.gigaTurmoil = false;
+        // Mercury vs Mars needs Turmoil.
+        this.expansions.mercury = false;
+      }
+    },
+    'expansions.colonies': function(value: boolean) {
+      // Mercury vs Mars needs Colonies.
+      if (value === false) {
+        this.expansions.mercury = false;
+      }
+    },
+    'expansions.mercury': function(value: boolean) {
+      // Mercury vs Mars needs Colonies and Turmoil.
+      if (value === true) {
+        this.expansions.colonies = true;
+        this.expansions.turmoil = true;
       }
     },
     gigaTurmoil(value: boolean) {

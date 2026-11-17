@@ -43,6 +43,8 @@
 
   <IndividualTracksBoard v-if="game.gameOptions.individualTracks" :players="players" />
 
+  <MercuryBoard v-if="game.mercury !== undefined" :model="game.mercury" />
+
   <div v-if="players.length > 1" class="player_home_block--milestones-and-awards">
     <a class="hotkey-target"></a>
     <Milestones :milestones="game.milestones" />
@@ -59,6 +61,7 @@ import {SpaceId} from '@/common/Types';
 import Board from '@/client/components/Board.vue';
 import DeltaProjectBoard from '@/client/components/delta/DeltaProjectBoard.vue';
 import IndividualTracksBoard from '@/client/components/individualTracks/IndividualTracksBoard.vue';
+import MercuryBoard from '@/client/components/mercury/MercuryBoard.vue';
 import ContaminationTrack from '@/client/components/nuclear/ContaminationTrack.vue';
 import Milestones from '@/client/components/Milestones.vue';
 import Awards from '@/client/components/Awards.vue';
@@ -91,6 +94,7 @@ export default defineComponent({
     ContaminationTrack,
     DeltaProjectBoard,
     IndividualTracksBoard,
+    MercuryBoard,
     Milestones,
     Awards,
     Turmoil,

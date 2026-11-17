@@ -46,6 +46,9 @@ const NOT_DISPLAYED: ReadonlyArray<CardName> = [
   CardName.CASH_CO,
   // Eternity: Greeting Card's discount only applies to the card it revealed, this generation.
   CardName.GREETING_CARD,
+  // Mercury vs Mars: one discount for several tags (or for placing a colony), not per tag.
+  CardName.BIOCOMPUTERS,
+  CardName.GANYMEDIAN_ALLIANCE,
 ];
 
 describe('customDiscounts', () => {

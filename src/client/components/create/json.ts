@@ -31,3 +31,4 @@ export const ETERNITY_EXPANSION = 'eternityExpansion';
 export const INDUSTRIES_EXPANSION = 'industriesExpansion';
 export const POSTLUDES_EXPANSION = 'postludesExpansion';
 export const HIGH_ORBIT_EXPANSION = 'highOrbitExpansion';
+export const MERCURY_EXPANSION = 'mercuryExpansion';

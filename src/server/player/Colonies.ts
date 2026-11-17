@@ -19,6 +19,7 @@ import {Payment} from '../../common/inputs/Payment';
 import {TradeWithHecateSpeditions} from '../cards/underworld/HecateSpeditions';
 import {ColonyName} from '../../../src/common/colonies/ColonyName';
 import {Eternity} from '../cards/eternity/Eternity';
+import {Mercury} from '../mercury/Mercury';
 
 export class Colonies {
   private player: IPlayer;
@@ -65,6 +66,7 @@ export class Colonies {
       new TradeWithCollegiumCopernicus(player),
       new TradeWithHecateSpeditions(player),
       ...Eternity.colonyTraders(player),
+      ...Mercury.colonyTraders(player),
       new TradeWithEnergy(player),
       new TradeWithTitanium(player),
       new TradeWithMegacredits(player),

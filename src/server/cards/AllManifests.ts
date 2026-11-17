@@ -1,5 +1,6 @@
 import {POSTLUDES_CARD_MANIFEST} from './postludes/PostludesCardManifest';
 import {HIGH_ORBIT_CARD_MANIFEST} from './highorbit/HighOrbitCardManifest';
+import {MERCURY_CARD_MANIFEST} from './mercury/MercuryCardManifest';
 import {ARES_CARD_MANIFEST} from './ares/AresCardManifest';
 import {ModuleManifest} from './ModuleManifest';
 import {COLONIES_CARD_MANIFEST} from './colonies/ColoniesCardManifest';
@@ -57,4 +58,5 @@ export const ALL_MODULE_MANIFESTS: Array<ModuleManifest> = [
   DELTA_PROJECT_CARD_MANIFEST,
   POSTLUDES_CARD_MANIFEST,
   HIGH_ORBIT_CARD_MANIFEST,
+  MERCURY_CARD_MANIFEST,
 ];

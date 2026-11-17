@@ -77,6 +77,10 @@ export const CardRenderItemType = {
   CORRUPTION_SHIELD: 'corruptive-block',
   GEOSCAN_ICON: 'geoscan-icon',
   UNDERGROUND_SHELTERS: 'underground-shelters',
+
+  // Mercury vs Mars
+  ASSET: 'asset',
+  ACT_CARD: 'act-card',
 } as const;
 
 export type CardRenderItemType = typeof CardRenderItemType[keyof typeof CardRenderItemType];

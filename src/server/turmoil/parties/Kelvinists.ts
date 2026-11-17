@@ -2,6 +2,7 @@ import {IParty} from './IParty';
 import {Party} from './Party';
 import {PartyName} from '../../../common/turmoil/PartyName';
 import {Resource} from '../../../common/Resource';
+import {Tag} from '../../../common/cards/Tag';
 import {Bonus} from '../Bonus';
 import {IPolicy} from '../Policy';
 import {IPlayer} from '../../IPlayer';
@@ -20,10 +21,12 @@ export class Kelvinists extends Party implements IParty {
 
 class KelvinistsBonus01 extends Bonus {
   readonly id = 'kb01' as const;
-  readonly description = 'Gain 1 M€ for each heat production you have';
+  readonly description = 'Gain 1 M€ for each heat production you have (and each Mercury tag, with Mercury vs Mars)';
 
   getScore(player: IPlayer) {
-    return player.production.heat;
+    // Mercury vs Mars Turmoil overlay: Kelvinists also support Mercury tags.
+    const mercury = player.game.gameOptions.mercuryExpansion ? player.tags.count(Tag.MERCURY, 'raw') : 0;
+    return player.production.heat + mercury;
   }
 
   grantForPlayer(player: IPlayer): void {

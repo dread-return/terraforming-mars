@@ -89,6 +89,9 @@ import {Turmoil} from './turmoil/Turmoil';
 import {IdesOfMars} from './cards/idesofmars/IdesOfMars';
 import {Nuclear} from './cards/nuclear/Nuclear';
 import {Eternity} from './cards/eternity/Eternity';
+import {Mercury} from './mercury/Mercury';
+import {mercuryCanUseSteel} from './mercury/MercuryCards';
+import {IActCard, isActCard} from './mercury/ActCard';
 
 const THROW_STATE_ERRORS = Boolean(process.env.THROW_STATE_ERRORS);
 const DEFAULT_GLOBAL_PARAMETER_STEPS = {
@@ -146,6 +149,7 @@ export class Player implements IPlayer {
   public dealtProjectCards: Array<IProjectCard> = [];
   public cardsInHand: Array<IProjectCard> = [];
   public preludeCardsInHand: Array<IPreludeCard> = [];
+  public actCardsInHand: Array<IActCard> = [];
   public ceoCardsInHand: Set<ICeoCard> = new Set();
   public playedCards: PlayedCards = new PlayedCards();
   public draftedCards: Array<IProjectCard> = [];
@@ -827,7 +831,7 @@ export class Player implements IPlayer {
     return {
       heat: this.canUseHeatAsMegaCredits,
       energy: this.canUseEnergyAsMegaCredits,
-      steel: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card) || Eternity.canUseSteel(this, card),
+      steel: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card) || Eternity.canUseSteel(this, card) || mercuryCanUseSteel(this, card),
       plants: card.tags.includes(Tag.BUILDING) && this.playedCards.has(CardName.MARTIAN_LUMBER_CORP),
       titanium: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.SPACE) || Nuclear.canUseTitanium(this, card) || Eternity.canUseTitanium(this, card),
       lunaTradeFederationTitanium: this.canUseTitaniumAsMegacredits,
@@ -841,6 +845,7 @@ export class Player implements IPlayer {
       kuiperAsteroids: card.name === CardName.AQUIFER_STANDARD_PROJECT || card.name === CardName.ASTEROID_STANDARD_PROJECT,
       propellantOre: HighOrbit.canPayWithPropellantOre(card),
       shipyardOre: false,
+      hephaestusAsteroids: card.tags.includes(Tag.MARS) || card.tags.includes(Tag.VENUS),
     };
   }
 
@@ -1069,6 +1074,7 @@ export class Player implements IPlayer {
     }
 
     PathfindersExpansion.onCardPlayed(this, card);
+    Mercury.onCardPlayed(this, card);
     Nuclear.onCardPlayed(this, card);
     Eternity.onCardPlayed(this, card);
   }
@@ -1487,6 +1493,7 @@ export class Player implements IPlayer {
       kuiperAsteroids: options?.kuiperAsteroids ?? false,
       propellantOre: options?.propellantOre ?? false,
       shipyardOre: options?.shipyardOre ?? false,
+      hephaestusAsteroids: options?.hephaestusAsteroids ?? false,
     };
 
     // HOOK: Luna Trade Federation
@@ -1626,6 +1633,13 @@ export class Player implements IPlayer {
           return;
         } else {
           game.phase = Phase.ACTION;
+        }
+
+        // Mercury vs Mars: the Negotiations phase, right before a player's first action of the generation.
+        const negotiations = Mercury.negotiations(this);
+        if (negotiations !== undefined) {
+          this.setWaitingFor(negotiations, () => game.drainQueue(() => this.takeAction()));
+          return;
         }
 
         if (game.hasPassedThisActionPhase(this) || (this.allOtherPlayersHavePassed() === false && this.actionsTakenThisRound >= this.availableActionsThisRound)) {
@@ -1777,6 +1791,12 @@ export class Player implements IPlayer {
     const coloniesTradeAction = this.colonies.coloniesTradeAction();
     if (coloniesTradeAction !== undefined) {
       action.options.push(coloniesTradeAction);
+    }
+
+    // Mercury vs Mars: develop an Act.
+    const developAct = Mercury.developAction(this);
+    if (developAct !== undefined) {
+      action.options.push(developAct);
     }
 
     // Add delegates
@@ -1985,6 +2005,7 @@ export class Player implements IPlayer {
       dealtProjectCards: this.dealtProjectCards.map(toName),
       cardsInHand: this.cardsInHand.map(toName),
       preludeCardsInHand: this.preludeCardsInHand.map(toName),
+      actCardsInHand: this.actCardsInHand.length > 0 ? this.actCardsInHand.map(toName) : undefined,
       ceoCardsInHand: Array.from(this.ceoCardsInHand).map(toName),
       playedCards: this.playedCards.serialize(),
       draftedCards: this.draftedCards.map(toName),
@@ -2113,6 +2134,7 @@ export class Player implements IPlayer {
     player.cardsInHand = cardsFromJSON(d.cardsInHand);
     // I don't like "as IPreludeCard" but this is pretty safe.
     player.preludeCardsInHand = cardsFromJSON(d.preludeCardsInHand) as Array<IPreludeCard>;
+    player.actCardsInHand = cardsFromJSON(d.actCardsInHand ?? []).filter(isActCard);
     player.ceoCardsInHand = new Set(ceosFromJSON(d.ceoCardsInHand));
     player.playedCards.deserialize(d.playedCards);
     player.draftedCards = cardsFromJSON(d.draftedCards);

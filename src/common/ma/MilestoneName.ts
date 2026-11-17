@@ -105,6 +105,10 @@ export const milestoneNames = [
   'G. Collector',
   'Inflater',
   'Oxygenator',
+  // Mercury vs Mars
+  'Solarist',
+  'Opportunist',
+  'Starman',
 ] as const;
 
 export type MilestoneName = typeof milestoneNames[number];

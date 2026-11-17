@@ -276,6 +276,10 @@ export default defineComponent({
         return ['card-geoscan-icon'];
       case CardRenderItemType.UNDERGROUND_SHELTERS:
         return ['card-underground-shelters'];
+      case CardRenderItemType.ASSET:
+        return ['card-mercury-asset'];
+      case CardRenderItemType.ACT_CARD:
+        return ['card-mercury-act'];
       default:
         return [];
       }

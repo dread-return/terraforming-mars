@@ -1,3 +1,4 @@
+import {IActCard} from './mercury/ActCard';
 import {PlayerId, isPlayerId} from '../common/Types';
 import {CardName} from '../common/cards/CardName';
 import {ICorporationCard} from './cards/corporation/ICorporationCard';
@@ -116,6 +117,8 @@ export interface IPlayer {
   dealtProjectCards: Array<IProjectCard>;
   cardsInHand: Array<IProjectCard>;
   preludeCardsInHand: Array<IPreludeCard>;
+  /** Mercury vs Mars: Act cards in hand. */
+  actCardsInHand: Array<IActCard>;
   ceoCardsInHand: Set<ICeoCard>;
   playedCards: PlayedCards;
   cardCost: number;

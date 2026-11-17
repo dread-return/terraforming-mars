@@ -35,6 +35,9 @@ import {DOMES_WILDERNESS_CARD_MANIFEST} from './cards/domeswilderness/DomesWilde
 import {INDUSTRIES_CARD_MANIFEST} from './cards/industries/IndustriesCardManifest';
 import {POSTLUDES_CARD_MANIFEST} from './cards/postludes/PostludesCardManifest';
 import {HIGH_ORBIT_CARD_MANIFEST} from './cards/highorbit/HighOrbitCardManifest';
+import {MERCURY_CARD_MANIFEST} from './cards/mercury/MercuryCardManifest';
+import {IActCard, isActCard} from './mercury/ActCard';
+import {HELD_OUT_ACTS} from '../common/mercury/MercuryCards';
 import {HELD_OUT_POSTLUDES, HIGH_ORBIT_POSTLUDES, isPostludeName} from '../common/postludes/Postludes';
 
 /**
@@ -83,6 +86,7 @@ export class GameCards {
       [gameOptions.domesWilderness, DOMES_WILDERNESS_CARD_MANIFEST],
       [gameOptions.postludesExpansion, POSTLUDES_CARD_MANIFEST],
       [gameOptions.highOrbitExpansion, HIGH_ORBIT_CARD_MANIFEST],
+      [gameOptions.mercuryExpansion, MERCURY_CARD_MANIFEST],
     ];
 
     this.moduleManifests = manifests
@@ -106,6 +110,16 @@ export class GameCards {
     }
     // Postludes have their own deck.
     return cards.filter(isIProjectCard).filter((card) => !isPostludeName(card.name));
+  }
+
+  /** Mercury vs Mars: the Act cards. They have their own deck, and are never project cards. */
+  public getActCards(): Array<IActCard> {
+    if (!this.gameOptions.mercuryExpansion) {
+      return [];
+    }
+    return this.getCards<IProjectCard>('projectCards')
+      .filter(isActCard)
+      .filter((card) => !HELD_OUT_ACTS.has(card.name));
   }
 
   /** The postludes that are dealt in this game. Empty when Postludes are not in the game. */

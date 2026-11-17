@@ -136,6 +136,13 @@
       </div>
       <br>
     </section>
+    <section v-show="visibleActCards.length > 0" class="card-list-cards-list" data-test="act-cards">
+      <h2 v-i18n>Act cards</h2>
+      <div class="cardbox" v-for="card in visibleActCards" :key="card" v-memo="[card, tallCards]">
+        <Card :card="{'name': card}" :autoTall="tallCards" />
+      </div>
+      <br>
+    </section>
     <section v-show="visibleStandardProjectCards.length > 0" class="card-list-cards-list">
       <h2 v-i18n>Standard Projects</h2>
       <div class="cardbox" v-for="card in visibleStandardProjectCards" :key="card" v-memo="[card, tallCards]">
@@ -290,6 +297,7 @@ export default defineComponent({
         CardType.STANDARD_PROJECT,
         CardType.CEO,
         CardType.INFRASTRUCTURE,
+        CardType.ACT,
         'colonyTiles',
         'globalEvents',
         'milestones',
@@ -344,6 +352,13 @@ export default defineComponent({
     visibleInfrastructureCards(): Array<CardName> {
       return this.sort(getCards(byType(CardType.INFRASTRUCTURE)).map(toName).filter((c) => !isInfrastructureCopy(c)))
         .filter((c) => this.showCard(c));
+    },
+    // Mercury vs Mars: Treaties first, then Rivalries.
+    visibleActCards(): Array<CardName> {
+      const acts = getCards(byType(CardType.ACT));
+      const treaties = acts.filter((c) => c.act?.kind !== 'rivalry').map(toName);
+      const rivalries = acts.filter((c) => c.act?.kind === 'rivalry').map(toName);
+      return [...this.sort(treaties), ...this.sort(rivalries)].filter((c) => this.showCard(c));
     },
     visibleGlobalEvents(): Array<GlobalEventName> {
       if (!this.types.globalEvents) {

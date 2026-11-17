@@ -1,4 +1,6 @@
 import {HighOrbit} from '../highOrbit/HighOrbit';
+import {Mercury} from '../mercury/Mercury';
+import {MercuryColonies} from '../mercury/MercuryColonies';
 import {AddResourcesToCard} from '../deferredActions/AddResourcesToCard';
 import {ColonyBenefit} from '../../common/colonies/ColonyBenefit';
 import {DeferredAction, SimpleDeferredAction} from '../deferredActions/DeferredAction';
@@ -75,11 +77,16 @@ export abstract class Colony implements IColony {
   }
 
   public increaseTrack(value: number = 1): void {
-    this.trackPosition = Math.min(this.trackPosition + value, MAX_COLONY_TRACK_POSITION);
+    this.trackPosition = Math.min(this.trackPosition + value, this.maxTrackPosition);
   }
 
   public decreaseTrack(value: number = 1): void {
     this.trackPosition = Math.max(this.trackPosition - value, this.colonies.length);
+  }
+
+  /** The last step of this colony's trade track. */
+  public get maxTrackPosition(): number {
+    return this.metadata.maxTrackPosition ?? MAX_COLONY_TRACK_POSITION;
   }
 
   public isFull(): boolean {
@@ -145,7 +152,7 @@ export abstract class Colony implements IColony {
 
   private tradeAfterFreighters(player: IPlayer, tradeOptions: TradeOptions, bonusTradeOffset: number): void {
     const tradeOffset = player.colonies.tradeOffset + bonusTradeOffset;
-    const maxPossibleTrackPosition = Math.min(this.trackPosition + tradeOffset, MAX_COLONY_TRACK_POSITION);
+    const maxPossibleTrackPosition = Math.min(this.trackPosition + tradeOffset, this.maxTrackPosition);
     const steps = maxPossibleTrackPosition - this.trackPosition;
 
     if (steps === 0 ||
@@ -190,6 +197,8 @@ export abstract class Colony implements IColony {
     }
     // High Orbit: Comsat.
     HighOrbit.onTrade(player);
+    // Mercury vs Mars: Interplanetary Trade Center.
+    Mercury.onTrade(player);
 
     // !== false because default is true.
     if (options.decreaseTrackAfterTrade !== false) {
@@ -229,7 +238,7 @@ export abstract class Colony implements IColony {
     switch (bonusType) {
     case ColonyBenefit.ADD_RESOURCES_TO_CARD:
       const cardResource = this.metadata.cardResource;
-      return new AddResourcesToCard(player, cardResource, {count: quantity});
+      return new AddResourcesToCard(player, cardResource, {count: quantity, fromColony: true});
 
     case ColonyBenefit.ADD_RESOURCES_TO_VENUS_CARD:
       return new AddResourcesToCard(
@@ -239,6 +248,7 @@ export abstract class Colony implements IColony {
           count: quantity,
           restrictedTag: Tag.VENUS,
           title: message('Select Venus card to add ${0} resource(s)', (b) => b.number(quantity)),
+          fromColony: true,
         });
 
     case ColonyBenefit.COPY_TRADE:
@@ -428,6 +438,14 @@ export abstract class Colony implements IColony {
         player.stock.add(Resource.MEGACREDITS, mc, {log: true});
       }
       return undefined;
+
+    case ColonyBenefit.GAIN_ASSETS:
+    case ColonyBenefit.GAIN_SAME_STANDARD_RESOURCES:
+    case ColonyBenefit.GAIN_STANDARD_RESOURCE:
+    case ColonyBenefit.MARKET_TRADE:
+    case ColonyBenefit.VENUS_STEP_OR_ASTEROID:
+    case ColonyBenefit.ASTEROID_BELT_TRADE:
+      return MercuryColonies.computeBonus(player, bonusType, quantity, this.trackPosition);
 
     default:
       throw new Error('Unsupported benefit type');

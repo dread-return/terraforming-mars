@@ -29,5 +29,10 @@ export enum ColonyName {
     LEAVITT_II = 'Leavitt II',
     IAPETUS_II = 'Iapetus II',
 
+    // Mercury vs Mars
+    MARKET_COLONIES = 'Market Colonies',
+    SHADOW_COLONIES = 'Shadow Colonies',
+    ASTEROID_BELT = 'The Asteroid Belt',
+
     // WHEN ADDING A NEW COLONY, ADD IT TO AllColonies.ts
 }

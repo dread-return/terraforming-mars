@@ -66,6 +66,7 @@ export type GameOptions = {
   postludesExpansion: boolean;
   /** High Orbit (Epic rules): infrastructure (silver) cards bought from six stacks, and five corporations. */
   highOrbitExpansion: boolean;
+  mercuryExpansion: boolean;
 
   expansions: Record<Expansion, boolean>,
 
@@ -159,6 +160,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
     industries: false,
     postludes: false,
     highorbit: false,
+    mercury: false,
   },
   fastModeOption: false,
   includeFanMA: false,
@@ -204,6 +206,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   industriesExpansion: false,
   postludesExpansion: false,
   highOrbitExpansion: false,
+  mercuryExpansion: false,
   automa: false,
   undoOption: false,
   venusNextExtension: false,

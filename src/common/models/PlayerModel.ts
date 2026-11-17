@@ -49,6 +49,8 @@ export type PublicPlayerModel = {
   color: Color;
   deltaProject?: DeltaProjectPlayerModel;
   individualTracks?: IndividualTracksPlayerModel;
+  /** Mercury vs Mars: how many Act cards this player holds. */
+  actCardsInHandNbr?: number;
   energy: number;
   energyProduction: number;
   fleetSize: number;
@@ -102,6 +104,8 @@ export interface PlayerViewModel extends ViewModel {
   ceoCardsInHand: ReadonlyArray<CardModel>;
   pickedCorporationCard: ReadonlyArray<CardModel>; // Why Array?
   preludeCardsInHand: ReadonlyArray<CardModel>;
+  /** Mercury vs Mars: this player's Act cards. */
+  actCardsInHand?: ReadonlyArray<CardModel>;
   /** The id of `waitingFor`, sent back with the response to it. */
   requestId: string | undefined;
   thisPlayer: PublicPlayerModel;

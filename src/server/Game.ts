@@ -1,5 +1,9 @@
 import {Postludes, PostludesState} from './postludes/Postludes';
 import {HighOrbit, HighOrbitState} from './highOrbit/HighOrbit';
+import {Mercury, MercuryState} from './mercury/Mercury';
+import {ActDeck, deserializeMercury} from './mercury/ActDeck';
+import {MercuryColonies} from './mercury/MercuryColonies';
+import {MarketColonies} from './mercury/MercuryColonyTiles';
 import * as constants from '../common/constants';
 import {venusLevelAfterSteps, venusStepsBetween} from './venusNext/venusScale';
 import {BeginnerCorporation} from './cards/corporation/BeginnerCorporation';
@@ -141,6 +145,7 @@ export class Game implements IGame, Logger {
   public ceoDeck: CeoDeck;
   public postludes: PostludesState | undefined = undefined;
   public highOrbit: HighOrbitState | undefined = undefined;
+  public mercury: MercuryState | undefined = undefined;
   public corporationDeck: CorporationDeck;
   public board: MarsBoard;
 
@@ -319,9 +324,16 @@ export class Game implements IGame, Logger {
         industries: partialOptions.industriesExpansion ?? false,
         postludes: partialOptions.postludesExpansion ?? false,
         highorbit: partialOptions.highOrbitExpansion ?? false,
+        mercury: partialOptions.mercuryExpansion ?? false,
       };
     }
     const gameOptions = {...DEFAULT_GAME_OPTIONS, ...partialOptions};
+    // Mercury vs Mars needs Colonies and Turmoil.
+    if (gameOptions.mercuryExpansion) {
+      gameOptions.coloniesExtension = true;
+      gameOptions.turmoilExtension = true;
+      gameOptions.expansions = {...gameOptions.expansions, colonies: true, turmoil: true};
+    }
     // Merger+2P is a form of the Merger variant (Merger leaves the prelude deck, more corps needed).
     if (gameOptions.mergerPlus2P) {
       gameOptions.twoCorpsVariant = true;
@@ -394,6 +406,9 @@ export class Game implements IGame, Logger {
       game.highOrbit = HighOrbit.newState(gameOptions, rng);
       HighOrbit.attach(game);
     }
+    if (gameOptions.mercuryExpansion) {
+      game.mercury = Mercury.newState(new ActDeck(gameCards.getActCards(), [], rng));
+    }
     // This evaluation of created time doesn't match what's stored in the database, but that's fine.
     game.createdTime = new Date();
     // Initialize Ares data
@@ -411,6 +426,8 @@ export class Game implements IGame, Logger {
       colonyDealer.drawColonies(players.length);
       game.colonies = colonyDealer.colonies;
       game.discardedColonies = colonyDealer.discardedColonies;
+      // Mercury vs Mars: Market Colonies is always in play, on top of the random colonies.
+      MercuryColonies.addMarketColonies(game, () => new MarketColonies());
     }
 
     // Add Turmoil stuff
@@ -515,6 +532,9 @@ export class Game implements IGame, Logger {
       }
     }
 
+    // Mercury vs Mars: 2 Treaties and 1 Rivalry for everybody.
+    Mercury.dealStartingActs(game);
+
     // Print game_id if solo game
     if (players.length === 1) {
       game.log('The id of this game is ${0}', (b) => b.rawString(id));
@@ -561,6 +581,7 @@ export class Game implements IGame, Logger {
       ceoDeck: this.ceoDeck.serialize(),
       postludes: this.postludes === undefined ? undefined : Postludes.serialize(this.postludes),
       highOrbit: this.highOrbit === undefined ? undefined : HighOrbit.serialize(this.highOrbit),
+      mercury: this.mercury === undefined ? undefined : Mercury.serialize(this.mercury),
       colonies: this.colonies.map((colony) => colony.serialize()),
       corporationDeck: this.corporationDeck.serialize(),
       createdTimeMs: this.createdTime.getTime(),
@@ -888,6 +909,8 @@ export class Game implements IGame, Logger {
     this.phase = Phase.PRODUCTION;
     this.passedPlayers.clear();
     this.someoneHasRemovedOtherPlayersPlants = false;
+    // Mercury vs Mars: Seed Sharing.
+    Mercury.onProductionPhase(this);
     this.players.forEach((player) => {
       player.colonies.cardDiscount = 0; // Iapetus reset hook
       player.runProductionPhase();
@@ -951,6 +974,8 @@ export class Game implements IGame, Logger {
     // this.phase = Phase.TURMOIL;
     this.inTurmoil = true;
     turmoil.runTurmoilPhase(this, () => {
+      // Mercury vs Mars: influence becomes assets.
+      Mercury.onTurmoilPhaseEnd(this);
       // The new government might have added actions.
       this.drainQueue(() => {
         this.inTurmoil = false;
@@ -994,6 +1019,7 @@ export class Game implements IGame, Logger {
     this.setNextFirstPlayer();
     Postludes.onGenerationStart(this);
     HighOrbit.onGenerationStart(this);
+    Mercury.onGenerationStart(this);
 
     this.players.forEach((player) => {
       player.hasIncreasedTerraformRatingThisGeneration = false;
@@ -1371,6 +1397,8 @@ export class Game implements IGame, Logger {
     if (aphrodite !== undefined) {
       aphrodite.stock.add(Resource.MEGACREDITS, 2 * steps, {log: true, from: {card: CardName.APHRODITE}});
     }
+    // Mercury vs Mars: Spires of Venus.
+    Mercury.onVenusRaised(this, steps);
 
     this.venusScaleLevel = newValue;
 
@@ -1587,6 +1615,7 @@ export class Game implements IGame, Logger {
     TurmoilHandler.resolveTilePlacementBonuses(player, space.spaceType);
     GigaHooks.onTilePlaced(player, space);
     Postludes.onTilePlaced(player, space);
+    Mercury.onTilePlaced(player, space);
 
     if (arcadianCommunityBonus) {
       this.defer(new GainResourcesDeferred(player, Resource.MEGACREDITS, {count: 3}));
@@ -1906,6 +1935,9 @@ export class Game implements IGame, Logger {
     if (gameOptions.highOrbitExpansion && d.highOrbit !== undefined) {
       game.highOrbit = HighOrbit.deserialize(d.highOrbit);
       HighOrbit.attach(game);
+    }
+    if (gameOptions.mercuryExpansion && d.mercury !== undefined) {
+      game.mercury = deserializeMercury(d.mercury, rng);
     }
     game.spectatorId = d.spectatorId;
     game.createdTime = new Date(d.createdTimeMs);

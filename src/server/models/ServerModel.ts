@@ -30,6 +30,7 @@ import {toName} from '../../common/utils/utils';
 import {MAX_AWARDS, MAX_MILESTONES} from '../../common/constants';
 import {DomesWilderness} from '../domesWilderness/DomesWilderness';
 import {IndividualTracks} from '../individualTracks/IndividualTracks';
+import {Mercury} from '../mercury/Mercury';
 
 export class Server {
   public static getSimpleGameModel(game: IGame): SimpleGameModel {
@@ -91,6 +92,7 @@ export class Server {
       passedPlayers: game.getPassedPlayers(),
       pathfinders: createPathfindersModel(game),
       contamination: game.gameOptions.nuclearExpansion ? game.contamination : undefined,
+      mercury: Mercury.model(game),
       phase: game.phase,
       spaces: this.getSpaces(game.board, game.gagarinBase, game.stJosephCathedrals, game.nomadSpace, this.jellyfishSpaces(game)),
       spectatorId: game.spectatorId,
@@ -125,6 +127,7 @@ export class Server {
       runId: runId,
       pickedCorporationCard: player.pickedCorporationCard ? cardsToModel(player, [player.pickedCorporationCard]) : [],
       preludeCardsInHand: cardsToModel(player, player.preludeCardsInHand),
+      actCardsInHand: player.actCardsInHand.length > 0 ? cardsToModel(player, player.actCardsInHand) : undefined,
       requestId: player.requestId,
       thisPlayer: thisPlayer,
       waitingFor: this.getWaitingFor(player, player.getWaitingFor()),
@@ -310,6 +313,9 @@ export class Server {
 
     model.deltaProject = player.deltaProjectData;
     model.individualTracks = player.individualTracksData;
+    if (game.mercury !== undefined) {
+      model.actCardsInHandNbr = player.actCardsInHand.length;
+    }
 
     return model;
   }
@@ -494,6 +500,7 @@ export class Server {
         industries: options.industriesExpansion,
         postludes: options.postludesExpansion,
         highorbit: options.highOrbitExpansion,
+        mercury: options.mercuryExpansion,
       },
       fastModeOption: options.fastModeOption,
       includedCards: options.includedCards,

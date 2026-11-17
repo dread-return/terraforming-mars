@@ -24,8 +24,8 @@ export class CheapChispa extends CorporationCard implements ICorporationCard {
           b.megacredits(48).production((pb) => pb.megacredits(-2));
           b.corpBox('effect', (ce) => {
             ce.vSpace(Size.MEDIUM);
-            ce.effect('Whenever your energy production decreases, decrease it 1 step less.', (eb) => {
-              eb.production((pb) => pb.minus().energy(1)).startEffect.text('-1 less', {size: Size.SMALL});
+            ce.effect('Whenever your energy production decreases, decrease it 1 step less (e.g. -2 becomes -1).', (eb) => {
+              eb.production((pb) => pb.minus().energy(2)).startEffect.production((pb) => pb.minus().energy(1));
             });
           });
         }),

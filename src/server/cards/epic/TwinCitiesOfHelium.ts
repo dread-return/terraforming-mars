@@ -24,17 +24,16 @@ export class TwinCitiesOfHelium extends CorporationCard implements ICorporationC
 
       metadata: {
         cardNumber: 'EP-TCH',
-        description: 'You start with 30 M€. First action: city next to an ocean space. No Earth tags.',
+        description: 'You start with 30 M€. First action: city next to an ocean space.',
         renderData: CardRenderer.builder((b) => {
+          b.megacredits(30).city({size: Size.SMALL}).asterix();
           b.br;
-          b.megacredits(30).city().asterix().nbsp.tag(Tag.EARTH).text('✕', {size: Size.SMALL});
+          b.tag(Tag.EARTH, {cancelled: true}).nbsp.text('No Earth tags, ever', {size: Size.SMALL});
           b.corpBox('effect', (ce) => {
-            ce.vSpace(Size.TINY);
             ce.effect(undefined, (eb) => {
               eb.tag(Tag.SCIENCE).slash().vpIcon('+').startEffect.megacredits(-3);
             });
-            ce.vSpace(Size.TINY);
-            ce.effect('Science and VP cards cost 3 M€ less. Ocean next to that city: +1 plant production, +2 M€.', (eb) => {
+            ce.effect('Science & VP cards -3 M€. Ocean by that city: +1 plant prod, +2 M€.', (eb) => {
               eb.oceans(1, {size: Size.SMALL, all}).asterix().startEffect.production((pb) => pb.plants(1)).megacredits(2);
             });
           });

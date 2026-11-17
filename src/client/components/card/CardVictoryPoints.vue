@@ -15,18 +15,22 @@
       *
     </template>
     <template v-else>
-      <div>{{ points }}</div>
-      <div v-if="victoryPoints.production === true && victoryPoints.item !== undefined" class="card-production-box card-points-production">
-        <div class="card-production-box-row">
-          <div class="card-production-box-row-item">
-            <CardRenderItemComponent :item="victoryPoints.item" data-test="item" />
+      <template v-for="(term, t) in terms" :key="t">
+        <div v-if="t > 0 && term.points >= 0" class="card-points-plus">+</div>
+        <div v-if="pointsOf(term) !== ''">{{ pointsOf(term) }}</div>
+        <div v-if="term.production === true && term.item !== undefined" class="card-production-box card-points-production">
+          <div class="card-production-box-row">
+            <div class="card-production-box-row-item">
+              <CardRenderItemComponent :item="term.item" data-test="item" />
+            </div>
           </div>
         </div>
-      </div>
-      <CardRenderItemComponent v-else-if="victoryPoints.item !== undefined" :item="victoryPoints.item" data-test="item" />
-      <template v-for="(extra, idx) in victoryPoints.extraItems ?? []" :key="idx">
-        <div class="card-points-plus">+</div>
-        <CardRenderItemComponent :item="extra" />
+        <CardRenderItemComponent v-else-if="term.item !== undefined" :item="term.item" data-test="item" />
+        <template v-for="(extra, idx) in term.extraItems ?? []" :key="idx">
+          <div v-if="(term.joiner ?? '+') !== ''" class="card-points-plus">{{ term.joiner ?? '+' }}</div>
+          <CardRenderItemComponent :item="extra" />
+        </template>
+        <div v-if="t > 0 && term.asterisk === true">*</div>
       </template>
     </template>
     <div v-if="victoryPoints.asterisk === true">*</div>
@@ -55,6 +59,28 @@ export default defineComponent({
   components: {
     CardRenderItemComponent,
   },
+  methods: {
+    pointsOf(vps: CardRenderDynamicVictoryPoints): string {
+      if (vps.label !== undefined) {
+        return vps.label;
+      }
+      if (vps.item === undefined && vps.points === 0 && vps.target === 0) {
+        return '?';
+      }
+      if (vps.item === undefined) {
+        return `${vps.points}`;
+      }
+      if (vps.target === vps.points || vps.target === 1) {
+        return `${vps.points}/`;
+      }
+      if (vps.asFraction) {
+        if (vps.target ===3 && vps.points === 1) {
+          return '⅓';
+        }
+      }
+      return `${vps.points}/${vps.target}`;
+    },
+  },
   computed: {
     classes(): string {
       if (typeof this.victoryPoints === 'number') {
@@ -71,32 +97,21 @@ export default defineComponent({
         } else {
           classes.push('card-points-normal');
         }
-        if ((this.victoryPoints.extraItems?.length ?? 0) > 0) {
+        if ((this.victoryPoints.extraItems?.length ?? 0) > 0 || this.victoryPoints.also !== undefined) {
           classes.push('card-points-multi');
+        }
+        if (this.victoryPoints.also !== undefined) {
+          classes.push('card-points-also');
         }
         return classes.join(' ');
       }
     },
-    points(): string {
+    terms(): ReadonlyArray<CardRenderDynamicVictoryPoints> {
       if (typeof this.victoryPoints === 'number') {
-        return '';
+        return [];
       }
       const vps = this.victoryPoints;
-      if (vps.item === undefined && vps.points === 0 && vps.target === 0) {
-        return '?';
-      }
-      if (vps.item === undefined) {
-        return `${vps.points}`;
-      }
-      if (vps.target === vps.points || vps.target === 1) {
-        return `${vps.points}/`;
-      }
-      if (vps.asFraction) {
-        if (vps.target ===3 && vps.points === 1) {
-          return '⅓';
-        }
-      }
-      return `${vps.points}/${vps.target}`;
+      return vps.also === undefined ? [vps] : [vps, vps.also];
     },
     animal(): ICardRenderItem {
       return {is: 'item', type: CardRenderItemType.RESOURCE, resource: CardResource.ANIMAL, size: Size.SMALL, amount: 1};

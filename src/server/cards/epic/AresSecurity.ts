@@ -5,7 +5,7 @@ import {CardRenderer} from '../render/CardRenderer';
 import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {all} from '../Options';
-import {questionmark} from '../render/DynamicVictoryPoints';
+import {cancelledVP} from '../render/DynamicVictoryPoints';
 
 export class AresSecurity extends CorporationCard implements ICorporationCard {
   constructor() {
@@ -20,18 +20,22 @@ export class AresSecurity extends CorporationCard implements ICorporationCard {
 
       metadata: {
         cardNumber: 'EP-ASE',
-        description: 'You start with 39 M€ and 1 M€ production. Your cards with negative VP score 0 VP.',
+        description: 'You start with 39 M€ and 1 M€ production.',
         renderData: CardRenderer.builder((b) => {
-          b.br.br;
+          b.br;
           b.megacredits(39).production((pb) => pb.megacredits(1));
           b.corpBox('effect', (ce) => {
-            ce.vSpace(Size.MEDIUM);
-            ce.effect('When a player removes another player\'s resources or production, gain 1 of that resource or production.', (eb) => {
+            ce.vSpace(Size.SMALL);
+            ce.effect('A player removes another player\'s resources or production: gain 1 of it.', (eb) => {
               eb.minus().wild(1, {all}).asterix().startEffect.wild(1);
+            });
+            ce.vSpace(Size.SMALL);
+            ce.effect('Your negative-VP cards score 0.', (eb) => {
+              eb.vpIcon('-X').startEffect.vpIcon('0');
             });
           });
         }),
-        victoryPoints: questionmark(),
+        victoryPoints: cancelledVP('-X'),
       },
     });
   }

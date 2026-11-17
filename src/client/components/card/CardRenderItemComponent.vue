@@ -22,6 +22,14 @@ const secondaryResourceClasses: Partial<Record<Tag | AltSecondaryTag, string>> =
   [AltSecondaryTag.WILD_RESOURCE]: 'card-icon-resource--wild',
 };
 
+const CANCEL_OVERLAY_TYPES: ReadonlyArray<CardRenderItemType> = [
+  CardRenderItemType.TAG,
+  CardRenderItemType.VP,
+  CardRenderItemType.CARDS,
+  CardRenderItemType.GREENERY,
+  CardRenderItemType.CITY,
+];
+
 export default defineComponent({
   name: 'CardRenderItemComponent',
   props: {
@@ -95,6 +103,10 @@ export default defineComponent({
         } else {
           classes.push('card-text-normal');
         }
+      }
+      // Epic Corporations: a red cross over tags, VP icons, cards and tiles that are forbidden or don't count.
+      if (this.item.cancelled === true && CANCEL_OVERLAY_TYPES.includes(this.item.type)) {
+        classes.push('card-item-cancelled');
       }
       return classes;
     },

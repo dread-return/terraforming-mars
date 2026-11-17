@@ -139,3 +139,37 @@ export function productionOf(type: CardRenderItemType, points: number, target: n
     target: target,
   };
 }
+
+/** Epic: 1 VP per complete set of these tags, drawn side by side. */
+export function tagSet(tags: Array<Tag>, points: number = 1): CardRenderDynamicVictoryPoints {
+  const [first, ...rest] = tags.map((t) => new CardRenderItem(CardRenderItemType.TAG, 1, {tag: t, size: Size.SMALL}));
+  return {
+    item: first,
+    extraItems: rest,
+    joiner: '',
+    points: points,
+    target: 1,
+  };
+}
+/** Epic: points per greenery (negative for a loss), e.g. greeneries that no longer score. */
+export function greeneries(points: number, asterisk: boolean = false): CardRenderDynamicVictoryPoints {
+  return {
+    item: new CardRenderItem(CardRenderItemType.GREENERY, -1, {size: Size.SMALL}),
+    points: points,
+    target: 1,
+    asterisk: asterisk,
+  };
+}
+/** Epic: a VP icon with a red cross over it, e.g. negative VP that don't count. */
+export function cancelledVP(text: string): CardRenderDynamicVictoryPoints {
+  return {
+    item: new CardRenderItem(CardRenderItemType.VP, undefined, {text, cancelled: true}),
+    label: '',
+    points: 0,
+    target: 0,
+  };
+}
+/** Epic: two scoring terms on one badge. */
+export function both(first: CardRenderDynamicVictoryPoints, second: CardRenderDynamicVictoryPoints): CardRenderDynamicVictoryPoints {
+  return {...first, also: second};
+}

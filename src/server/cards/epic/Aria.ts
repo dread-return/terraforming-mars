@@ -10,7 +10,7 @@ import {Space} from '../../boards/Space';
 import {Board} from '../../boards/Board';
 import {BoardType} from '../../boards/BoardType';
 import {all} from '../Options';
-import {questionmark} from '../render/DynamicVictoryPoints';
+import {both, greeneries, oceans} from '../render/DynamicVictoryPoints';
 import {sum} from '../../../common/utils/utils';
 
 export class Aria extends CorporationCard implements ICorporationCard {
@@ -28,7 +28,7 @@ export class Aria extends CorporationCard implements ICorporationCard {
 
       metadata: {
         cardNumber: 'EP-ARI',
-        description: 'You start with 40 M€. First action: place an ocean. At game end, your cities score adjacent oceans INSTEAD of greeneries.',
+        description: 'You start with 40 M€. First action: place an ocean. *Your cities score adjacent oceans INSTEAD of greeneries.',
         renderData: CardRenderer.builder((b) => {
           b.br;
           b.megacredits(40).oceans(1);
@@ -39,7 +39,7 @@ export class Aria extends CorporationCard implements ICorporationCard {
             });
           });
         }),
-        victoryPoints: questionmark(),
+        victoryPoints: both({...oceans(1, 1), asterisk: false}, greeneries(-1, true)),
       },
     });
   }

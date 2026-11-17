@@ -10,7 +10,7 @@ import {CardResource} from '../../../common/CardResource';
 import {Space} from '../../boards/Space';
 import {Board} from '../../boards/Board';
 import {all} from '../Options';
-import {questionmark} from '../render/DynamicVictoryPoints';
+import {both, oceans, resource} from '../render/DynamicVictoryPoints';
 import {sum} from '../../../common/utils/utils';
 
 export class AquatechCorp extends CorporationCard implements ICorporationCard {
@@ -29,9 +29,8 @@ export class AquatechCorp extends CorporationCard implements ICorporationCard {
 
       metadata: {
         cardNumber: 'EP-AQT',
-        description: 'You start with 25 M€. First action: place an ocean. 1 VP per 3 microbes here; oceans next to your cities score as greeneries.',
+        description: 'You start with 25 M€. First action: place an ocean. *1 VP per ocean next to each of your cities.',
         renderData: CardRenderer.builder((b) => {
-          b.br;
           b.megacredits(25).oceans(1);
           b.corpBox('effect', (ce) => {
             ce.vSpace(Size.SMALL);
@@ -40,7 +39,7 @@ export class AquatechCorp extends CorporationCard implements ICorporationCard {
             });
           });
         }),
-        victoryPoints: questionmark(),
+        victoryPoints: both({...resource(CardResource.MICROBE, 1, 3), asFraction: true}, oceans(1, 1)),
       },
     });
   }

@@ -2,7 +2,7 @@ import {CorporationCard} from '../corporation/CorporationCard';
 import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
-import {questionmark} from '../render/DynamicVictoryPoints';
+import {tagSet} from '../render/DynamicVictoryPoints';
 import {CardRenderer} from '../render/CardRenderer';
 import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
@@ -35,7 +35,7 @@ export class SymbioticSystems extends CorporationCard implements ICorporationCar
             });
           });
         }),
-        victoryPoints: questionmark(),
+        victoryPoints: tagSet(TAGS),
       },
     });
   }

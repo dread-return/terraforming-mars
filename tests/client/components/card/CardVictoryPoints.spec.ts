@@ -72,6 +72,39 @@ describe('CardVictoryPoints', () => {
     expect(wrapper.find('.card-points-production').exists()).is.true;
   });
 
+  it('Epic: two terms on one badge, the second with a plus', async () => {
+    await wrapper.setProps(prop({
+      item: {type: CardRenderItemType.RESOURCE, resource: CardResource.MICROBE},
+      points: 1,
+      target: 3,
+      also: {item: {type: CardRenderItemType.OCEANS}, points: 1, target: 1, asterisk: true},
+    }));
+    expect(wrapper.findAll('[data-test=item]')).has.length(2);
+    expect(wrapper.text().replace(/\s/g, '')).to.eq('1/3+1/*');
+    expect(wrapper.classes()).to.include('card-points-also');
+  });
+  it('Epic: a negative second term has no plus', async () => {
+    await wrapper.setProps(prop({
+      item: {type: CardRenderItemType.OCEANS},
+      points: 1,
+      target: 1,
+      also: {item: {type: CardRenderItemType.GREENERY}, points: -1, target: 1},
+    }));
+    expect(wrapper.text().replace(/\s/g, '')).to.eq('1/-1/');
+  });
+  it('Epic: a tag set has no joiner; a label replaces the points', async () => {
+    await wrapper.setProps(prop({
+      item: {type: CardRenderItemType.TAG, tag: Tag.EARTH},
+      extraItems: [{type: CardRenderItemType.TAG, tag: Tag.VENUS}],
+      joiner: '',
+      points: 1,
+      target: 1,
+    }));
+    expect(wrapper.text().replace(/\s/g, '')).to.eq('1/');
+    await wrapper.setProps(prop({item: {type: CardRenderItemType.VP}, label: '', points: 0, target: 0}));
+    expect(wrapper.text().replace(/\s/g, '')).to.eq('');
+  });
+
   function prop(vps: RecursivePartial<CardRenderDynamicVictoryPoints>) {
     return {
       victoryPoints: {

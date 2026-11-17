@@ -28,7 +28,7 @@ export class Blizzcorp extends CorporationCard implements ICorporationCard {
           b.corpBox('effect', (ce) => {
             ce.vSpace(Size.SMALL);
             ce.effect(undefined, (eb) => {
-              eb.temperature(1).text('<0', {size: Size.SMALL}).startEffect.megacredits(-1).text('/ +2 at 0+', {size: Size.SMALL});
+              eb.temperature(1).text('<0° / 0°+', {size: Size.SMALL}).startEffect.megacredits(-1).slash().megacredits(2, {text: '+2'});
             });
             ce.vSpace(Size.SMALL);
             ce.effect('Cards cost 1 M€ less below 0°C, 2 M€ more at 0°C+. Greenery standard project in the top or bottom 2 rows: +5 M€.', (eb) => {

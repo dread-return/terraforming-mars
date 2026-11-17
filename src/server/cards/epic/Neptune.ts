@@ -9,7 +9,7 @@ import {Resource} from '../../../common/Resource';
 import {Space} from '../../boards/Space';
 import {Board} from '../../boards/Board';
 import {all} from '../Options';
-import {questionmark} from '../render/DynamicVictoryPoints';
+import {oceans} from '../render/DynamicVictoryPoints';
 import {OrOptions} from '../../inputs/OrOptions';
 import {SelectOption} from '../../inputs/SelectOption';
 import {SelectPaymentDeferred} from '../../deferredActions/SelectPaymentDeferred';
@@ -35,7 +35,7 @@ export class Neptune extends CorporationCard implements ICorporationCard {
             });
           });
         }),
-        victoryPoints: questionmark(),
+        victoryPoints: oceans(1, 1),
       },
     });
   }

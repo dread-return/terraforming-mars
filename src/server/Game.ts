@@ -1184,6 +1184,8 @@ export class Game implements IGame, Logger {
       this.researchedPlayers.add(player.id);
       if (this.researchedPlayers.size === this.players.length) {
         this.researchedPlayers.clear();
+        // Epic Corporations: ProfiCoin is paid for the cards bought this research phase.
+        EpicHooks.onResearchPhaseEnd(this);
         this.phase = Phase.ACTION;
         this.passedPlayers.clear();
         this.potentiallyChangeFirstPlayer();
@@ -1220,7 +1222,9 @@ export class Game implements IGame, Logger {
 
       // This next section can be done more simply.
       if (this.allPlayersHavePassed()) {
-        this.gotoProductionPhase();
+        // Epic Corporations: Syndicat des Travailleurs Martiens picks a resource first (may ask its owner).
+        EpicHooks.beforeProductionPhase(this);
+        this.drainQueue(() => this.gotoProductionPhase());
         return;
       }
 

@@ -215,6 +215,8 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       [CardResource.GALAXY]: true,
       [CardResource.INFLUENCE]: true,
       [CardResource.DEFICIT]: true,
+      [CardResource.WORKER]: true,
+      [CardResource.PRISONER]: true,
     },
     searchIndex: SearchIndex.create(),
     namesOnly: true,

@@ -27,7 +27,7 @@ export class FirstWave extends CorporationCard implements ICorporationCard {
         cardNumber: 'EP-FWV',
         description: 'You start with 10 M€, +1 TR and 1 production of each kind. First action: city.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(10).tr(1).production((pb) => pb.wild(1)).text('x6');
+          b.megacredits(10).tr(1).production((pb) => pb.wild(1)).text('x6').city({size: Size.SMALL});
           b.corpBox('effect', (ce) => {
             ce.vSpace(Size.SMALL);
             ce.effect('You do not pay for the first 4 cards you keep during setup.', (eb) => {

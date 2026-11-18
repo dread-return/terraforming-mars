@@ -15,6 +15,7 @@ import {Message} from '../../common/logs/Message';
 export type PlayCardMetadata = {
   reserveUnits: Readonly<Units>;
   overriddenCost?: number;
+  paymentOverrides?: {steel?: boolean, titanium?: boolean, steelValue?: number, graphene?: boolean, grapheneValue?: number};
 };
 
 export abstract class SelectCardToPlay<T extends IProjectCard | IStandardProjectCard> extends BasePlayerInput<T> {

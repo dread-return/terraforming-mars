@@ -159,6 +159,22 @@ import {Schlockmeister} from './Schlockmeister';
 import {SpaceGuild} from './SpaceGuild';
 import {StJosephOfCupertinoMissionEpic} from './StJosephOfCupertinoMissionEpic';
 import {SteelRidgeConstructions} from './SteelRidgeConstructions';
+import {AetherVial} from './AetherVial';
+import {Biofusion} from './Biofusion';
+import {CarbonNanosystemsEpic} from './CarbonNanosystemsEpic';
+import {CastleQueenMary} from './CastleQueenMary';
+import {CorellianEngineering} from './CorellianEngineering';
+import {DarwinEvolution} from './DarwinEvolution';
+import {GrotheIndustries} from './GrotheIndustries';
+import {HardHatConstruction} from './HardHatConstruction';
+import {PinpointRobotics} from './PinpointRobotics';
+import {ProfiCoin} from './ProfiCoin';
+import {SkyRanchers} from './SkyRanchers';
+import {SpacePenalColonies} from './SpacePenalColonies';
+import {SyndicatDesTravailleursMartiens} from './SyndicatDesTravailleursMartiens';
+import {Vanguard} from './Vanguard';
+import {WindMeyer} from './WindMeyer';
+import {XenosZoological} from './XenosZoological';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -333,5 +349,22 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.ST_JOSEPH_OF_CUPERTINO_MISSION_EPIC]: {Factory: StJosephOfCupertinoMissionEpic},
     [CardName.STEEL_RIDGE_CONSTRUCTIONS]: {Factory: SteelRidgeConstructions},
     [CardName.ROSENBURG_INITIATIVE]: {Factory: RosenburgInitiative},
+    // Batch 5
+    [CardName.AETHER_VIAL]: {Factory: AetherVial, compatibility: 'mercury'},
+    [CardName.BIOFUSION]: {Factory: Biofusion, compatibility: ['nuclear', 'pathfinders']},
+    [CardName.CARBON_NANOSYSTEMS_EPIC]: {Factory: CarbonNanosystemsEpic},
+    [CardName.CASTLE_QUEEN_MARY]: {Factory: CastleQueenMary},
+    [CardName.CORELLIAN_ENGINEERING]: {Factory: CorellianEngineering},
+    [CardName.DARWIN_EVOLUTION]: {Factory: DarwinEvolution},
+    [CardName.GROTHE_INDUSTRIES]: {Factory: GrotheIndustries},
+    [CardName.HARD_HAT_CONSTRUCTION]: {Factory: HardHatConstruction},
+    [CardName.PINPOINT_ROBOTICS]: {Factory: PinpointRobotics},
+    [CardName.PROFICOIN]: {Factory: ProfiCoin},
+    [CardName.SKY_RANCHERS]: {Factory: SkyRanchers},
+    [CardName.SPACE_PENAL_COLONIES]: {Factory: SpacePenalColonies},
+    [CardName.SYNDICAT_DES_TRAVAILLEURS_MARTIENS]: {Factory: SyndicatDesTravailleursMartiens},
+    [CardName.VANGUARD]: {Factory: Vanguard, compatibility: 'venus'},
+    [CardName.WIND_MEYER]: {Factory: WindMeyer},
+    [CardName.XENOS_ZOOLOGICAL]: {Factory: XenosZoological},
   },
 });

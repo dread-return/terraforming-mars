@@ -8,6 +8,7 @@ import {Prospecting} from '../../../src/server/cards/underworld/Prospecting';
 import {Venus} from '../../../src/server/cards/community/Venus';
 import {Celestic} from '../../../src/server/cards/venusNext/Celestic';
 import {cast} from '../../../src/common/utils/utils';
+import {ColonyName} from '../../../src/common/colonies/ColonyName';
 
 describe('Prospecting', () => {
   let card: Prospecting;
@@ -32,7 +33,8 @@ describe('Prospecting', () => {
     cast(card.play(player), undefined);
     runAllActions(player.game);
     const selectColony = cast(player.popWaitingFor(), SelectColony);
-    const selectedColony = selectColony.colonies[0];
+    // Avoid Europa, whose ocean placement would leave a pending input ahead of the payment.
+    const selectedColony = selectColony.colonies.find((c) => c.name !== ColonyName.EUROPA)!;
     selectColony.cb(selectedColony);
     runAllActions(game);
 

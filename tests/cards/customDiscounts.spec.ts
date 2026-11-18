@@ -60,6 +60,8 @@ const NOT_DISPLAYED: ReadonlyArray<CardName> = [
   CardName.TWIN_CITIES_OF_HELIUM,
   CardName.CHANCE_SYNERGETICS,
   CardName.MEDIUM_GROUNDS,
+  CardName.AETHER_VIAL,
+  CardName.HARD_HAT_CONSTRUCTION,
 ];
 
 describe('customDiscounts', () => {

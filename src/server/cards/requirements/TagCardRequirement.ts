@@ -6,6 +6,7 @@ import {Options} from './CardRequirement';
 import {RequirementType} from '../../../common/cards/RequirementType';
 import {IProjectCard} from '../IProjectCard';
 import {Eternity} from '../eternity/Eternity';
+import {EpicHooks} from '../epic/EpicHooks';
 
 /**
  * Evaluate whether a player (or all players) have played at least (or at most) a given number of tags.
@@ -25,7 +26,14 @@ export class TagCardRequirement extends InequalityRequirement {
     if (this.max !== true && this.all !== true && Eternity.ignoresTagRequirement(player, card)) {
       return true;
     }
-    return super.satisfies(player, card);
+    if (super.satisfies(player, card)) {
+      return true;
+    }
+    // Epic Corporations: Sky Ranchers (animal cards) and Space Penal Colonies (prisoners) add wild tags.
+    if (this.max !== true && this.all !== true) {
+      return EpicHooks.extraTagsForRequirement(player, card, this.count - this.getScore(player));
+    }
+    return false;
   }
 
   public getScore(player: IPlayer): number {

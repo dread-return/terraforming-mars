@@ -71,9 +71,9 @@ describe('Epic Corporations batch 4', () => {
   it('Bentenmaru: attacks raise it instead; passing discards M€', () => {
     const [, player, other] = withCorp(new Bentenmaru());
     player.plants = 4;
-    player.stock.deduct(Resource.PLANTS, 2, {from: {player: other}});
+    player.stock.deduct(Resource.PLANTS, 2, {log: false, from: {player: other}});
     expect(player.plants).eq(6);
-    player.production.add(Resource.MEGACREDITS, -1, {from: {player: other}});
+    player.production.add(Resource.MEGACREDITS, -1, {log: false, from: {player: other}});
     expect(player.production.megacredits).eq(11);
     player.megaCredits = 20;
     EpicHooks.onPass(player);

@@ -30,12 +30,17 @@ import {IProjectCard} from '../IProjectCard';
 import {UndergroundTokenRequirement} from './UndergroundTokenRequirement';
 import {DisplayRequirement} from './DisplayRequirement';
 import {Eternity} from '../eternity/Eternity';
+import {EpicHooks} from '../epic/EpicHooks';
 
 export class CardRequirements {
   constructor(public requirements: Array<CardRequirement>) {}
 
   public satisfies(player: IPlayer, card: IProjectCard): boolean {
     if (this.requirements.length === 0) {
+      return true;
+    }
+    // Epic Corporations: Xenos Zoological can ignore all requirements of an animal card.
+    if (EpicHooks.ignoresAllRequirements(player, card)) {
       return true;
     }
     // Process tags separately, though max & any tag criteria will be processed later.

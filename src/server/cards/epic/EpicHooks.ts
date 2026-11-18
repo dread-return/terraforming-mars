@@ -121,6 +121,38 @@ export class EpicHooks {
     if (count > 0 && player.tableau.has(CardName.DEV_WRIGHT)) {
       player.stock.add(Resource.MEGACREDITS, (bought ? 1 : 2) * count, {log: true});
     }
+    // ProfiCoin: 1 M€ per card bought outside the research phase; research purchases are paid out at its end.
+    if (count > 0 && bought && player.game !== undefined) {
+      const researching = player.game.phase === Phase.RESEARCH || player.game.phase === Phase.DRAFTING;
+      for (const p of player.game.players) {
+        const proficoin = p.tableau.get(CardName.PROFICOIN);
+        if (proficoin === undefined) {
+          continue;
+        }
+        if (researching) {
+          const data = dataOf<{researchBought?: number}>(proficoin);
+          data.researchBought = (data.researchBought ?? 0) + count;
+        } else {
+          p.stock.add(Resource.MEGACREDITS, count, {log: true});
+        }
+      }
+    }
+  }
+
+  /** ProfiCoin: 1 M€ per 2 cards bought by all players during the research phase. */
+  public static onResearchPhaseEnd(game: IGame): void {
+    for (const p of game.players) {
+      const proficoin = p.tableau.get(CardName.PROFICOIN);
+      if (proficoin === undefined) {
+        continue;
+      }
+      const data = dataOf<{researchBought?: number}>(proficoin);
+      const gain = Math.floor((data.researchBought ?? 0) / 2);
+      data.researchBought = 0;
+      if (gain > 0) {
+        p.stock.add(Resource.MEGACREDITS, gain, {log: true});
+      }
+    }
   }
 
   /**
@@ -144,6 +176,20 @@ export class EpicHooks {
       return;
     }
     const fromOtherPlayer = isFromPlayer(from) && from.player.id !== player.id;
+
+    // Grothe Industries: remember productions raised during the first action of a turn.
+    const grothe = player.tableau.get(CardName.GROTHE_INDUSTRIES);
+    if (grothe !== undefined && delta > 0 && game.phase === Phase.ACTION && player.actionsTakenThisRound === 0) {
+      const data = dataOf<{action?: number, raised?: Array<Resource>}>(grothe);
+      if (data.action !== player.actionsTakenThisGame) {
+        data.action = player.actionsTakenThisGame;
+        data.raised = [];
+      }
+      data.raised = data.raised ?? [];
+      if (!data.raised.includes(resource)) {
+        data.raised.push(resource);
+      }
+    }
 
     // The player's own corporations.
     if (delta > 0) {
@@ -265,6 +311,8 @@ export class EpicHooks {
       if (player.tableau.has(CardName.BENTENMARU)) {
         player.stock.add(resource, -2 * delta, {log: true});
       }
+      // Corellian Engineering: a fighter can cancel the loss.
+      EpicHooks.offerCorellianShield(player, `${-delta} ${resource}`, () => player.stock.add(resource, -delta, {log: true}));
       // Amityville: removing plants from others lets it gain them, or add radiation.
       const thief = from.player;
       if (resource === Resource.PLANTS && thief.tableau.has(CardName.AMITYVILLE)) {
@@ -319,6 +367,8 @@ export class EpicHooks {
     if (owner.tableau.has(CardName.BENTENMARU)) {
       owner.addResourceTo(card, {qty: 2 * count, log: true});
     }
+    // Corellian Engineering: a fighter can cancel the loss.
+    EpicHooks.offerCorellianShield(owner, `${count} ${type.toLowerCase()} on ${card.name}`, () => owner.addResourceTo(card, {qty: count, log: true}));
     for (const p of owner.game.players) {
       // Ares Security: 1 of that resource. Orbital Eye: 3 of it.
       const qty = (p.tableau.has(CardName.ARES_SECURITY) ? 1 : 0) + (p.tableau.has(CardName.ORBITAL_EYE) ? 3 : 0);
@@ -563,6 +613,17 @@ export class EpicHooks {
             return undefined;
           }))));
     }
+    if (player.tableau.has(CardName.BIOFUSION) && player.getResourceCount(CardResource.RADIATION) > 0 && player.getResourceCards(CardResource.MICROBE).length > 0) {
+      options.push(new SelectOption('Biofusion: use radiation as microbes', 'Move').andThen(() =>
+        new SelectCard('Take radiation from', 'Select', player.getCardsWithResources(CardResource.RADIATION)).andThen(([from]) =>
+          new SelectCard('Put microbes on', 'Select', player.getResourceCards(CardResource.MICROBE)).andThen(([to]) =>
+            new SelectAmount('How many?', 'Move', 1, from.resourceCount, true).andThen((n) => {
+              player.freeActionTaken = true;
+              player.removeResourceFrom(from, n, {log: true});
+              player.addResourceTo(to, {qty: n, log: true});
+              return undefined;
+            })))));
+    }
     const gaia = player.tableau.get(CardName.G_AI_A);
     if (gaia !== undefined && gaia.resourceCount > 0) {
       const exchange = (label: string, rate: number, give: (n: number) => void) => new SelectOption(`G-AI-A: ${label}`, 'Exchange').andThen(() =>
@@ -591,13 +652,22 @@ export class EpicHooks {
   /** Planet Forge (Venus cards) and Plutonic Prototyping (space cards) may pay with steel. */
   public static canUseSteel(player: IPlayer, card: IProjectCard): boolean {
     return (player.tableau.has(CardName.PLANET_FORGE) && card.tags.includes(Tag.VENUS)) ||
-      (player.tableau.has(CardName.PLUTONIC_PROTOTYPING) && card.tags.includes(Tag.SPACE));
+      (player.tableau.has(CardName.PLUTONIC_PROTOTYPING) && card.tags.includes(Tag.SPACE)) ||
+      (player.tableau.has(CardName.VANGUARD) && card.tags.includes(Tag.VENUS));
   }
 
   /** Planet Forge (Venus cards) and Plutonic Prototyping (building cards) may pay with titanium. */
   public static canUseTitanium(player: IPlayer, card: IProjectCard): boolean {
     return (player.tableau.has(CardName.PLANET_FORGE) && card.tags.includes(Tag.VENUS)) ||
       (player.tableau.has(CardName.PLUTONIC_PROTOTYPING) && card.tags.includes(Tag.BUILDING));
+  }
+
+  /** Vanguard: steel is worth 3 M€ for cards with a Venus tag. Undefined means the usual value. */
+  public static steelValueForCard(player: IPlayer, card: IProjectCard): number | undefined {
+    if (player.tableau.has(CardName.VANGUARD) && card.tags.includes(Tag.VENUS)) {
+      return Math.max(3, player.getSteelValue());
+    }
+    return undefined;
   }
 
   /** New Grounds and Steel Ridge Constructions place cities ignoring the normal rules. */
@@ -629,9 +699,163 @@ export class EpicHooks {
     }
   }
 
+  /** Corellian Engineering: spend 1 fighter to undo a resource loss caused by another player. */
+  private static offerCorellianShield(player: IPlayer, what: string, restore: () => void): void {
+    const corellian = player.tableau.get(CardName.CORELLIAN_ENGINEERING);
+    if (corellian === undefined || corellian.resourceCount === 0) {
+      return;
+    }
+    player.defer(new OrOptions(
+      new SelectOption(`Corellian Engineering: spend 1 fighter to keep your ${what}`, 'Spend').andThen(() => {
+        player.removeResourceFrom(corellian, 1, {log: true});
+        restore();
+        return undefined;
+      }),
+      new SelectOption('Accept the loss', 'Accept').andThen(() => undefined),
+    ));
+  }
+
+  /** Carbon Nanosystems (Epic): graphene pays for space and building cards. */
+  public static canUseGraphene(player: IPlayer, card: IProjectCard): boolean {
+    return player.tableau.has(CardName.CARBON_NANOSYSTEMS_EPIC) && (card.tags.includes(Tag.SPACE) || card.tags.includes(Tag.BUILDING));
+  }
+
+  /** Carbon Nanosystems (Epic): graphene is worth 5 M€. Undefined means the usual value. */
+  public static grapheneValue(player: IPlayer): number | undefined {
+    return player.tableau.has(CardName.CARBON_NANOSYSTEMS_EPIC) ? 5 : undefined;
+  }
+
+  /** Darwin Evolution: animal tags also count as science tags. */
+  public static animalsAreScience(player: IPlayer): boolean {
+    return player.tableau.has(CardName.DARWIN_EVOLUTION);
+  }
+
+  /**
+   * Darwin Evolution: an animal card may miss a global requirement by up to 2 steps per science resource;
+   * the science needed is spent when the card is played.
+   */
+  public static bendGlobalRequirement(player: IPlayer, card: IProjectCard, distance: number): boolean {
+    const darwin = player.tableau.get(CardName.DARWIN_EVOLUTION);
+    if (darwin === undefined || !card.tags.includes(Tag.ANIMAL) || distance <= 0) {
+      return false;
+    }
+    const needed = Math.ceil(distance / 2);
+    if (needed > darwin.resourceCount) {
+      return false;
+    }
+    const data = dataOf<{spend?: Record<string, number>}>(darwin);
+    data.spend = data.spend ?? {};
+    data.spend[card.name] = Math.max(data.spend[card.name] ?? 0, needed);
+    return true;
+  }
+
+  /**
+   * Sky Ranchers (a wild tag for animal cards) and Space Penal Colonies (prisoners as wild tags)
+   * for tag requirements that are `missing` tags short.
+   */
+  public static extraTagsForRequirement(player: IPlayer, card: IProjectCard, missing: number): boolean {
+    if (missing <= 0) {
+      return true;
+    }
+    let extra = 0;
+    if (player.tableau.has(CardName.SKY_RANCHERS) && card.tags.includes(Tag.ANIMAL)) {
+      extra++;
+    }
+    if (missing <= extra) {
+      return true;
+    }
+    const penal = player.tableau.get(CardName.SPACE_PENAL_COLONIES);
+    if (penal !== undefined && missing - extra <= penal.resourceCount) {
+      const data = dataOf<{spend?: Record<string, number>}>(penal);
+      data.spend = data.spend ?? {};
+      data.spend[card.name] = Math.max(data.spend[card.name] ?? 0, missing - extra);
+      return true;
+    }
+    return false;
+  }
+
+  /** Xenos Zoological: after its action, the chosen non-Venus animal card ignores all requirements. */
+  public static ignoresAllRequirements(player: IPlayer, card: ICard): boolean {
+    const xenos = player.tableau?.get(CardName.XENOS_ZOOLOGICAL);
+    if (xenos === undefined || dataOf<{pending?: boolean}>(xenos).pending !== true) {
+      return false;
+    }
+    return card.tags.includes(Tag.ANIMAL) && !card.tags.includes(Tag.VENUS);
+  }
+
+  /** Called just before the production phase, while players can still be asked things. */
+  public static beforeProductionPhase(game: IGame): void {
+    for (const p of game.players) {
+      const syndicat = p.tableau.get(CardName.SYNDICAT_DES_TRAVAILLEURS_MARTIENS);
+      if (syndicat === undefined) {
+        continue;
+      }
+      const data = dataOf<{chosen?: Array<Resource>, current?: Resource}>(syndicat);
+      const all = [Resource.MEGACREDITS, Resource.STEEL, Resource.TITANIUM, Resource.PLANTS, Resource.ENERGY, Resource.HEAT];
+      let open = all.filter((r) => !(data.chosen ?? []).includes(r));
+      if (open.length === 0) {
+        data.chosen = [];
+        open = all;
+      }
+      p.defer(new OrOptions(...open.map((r) => new SelectOption(`Other players produce 5 less ${r}`).andThen(() => {
+        data.chosen = [...(data.chosen ?? []), r];
+        data.current = r;
+        game.log('${0} strikes: other players produce 5 less ${1} this generation', (b) => b.player(p).string(r));
+        return undefined;
+      }))).setTitle('Syndicat des Travailleurs Martiens: choose a resource'));
+    }
+  }
+
+  /** Called right after a player received this generation's production. */
+  public static afterProduction(player: IPlayer): void {
+    for (const p of player.game.players) {
+      if (p.id === player.id) {
+        continue;
+      }
+      const syndicat = p.tableau.get(CardName.SYNDICAT_DES_TRAVAILLEURS_MARTIENS);
+      const resource = syndicat !== undefined ? dataOf<{current?: Resource}>(syndicat).current : undefined;
+      if (resource === undefined) {
+        continue;
+      }
+      const produced = resource === Resource.MEGACREDITS ? player.production.megacredits + player.terraformRating : player.production.get(resource);
+      const loss = Math.min(5, Math.max(0, produced), player.stock.get(resource));
+      if (loss > 0) {
+        player.stock.add(resource, -loss);
+        player.game.log('${0} produced ${1} less ${2} (Syndicat des Travailleurs Martiens)', (b) => b.player(player).number(loss).string(resource));
+      }
+    }
+  }
+
   /** Called at the start of each generation. */
   public static onGenerationStart(game: IGame): void {
     for (const p of game.players) {
+      // Aether Vial: after production, add or discard up to 5 M€ on the card.
+      const vial = p.tableau.get(CardName.AETHER_VIAL);
+      if (vial !== undefined) {
+        const data = dataOf<{stored?: number}>(vial);
+        const stored = data.stored ?? 0;
+        const options: Array<SelectOption> = [];
+        if (p.megaCredits > 0) {
+          options.push(new SelectOption(`Aether Vial: add up to 5 M€ (now ${stored})`, 'Add').andThen(() =>
+            new SelectAmount('Add how many M€?', 'Add', 1, Math.min(5, p.megaCredits), true).andThen((n) => {
+              p.stock.deduct(Resource.MEGACREDITS, n);
+              data.stored = stored + n;
+              game.log('${0} added ${1} M€ to Aether Vial (now ${2})', (b) => b.player(p).number(n).number(stored + n));
+              return undefined;
+            })));
+        }
+        if (stored > 0) {
+          options.push(new SelectOption(`Aether Vial: discard up to 5 M€ (now ${stored})`, 'Discard').andThen(() =>
+            new SelectAmount('Discard how many M€?', 'Discard', 1, Math.min(5, stored), true).andThen((n) => {
+              data.stored = stored - n;
+              game.log('${0} discarded ${1} M€ from Aether Vial (now ${2})', (b) => b.player(p).number(n).number(stored - n));
+              return undefined;
+            })));
+        }
+        if (options.length > 0) {
+          p.defer(new OrOptions(...options, new SelectOption(`Aether Vial: leave it at ${stored} M€`, 'Keep').andThen(() => undefined)));
+        }
+      }
       // New Tech: its action is only available as the first action of a generation.
       const newTech = p.tableau.get(CardName.NEW_TECH);
       if (newTech !== undefined) {

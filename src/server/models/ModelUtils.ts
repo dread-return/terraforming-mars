@@ -70,6 +70,9 @@ export function cardsToModel(
       model.additionalProjectCosts = card.additionalProjectCosts;
     }
 
+    if (playCardMetadata?.paymentOverrides !== undefined) {
+      model.paymentOverrides = playCardMetadata.paymentOverrides;
+    }
     const reserveUnits = playCardMetadata?.reserveUnits;
     if (reserveUnits !== undefined) {
       model.reserveUnits = reserveUnits;

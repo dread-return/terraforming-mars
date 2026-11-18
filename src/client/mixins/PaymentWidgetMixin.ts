@@ -91,7 +91,8 @@ export const PaymentWidgetMixin = defineComponent({
     getResourceRate(unit: SpendableResource): number {
       switch (unit) {
       case 'steel':
-        return this.playerView.thisPlayer.steelValue;
+        // Epic Corporations (Vanguard): steel can be worth more for this card.
+        return (this as any).card?.paymentOverrides?.steelValue ?? this.playerView.thisPlayer.steelValue;
       case 'titanium':
         return this.getTitaniumResourceRate();
       case 'energy':
@@ -102,6 +103,9 @@ export const PaymentWidgetMixin = defineComponent({
         const heatValue = (this as any).card?.standardProjectCanPayWith?.heatValue;
         return typeof heatValue === 'number' ? heatValue : DEFAULT_PAYMENT_VALUES[unit];
       }
+      case 'graphene':
+        // Epic Corporations (Carbon Nanosystems): graphene can be worth more.
+        return (this as any).card?.paymentOverrides?.grapheneValue ?? DEFAULT_PAYMENT_VALUES[unit];
       case 'floaters':
         // Venus Phase 2: floaters paying for Venus standard projects (Negative Mass Fluids makes them worth more).
         return (this.playerinput.type === 'projectCard' ? this.playerinput.floaterValue : undefined) ?? DEFAULT_PAYMENT_VALUES[unit];

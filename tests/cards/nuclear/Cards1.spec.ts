@@ -79,7 +79,7 @@ describe('Nuclear cards 01-30', () => {
   });
 
   it('Nuclear Winter: hand limit and production', () => {
-    const [game, player, opponent, holder] = setup();
+    const [, player, opponent, holder] = setup();
     const card = new NuclearWinter();
     player.production.add(Resource.PLANTS, 1);
     opponent.production.add(Resource.HEAT, 1);
@@ -185,7 +185,7 @@ describe('Nuclear cards 01-30', () => {
   });
 
   it('Ionized Gas Harvest: draws 2; spend titanium for 2 radiation; remove for energy and steel', () => {
-    const [game, player] = setup();
+    const [, player] = setup();
     const card = new IonizedGasHarvest();
     card.play(player);
     expect(player.cardsInHand).has.length(2);

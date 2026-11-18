@@ -48,6 +48,10 @@ import {SelectStandardProjectToPlay} from './inputs/SelectStandardProjectToPlay'
  */
 export type CanAffordOptions = Partial<PaymentOptions> & {
   cost: number,
+  /** Steel is worth this much instead of the usual value (e.g. Vanguard for Venus cards). */
+  steelValue?: number,
+  /** Graphene is worth this much instead of the usual value (Carbon Nanosystems (Epic)). */
+  grapheneValue?: number,
   reserveUnits?: Units,
   tr?: TRSource,
   /** Represents when the action rewards the tile space more than once. */
@@ -373,7 +377,9 @@ export interface IPlayer {
   getPlayableCards(): Array<IProjectCard>;
   canPlay(card: IProjectCard): boolean;
   canSpend(payment: Payment, reserveUnits?: Units): boolean;
-  payingAmount(payment: Payment, options?: Partial<PaymentOptions>): number;
+  payingAmount(payment: Payment, options?: Partial<PaymentOptions> & {steelValue?: number, grapheneValue?: number}): number;
+  /** How this player may pay for this card (steel, titanium, ...), including expansion effects. */
+  paymentOptionsForCard(card: IProjectCard): PaymentOptions & {steelValue?: number, grapheneValue?: number};
   /**
    * Returns a summary of how much a player would have to spend to play a card,
    * any associated costs, and ways the player can pay.

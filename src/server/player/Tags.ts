@@ -84,6 +84,10 @@ export class Tags {
     // Leavitt Station, Underworld
     if (tag === Tag.SCIENCE) {
       tagCount += this.extraScienceTags;
+      // Epic Corporations: Darwin Evolution's animal tags are also science tags.
+      if (EpicHooks.animalsAreScience(this.player)) {
+        tagCount += this.rawCount(Tag.ANIMAL, includeEvents);
+      }
     }
 
     if (tag === Tag.PLANT) {

@@ -139,7 +139,8 @@ export default defineComponent({
     },
     canUseTitaniumRegularly(): boolean {
       return this.tags.includes(Tag.SPACE) ||
-          this.playerView.thisPlayer.lastCardPlayed === CardName.LAST_RESORT_INGENUITY;
+          this.playerView.thisPlayer.lastCardPlayed === CardName.LAST_RESORT_INGENUITY ||
+          this.card?.paymentOverrides?.titanium === true;
     },
   },
   watch: {
@@ -262,7 +263,8 @@ export default defineComponent({
           return this.playerinput.paymentOptions.energy === true;
         case 'steel':
           return this.tags.includes(Tag.BUILDING) ||
-          this.playerView.thisPlayer.lastCardPlayed === CardName.LAST_RESORT_INGENUITY;
+          this.playerView.thisPlayer.lastCardPlayed === CardName.LAST_RESORT_INGENUITY ||
+          this.card?.paymentOverrides?.steel === true;
         case 'titanium':
           return this.canUseTitaniumRegularly ||
           this.playerinput.paymentOptions.lunaTradeFederationTitanium === true;
@@ -278,7 +280,8 @@ export default defineComponent({
           return this.tags.includes(Tag.PLANT);
         case 'graphene':
           return this.tags.includes(Tag.SPACE) ||
-            this.tags.includes(Tag.CITY);
+            this.tags.includes(Tag.CITY) ||
+            this.card?.paymentOverrides?.graphene === true;
         // High Orbit: Propellant Depot ore pays for cards with a planetary tag.
         case 'propellantOre':
           return PLANETARY_TAGS.some((tag) => this.tags.includes(tag));

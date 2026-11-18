@@ -73,4 +73,6 @@ export enum CardResource {
   GALAXY = 'Galaxy',
   INFLUENCE = 'Influence',
   DEFICIT = 'Deficit',
+  WORKER = 'Worker',
+  PRISONER = 'Prisoner',
 }

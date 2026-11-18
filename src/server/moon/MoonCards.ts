@@ -20,5 +20,6 @@ export class MoonCards {
     CardName.HEYER_EDUCATION,
     CardName.HELIX,
     CardName.G_AI_A,
+    CardName.DARWIN_EVOLUTION,
   ]);
 }

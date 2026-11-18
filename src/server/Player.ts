@@ -710,6 +710,8 @@ export class Player implements IPlayer {
     this.plants += this.production.plants;
     this.energy += this.production.energy;
     this.heat += this.production.heat;
+    // Epic Corporations: Syndicat des Travailleurs Martiens.
+    EpicHooks.afterProduction(this);
 
     for (const card of this.tableau) {
       card.onProductionPhase?.(this);
@@ -846,7 +848,7 @@ export class Player implements IPlayer {
     return Math.max(cost, 0);
   }
 
-  private paymentOptionsForCard(card: IProjectCard): PaymentOptions {
+  public paymentOptionsForCard(card: IProjectCard): PaymentOptions & {steelValue?: number, grapheneValue?: number} {
     return {
       heat: this.canUseHeatAsMegaCredits,
       energy: this.canUseEnergyAsMegaCredits,
@@ -860,11 +862,14 @@ export class Player implements IPlayer {
       lunaArchivesScience: card.tags.includes(Tag.MOON),
       spireScience: card.type === CardType.STANDARD_PROJECT,
       auroraiData: card.type === CardType.STANDARD_PROJECT,
-      graphene: card.tags.includes(Tag.CITY) || card.tags.includes(Tag.SPACE),
+      graphene: card.tags.includes(Tag.CITY) || card.tags.includes(Tag.SPACE) || EpicHooks.canUseGraphene(this, card),
       kuiperAsteroids: card.name === CardName.AQUIFER_STANDARD_PROJECT || card.name === CardName.ASTEROID_STANDARD_PROJECT,
       propellantOre: HighOrbit.canPayWithPropellantOre(card),
       shipyardOre: false,
       hephaestusAsteroids: card.tags.includes(Tag.MARS) || card.tags.includes(Tag.VENUS),
+      // Epic Corporations: Vanguard's steel is worth more for Venus cards; Carbon Nanosystems' graphene is worth 5.
+      steelValue: EpicHooks.steelValueForCard(this, card),
+      grapheneValue: EpicHooks.grapheneValue(this),
     };
   }
 
@@ -927,6 +932,10 @@ export class Player implements IPlayer {
     if (SpendableResource === 'shipyardOre') {
       return HighOrbit.shipyardOre(this);
     }
+    // Epic Corporations: graphene on Carbon Nanosystems (Epic) can pay too.
+    if (SpendableResource === 'graphene') {
+      return this.resourcesOnCard(CARD_FOR_SPENDABLE_RESOURCE.graphene) + this.resourcesOnCard(CardName.CARBON_NANOSYSTEMS_EPIC);
+    }
     return this.resourcesOnCard(CARD_FOR_SPENDABLE_RESOURCE[SpendableResource]);
   }
 
@@ -956,6 +965,19 @@ export class Player implements IPlayer {
       }
       if (resource === 'shipyardOre') {
         HighOrbit.spendShipyardOre(this, count);
+        continue;
+      }
+      if (resource === 'graphene' && this.tableau.has(CardName.CARBON_NANOSYSTEMS_EPIC)) {
+        // Epic Corporations: take graphene from the Moon card first, then from Carbon Nanosystems (Epic).
+        const moon = this.playedCards.get(CARD_FOR_SPENDABLE_RESOURCE.graphene);
+        const fromMoon = Math.min(count, moon?.resourceCount ?? 0);
+        if (moon !== undefined && fromMoon > 0) {
+          this.removeResourceFrom(moon, fromMoon, {log: true});
+        }
+        const epic = this.tableau.get(CardName.CARBON_NANOSYSTEMS_EPIC);
+        if (epic !== undefined && count - fromMoon > 0) {
+          this.removeResourceFrom(epic, count - fromMoon, {log: true});
+        }
         continue;
       }
       const name = CARD_FOR_SPENDABLE_RESOURCE[resource];
@@ -1495,10 +1517,11 @@ export class Player implements IPlayer {
    * ../..param {PaymentOptions} options any configuration defining the accepted form of payment.
    * ../..return {number} a number representing the value of payment in M€.
    */
-  public payingAmount(payment: Payment, options?: Partial<PaymentOptions>): number {
+  public payingAmount(payment: Payment, options?: Partial<PaymentOptions> & {steelValue?: number, grapheneValue?: number}): number {
     const multiplier = {
       ...DEFAULT_PAYMENT_VALUES,
-      steel: this.getSteelValue(),
+      steel: options?.steelValue ?? this.getSteelValue(),
+      graphene: options?.grapheneValue ?? DEFAULT_PAYMENT_VALUES.graphene,
       titanium: this.getTitaniumValue(),
       energy: this.energyValue,
     };

@@ -77,6 +77,19 @@ const AMAZONIS_PLANITIA: GlobalParameterTracks = {
 };
 
 /**
+ * The GIGA board prints the classic bonuses at the same values on its longer tracks, and adds a colony
+ * at 24% Venus.
+ */
+const GIGA: GlobalParameterTracks = {
+  ...STANDARD,
+  venus: [
+    {value: constants.VENUS_LEVEL_FOR_CARD_BONUS, bonus: 'drawcard'},
+    {value: constants.VENUS_LEVEL_FOR_TR_BONUS, bonus: 'tr'},
+    {value: constants.VENUS_LEVEL_FOR_GIGA_COLONY_BONUS, bonus: 'colony'},
+  ],
+};
+
+/**
  * Venus Phase 2's 24-step Venus track (to 48%): cards at 8% and 22%, TR at 34%. The standard and wild
  * resources on its last steps are granted by Game.increaseVenusScaleLevel, like the Alt. Venus board.
  */
@@ -91,6 +104,9 @@ const VENUS_PHASE_2_VENUS: ReadonlyArray<GlobalParameterThreshold> = [
  * Phase 2 Venus track replaces the map's own.
  */
 export function getGlobalParameterTracks(boardName: BoardName, venusPhase2Track: boolean = false): GlobalParameterTracks {
+  if (boardName === BoardName.GIGA) {
+    return GIGA;
+  }
   const tracks = boardName === BoardName.AMAZONIS_PLANITIA ? AMAZONIS_PLANITIA : STANDARD;
   return venusPhase2Track ? {...tracks, venus: VENUS_PHASE_2_VENUS} : tracks;
 }

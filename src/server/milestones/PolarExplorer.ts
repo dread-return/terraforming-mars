@@ -15,7 +15,7 @@ export class PolarExplorer extends BaseMilestone {
     return board.spaces
       .filter(Board.ownedBy(player))
       .filter(Board.hasRealTile)
-      .filter((space) => space.y >= board.bottomRow - 1).length;
+      .filter((space) => board.isPolarSpace(space)).length;
   }
 }
 

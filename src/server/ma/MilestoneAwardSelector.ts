@@ -1,3 +1,4 @@
+import {GIGA_MILESTONES_AWARDS_DRAWN} from '../../common/ma/MilestoneAwardLimits';
 import {awardManifest} from '../awards/Awards';
 import {BoardName} from '../../common/boards/BoardName';
 import {GameOptions} from '../game/GameOptions';
@@ -53,6 +54,14 @@ const UNLIMITED_SYNERGY: Constraints = {
   highThreshold: 100,
 };
 
+// The GIGA board draws 10 of each: still no strongly overlapping pair, but no cap on the total.
+const GIGA_SYNERGY: Constraints = {
+  maxSynergyAllowed: LIMITED_SYNERGY.maxSynergyAllowed,
+  totalSynergyAllowed: 1000,
+  numberOfHighAllowed: 1000,
+  highThreshold: LIMITED_SYNERGY.highThreshold,
+};
+
 export function chooseMilestonesAndAwards(gameOptions: GameOptions): DrawnMilestonesAndAwards {
   let drawnMilestonesAndAwards: DrawnMilestonesAndAwards = {
     milestones: [],
@@ -62,6 +71,11 @@ export function chooseMilestonesAndAwards(gameOptions: GameOptions): DrawnMilest
   function push(milestones: ReadonlyArray<MilestoneName>, awards: ReadonlyArray<AwardName>) {
     drawnMilestonesAndAwards.milestones.push(...milestones);
     drawnMilestonesAndAwards.awards.push(...awards);
+  }
+
+  // The GIGA board draws 10 milestones and 10 awards at random, unless they are picked by hand.
+  if (gameOptions.boardName === BoardName.GIGA && gameOptions.randomMA !== RandomMAOptionType.MANUAL) {
+    return getRandomMilestonesAndAwards(gameOptions, GIGA_MILESTONES_AWARDS_DRAWN, GIGA_SYNERGY);
   }
 
   // This fork shows 3 milestones and 3 awards (as many as can be claimed and funded), see threeMilestonesAndAwards.
@@ -195,8 +209,9 @@ export function getCandidates(gameOptions: GameOptions): [Array<MilestoneName>, 
       if (boards.length > 0 && gameOptions.includeFanMA === false) {
         return false;
       }
-      // GIGA fan MAs belong to no board, so the check above does not cover them.
-      if (manifest.all[name].fan === true && gameOptions.includeFanMA === false) {
+      // GIGA fan MAs belong to no board, so the check above does not cover them. The GIGA board always
+      // includes them.
+      if (manifest.all[name].fan === true && gameOptions.includeFanMA === false && gameOptions.boardName !== BoardName.GIGA) {
         return false;
       }
       // Modular MAs are not part of our own built random MAs.

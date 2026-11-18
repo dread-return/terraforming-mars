@@ -173,6 +173,8 @@ export const milestoneManifest: MAManifest<MilestoneName, IMilestone> = {
     [BoardName.TERRA_CIMMERIA_NOVA]: ['Planetologist', 'Architect', 'Coastguard', 'C. Forester', 'Fundraiser'],
     [BoardName.HOLLANDIA]: [],
     [BoardName.AMAZONIS_PLANITIA]: ['Terran', 'Landshaper', 'Merchant3', 'Sponsor', 'Lobbyist'],
+    // The GIGA board draws its milestones at random.
+    [BoardName.GIGA]: [],
   },
   expansions: {
     venus: ['Hoverlord'],

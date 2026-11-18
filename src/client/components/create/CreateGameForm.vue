@@ -684,6 +684,7 @@ import AppButton from '@/client/components/common/AppButton.vue';
 import {playerColorClass} from '@/common/utils/utils';
 import {RandomMAOptionType} from '@/common/ma/RandomMAOptionType';
 import {GameId, JSONObject} from '@/common/Types';
+import {BoardName} from '@/common/boards/BoardName';
 import {AgendaStyle} from '@/common/turmoil/Types';
 import PreferencesIcon from '@/client/components/PreferencesIcon.vue';
 import {getCard} from '@/client/cards/ClientCardManifest';
@@ -828,6 +829,15 @@ export default defineComponent({
       if (value === true && this.preludeToggled === false && this.uploading === false) {
         this.expansions.prelude = true;
         this.preludeToggled = true;
+      }
+    },
+    boards(value: Array<BoardName>) {
+      // The GIGA board prints the individual tracks, the industry track and a postlude for each funded
+      // award, so picking it ticks those modules (they can be unticked again).
+      if (value.length === 1 && value[0] === BoardName.GIGA && this.uploading === false) {
+        this.individualTracks = true;
+        this.expansions.industries = true;
+        this.expansions.postludes = true;
       }
     },
     'expansions.postludes': function(value: boolean) {

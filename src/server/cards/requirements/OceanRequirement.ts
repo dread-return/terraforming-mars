@@ -21,6 +21,7 @@ export class OceanRequirement extends GlobalParameterRequirement {
   }
 
   public getGlobalValue(player: IPlayer) {
-    return player.game.board.getOceanSpaces({upgradedOceans: true, wetlands: true}).length;
+    // The GIGA board doubles card ocean requirements, which is the same as counting half the oceans.
+    return player.game.board.getOceanSpaces({upgradedOceans: true, wetlands: true}).length / player.game.board.oceanRequirementMultiplier;
   }
 }

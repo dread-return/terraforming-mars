@@ -38,6 +38,12 @@ export const TEMPERATURE_BONUS_FOR_HEAT_2 = -20;
 export const TEMPERATURE_BONUS_FOR_PLANT = -12;
 export const VENUS_LEVEL_FOR_AMAZONIS_COLONY_BONUS = 16;
 export const VENUS_LEVEL_FOR_AMAZONIS_TR_BONUS = 22;
+// The GIGA board: the same scales in half-size steps (1 °C, 0.5 % oxygen, 1 % Venus), to +10 °C.
+export const MAX_OCEAN_TILES_GIGA = 21;
+export const MAX_TEMPERATURE_GIGA = 10;
+export const MAX_OXYGEN_LEVEL_GIGA = 15;
+export const MAX_VENUS_SCALE_GIGA = 30;
+export const VENUS_LEVEL_FOR_GIGA_COLONY_BONUS = 24;
 // Venus Phase 2 lengthens the Venus track to 24 steps, still 2% each.
 export const MAX_VENUS_SCALE_VENUS_PHASE_2 = 48;
 export const VENUS_PHASE_2_LEVEL_FOR_SECOND_CARD_BONUS = 22;

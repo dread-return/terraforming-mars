@@ -67,6 +67,7 @@ export abstract class GlobalParameterRequirement extends InequalityRequirement {
   }
 
   public distance(player: IPlayer): number {
-    return Math.floor(Math.abs(this.getScore(player) - this.count) / this.scale);
+    // Rounded up: on the GIGA board a parameter can sit between two of the card's steps.
+    return Math.ceil(Math.abs(this.getScore(player) - this.count) / this.scale);
   }
 }

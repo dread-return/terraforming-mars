@@ -5,7 +5,6 @@ import {PostludeCard} from './PostludeCard';
 import {Tag} from '../../../common/cards/Tag';
 import {BoardType} from '../../boards/BoardType';
 import {IPlayer} from '../../IPlayer';
-import {MAX_OXYGEN_LEVEL} from '../../../common/constants';
 import {Postludes} from '../../postludes/Postludes';
 import {Size} from '../../../common/cards/render/Size';
 import {Space} from '../../boards/Space';
@@ -35,7 +34,7 @@ export class MarsHospital extends PostludeCard {
       return;
     }
     // Greeneries are placed before the oxygen goes up, so a maxed oxygen level means no TR is coming.
-    if (cardOwner.game.getOxygenLevel() < MAX_OXYGEN_LEVEL) {
+    if (cardOwner.game.getOxygenLevel() < cardOwner.game.max.oxygen) {
       return;
     }
     if (!Postludes.adjacentTo(cardOwner.game, this.name).includes(space)) {

@@ -29,7 +29,9 @@
 <script lang="ts">
 
 import {defineComponent} from 'vue';
-import {MAX_MILESTONES, MILESTONE_COST} from '@/common/constants';
+import {MILESTONE_COST} from '@/common/constants';
+import {BoardName} from '@/common/boards/BoardName';
+import {getMilestoneAwardLimits} from '@/common/ma/MilestoneAwardLimits';
 import Milestone from '@/client/components/Milestone.vue';
 import {ClaimedMilestoneModel} from '@/common/models/ClaimedMilestoneModel';
 import {Preferences, PreferencesManager} from '@/client/utils/PreferencesManager';
@@ -49,10 +51,16 @@ export default defineComponent({
       type: Object as () => Readonly<Preferences>,
       default: () => PreferencesManager.INSTANCE.values(),
     },
+    // The GIGA board allows more claims.
+    boardName: {
+      type: String as () => BoardName,
+      default: BoardName.THARSIS,
+    },
   },
   data() {
+    const maxMilestones = getMilestoneAwardLimits(this.boardName).maxMilestones;
     return {
-      showMilestoneDetails: (this.milestones.filter((milestone) => milestone.playerName).length === MAX_MILESTONES ? false : this.preferences?.show_milestone_details),
+      showMilestoneDetails: (this.milestones.filter((milestone) => milestone.playerName).length === maxMilestones ? false : this.preferences?.show_milestone_details),
       showDescription: false,
     };
   },
@@ -62,7 +70,7 @@ export default defineComponent({
   computed: {
     availableMilestoneSpots(): Array<number> {
       const count = this.milestones.filter((milestone) => milestone.playerName).length;
-      return Array(MAX_MILESTONES - count).fill(MILESTONE_COST);
+      return Array(Math.max(0, getMilestoneAwardLimits(this.boardName).maxMilestones - count)).fill(MILESTONE_COST);
     },
   },
   methods: {

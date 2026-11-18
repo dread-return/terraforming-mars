@@ -1,0 +1,155 @@
+// The fan GIGA expansion's board (GigaMarsBoard.vue).
+
+@giga-board-width: 908px;
+@giga-board-height: 475px;
+
+.board-cont--giga {
+  width: @giga-board-width + 20px;
+  background: none;
+
+  .hide-tile-button-container .hide-tile-button {
+    bottom: auto;
+    top: 8px;
+  }
+}
+
+.giga-tracks {
+  display: grid;
+  padding-top: 14px;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 18px;
+  margin: 0 0 6px 40px;
+  width: @giga-board-width - 60px;
+}
+
+.giga-track {
+  display: flex;
+  align-items: center;
+  height: 26px;
+}
+
+.giga-track-label {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  &.temperature-tile {
+    background-image: url(./assets/global-parameters/temperature.png);
+  }
+  &.oxygen-tile {
+    background-image: url(./assets/global-parameters/oxygen.png);
+  }
+  &.ocean-tile {
+    background-image: url(./assets/tiles/ocean.png);
+  }
+  &.venus-tile {
+    background-image: url(./assets/global-parameters/venus.png);
+  }
+}
+
+.giga-track-bar {
+  position: relative;
+  flex: auto;
+  height: 12px;
+  margin: 0 8px;
+  border: 1px solid #888;
+  border-radius: 6px;
+  background: #222;
+}
+
+.giga-track-fill {
+  height: 100%;
+  border-radius: 6px;
+}
+
+.giga-track--temperature .giga-track-fill {
+  background: linear-gradient(to right, #2448c8, #c8243a);
+}
+.giga-track--oxygen .giga-track-fill {
+  background: linear-gradient(to right, #6a4a2a, #4caf50);
+}
+.giga-track--oceans .giga-track-fill {
+  background: #2e8bd8;
+}
+.giga-track--venus .giga-track-fill {
+  background: linear-gradient(to right, #8a6a2a, #e8c25a);
+}
+
+.giga-track-bonus {
+  position: absolute;
+  top: -15px;
+  transform: translateX(-50%);
+  font-size: 11px;
+  line-height: 12px;
+  color: #eee;
+  pointer-events: auto;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 13px;
+    width: 1px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.giga-track-value {
+  flex: none;
+  width: 62px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #eee;
+  text-align: right;
+}
+
+.board--giga {
+  position: relative;
+  width: @giga-board-width;
+  height: @giga-board-height;
+  margin: 0 0 0 10px;
+  background: url(./assets/board/giga-mars.jpg) no-repeat;
+  background-size: @giga-board-width @giga-board-height;
+
+  // The board art already shows the ocean, volcanic and Noctis City spaces, so empty spaces are not
+  // drawn over it.
+  .board-space-type-land,
+  .board-space-type-land-volcanic,
+  .board-space-type-land-noctis,
+  .board-space-type-ocean {
+    background: none;
+  }
+
+  // The GIGA board's extra ocean costs 5 M€ rather than Hellas's 6 M€.
+  .board-space-bonus--bonusocean {
+    background-image: url(./assets/tiles/ocean.png), url(./assets/misc/giga-ocean-cost.png);
+  }
+}
+
+.giga-outer-spaces {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 40px;
+  width: @giga-board-width;
+  margin: 18px 0 0 10px;
+}
+
+.giga-outer-spaces .giga-outer-space {
+  position: relative;
+  width: 46px;
+  height: 76px;
+
+  > .board-space {
+    position: relative;
+  }
+
+  // More specific than the per-space label offsets of the round boards.
+  > .board-space .board-space-text {
+    margin: 53px 0 0 -21px;
+  }
+}

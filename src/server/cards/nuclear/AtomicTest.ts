@@ -34,7 +34,7 @@ export class AtomicTest extends Card implements IProjectCard {
   }
 
   public override bespokePlay(player: IPlayer) {
-    const steps = (player.game.getTemperature() - MIN_TEMPERATURE) / 2;
+    const steps = (player.game.getTemperature() - MIN_TEMPERATURE) / player.game.max.temperatureStep;
     player.stock.add(Resource.HEAT, steps, {log: true});
     return undefined;
   }

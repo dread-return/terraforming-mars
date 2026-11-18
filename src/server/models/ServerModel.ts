@@ -27,7 +27,7 @@ import {SpaceId} from '../../common/Types';
 import {cardsToModel, coloniesToModel} from './ModelUtils';
 import {runId} from '../utils/server-ids';
 import {toName} from '../../common/utils/utils';
-import {MAX_AWARDS, MAX_MILESTONES} from '../../common/constants';
+import {getMilestoneAwardLimits} from '../../common/ma/MilestoneAwardLimits';
 import {DomesWilderness} from '../domesWilderness/DomesWilderness';
 import {IndividualTracks} from '../individualTracks/IndividualTracks';
 import {Mercury} from '../mercury/Mercury';
@@ -170,7 +170,7 @@ export class Server {
         (m) => m.milestone.name === milestone.name,
       );
       let scores: Array<MilestoneScore> = [];
-      if (claimed === undefined && (claimedMilestones.length < MAX_MILESTONES || game.players.some(IndividualTracks.hasExtraClaim))) {
+      if (claimed === undefined && (claimedMilestones.length < getMilestoneAwardLimits(game.gameOptions.boardName).maxMilestones || game.players.some(IndividualTracks.hasExtraClaim))) {
         scores = game.players.map((player) => ({
           color: player.color,
           score: milestone.getScore(player),
@@ -197,7 +197,7 @@ export class Server {
       const funded = fundedAwards.find((a) => a.award.name === award.name);
       const scorer = new AwardScorer(game, award);
       let scores: Array<AwardScore> = [];
-      if (fundedAwards.length < MAX_AWARDS || funded !== undefined || game.players.some(IndividualTracks.hasExtraClaim)) {
+      if (fundedAwards.length < getMilestoneAwardLimits(game.gameOptions.boardName).maxAwards || funded !== undefined || game.players.some(IndividualTracks.hasExtraClaim)) {
         scores = game.players.map((player) => ({
           color: player.color,
           score: scorer.get(player),

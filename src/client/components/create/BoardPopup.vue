@@ -25,7 +25,7 @@
             </label>
           </div>
         </div>
-        <button class="create-game-board-button create-game-board-random" @click="randomSelection(group.randomBoards)" v-i18n>{{ group.randomTitle }}</button>
+        <button v-if="group.randomBoards.length > 0" class="create-game-board-button create-game-board-random" @click="randomSelection(group.randomBoards)" v-i18n>{{ group.randomTitle }}</button>
       </div>
     </div>
     <div class="create-game-board-shuffle">
@@ -51,6 +51,7 @@ import {boardOptions} from '@/common/boards/randomBoardOptions';
 type BoardGroup = {
   label: string;
   boards: ReadonlyArray<BoardName>;
+  /** Empty when the group has no random button. */
   randomTitle: string;
   /** Boards selected by this group's random button. */
   randomBoards: ReadonlyArray<BoardName>;
@@ -70,6 +71,7 @@ const WIKI_ANCHORS: Record<BoardName, string> = {
   [BoardName.TERRA_CIMMERIA_NOVA]: 'terra-cimmeria-nova',
   [BoardName.HOLLANDIA]: 'hollandia',
   [BoardName.AMAZONIS_PLANITIA]: 'amazonis-planitia',
+  [BoardName.GIGA]: 'giga',
 };
 
 const props = defineProps<{
@@ -128,6 +130,13 @@ const groups: ReadonlyArray<BoardGroup> = [
     boards: FAN_GROUP_BOARDS,
     randomTitle: 'Random All',
     randomBoards: [...OFFICIAL_GROUP_BOARDS, ...FAN_GROUP_BOARDS],
+  },
+  {
+    // The GIGA board is a different game, so it is never picked at random.
+    label: 'GIGA',
+    boards: [BoardName.GIGA],
+    randomTitle: '',
+    randomBoards: [],
   },
 ] as const;
 

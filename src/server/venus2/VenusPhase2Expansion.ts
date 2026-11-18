@@ -1,3 +1,4 @@
+import {BoardName} from '../../common/boards/BoardName';
 import {IGame} from '../IGame';
 import {IPlayer} from '../IPlayer';
 import {Tile} from '../Tile';
@@ -26,10 +27,10 @@ export const VENUS_FLOATER_VALUE = 3;
 
 /**
  * Whether the game uses Venus Phase 2's 24-step Venus track (to 48%), which replaces the map's
- * Venus track and the Alt. Venus board.
+ * Venus track and the Alt. Venus board. The GIGA board keeps its own 30-step track.
  */
-export function isVenusPhase2Track(gameOptions: Pick<GameOptions, 'venusPhase2Expansion' | 'venusNextExtension'>): boolean {
-  return gameOptions.venusPhase2Expansion === true && gameOptions.venusNextExtension === true;
+export function isVenusPhase2Track(gameOptions: Pick<GameOptions, 'venusPhase2Expansion' | 'venusNextExtension'> & Partial<Pick<GameOptions, 'boardName'>>): boolean {
+  return gameOptions.venusPhase2Expansion === true && gameOptions.venusNextExtension === true && gameOptions.boardName !== BoardName.GIGA;
 }
 
 export class VenusPhase2Expansion {

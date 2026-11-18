@@ -11,7 +11,8 @@ const OFFICIAL_BOARDS = [
 ];
 
 export function boardOptions(board: RandomBoardOption): Array<BoardName> {
-  const allBoards = Object.values(BoardName);
+  // The GIGA board is a different game, so it is never picked at random.
+  const allBoards = Object.values(BoardName).filter((boardName) => boardName !== BoardName.GIGA);
 
   switch (board) {
   case RandomBoardOption.ALL:

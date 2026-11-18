@@ -82,6 +82,8 @@ const MARS_A9 = {
 export class MarsBoard extends Board {
   public readonly A9: Readonly<Partial<Record<SpaceId, string>>> = MARS_A9;
   public readonly max: Readonly<GlobalParameterMaximums>;
+  /** Card ocean requirements are multiplied by this (the GIGA board doubles them). */
+  public readonly oceanRequirementMultiplier: number = 1;
 
   public constructor(
     spaces: ReadonlyArray<Space>,
@@ -89,6 +91,11 @@ export class MarsBoard extends Board {
     max: Readonly<GlobalParameterMaximums> = getGlobalParameterMaximums(BoardName.THARSIS)) {
     super(spaces, noctisCitySpaceId);
     this.max = max;
+  }
+
+  /** What the player pays for the extra ocean of the OCEAN space bonus (the bottom of Hellas). */
+  public oceanBonusCost(): number {
+    return constants.HELLAS_BONUS_OCEAN_COST;
   }
 
   /**
@@ -302,7 +309,7 @@ export class MarsBoard extends Board {
   public static canAffordPlacementBonuses(player: IPlayer, space: Space): boolean {
     const game = player.game;
     if (space.bonus.includes(SpaceBonus.OCEAN) && game.canAddOcean()) {
-      if (!player.canAfford({cost: constants.HELLAS_BONUS_OCEAN_COST, tr: {oceans: 1}})) {
+      if (!player.canAfford({cost: game.board.oceanBonusCost(), tr: {oceans: 1}})) {
         return false;
       }
     }

@@ -7,8 +7,9 @@ import {Resource} from '../../common/Resource';
 import {Tag} from '../../common/cards/Tag';
 import {INDUSTRY_TILES, TileType} from '../../common/TileType';
 import {
-  INDUSTRY_RESOURCES, INDUSTRY_TILE, INDUSTRY_TRACK_CARD_STEP, INDUSTRY_TRACK_PRELUDE_STEP, IndustryKind, MAX_INDUSTRIES,
+  INDUSTRY_RESOURCES, INDUSTRY_TILE, INDUSTRY_TRACK_CARD_STEP, INDUSTRY_TRACK_PRELUDE_STEP, IndustryKind, MAX_INDUSTRIES, GIGA_BOARD_MAX_INDUSTRIES,
 } from '../../common/industries/Industries';
+import {BoardName} from '../../common/boards/BoardName';
 import {DeferredAction} from '../deferredActions/DeferredAction';
 import {Priority} from '../deferredActions/Priority';
 import {PlayerInput} from '../PlayerInput';
@@ -67,9 +68,8 @@ export class Industries {
   }
 
   /** The most industries a player may own: 13 on the GIGA board, 5 everywhere else. */
-  public static max(_game: IGame): number {
-    // TODO(Leo): return GIGA_BOARD_MAX_INDUSTRIES (13) on the GIGA board, once it exists.
-    return MAX_INDUSTRIES;
+  public static max(game: IGame): number {
+    return game.gameOptions.boardName === BoardName.GIGA ? GIGA_BOARD_MAX_INDUSTRIES : MAX_INDUSTRIES;
   }
 
   /** Requirement to buy an industry: more power tags than industries owned, and room on the track. */

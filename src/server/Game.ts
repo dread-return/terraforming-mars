@@ -76,6 +76,7 @@ import {Logger} from './logs/Logger';
 import {addDays, stringToNumber} from './database/utils';
 import {Tag} from '../common/cards/Tag';
 import {IGame, Score} from './IGame';
+import {awardFundingCost, getMilestoneAwardLimits} from '../common/ma/MilestoneAwardLimits';
 import {GlobalParameterMaximums, withVenusPhase2Track} from '../common/boards/GlobalParameterMaximums';
 import {MarsBoard} from './boards/MarsBoard';
 import {UnderworldData} from './underworld/UnderworldData';
@@ -746,7 +747,7 @@ export class Game implements IGame, Logger {
   }
 
   public getAwardFundingCost(): number {
-    return 8 + (6 * this.fundedAwards.length);
+    return awardFundingCost(getMilestoneAwardLimits(this.gameOptions.boardName), this.fundedAwards.length);
   }
 
   public fundAward(player: IPlayer, award: IAward): void {
@@ -778,7 +779,7 @@ export class Game implements IGame, Logger {
       return true;
     }
 
-    return this.fundedAwards.length >= constants.MAX_AWARDS;
+    return this.fundedAwards.length >= getMilestoneAwardLimits(this.gameOptions.boardName).maxAwards;
   }
 
   public allMilestonesClaimed(): boolean {
@@ -787,7 +788,7 @@ export class Game implements IGame, Logger {
       return true;
     }
 
-    return this.claimedMilestones.length >= constants.MAX_MILESTONES;
+    return this.claimedMilestones.length >= getMilestoneAwardLimits(this.gameOptions.boardName).maxMilestones;
   }
 
   private playerHasPickedCorporationCard(player: IPlayer, corporationCard: ICorporationCard): void {
@@ -1318,15 +1319,18 @@ export class Game implements IGame, Logger {
       return undefined;
     }
 
+    // Each step is 1%, or 0.5% on the GIGA board.
+    const oxygenStep = this.max.oxygenStep;
+
     // PoliticalAgendas Reds P3 && Magnetic Field Stimulation Delays hook
     if (increments < 0) {
-      this.oxygenLevel = Math.max(constants.MIN_OXYGEN_LEVEL, this.oxygenLevel + increments);
+      this.oxygenLevel = Math.max(constants.MIN_OXYGEN_LEVEL, this.oxygenLevel + increments * oxygenStep);
       return undefined;
     }
 
     // Literal typing makes |increments| a const
-    const steps = Math.min(increments, this.max.oxygen - this.oxygenLevel);
-    const newOxygenLevel = this.oxygenLevel + steps;
+    const steps = Math.min(increments, Math.round((this.max.oxygen - this.oxygenLevel) / oxygenStep));
+    const newOxygenLevel = this.oxygenLevel + steps * oxygenStep;
 
     if (this.phase !== Phase.SOLAR) {
       TurmoilHandler.onGlobalParameterIncrease(player, GlobalParameter.OXYGEN, steps);
@@ -1356,13 +1360,13 @@ export class Game implements IGame, Logger {
 
     // PoliticalAgendas Reds P3 hook
     if (increments === -1) {
-      this.venusScaleLevel = venusLevelAfterSteps(this.venusScaleLevel, increments, this.max.venus);
+      this.venusScaleLevel = venusLevelAfterSteps(this.venusScaleLevel, increments, this.max.venus, this.max.venusStep);
       return -1;
     }
 
     // Literal typing makes |increments| a const
-    const steps = Math.min(increments, venusStepsBetween(this.venusScaleLevel, this.max.venus, this.max.venus));
-    const newValue = venusLevelAfterSteps(this.venusScaleLevel, steps, this.max.venus);
+    const steps = Math.min(increments, venusStepsBetween(this.venusScaleLevel, this.max.venus, this.max.venus, this.max.venusStep));
+    const newValue = venusLevelAfterSteps(this.venusScaleLevel, steps, this.max.venus, this.max.venusStep);
 
     grantGlobalParameterTrackBonuses(player, 'venus', this.venusScaleLevel, newValue);
 
@@ -1414,14 +1418,17 @@ export class Game implements IGame, Logger {
       return undefined;
     }
 
+    // Each step is 2 °C, or 1 °C on the GIGA board.
+    const temperatureStep = this.max.temperatureStep;
+
     if (increments === -2 || increments === -1) {
-      this.temperature = Math.max(constants.MIN_TEMPERATURE, this.temperature + increments * 2);
+      this.temperature = Math.max(constants.MIN_TEMPERATURE, this.temperature + increments * temperatureStep);
       return undefined;
     }
 
     // Literal typing makes |increments| a const
-    const steps = Math.min(increments, (this.max.temperature - this.temperature) / 2);
-    const newTemperature = this.temperature + steps * 2;
+    const steps = Math.min(increments, (this.max.temperature - this.temperature) / temperatureStep);
+    const newTemperature = this.temperature + steps * temperatureStep;
 
     if (this.phase !== Phase.SOLAR) {
       for (const card of player.playedCards) {
@@ -1669,7 +1676,7 @@ export class Game implements IGame, Logger {
     case SpaceBonus.OCEAN:
       // Hellas special requirements ocean tile
       if (this.canAddOcean()) {
-        this.defer(new SelectPaymentDeferred(player, constants.HELLAS_BONUS_OCEAN_COST, {title: 'Select how to pay for placement bonus ocean'}))
+        this.defer(new SelectPaymentDeferred(player, this.board.oceanBonusCost(), {title: 'Select how to pay for placement bonus ocean'}))
           .andThen(() => {
             this.defer(new PlaceOceanTile(player, {title: 'Select space for ocean from placement bonus'}));
             return undefined;

@@ -12,8 +12,16 @@ function twoPercentSteps(level: number, max: number): boolean {
   return level <= MAX_VENUS_SCALE || max === MAX_VENUS_SCALE_VENUS_PHASE_2;
 }
 
+/*
+ * `step` is the game's percent per Venus step (`game.max.venusStep`): 2, or 1 on the GIGA board,
+ * whose track moves 1% per step all the way.
+ */
+
 /** Converts a Venus scale level to the number of steps from 0. */
-export function venusLevelToSteps(level: number, max: number = MAX_VENUS_SCALE): number {
+export function venusLevelToSteps(level: number, max: number = MAX_VENUS_SCALE, step: number = 2): number {
+  if (step === 1) {
+    return level;
+  }
   if (twoPercentSteps(level, max)) {
     return level / 2;
   }
@@ -21,7 +29,10 @@ export function venusLevelToSteps(level: number, max: number = MAX_VENUS_SCALE):
 }
 
 /** Converts the number of Venus steps from 0 to a Venus scale level. */
-export function venusStepsToLevel(steps: number, max: number = MAX_VENUS_SCALE): number {
+export function venusStepsToLevel(steps: number, max: number = MAX_VENUS_SCALE, step: number = 2): number {
+  if (step === 1) {
+    return steps;
+  }
   if (steps <= STEPS_TO_MAX_VENUS_SCALE || max === MAX_VENUS_SCALE_VENUS_PHASE_2) {
     return steps * 2;
   }
@@ -33,11 +44,11 @@ export function venusStepsToLevel(steps: number, max: number = MAX_VENUS_SCALE):
  *
  * `steps` can be negative.
  */
-export function venusLevelAfterSteps(level: number, steps: number, max: number = MAX_VENUS_SCALE): number {
-  return venusStepsToLevel(Math.max(0, venusLevelToSteps(level, max) + steps), max);
+export function venusLevelAfterSteps(level: number, steps: number, max: number = MAX_VENUS_SCALE, step: number = 2): number {
+  return venusStepsToLevel(Math.max(0, venusLevelToSteps(level, max, step) + steps), max, step);
 }
 
 /** Returns the number of steps between `from` and `to`. */
-export function venusStepsBetween(from: number, to: number, max: number = MAX_VENUS_SCALE): number {
-  return venusLevelToSteps(to, max) - venusLevelToSteps(from, max);
+export function venusStepsBetween(from: number, to: number, max: number = MAX_VENUS_SCALE, step: number = 2): number {
+  return venusLevelToSteps(to, max, step) - venusLevelToSteps(from, max, step);
 }

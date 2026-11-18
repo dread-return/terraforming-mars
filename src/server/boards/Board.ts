@@ -56,6 +56,14 @@ export abstract class Board {
     this.equatorRow = this.bottomRow / 2;
   }
 
+  /**
+   * Whether `space` is in a polar region, as Polar Explorer counts them. On the standard maps these are
+   * the two bottom rows.
+   */
+  public isPolarSpace(space: Space): boolean {
+    return space.spaceType !== SpaceType.COLONY && space.y >= this.bottomRow - 1;
+  }
+
   /* Returns the space given a Space ID. */
   public getSpaceOrThrow(id: SpaceId): Space {
     const space = this.map.get(id);

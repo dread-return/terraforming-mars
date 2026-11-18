@@ -13,4 +13,7 @@ export enum BoardName {
   AMAZONIS = 'amazonis p.',
   TERRA_CIMMERIA = 't. cimmeria',
   HOLLANDIA = 'Hollandia',
+
+  // The fan GIGA expansion's board.
+  GIGA = 'GIGA',
 }

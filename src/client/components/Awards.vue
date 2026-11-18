@@ -47,7 +47,8 @@
 <script lang="ts">
 import {defineComponent} from 'vue';
 import Award from '@/client/components/Award.vue';
-import {AWARD_COSTS} from '@/common/constants';
+import {BoardName} from '@/common/boards/BoardName';
+import {getMilestoneAwardLimits} from '@/common/ma/MilestoneAwardLimits';
 import {FundedAwardModel} from '@/common/models/FundedAwardModel';
 import {Preferences, PreferencesManager} from '@/client/utils/PreferencesManager';
 
@@ -66,6 +67,11 @@ export default defineComponent({
     preferences: {
       type: Object as () => Readonly<Preferences>,
       default: () => PreferencesManager.INSTANCE.values(),
+    },
+    // The GIGA board allows more fundings, at other costs.
+    boardName: {
+      type: String as () => BoardName,
+      default: BoardName.THARSIS,
     },
   },
   data() {
@@ -90,7 +96,7 @@ export default defineComponent({
       return this.awards.filter(isFunded);
     },
     availableAwardSpots(): number[] {
-      return AWARD_COSTS.slice(this.fundedAwards.length);
+      return getMilestoneAwardLimits(this.boardName).awardCosts.slice(this.fundedAwards.length);
     },
   },
 });

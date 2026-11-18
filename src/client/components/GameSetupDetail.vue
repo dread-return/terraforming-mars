@@ -116,6 +116,7 @@ const boardColorClass: Record<BoardName, string> = {
   [BoardName.TERRA_CIMMERIA]: 'game-config board-terra_cimmeria map',
   [BoardName.HOLLANDIA]: 'game-config board-hollandia map',
   [BoardName.AMAZONIS_PLANITIA]: 'game-config board-amazonis_planitia map',
+  [BoardName.GIGA]: 'game-config board-giga map',
 };
 
 export default defineComponent({

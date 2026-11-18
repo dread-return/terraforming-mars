@@ -1,5 +1,16 @@
 <template>
-  <div :class="gameBoardClassName">
+  <GigaMarsBoard
+    v-if="boardName === BoardName.GIGA"
+    :spaces="spaces"
+    :venusScaleLevel="venusScaleLevel"
+    :oceans_count="oceans_count"
+    :oxygen_level="oxygen_level"
+    :temperature="temperature"
+    :expansions="expansions"
+    :tileView="tileView"
+    @toggleTileView="$emit('toggleTileView')"
+  />
+  <div v-else :class="gameBoardClassName">
     <div class="hide-tile-button-container">
       <div class="hide-tile-button" @click="$emit('toggleTileView')" data-test="hide-tiles-button" v-i18n>
         {{ tileView }} tiles
@@ -360,6 +371,7 @@ import {defineComponent} from 'vue';
 import * as constants from '@/common/constants';
 import {getGlobalParameterMaximums} from '@/common/boards/GlobalParameterMaximums';
 import BoardSpace from '@/client/components/BoardSpace.vue';
+import GigaMarsBoard from '@/client/components/GigaMarsBoard.vue';
 import {AresData} from '@/common/ares/AresData';
 import {SpaceModel} from '@/common/models/SpaceModel';
 import {SpaceType} from '@/common/boards/SpaceType';
@@ -427,6 +439,7 @@ export default defineComponent({
   },
   components: {
     BoardSpace,
+    GigaMarsBoard,
   },
   methods: {
     hasSpace(spaceId: SpaceId): boolean {

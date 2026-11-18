@@ -107,6 +107,9 @@ export enum TileType {
 
     // Mercury vs Mars
     BOREHOLES, // 72
+
+    // Rob Antilles: Mobile Biological Dome (held until the GIGA parties existed)
+    BIOLOGICAL_DOME, // 73
   }
 
 export const tileTypeToString: Record<TileType, string> = {
@@ -161,6 +164,7 @@ export const tileTypeToString: Record<TileType, string> = {
   [TileType.METROPOLIS]: 'Metropolis',
   [TileType.PARADISE_CITY]: 'Paradise City',
   [TileType.ANIMAL_DOME]: 'Animal Dome',
+  [TileType.BIOLOGICAL_DOME]: 'Biological Dome',
   [TileType.PUMPING_HUB]: 'Pumping Hub',
   [TileType.SEDIMENT]: 'Sediment',
   [TileType.INVAK_CITY]: 'Invak City',
@@ -196,7 +200,7 @@ export const BASE_OCEAN_TILES = new Set([TileType.OCEAN, TileType.WETLANDS]);
 export const GREENERY_TILES = new Set([TileType.GREENERY, TileType.WETLANDS, TileType.INVAK_CITY, TileType.SUBURBS]);
 
 /** Rob Antilles special tiles. */
-export const ROB_ANTILLES_TILES = new Set([TileType.SUBURBS, TileType.HARBOR, TileType.METROPOLIS, TileType.PARADISE_CITY, TileType.ANIMAL_DOME, TileType.PUMPING_HUB, TileType.SEDIMENT, TileType.INVAK_CITY, TileType.ESOTERIC_COMMUNITY, TileType.MENAGERIE]);
+export const ROB_ANTILLES_TILES = new Set([TileType.SUBURBS, TileType.HARBOR, TileType.METROPOLIS, TileType.PARADISE_CITY, TileType.ANIMAL_DOME, TileType.BIOLOGICAL_DOME, TileType.PUMPING_HUB, TileType.SEDIMENT, TileType.INVAK_CITY, TileType.ESOTERIC_COMMUNITY, TileType.MENAGERIE]);
 
 /** Venus Phase 2 tiles, placed on the Venus map. */
 export const VENUS_TILES = new Set([TileType.VENUS_FLOATING_ARRAY, TileType.VENUS_GAS_MINE, TileType.VENUS_HABITAT]);

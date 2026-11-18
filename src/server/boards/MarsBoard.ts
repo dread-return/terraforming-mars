@@ -121,6 +121,11 @@ export class MarsBoard extends Board {
     if (MarsBoard.isOnVenusMap(space)) {
       return [];
     }
+    if (space.spaceType === SpaceType.COLONY) {
+      // An off-world greenery (Flying Garden) is next to the off-world city it was placed by.
+      const linked = space.tile?.nextTo;
+      return this.spaces.filter((s) => s.spaceType === SpaceType.COLONY && (s.id === linked || s.tile?.nextTo === space.id));
+    }
     return super.getAdjacentSpaces(space);
   }
 

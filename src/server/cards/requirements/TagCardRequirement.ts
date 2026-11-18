@@ -43,6 +43,11 @@ export class TagCardRequirement extends InequalityRequirement {
       tagCount += 2;
     }
 
+    // Bionic Augmentations (Solaris): science tag requirements need 2 fewer tags.
+    if (this.tag === Tag.SCIENCE && this.max !== true && player.tableau.has(CardName.BIONIC_AUGMENTATIONS)) {
+      tagCount += 2;
+    }
+
     // PoliticalAgendas Scientists P4 hook
     if (this.tag === Tag.SCIENCE && player.hasTurmoilScienceTagBonus) {
       tagCount += 1;

@@ -34,6 +34,10 @@ export function expansionColonySpaces(gameOptions: GameOptions): Array<Space> {
       }
       continue;
     }
+    // Flying Garden needs a GIGA party.
+    if (entry.card === CardName.FLYING_GARDEN && gameOptions.gigaTurmoil !== true) {
+      continue;
+    }
     if (gameOptions.expansions[entry.expansion] || gameOptions.includedCards.includes(entry.card)) {
       spaces.push(colonySpace(entry.name));
     }

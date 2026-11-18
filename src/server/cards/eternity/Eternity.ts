@@ -318,10 +318,15 @@ export class Eternity {
   }
 
   /** Administrative Restructure: 1 action per turn for everyone for the rest of the generation. */
-  public static actionsPerTurn(game: IPlayer['game']): number {
+  public static actionsPerTurn(game: IPlayer['game'], player?: IPlayer): number {
     for (const p of game.players) {
       const card = p.playedCards.get(CardName.ADMINISTRATIVE_RESTRUCTURE);
       if (card !== undefined && (card.data as {gen?: number} | undefined)?.gen === game.generation) {
+        return 1;
+      }
+      // Management Crisis (Solaris): its owner's opponents take 1 action per turn this generation.
+      const crisis = p.playedCards.get(CardName.MANAGEMENT_CRISIS);
+      if (player !== undefined && p !== player && crisis !== undefined && crisis.generationUsed === game.generation) {
         return 1;
       }
     }

@@ -16,9 +16,14 @@ export type CardFactorySpec<T> = {
   instantiate?: boolean;
   // Used for Turmoil's global events. When true, classified as a "negative" global event.
   negative?: boolean;
+  // True for cards that need one of the six GIGA fan parties: they are only in games with Giga Turmoil.
+  gigaTurmoil?: boolean;
 }
 
 export function isCompatibleWith(cf: CardFactorySpec<any>, gameOptions: GameOptions): boolean {
+  if (cf.gigaTurmoil === true && gameOptions.gigaTurmoil !== true) {
+    return false;
+  }
   if (cf.compatibility === undefined) {
     return true;
   }

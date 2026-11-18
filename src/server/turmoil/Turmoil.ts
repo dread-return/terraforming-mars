@@ -1,3 +1,4 @@
+import {FanPartyCards} from './giga/FanPartyCards';
 import {GIGA_PARTIES, GIGA_PARTIES_IN_PLAY, OFFICIAL_PARTIES, PartyName} from '../../common/turmoil/PartyName';
 import {IParty} from './parties/IParty';
 import {MarsFirst} from './parties/MarsFirst';
@@ -189,6 +190,8 @@ export class Turmoil {
     this.setPartiesInPlay(names);
     this.partyDraft = undefined;
     game.log('Giga Turmoil parties: ${0}', (b) => b.rawString(this.parties.map((p) => p.name).join(', ')));
+    // Cards for fan parties that were not drafted leave the game.
+    FanPartyCards.removeAbsentPartyCards(game);
 
     this.politicalAgendasData = PoliticalAgendas.newInstance('Random', this.parties);
     this.politicalAgendasData.agendaStyle = 'Chairman';

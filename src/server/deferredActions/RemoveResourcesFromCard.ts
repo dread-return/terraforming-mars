@@ -1,3 +1,4 @@
+import {antiFraudActive} from '../cards/solaris/antiFraud';
 import {IPlayer} from '../IPlayer';
 import {CardResource} from '../../common/CardResource';
 import {OrOptions} from '../inputs/OrOptions';
@@ -133,7 +134,8 @@ export class RemoveResourcesFromCard extends DeferredAction<Response> {
           }
         }
       } else {
-        if (source !== 'self') {
+        // Solaris: Anti Fraud Investigation stops all resource removal from other players this generation.
+        if (source !== 'self' && !antiFraudActive(player.game)) {
           const hasProtetedHabitats = p.tableau.has(CardName.PROTECTED_HABITATS);
           const hasMartianRangers = p.tableau.has(CardName.MARTIAN_RANGERS);
           for (const card of p.getCardsWithResources(resourceType)) {

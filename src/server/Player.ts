@@ -1,3 +1,4 @@
+import {antiFraudActive} from './cards/solaris/antiFraud';
 import {HighOrbit} from './highOrbit/HighOrbit';
 import {Postludes} from './postludes/Postludes';
 import * as constants from '../common/constants';
@@ -417,7 +418,7 @@ export class Player implements IPlayer {
   }
 
   public plantsAreProtected(): boolean {
-    return this.withinDeflectionZone ||
+    return this.withinDeflectionZone || antiFraudActive(this.game) ||
       this.playedCards.has(CardName.PROTECTED_HABITATS) ||
       this.playedCards.has(CardName.ASTEROID_DEFLECTION_SYSTEM);
   }
@@ -428,6 +429,10 @@ export class Player implements IPlayer {
   }
 
   public isProtected(resource: Resource) {
+    // Solaris: Anti Fraud Investigation stops all resource removal this generation.
+    if (antiFraudActive(this.game)) {
+      return true;
+    }
     switch (resource) {
     case Resource.PLANTS:
       return this.plantsAreProtected();
@@ -1645,7 +1650,7 @@ export class Player implements IPlayer {
         if (game.hasPassedThisActionPhase(this) || (this.allOtherPlayersHavePassed() === false && this.actionsTakenThisRound >= this.availableActionsThisRound)) {
           this.actionsTakenThisRound = 0;
           // Eternity: Administrative Restructure limits everyone to 1 action per turn this generation.
-          this.availableActionsThisRound = Eternity.actionsPerTurn(this.game);
+          this.availableActionsThisRound = Eternity.actionsPerTurn(this.game, this);
           game.resettable = true;
           game.playerIsFinishedTakingActions();
           return;

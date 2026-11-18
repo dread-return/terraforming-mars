@@ -1,5 +1,12 @@
 import {CardName} from '../../../common/cards/CardName';
 import {ModuleManifest} from '../ModuleManifest';
+import {MobileBiologicalDome} from './MobileBiologicalDome';
+import {GreenhouseLights} from './GreenhouseLights';
+import {CorruptedDelegate} from './CorruptedDelegate';
+import {TerraformingBureauRestructuring} from './TerraformingBureauRestructuring';
+import {GreatMartianArchives} from './GreatMartianArchives';
+import {ElectoralCampaign} from './ElectoralCampaign';
+import {TaxTheRich} from './TaxTheRich';
 import {Suburbs} from './Suburbs';
 import {HarborBorealis} from './HarborBorealis';
 import {HistoricalVideographicArchive} from './HistoricalVideographicArchive';
@@ -136,5 +143,13 @@ export const ROB_ANTILLES_CARD_MANIFEST = new ModuleManifest({
     [CardName.CLOUD_CITY_RA]: {Factory: CloudCity, compatibility: 'venusphase2'},
     [CardName.TROPOSPHERIC_CITY]: {Factory: TroposphericCity, compatibility: 'venusphase2'},
     [CardName.METEOR_SHOWER]: {Factory: MeteorShower},
+    // Need a GIGA fan party, so only in Giga Turmoil games (see FanPartyCards).
+    [CardName.MOBILE_BIOLOGICAL_DOME]: {Factory: MobileBiologicalDome, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.GREENHOUSE_LIGHTS]: {Factory: GreenhouseLights, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.CORRUPTED_DELEGATE]: {Factory: CorruptedDelegate, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.TERRAFORMING_BUREAU_RESTRUCTURING]: {Factory: TerraformingBureauRestructuring, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.GREAT_MARTIAN_ARCHIVES]: {Factory: GreatMartianArchives, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.ELECTORAL_CAMPAIGN]: {Factory: ElectoralCampaign, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.TAX_THE_RICH]: {Factory: TaxTheRich, compatibility: 'turmoil', gigaTurmoil: true},
   },
 });

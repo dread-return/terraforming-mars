@@ -11,11 +11,11 @@ describe('Ides of Mars manifest', () => {
     return cards.filter((c) => names.has(c.name));
   }
 
-  it('has 61 cards', () => {
-    expect(names.size).eq(61);
+  it('has 64 cards', () => {
+    expect(names.size).eq(64);
   });
 
-  it('all cards but Mercurial Laboratory join the deck with Colonies, Turmoil and Venus on', () => {
+  it('all cards but Mercurial Laboratory and the 3 fan-party cards join the deck with Colonies, Turmoil and Venus on', () => {
     const [game] = testGame(3, {idesofmarsExpansion: true, coloniesExtension: true, turmoilExtension: true, venusNextExtension: true});
     const inGame = idesCardsInGame(game).map((c) => c.name);
     expect(inGame).has.length(60);
@@ -30,11 +30,20 @@ describe('Ides of Mars manifest', () => {
     expect(inGame).includes(CardName.MERCURIAL_LABORATORY);
   });
 
+  it('the 3 fan-party cards join with Giga Turmoil', () => {
+    const [game] = testGame(3, {idesofmarsExpansion: true, coloniesExtension: true, turmoilExtension: true, venusNextExtension: true,
+      gigaTurmoil: true, politicalAgendasExtension: 'Chairman'});
+    const inGame = idesCardsInGame(game).map((c) => c.name);
+    expect(inGame).has.length(63);
+    expect(inGame).includes(CardName.FREE_CITY);
+  });
+
   it('cards needing other expansions stay out without them', () => {
     const [game] = testGame(2, {idesofmarsExpansion: true});
     const inGame = idesCardsInGame(game).map((c) => c.name);
-    // 12 cards need Colonies, Turmoil or Venus (Air Transport Company now too); Mercurial Laboratory needs Mercury vs Mars.
-    expect(inGame).has.length(61 - 13);
+    // 12 cards need Colonies, Turmoil or Venus (Air Transport Company now too); Mercurial Laboratory needs Mercury vs Mars;
+    // 3 need Giga Turmoil.
+    expect(inGame).has.length(64 - 16);
     expect(inGame).does.not.include(CardName.AIR_TRANSPORT_COMPANY);
     expect(inGame).does.not.include(CardName.SPACE_PIRATES);
     expect(inGame).does.not.include(CardName.BACKSTABBING);

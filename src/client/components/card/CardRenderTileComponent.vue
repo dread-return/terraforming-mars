@@ -165,6 +165,9 @@ const TILE_CLASSES: Record<TileType, Classes> = {
   [TileType.ANIMAL_DOME]: {
     tile: 'card-tile-ra-animal-dome',
   },
+  [TileType.BIOLOGICAL_DOME]: {
+    tile: 'card-tile-ra-biological-dome',
+  },
   [TileType.PUMPING_HUB]: {
     tile: 'card-tile-ra-pumping-hub',
   },

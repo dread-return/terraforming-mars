@@ -1,5 +1,25 @@
 import {CardName} from '../../../common/cards/CardName';
 import {ModuleManifest} from '../ModuleManifest';
+import {BionicAugmentations} from './BionicAugmentations';
+import {SyntheticBrainCells} from './SyntheticBrainCells';
+import {BuildingDeregulation} from './BuildingDeregulation';
+import {PowerLinesHub} from './PowerLinesHub';
+import {Plebiscite} from './Plebiscite';
+import {RedistributionOfWealth} from './RedistributionOfWealth';
+import {Cyborgs} from './Cyborgs';
+import {StrongArtificialIntelligence} from './StrongArtificialIntelligence';
+import {ColdFusionTechnology} from './ColdFusionTechnology';
+import {MartianAgriculture} from './MartianAgriculture';
+import {ManagementCrisis} from './ManagementCrisis';
+import {EnergyAcquisition} from './EnergyAcquisition';
+import {MartianCensus} from './MartianCensus';
+import {WanderingStationHermes} from './WanderingStationHermes';
+import {FirstManMonument} from './FirstManMonument';
+import {AwardCelebration} from './AwardCelebration';
+import {Bribery} from './Bribery';
+import {MarsAcademyOfPoliticalSciences} from './MarsAcademyOfPoliticalSciences';
+import {ImmigrationBureau} from './ImmigrationBureau';
+import {AntiFraudInvestigation} from './AntiFraudInvestigation';
 import {Omegalaxy} from './Omegalaxy';
 import {AtmosphericCompressor} from './AtmosphericCompressor';
 import {OrbitalHydrogeologicCannon} from './OrbitalHydrogeologicCannon';
@@ -66,5 +86,26 @@ export const SOLARIS_CARD_MANIFEST = new ModuleManifest({
     [CardName.MOTHERSHIP]: {Factory: Mothership},
     [CardName.HYPERSONIC_FIGHTERS]: {Factory: HypersonicFighters},
     [CardName.SHIELDING_DRONES]: {Factory: ShieldingDrones},
+    // Need a GIGA fan party, so only in Giga Turmoil games (see FanPartyCards).
+    [CardName.BIONIC_AUGMENTATIONS]: {Factory: BionicAugmentations, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.SYNTHETIC_BRAIN_CELLS]: {Factory: SyntheticBrainCells, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.BUILDING_DEREGULATION]: {Factory: BuildingDeregulation, compatibility: ['turmoil', 'industries'], gigaTurmoil: true},
+    [CardName.POWER_LINES_HUB]: {Factory: PowerLinesHub, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.PLEBISCITE]: {Factory: Plebiscite, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.REDISTRIBUTION_OF_WEALTH]: {Factory: RedistributionOfWealth, compatibility: ['turmoil', 'prelude'], gigaTurmoil: true},
+    [CardName.CYBORGS]: {Factory: Cyborgs, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.STRONG_ARTIFICIAL_INTELLIGENCE]: {Factory: StrongArtificialIntelligence, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.COLD_FUSION_TECHNOLOGY]: {Factory: ColdFusionTechnology, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.MARTIAN_AGRICULTURE]: {Factory: MartianAgriculture, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.MANAGEMENT_CRISIS]: {Factory: ManagementCrisis, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.ENERGY_ACQUISITION]: {Factory: EnergyAcquisition, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.MARTIAN_CENSUS]: {Factory: MartianCensus, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.WANDERING_STATION_HERMES]: {Factory: WanderingStationHermes, compatibility: ['turmoil', 'pathfinders'], gigaTurmoil: true},
+    [CardName.FIRST_MAN_MONUMENT]: {Factory: FirstManMonument, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.AWARD_CELEBRATION]: {Factory: AwardCelebration, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.BRIBERY]: {Factory: Bribery, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.MARS_ACADEMY_OF_POLITICAL_SCIENCES]: {Factory: MarsAcademyOfPoliticalSciences, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.IMMIGRATION_BUREAU]: {Factory: ImmigrationBureau, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.ANTI_FRAUD_INVESTIGATION]: {Factory: AntiFraudInvestigation, compatibility: 'turmoil', gigaTurmoil: true},
   },
 });

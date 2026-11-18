@@ -28,4 +28,7 @@ export const SpaceName = {
   // Mercury vs Mars: the reserved areas on the Mercury board
   NEW_POMPEII: 'c81',
   SHADOW_FOREST: 'c82',
+
+  // Flying Garden (Ides of Mars): an off-world greenery placed next to an off-world city.
+  FLYING_GARDEN: 'c83',
 } as const;

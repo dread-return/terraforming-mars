@@ -93,6 +93,7 @@ const OFF_MARS_NAMES: Partial<Record<SpaceId, string>> = {
   [SpaceName.MAIN_DOCKING_STATION]: 'Main Docking Station',
   [SpaceName.NEW_POMPEII]: 'New Pompeii (Mercury)',
   [SpaceName.SHADOW_FOREST]: 'Shadow Forest (Mercury)',
+  [SpaceName.FLYING_GARDEN]: 'Flying Garden',
 };
 
 type TrackBonus = {percent: number, label: string, title: string};

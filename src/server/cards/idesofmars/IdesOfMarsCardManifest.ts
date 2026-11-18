@@ -1,5 +1,8 @@
 import {CardName} from '../../../common/cards/CardName';
 import {ModuleManifest} from '../ModuleManifest';
+import {FlyingGarden} from './FlyingGarden';
+import {TerraformingOffice} from './TerraformingOffice';
+import {FreeCity} from './FreeCity';
 import {BudgetRestrictions} from './BudgetRestrictions';
 import {PreciousMetalAsteroid} from './PreciousMetalAsteroid';
 import {TargetedResearch} from './TargetedResearch';
@@ -136,5 +139,9 @@ export const IDES_OF_MARS_CARD_MANIFEST = new ModuleManifest({
     [CardName.OBJECTIVE_MARS]: {Factory: ObjectiveMars},
     [CardName.GALILEO_INSTITUTE]: {Factory: GalileoInstitute},
     [CardName.UNIVERSAL_FIGHTERS]: {Factory: UniversalFighters},
+    // Need a GIGA fan party, so only in Giga Turmoil games (see FanPartyCards).
+    [CardName.FLYING_GARDEN]: {Factory: FlyingGarden, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.TERRAFORMING_OFFICE]: {Factory: TerraformingOffice, compatibility: 'turmoil', gigaTurmoil: true},
+    [CardName.FREE_CITY]: {Factory: FreeCity, compatibility: 'turmoil', gigaTurmoil: true},
   },
 });

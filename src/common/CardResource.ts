@@ -71,4 +71,6 @@ export enum CardResource {
   PROBIOTIC = 'Probiotic',
   // Epic Corporations
   GALAXY = 'Galaxy',
+  INFLUENCE = 'Influence',
+  DEFICIT = 'Deficit',
 }

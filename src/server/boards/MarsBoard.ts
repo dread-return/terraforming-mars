@@ -13,6 +13,7 @@ import {SpaceBonus} from '../../common/boards/SpaceBonus';
 import * as constants from '../../common/constants';
 import {GlobalParameterMaximums, getGlobalParameterMaximums} from '../../common/boards/GlobalParameterMaximums';
 import {BoardName} from '../../common/boards/BoardName';
+import {EpicHooks} from '../cards/epic/EpicHooks';
 
 // Coordinate labels for the standard nine-row maps.
 const MARS_A9 = {
@@ -182,7 +183,8 @@ export class MarsBoard extends Board {
   public getAvailableSpacesForCity(player: IPlayer, canAffordOptions?: CanAffordOptions, spaces?: ReadonlyArray<Space>): ReadonlyArray<Space> {
     const spacesOnLand = spaces ?? this.getAvailableSpacesOnLand(player, canAffordOptions);
     // Gordon CEO can ignore placement restrictions for Cities+Greenery
-    if (player.tableau.has(CardName.GORDON)) {
+    // Epic Corporations: New Grounds and Steel Ridge Constructions too.
+    if (player.tableau.has(CardName.GORDON) || EpicHooks.ignoresCityPlacement(player)) {
       return spacesOnLand;
     }
     // Kingdom of Tauraro can place cities next to cities, but also must place them
@@ -247,7 +249,8 @@ export class MarsBoard extends Board {
   public getAvailableSpacesForGreenery(player: IPlayer, canAffordOptions?: CanAffordOptions): ReadonlyArray<Space> {
     let availableLandSpaces = this.getAvailableSpacesOnLand(player, canAffordOptions);
     // Gordon CEO can ignore placement restrictions for Cities+Greenery
-    if (player.tableau.has(CardName.GORDON)) {
+    // Epic Corporations: New Grounds too.
+    if (player.tableau.has(CardName.GORDON) || EpicHooks.ignoresGreeneryPlacement(player)) {
       return availableLandSpaces;
     }
     // Spaces next to Red City are always unavailable for Greeneries.
@@ -257,7 +260,8 @@ export class MarsBoard extends Board {
     // to a tile the player already owns.
     const spacesForGreenery = availableLandSpaces.filter((space) => {
       return this.getAdjacentSpaces(space).some((adj) => {
-        return MarsBoard.hasRealTile(adj) && adj.player === player;
+        // Epic Corporations: Planet Wave treats oceans as its own tiles for placement.
+        return MarsBoard.hasRealTile(adj) && (adj.player === player || (Board.isOceanSpace(adj) && player.tableau.has(CardName.PLANET_WAVE)));
       });
     });
 

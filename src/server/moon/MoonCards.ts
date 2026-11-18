@@ -19,5 +19,6 @@ export class MoonCards {
     // Epic Corporations
     CardName.HEYER_EDUCATION,
     CardName.HELIX,
+    CardName.G_AI_A,
   ]);
 }

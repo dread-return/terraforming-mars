@@ -40,5 +40,7 @@ export const cardResourceCSS = {
   [CardResource.DIRECTOR]: 'card-resource-director',
   [CardResource.FOOD]: 'card-resource-food',
   [CardResource.GALAXY]: 'card-resource-galaxy',
+  [CardResource.INFLUENCE]: 'card-resource-influence',
+  [CardResource.DEFICIT]: 'card-resource-deficit',
   [CardResource.PROBIOTIC]: 'card-resource-probiotic',
 } satisfies Record<CardResource, string>;

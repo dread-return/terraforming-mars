@@ -19,9 +19,11 @@ import {IGlobalEvent} from '../../turmoil/globalEvents/IGlobalEvent';
 import {IStandardProjectCard} from '../IStandardProjectCard';
 import {StandardProjectCanPayWith} from '../../../common/cards/Types';
 import {SelectAmount} from '../../inputs/SelectAmount';
+import {SelectCard} from '../../inputs/SelectCard';
 import {PlaceCityTile} from '../../deferredActions/PlaceCityTile';
 import {PlayerInput} from '../../PlayerInput';
 import {EpicUtils} from './EpicUtils';
+import {ICorporationCard} from '../corporation/ICorporationCard';
 
 /** True Mars Foundation: the tag sets a player can mark (one per action). */
 export const TRUE_MARS_FOUNDATION_SETS: ReadonlyArray<ReadonlyArray<Tag>> = [
@@ -217,6 +219,23 @@ export class EpicHooks {
 
     if (delta < 0 && fromOtherPlayer) {
       EpicHooks.onReducedByAnotherPlayer(player, resource, /* production */ true);
+      // Bentenmaru: the attack raises its production instead.
+      if (player.tableau.has(CardName.BENTENMARU)) {
+        player.production.add(resource, -2 * delta, {log: true});
+      }
+    }
+
+    // Schlockmeister: raising a non-M€ production may also raise M€ production, for a deficit.
+    const schlock = player.tableau.get(CardName.SCHLOCKMEISTER);
+    if (schlock !== undefined && delta > 0 && resource !== Resource.MEGACREDITS) {
+      player.defer(new OrOptions(
+        new SelectOption('Schlockmeister: also raise your M€ production 1 step (add 1 deficit)', 'Raise').andThen(() => {
+          player.production.add(Resource.MEGACREDITS, 1, {log: true});
+          player.addResourceTo(schlock, {qty: 1, log: true});
+          return undefined;
+        }),
+        new SelectOption('Schlockmeister: no', 'Skip').andThen(() => undefined),
+      ));
     }
   }
 
@@ -242,14 +261,63 @@ export class EpicHooks {
     }
     if (delta < 0 && isFromPlayer(from) && from.player.id !== player.id) {
       EpicHooks.onReducedByAnotherPlayer(player, resource, /* production */ false);
+      // Bentenmaru: the attack raises its resources instead.
+      if (player.tableau.has(CardName.BENTENMARU)) {
+        player.stock.add(resource, -2 * delta, {log: true});
+      }
+      // Amityville: removing plants from others lets it gain them, or add radiation.
+      const thief = from.player;
+      if (resource === Resource.PLANTS && thief.tableau.has(CardName.AMITYVILLE)) {
+        const amount = -delta;
+        const options = [new SelectOption(`Amityville: gain ${amount} plants`, 'Gain').andThen(() => {
+          thief.stock.add(Resource.PLANTS, amount, {log: true});
+          return undefined;
+        })];
+        if (thief.getResourceCards(CardResource.RADIATION).length > 0) {
+          options.push(new SelectOption(`Amityville: add ${amount} radiation to a card`, 'Add').andThen(() => {
+            thief.game.defer(new AddResourcesToCard(thief, CardResource.RADIATION, {count: amount}));
+            return undefined;
+          }));
+        }
+        thief.defer(new OrOptions(...options, new SelectOption('Amityville: nothing', 'Skip').andThen(() => undefined)));
+      }
+    }
+    // Aerospace Alloys: titanium gained goes on the card until it holds 10.
+    if (resource === Resource.TITANIUM && delta > 0) {
+      EpicHooks.storeAerospaceTitanium(player, delta);
+    }
+  }
+
+  /** Aerospace Alloys: move newly gained titanium onto the card until 10 are there, then release them. */
+  public static storeAerospaceTitanium(player: IPlayer, amount: number): void {
+    const card = player.tableau.get(CardName.AEROSPACE_ALLOYS);
+    if (card === undefined || dataOf<{released?: boolean}>(card).released === true || amount <= 0) {
+      return;
+    }
+    const moved = Math.min(amount, 10 - card.resourceCount, player.titanium);
+    if (moved <= 0) {
+      return;
+    }
+    player.titanium -= moved;
+    card.resourceCount += moved;
+    player.game.log('${0} stored ${1} titanium on ${2}', (b) => b.player(player).number(moved).card(card));
+    if (card.resourceCount >= 10) {
+      dataOf<{released?: boolean}>(card).released = true;
+      player.titanium += card.resourceCount;
+      player.game.log('${0} moved the ${1} titanium from ${2} to their stock', (b) => b.player(player).number(card.resourceCount).card(card));
+      card.resourceCount = 0;
     }
   }
 
   /** Called when resources were removed from a card. */
-  public static onCardResourceRemoved(owner: IPlayer, card: ICard, removingPlayer?: IPlayer): void {
+  public static onCardResourceRemoved(owner: IPlayer, card: ICard, removingPlayer?: IPlayer, count: number = 1): void {
     const type = card.resourceType;
     if (type === undefined || removingPlayer === undefined || removingPlayer.id === owner.id) {
       return;
+    }
+    // Bentenmaru: the attack adds to the card instead.
+    if (owner.tableau.has(CardName.BENTENMARU)) {
+      owner.addResourceTo(card, {qty: 2 * count, log: true});
     }
     for (const p of owner.game.players) {
       // Ares Security: 1 of that resource. Orbital Eye: 3 of it.
@@ -474,10 +542,91 @@ export class EpicHooks {
         return undefined;
       }));
     }
+    const elm = player.tableau.get(CardName.ELM);
+    if (elm !== undefined && elm.resourceCount > 0) {
+      options.push(new SelectOption('ELM: spend influence for 2 M€ each', 'Spend').andThen(() =>
+        new SelectAmount('How much influence?', 'Spend', 1, elm.resourceCount, true).andThen((x) => {
+          player.freeActionTaken = true;
+          player.removeResourceFrom(elm, x, {log: true});
+          player.stock.add(Resource.MEGACREDITS, 2 * x, {log: true});
+          return undefined;
+        })));
+    }
+    const microbes = player.getResourceCount(CardResource.MICROBE);
+    if (player.tableau.has(CardName.HEINDL_AQUATIC) && microbes > 0) {
+      options.push(new SelectOption('HeindlAquatic: use microbes as plants', 'Convert').andThen(() =>
+        new SelectCard('Take microbes from', 'Select', player.getCardsWithResources(CardResource.MICROBE)).andThen(([card]) =>
+          new SelectAmount('How many microbes?', 'Convert', 1, card.resourceCount, true).andThen((x) => {
+            player.freeActionTaken = true;
+            player.removeResourceFrom(card, x, {log: true});
+            player.stock.add(Resource.PLANTS, x, {log: true});
+            return undefined;
+          }))));
+    }
+    const gaia = player.tableau.get(CardName.G_AI_A);
+    if (gaia !== undefined && gaia.resourceCount > 0) {
+      const exchange = (label: string, rate: number, give: (n: number) => void) => new SelectOption(`G-AI-A: ${label}`, 'Exchange').andThen(() =>
+        new SelectAmount('How many?', 'Exchange', 1, Math.floor(gaia.resourceCount / rate), true).andThen((n) => {
+          player.freeActionTaken = true;
+          player.removeResourceFrom(gaia, n * rate, {log: true});
+          give(n);
+          return undefined;
+        }));
+      if (player.getResourceCards(CardResource.MICROBE).length > 0) {
+        options.push(exchange('1 science → 1 microbe', 1, (n) => player.game.defer(new AddResourcesToCard(player, CardResource.MICROBE, {count: n}))));
+      }
+      if (gaia.resourceCount >= 2) {
+        options.push(exchange('2 science → 1 plant', 2, (n) => player.stock.add(Resource.PLANTS, n, {log: true})));
+      }
+      if (gaia.resourceCount >= 3 && player.getResourceCards(CardResource.ANIMAL).length > 0) {
+        options.push(exchange('3 science → 1 animal', 3, (n) => player.game.defer(new AddResourcesToCard(player, CardResource.ANIMAL, {count: n}))));
+      }
+    }
     if (options.length === 0) {
       return undefined;
     }
     return new OrOptions(...options).setTitle('Free conversions (Epic corporations)');
+  }
+
+  /** Planet Forge (Venus cards) and Plutonic Prototyping (space cards) may pay with steel. */
+  public static canUseSteel(player: IPlayer, card: IProjectCard): boolean {
+    return (player.tableau.has(CardName.PLANET_FORGE) && card.tags.includes(Tag.VENUS)) ||
+      (player.tableau.has(CardName.PLUTONIC_PROTOTYPING) && card.tags.includes(Tag.SPACE));
+  }
+
+  /** Planet Forge (Venus cards) and Plutonic Prototyping (building cards) may pay with titanium. */
+  public static canUseTitanium(player: IPlayer, card: IProjectCard): boolean {
+    return (player.tableau.has(CardName.PLANET_FORGE) && card.tags.includes(Tag.VENUS)) ||
+      (player.tableau.has(CardName.PLUTONIC_PROTOTYPING) && card.tags.includes(Tag.BUILDING));
+  }
+
+  /** New Grounds and Steel Ridge Constructions place cities ignoring the normal rules. */
+  public static ignoresCityPlacement(player: IPlayer): boolean {
+    return player.tableau.has(CardName.NEW_GROUNDS) || player.tableau.has(CardName.STEEL_RIDGE_CONSTRUCTIONS);
+  }
+
+  /** New Grounds places greeneries ignoring the normal rules. */
+  public static ignoresGreeneryPlacement(player: IPlayer): boolean {
+    return player.tableau.has(CardName.NEW_GROUNDS);
+  }
+
+  /** Space Guild: its events stay face up, so their tags count. */
+  public static eventsFaceUp(player: IPlayer): boolean {
+    return player.tableau.has(CardName.SPACE_GUILD);
+  }
+
+  /** First Wave: the first 4 cards kept during setup are free. */
+  public static freeSetupCards(corp: ICorporationCard): number {
+    return corp.name === CardName.FIRST_WAVE ? 4 : 0;
+  }
+
+  /** Called when a player passes. */
+  public static onPass(player: IPlayer): void {
+    // Bentenmaru: discard all remaining M€.
+    if (player.tableau.has(CardName.BENTENMARU) && player.megaCredits > 0) {
+      player.game.log('${0} discarded ${1} M€ (Bentenmaru)', (b) => b.player(player).number(player.megaCredits));
+      player.megaCredits = 0;
+    }
   }
 
   /** Called at the start of each generation. */

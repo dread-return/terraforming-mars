@@ -420,7 +420,9 @@ export class Player implements IPlayer {
   public plantsAreProtected(): boolean {
     return this.withinDeflectionZone ||
       this.playedCards.has(CardName.PROTECTED_HABITATS) ||
-      this.playedCards.has(CardName.ASTEROID_DEFLECTION_SYSTEM);
+      this.playedCards.has(CardName.ASTEROID_DEFLECTION_SYSTEM) ||
+      // Epic Corporations: G-AI-A.
+      this.tableau.has(CardName.G_AI_A);
   }
 
   public alloysAreProtected(): boolean {
@@ -578,7 +580,7 @@ export class Player implements IPlayer {
             .card(card));
       }
 
-      EpicHooks.onCardResourceRemoved(this, card, removingPlayer);
+      EpicHooks.onCardResourceRemoved(this, card, removingPlayer, amountRemoved);
 
       // Lawsuit hook
       if (removingPlayer !== undefined && removingPlayer !== this && this.removingPlayers.includes(removingPlayer.id) === false) {
@@ -848,9 +850,9 @@ export class Player implements IPlayer {
     return {
       heat: this.canUseHeatAsMegaCredits,
       energy: this.canUseEnergyAsMegaCredits,
-      steel: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card) || Eternity.canUseSteel(this, card) || mercuryCanUseSteel(this, card),
+      steel: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card) || Eternity.canUseSteel(this, card) || mercuryCanUseSteel(this, card) || EpicHooks.canUseSteel(this, card),
       plants: card.tags.includes(Tag.BUILDING) && this.playedCards.has(CardName.MARTIAN_LUMBER_CORP),
-      titanium: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.SPACE) || Nuclear.canUseTitanium(this, card) || Eternity.canUseTitanium(this, card),
+      titanium: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.SPACE) || Nuclear.canUseTitanium(this, card) || Eternity.canUseTitanium(this, card) || EpicHooks.canUseTitanium(this, card),
       lunaTradeFederationTitanium: this.canUseTitaniumAsMegacredits,
       seeds: card.tags.includes(Tag.PLANT) || card.name === CardName.GREENERY_STANDARD_PROJECT,
       floaters: card.tags.includes(Tag.VENUS),
@@ -1137,7 +1139,8 @@ export class Player implements IPlayer {
     // and log "kept N project cards" in its andThen.
     let deferredCardCost = 0;
     if (additionalCorp === false && corporationCard.name !== CardName.BEGINNER_CORPORATION) {
-      const diff = this.cardsInHand.length * this.cardCost;
+      // Epic Corporations: First Wave keeps its first 4 setup cards for free.
+      const diff = Math.max(0, this.cardsInHand.length - EpicHooks.freeSetupCards(corporationCard)) * this.cardCost;
       if (corporationCard.name === CardName.LUNA_TRADE_FEDERATION) {
         deferredCardCost = diff;
       } else {
@@ -1309,6 +1312,8 @@ export class Player implements IPlayer {
   }
 
   public pass(): void {
+    // Epic Corporations: Bentenmaru loses its M€ when it passes.
+    EpicHooks.onPass(this);
     // Eternity: DGT Mars Crew may still play after passing, so passing only ends its turn.
     if (Eternity.keepsPlayingAfterPass(this)) {
       this.actionsTakenThisRound = this.availableActionsThisRound;

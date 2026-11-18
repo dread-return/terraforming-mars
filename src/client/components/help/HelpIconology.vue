@@ -148,6 +148,8 @@ const CARD_TAGS: ReadonlyArray<IconEntry> = [
   {iconClass: 'card-resource-food', label: 'Food', official: false, expansions: ['postludes']},
   {iconClass: 'card-resource-probiotic', label: 'Probiotic', official: false, expansions: ['postludes']},
   {iconClass: 'card-resource-galaxy', label: 'Galaxy', official: false, expansions: ['corpera']},
+  {iconClass: 'card-resource-influence', label: 'Influence', official: false, expansions: ['corpera']},
+  {iconClass: 'card-resource-deficit', label: 'Deficit', official: false, expansions: ['corpera']},
 ];
 
 const STANDARD_RESOURCES: ReadonlyArray<IconEntry> = [

@@ -141,6 +141,24 @@ import {ResourcefulCollective} from './ResourcefulCollective';
 import {StorytellerInc} from './StorytellerInc';
 import {TalosFoundation} from './TalosFoundation';
 import {VenusianPowerAndGas} from './VenusianPowerAndGas';
+import {AerospaceAlloys} from './AerospaceAlloys';
+import {Amityville} from './Amityville';
+import {Bentenmaru} from './Bentenmaru';
+import {ELM} from './ELM';
+import {FirstWave} from './FirstWave';
+import {Futura} from './Futura';
+import {GAIA} from './GAIA';
+import {HeindlAquatic} from './HeindlAquatic';
+import {MiMix} from './MiMix';
+import {NewGrounds} from './NewGrounds';
+import {PlanetForge} from './PlanetForge';
+import {PlanetWave} from './PlanetWave';
+import {PlutonicPrototyping} from './PlutonicPrototyping';
+import {RosenburgInitiative} from './RosenburgInitiative';
+import {Schlockmeister} from './Schlockmeister';
+import {SpaceGuild} from './SpaceGuild';
+import {StJosephOfCupertinoMissionEpic} from './StJosephOfCupertinoMissionEpic';
+import {SteelRidgeConstructions} from './SteelRidgeConstructions';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -296,5 +314,24 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.CRYO]: {Factory: Cryo},
     [CardName.LOREAN]: {Factory: Lorean},
     [CardName.LANDMARK_ACHIEVEMENTS]: {Factory: LandmarkAchievements},
+    // Batch 4
+    [CardName.AEROSPACE_ALLOYS]: {Factory: AerospaceAlloys},
+    [CardName.AMITYVILLE]: {Factory: Amityville},
+    [CardName.BENTENMARU]: {Factory: Bentenmaru},
+    [CardName.ELM]: {Factory: ELM},
+    [CardName.FIRST_WAVE]: {Factory: FirstWave, compatibility: 'pathfinders'},
+    [CardName.FUTURA]: {Factory: Futura},
+    [CardName.G_AI_A]: {Factory: GAIA},
+    [CardName.HEINDL_AQUATIC]: {Factory: HeindlAquatic},
+    [CardName.MIMIX]: {Factory: MiMix},
+    [CardName.NEW_GROUNDS]: {Factory: NewGrounds},
+    [CardName.PLANET_FORGE]: {Factory: PlanetForge, compatibility: 'venus'},
+    [CardName.PLANET_WAVE]: {Factory: PlanetWave},
+    [CardName.PLUTONIC_PROTOTYPING]: {Factory: PlutonicPrototyping, compatibility: 'nuclear'},
+    [CardName.SCHLOCKMEISTER]: {Factory: Schlockmeister},
+    [CardName.SPACE_GUILD]: {Factory: SpaceGuild, compatibility: 'colonies'},
+    [CardName.ST_JOSEPH_OF_CUPERTINO_MISSION_EPIC]: {Factory: StJosephOfCupertinoMissionEpic},
+    [CardName.STEEL_RIDGE_CONSTRUCTIONS]: {Factory: SteelRidgeConstructions},
+    [CardName.ROSENBURG_INITIATIVE]: {Factory: RosenburgInitiative},
   },
 });

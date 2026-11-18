@@ -213,6 +213,8 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       [CardResource.FOOD]: true,
       [CardResource.PROBIOTIC]: true,
       [CardResource.GALAXY]: true,
+      [CardResource.INFLUENCE]: true,
+      [CardResource.DEFICIT]: true,
     },
     searchIndex: SearchIndex.create(),
     namesOnly: true,

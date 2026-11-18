@@ -8,6 +8,7 @@ import {IPlayer} from '../IPlayer';
 import {OneOrArray} from '../../common/utils/types';
 import {intersection} from '../../common/utils/utils';
 import {GigaHooks} from '../turmoil/giga/GigaHooks';
+import {EpicHooks} from '../cards/epic/EpicHooks';
 
 export type CountingMode =
   'raw' | // Count face-up tags literally, including Leavitt Station.
@@ -75,7 +76,7 @@ export class Tags {
    * Get the number of tags this player has.
    */
   public count(tag: Tag, mode: CountingMode = 'default') {
-    const includeEvents = mode === 'raw-underworld' || this.player.tableau.has(CardName.ODYSSEY);
+    const includeEvents = mode === 'raw-underworld' || this.player.tableau.has(CardName.ODYSSEY) || EpicHooks.eventsFaceUp(this.player);
     const includeTagSubstitutions = (mode === 'default' || mode === 'milestone');
 
     let tagCount = this.rawCount(tag, includeEvents);
@@ -280,7 +281,7 @@ export class Tags {
    */
   public distinctCount(mode: DistinctCountMode, extraTag?: Tag): number {
     const uniqueTags = new Set<Tag>();
-    const playerIsOdyssey = this.player.tableau.has(CardName.ODYSSEY);
+    const playerIsOdyssey = this.player.tableau.has(CardName.ODYSSEY) || EpicHooks.eventsFaceUp(this.player);
     let wildTagCount = 0;
 
     for (const card of this.player.tableau) {

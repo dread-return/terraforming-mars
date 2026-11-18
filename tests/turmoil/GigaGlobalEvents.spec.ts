@@ -175,11 +175,14 @@ describe('Giga global events', () => {
   });
 
   describe('neutral delegates', () => {
-    function sendEvent(game: IGame, revealed: PartyName): Turmoil {
+    function sendEvent(game: IGame, revealed: PartyName, distantRevealed?: PartyName): Turmoil {
       const turmoil = Turmoil.getTurmoil(game);
       const e = event(GlobalEventName.INTERSTELLAR_SIGNAL);
       Object.defineProperty(e, 'revealedDelegate', {value: revealed});
-      turmoil.globalEventDealer.deck.push(e);
+      // initGlobalEvent also draws a distant event: make it one that adds no delegate, so the test doesn't depend on the shuffle.
+      const distant = event(GlobalEventName.INTERSTELLAR_SIGNAL);
+      Object.defineProperty(distant, 'revealedDelegate', {value: distantRevealed});
+      turmoil.globalEventDealer.deck.push(distant, e);
       turmoil.initGlobalEvent(game);
       return turmoil;
     }
@@ -225,7 +228,7 @@ describe('Giga global events', () => {
       const absent = BOARD_ORDER.find((name) => !turmoil.isInPlay(name))!;
       const reserve = turmoil.delegateReserve.get('NEUTRAL');
 
-      sendEvent(game, absent);
+      sendEvent(game, absent, absent);
 
       // Both revealed events put one neutral delegate on the board, the same as for a party in play.
       expect(turmoil.delegateReserve.get('NEUTRAL')).eq(reserve - 2);

@@ -364,6 +364,9 @@ export default defineComponent({
       if (this.item.type === CardRenderItemType.FIRST_PLAYER) {
         result = '<div class="card-first-player-icon"></div>';
       }
+      if (this.item.type === CardRenderItemType.OTHER_PLAYER) {
+        result = '<div class="card-other-player-icon"></div>';
+      }
       if (this.item.type === CardRenderItemType.RULING_PARTY) {
         result = '<div class="card-party-icon"></div>';
       }

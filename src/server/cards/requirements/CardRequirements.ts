@@ -52,10 +52,14 @@ export class CardRequirements {
         tags.push((requirement as TagCardRequirement).tag);
       }
     }
-    if (tags.length > 1 && !player.tags.playerHas(tags) && !Eternity.ignoresTagRequirement(player, card)) {
+    if (tags.length > 1 && !player.tags.playerHas(tags) && !Eternity.ignoresTagRequirement(player, card) && !EpicHooks.checksTagsSeparately(player)) {
       return false;
     }
     for (const requirement of this.requirements) {
+      // Epic Corporations: Top-Up Operation's action ignores maximum requirements.
+      if (requirement.max && EpicHooks.ignoresMaxRequirements(player)) {
+        continue;
+      }
       const satisfies = requirement.satisfies(player, card);
       if (satisfies === false) {
         return false;

@@ -2141,4 +2141,13 @@ export enum CardName {
   VANGUARD = 'Vanguard',
   WIND_MEYER = 'Wind Meyer',
   XENOS_ZOOLOGICAL = 'Xenos Zoological',
+  // Epic Corporations, batch 6 (wild resources)
+  DISCOUNT_CONGLOMERATE = 'Discount Conglomerate',
+  FLEXI_CHANGE_INDUSTRY = 'Flexi-Change Industry',
+  JUMP_START_CORPORATION = 'Jump-Start Corporation',
+  SHORT_CUT_ENTERPRISE = 'Short-Cut Enterprise',
+  STANDARD_BUSINESS = 'Standard Business',
+  STREAMLINE_LOGISTICS = 'Streamline Logistics',
+  TERRA_INVEST_FIRM = 'Terra-Invest Firm',
+  TOP_UP_OPERATION = 'Top-Up Operation',
 }

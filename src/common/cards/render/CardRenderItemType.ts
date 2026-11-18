@@ -54,6 +54,7 @@ export const CardRenderItemType = {
   PLANETARY_TRACK: 'planetary-track',
   GLOBAL_EVENT: 'global-event',
   FIRST_PLAYER: '1p',
+  OTHER_PLAYER: 'other-player',
   RULING_PARTY: 'ruling-party',
   POLICY: 'policy',
   CATHEDRAL: 'cathedral',

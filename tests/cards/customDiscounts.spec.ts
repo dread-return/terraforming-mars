@@ -62,6 +62,7 @@ const NOT_DISPLAYED: ReadonlyArray<CardName> = [
   CardName.MEDIUM_GROUNDS,
   CardName.AETHER_VIAL,
   CardName.HARD_HAT_CONSTRUCTION,
+  CardName.DISCOUNT_CONGLOMERATE,
 ];
 
 describe('customDiscounts', () => {

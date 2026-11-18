@@ -19,6 +19,8 @@ import {IGlobalEvent} from '../../turmoil/globalEvents/IGlobalEvent';
 import {IStandardProjectCard} from '../IStandardProjectCard';
 import {StandardProjectCanPayWith} from '../../../common/cards/Types';
 import {SelectAmount} from '../../inputs/SelectAmount';
+import {message} from '../../logs/MessageBuilder';
+import {SelectResources} from '../../inputs/SelectResources';
 import {SelectCard} from '../../inputs/SelectCard';
 import {PlaceCityTile} from '../../deferredActions/PlaceCityTile';
 import {PlayerInput} from '../../PlayerInput';
@@ -70,6 +72,11 @@ export class EpicHooks {
   public static onGlobalParameterIncrease(activePlayer: IPlayer, parameter: GlobalParameter, steps: number): void {
     if (steps <= 0 || activePlayer.game === undefined) {
       return;
+    }
+    // Jump-Start Corporation: a wild resource per step you raise.
+    const jumpStart = activePlayer.tableau.get(CardName.JUMP_START_CORPORATION);
+    if (jumpStart !== undefined) {
+      activePlayer.addResourceTo(jumpStart, {qty: steps, log: true});
     }
     for (const p of activePlayer.game.players) {
       // Barsoomian Atmospherics: 2 M€ per oxygen step raised by anyone, plus 2 energy when it's you.
@@ -176,6 +183,12 @@ export class EpicHooks {
       return;
     }
     const fromOtherPlayer = isFromPlayer(from) && from.player.id !== player.id;
+
+    // Discount Conglomerate: a wild resource whenever your production is lowered.
+    const discount = player.tableau.get(CardName.DISCOUNT_CONGLOMERATE);
+    if (discount !== undefined && delta < 0) {
+      player.addResourceTo(discount, {qty: 1, log: true});
+    }
 
     // Grothe Industries: remember productions raised during the first action of a turn.
     const grothe = player.tableau.get(CardName.GROTHE_INDUSTRIES);
@@ -643,6 +656,20 @@ export class EpicHooks {
         options.push(exchange('3 science → 1 animal', 3, (n) => player.game.defer(new AddResourcesToCard(player, CardResource.ANIMAL, {count: n}))));
       }
     }
+    // Wild resources (Discount Conglomerate, Flexi-Change, ...): use as any standard resource.
+    for (const card of player.tableau) {
+      if (card.resourceType !== CardResource.WILD_RESOURCE || card.resourceCount === 0) {
+        continue;
+      }
+      const take = (n: number) => new SelectResources(message('Gain ${0} standard resources', (b) => b.number(n)), n).andThen((units) => {
+        player.freeActionTaken = true;
+        player.removeResourceFrom(card, n, {log: true});
+        player.stock.adjust(units, {log: true});
+        return undefined;
+      });
+      options.push(new SelectOption(`${card.name}: use wild resources as standard resources`, 'Convert').andThen(() =>
+        card.resourceCount === 1 ? take(1) : new SelectAmount('How many wild resources?', 'Convert', 1, card.resourceCount, true).andThen(take)));
+    }
     if (options.length === 0) {
       return undefined;
     }
@@ -735,6 +762,16 @@ export class EpicHooks {
    * the science needed is spent when the card is played.
    */
   public static bendGlobalRequirement(player: IPlayer, card: IProjectCard, distance: number): boolean {
+    // Jump-Start Corporation: during its action, each wild resource shifts a global requirement 1 step.
+    const jumpStart = player.tableau.get(CardName.JUMP_START_CORPORATION);
+    if (jumpStart !== undefined && distance > 0 && distance <= jumpStart.resourceCount) {
+      const data = dataOf<{pending?: boolean, spend?: Record<string, number>}>(jumpStart);
+      if (data.pending === true) {
+        data.spend = data.spend ?? {};
+        data.spend[card.name] = Math.max(data.spend[card.name] ?? 0, distance);
+        return true;
+      }
+    }
     const darwin = player.tableau.get(CardName.DARWIN_EVOLUTION);
     if (darwin === undefined || !card.tags.includes(Tag.ANIMAL) || distance <= 0) {
       return false;
@@ -764,6 +801,16 @@ export class EpicHooks {
     if (missing <= extra) {
       return true;
     }
+    // Short-Cut Enterprise: during its action, each wild resource lowers a tag requirement by 1.
+    const shortCut = player.tableau.get(CardName.SHORT_CUT_ENTERPRISE);
+    if (shortCut !== undefined && missing - extra <= shortCut.resourceCount) {
+      const data = dataOf<{pending?: boolean, spend?: Record<string, number>}>(shortCut);
+      if (data.pending === true) {
+        data.spend = data.spend ?? {};
+        data.spend[card.name] = Math.max(data.spend[card.name] ?? 0, missing - extra);
+        return true;
+      }
+    }
     const penal = player.tableau.get(CardName.SPACE_PENAL_COLONIES);
     if (penal !== undefined && missing - extra <= penal.resourceCount) {
       const data = dataOf<{spend?: Record<string, number>}>(penal);
@@ -781,6 +828,18 @@ export class EpicHooks {
       return false;
     }
     return card.tags.includes(Tag.ANIMAL) && !card.tags.includes(Tag.VENUS);
+  }
+
+  /** Top-Up Operation: during its action, the chosen card ignores its maximum requirements. */
+  public static ignoresMaxRequirements(player: IPlayer): boolean {
+    const topUp = player.tableau?.get(CardName.TOP_UP_OPERATION);
+    return topUp !== undefined && dataOf<{pending?: boolean}>(topUp).pending === true;
+  }
+
+  /** Short-Cut Enterprise: during its action, tag requirements are checked one by one (wild resources fill gaps). */
+  public static checksTagsSeparately(player: IPlayer): boolean {
+    const shortCut = player.tableau?.get(CardName.SHORT_CUT_ENTERPRISE);
+    return shortCut !== undefined && dataOf<{pending?: boolean}>(shortCut).pending === true;
   }
 
   /** Called just before the production phase, while players can still be asked things. */

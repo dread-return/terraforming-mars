@@ -152,6 +152,7 @@ const CARD_TAGS: ReadonlyArray<IconEntry> = [
   {iconClass: 'card-resource-deficit', label: 'Deficit', official: false, expansions: ['corpera']},
   {iconClass: 'card-resource-worker', label: 'Worker', official: false, expansions: ['corpera']},
   {iconClass: 'card-resource-prisoner', label: 'Prisoner', official: false, expansions: ['corpera']},
+  {iconClass: 'card-resource-wild-resource', label: 'Wild resource', official: false, expansions: ['corpera']},
 ];
 
 const STANDARD_RESOURCES: ReadonlyArray<IconEntry> = [

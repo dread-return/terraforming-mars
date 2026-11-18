@@ -184,4 +184,13 @@ export const EPIC_LOGOS: Partial<Record<CardName, {slug: string, lines: Readonly
   [CardName.VANGUARD]: {slug: 'ep-vanguard', lines: ['VANGUARD', 'THE LEADERS OF TOMORROW']},
   [CardName.WIND_MEYER]: {slug: 'ep-wind-meyer', lines: ['WIND', 'MEYER']},
   [CardName.XENOS_ZOOLOGICAL]: {slug: 'ep-xenos', lines: ['XENOS', 'ZOOLOGICAL']},
+  // Batch 6: wild resources
+  [CardName.DISCOUNT_CONGLOMERATE]: {slug: 'ep-discount', lines: ['% DISCOUNT', 'CONGLOMERATE']},
+  [CardName.FLEXI_CHANGE_INDUSTRY]: {slug: 'ep-flexi', lines: ['FLEXI-CHANGE', 'INDUSTRY']},
+  [CardName.JUMP_START_CORPORATION]: {slug: 'ep-jump-start', lines: ['JUMP-START', 'CORPORATION']},
+  [CardName.SHORT_CUT_ENTERPRISE]: {slug: 'ep-short-cut', lines: ['Short-Cut', 'Enterprise']},
+  [CardName.STANDARD_BUSINESS]: {slug: 'ep-standard-business', lines: ['STANDARD', 'BUSINESS']},
+  [CardName.STREAMLINE_LOGISTICS]: {slug: 'ep-streamline', lines: ['STREAMLINE', 'LOGISTICS']},
+  [CardName.TERRA_INVEST_FIRM]: {slug: 'ep-terra-invest', lines: ['€ TERRA-INVEST', 'FIRM']},
+  [CardName.TOP_UP_OPERATION]: {slug: 'ep-top-up', lines: ['TOP-UP', 'OPERATION']},
 };

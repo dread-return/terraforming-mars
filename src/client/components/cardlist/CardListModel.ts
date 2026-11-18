@@ -217,6 +217,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       [CardResource.DEFICIT]: true,
       [CardResource.WORKER]: true,
       [CardResource.PRISONER]: true,
+      [CardResource.WILD_RESOURCE]: true,
     },
     searchIndex: SearchIndex.create(),
     namesOnly: true,

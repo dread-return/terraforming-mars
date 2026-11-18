@@ -175,6 +175,14 @@ import {SyndicatDesTravailleursMartiens} from './SyndicatDesTravailleursMartiens
 import {Vanguard} from './Vanguard';
 import {WindMeyer} from './WindMeyer';
 import {XenosZoological} from './XenosZoological';
+import {DiscountConglomerate} from './DiscountConglomerate';
+import {FlexiChangeIndustry} from './FlexiChangeIndustry';
+import {JumpStartCorporation} from './JumpStartCorporation';
+import {ShortCutEnterprise} from './ShortCutEnterprise';
+import {StandardBusiness} from './StandardBusiness';
+import {StreamlineLogistics} from './StreamlineLogistics';
+import {TerraInvestFirm} from './TerraInvestFirm';
+import {TopUpOperation} from './TopUpOperation';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -366,5 +374,14 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.VANGUARD]: {Factory: Vanguard, compatibility: 'venus'},
     [CardName.WIND_MEYER]: {Factory: WindMeyer},
     [CardName.XENOS_ZOOLOGICAL]: {Factory: XenosZoological},
+    // Batch 6: wild resources
+    [CardName.DISCOUNT_CONGLOMERATE]: {Factory: DiscountConglomerate},
+    [CardName.FLEXI_CHANGE_INDUSTRY]: {Factory: FlexiChangeIndustry},
+    [CardName.JUMP_START_CORPORATION]: {Factory: JumpStartCorporation},
+    [CardName.SHORT_CUT_ENTERPRISE]: {Factory: ShortCutEnterprise},
+    [CardName.STANDARD_BUSINESS]: {Factory: StandardBusiness},
+    [CardName.STREAMLINE_LOGISTICS]: {Factory: StreamlineLogistics},
+    [CardName.TERRA_INVEST_FIRM]: {Factory: TerraInvestFirm},
+    [CardName.TOP_UP_OPERATION]: {Factory: TopUpOperation},
   },
 });

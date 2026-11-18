@@ -837,6 +837,49 @@
     .et-line-1 { font-size: 12px; color: #c0281e; }
   }
 
+  // Batch 6: the wild-resource corps share a rainbow accent.
+  .ep-rainbow() {
+    background: linear-gradient(90deg, #e8302a, #f39c12, #f1d21b, #2fb34a, #1f8fe0, #8e44ad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: none;
+  }
+  &.et-logo-ep-discount {
+    font-family: 'EpBebas', sans-serif; font-size: 25px; color: #111; letter-spacing: 1px; line-height: 0.9;
+    .et-line-0 { color: #d9481c; }
+  }
+  &.et-logo-ep-flexi {
+    font-family: 'EpRusso', sans-serif; font-style: italic; font-size: 19px; color: #111; line-height: 1;
+    .et-line-0 { .ep-rainbow(); font-size: 21px; }
+    .et-line-1 { font-size: 12px; letter-spacing: 4px; }
+  }
+  &.et-logo-ep-jump-start {
+    font-family: 'EpBlackOps', sans-serif; font-size: 21px; color: #222; line-height: 0.95;
+    .et-line-0 { color: #2e7d32; }
+    .et-line-1 { font-size: 13px; color: #e07b12; letter-spacing: 1px; }
+  }
+  &.et-logo-ep-short-cut {
+    font-family: 'EpRighteous', sans-serif; font-size: 22px; color: #1767b5; line-height: 0.95;
+    .et-line-1 { font-size: 15px; color: #222; letter-spacing: 2px; }
+  }
+  &.et-logo-ep-standard-business {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 21px; color: #111; line-height: 0.95;
+    .et-line-1 { .ep-rainbow(); font-size: 19px; }
+  }
+  &.et-logo-ep-streamline {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 18px; color: #1d2b4c; letter-spacing: 3px; line-height: 1;
+    .et-line-1 { color: #1b8fb5; letter-spacing: 5px; font-size: 14px; }
+  }
+  &.et-logo-ep-terra-invest {
+    font-family: 'EpRusso', sans-serif; font-size: 20px; color: #111; line-height: 0.95;
+    .et-line-1 { .ep-rainbow(); font-size: 16px; letter-spacing: 6px; }
+  }
+  &.et-logo-ep-top-up {
+    font-family: 'EpBebas', sans-serif; font-size: 28px; color: #1c4f8a; letter-spacing: 1px; line-height: 0.85;
+    .et-line-1 { font-size: 17px; color: #8a6d1c; letter-spacing: 3px; }
+  }
+
 
 
 }
@@ -877,4 +920,27 @@
 .card-container.card-rod-association .card-row:has(.card-resource-tag):not(:has(.card-corporation-box, .card-effect-box)) {
   zoom: 0.6;
   margin: 0;
+}
+
+// Wild-resource corps with a busy start row: smaller start icons and a slightly smaller box so everything fits.
+.card-container.card-discount-conglomerate,
+.card-container.card-flexi-change-industry,
+.card-container.card-jump-start-corporation,
+.card-container.card-short-cut-enterprise,
+.card-container.card-top-up-operation {
+  .card-row:not(:has(.card-corporation-box, .card-effect-box)) {
+    zoom: 0.8;
+  }
+  .card-corporation-box {
+    zoom: 0.9;
+  }
+}
+
+.card-container.card-short-cut-enterprise .card-corporation-box,
+.card-container.card-top-up-operation .card-corporation-box {
+  zoom: 0.85;
+}
+
+.card-container.card-standard-business .card-corporation-box {
+  zoom: 0.9;
 }

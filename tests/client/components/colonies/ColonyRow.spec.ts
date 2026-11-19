@@ -22,4 +22,20 @@ describe('ColonyRow', () => {
     });
     expect(wrapper.exists()).to.be.true;
   });
+
+  function markers(name: ColonyName) {
+    const wrapper = shallowMount(ColonyRow, {
+      ...globalConfig,
+      props: {
+        metadata: getColonyOrThrow(name),
+        colony: {colonies: [], isActive: true, name, trackPosition: 1, visitor: undefined},
+      },
+    });
+    return wrapper.findAllComponents({name: 'ColonySpace'}).filter((s) => s.props('marker') === true);
+  }
+
+  it('shows the track marker, except on Market Colonies, which has no track', () => {
+    expect(markers(ColonyName.GANYMEDE)).has.length(1);
+    expect(markers(ColonyName.MARKET_COLONIES)).has.length(0);
+  });
 });

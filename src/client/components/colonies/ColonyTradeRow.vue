@@ -66,13 +66,15 @@
 
     </template>
     <template v-else-if="metadata.name === ColonyName.ASTEROID_BELT">
-      <div><div class="resource wild">?</div></div>
-      <div><div class="resource wild">2?</div></div>
+      <!-- 1 standard resource, 2 standard resources, 1 steel production, 1 asteroid, 1 asteroid + 1 titanium,
+           1 asteroid + 1 resource to any card (the rainbow card-resource icon), 2 asteroids + 1 resource to any card -->
+      <div><div class="resource wild"></div></div>
+      <div><span class="asteroid-belt-count">2</span><div class="resource wild"></div></div>
       <div><div class="production-box"><div class="production steel"></div></div></div>
       <div><div class="resource asteroid"></div></div>
       <div><div class="resource asteroid"></div><div class="resource titanium"></div></div>
-      <div><div class="resource asteroid"></div><div class="resource wild">*</div></div>
-      <div><div class="resource asteroid"></div><div class="resource asteroid"></div><div class="resource wild">*</div></div>
+      <div><div class="resource asteroid"></div><div class="resource card-resource-wild-resource"></div></div>
+      <div><span class="asteroid-belt-count">2</span><div class="resource asteroid"></div><div class="resource card-resource-wild-resource"></div></div>
     </template>
     <template v-else v-for="idx in range((metadata.maxTrackPosition ?? 6) + 1)" :key="idx">
       <div>{{ metadata.trade.quantity[idx] }}</div>

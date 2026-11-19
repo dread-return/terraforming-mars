@@ -116,15 +116,28 @@
 }
 
 // The Asteroid Belt trade row: several small icons per step.
+// The Asteroid Belt trade row: up to two small icons per step, with a count in front like "3 ★" on other tiles.
 .colony-grid-container2.asteroid-belt-trade > div {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
+  gap: 1px;
+
   .resource {
-    margin: 1px;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    background-size: 22px;
   }
-  .resource + .resource {
-    margin-left: -6px;
+
+  .production-box {
+    transform: scale(0.65);
+  }
+
+  .asteroid-belt-count {
+    font-family: Prototype, sans-serif;
+    font-size: 18px;
+    color: white;
   }
 }

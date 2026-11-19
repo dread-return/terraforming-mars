@@ -813,3 +813,47 @@ input[type="radio"]:checked + .party-container::after {
   height: 76px;
   vertical-align: middle;
 }
+
+// Giga Turmoil before the party draft (Turmoil.vue): the 12 parties in two rows, without the board.
+.turmoil-predraft {
+  // The bottom margin makes up for .turmoil's negative one, which the full board's height covers.
+  margin: 10px 0 60px 0;
+  padding: 14px 16px 14px;
+  width: 1000px;
+  box-sizing: border-box;
+  background: linear-gradient(#6e5442, #574131);
+  border: 3px solid #3b2b20;
+  border-radius: 10px;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.5);
+
+  .turmoil-predraft-title {
+    font-family: Prototype, sans-serif;
+    font-size: 22px;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  .turmoil-predraft-note {
+    margin: 4px 0 12px;
+    color: #f2e6d9;
+    font-size: 14px;
+  }
+
+  .turmoil-predraft-parties {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+  }
+
+  .turmoil-predraft-party {
+    padding: 8px 4px 4px;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 8px;
+    text-align: center;
+
+    .party-name {
+      width: auto;
+      margin: 0 0 6px;
+    }
+  }
+}

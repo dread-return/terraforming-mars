@@ -5,7 +5,7 @@
       :idx="idx"
       :metadata="metadata"
       :player="colony.colonies[idx]"
-      :marker="colony.isActive && colony.trackPosition === idx"
+      :marker="hasTrack && colony.isActive && colony.trackPosition === idx"
       :fadeMarker="fadeMarker" />
   </div>
 </template>
@@ -16,6 +16,7 @@ import {defineComponent} from 'vue';
 import {ColonyMetadata} from '@/common/colonies/ColonyMetadata';
 import {ColonyModel} from '@/common/models/ColonyModel';
 import ColonySpace from './ColonySpace.vue';
+import {ColonyName} from '@/common/colonies/ColonyName';
 
 export default defineComponent({
   name: 'ColonyRow',
@@ -36,11 +37,15 @@ export default defineComponent({
     },
   },
   computed: {
+    // Market Colonies (Mercury vs Mars) trades from its market, so it has no track marker.
+    hasTrack(): boolean {
+      return this.metadata.name !== ColonyName.MARKET_COLONIES;
+    },
     // Shadow Colonies (Mercury vs Mars) has 8 steps; Market Colonies has only its 4 colony spaces.
     positions(): Array<number> {
       const last = this.metadata.maxTrackPosition ?? 6;
       const count = Math.max(last + 1, this.metadata.colonySpaces ?? 0);
-      return Array.from({length: this.metadata.name === 'Market Colonies' ? 4 : count}, (_, i) => i);
+      return Array.from({length: this.metadata.name === ColonyName.MARKET_COLONIES ? 4 : count}, (_, i) => i);
     },
   },
 });

@@ -54,7 +54,7 @@
       <span>{{ buildQuantityText }}</span><div class="card-mercury-asset"></div>
     </div>
     <div v-else-if="metadata.build.type === ColonyBenefit.GAIN_SAME_STANDARD_RESOURCES" class="mercury-build-bonus">
-      <span>{{ buildQuantityText }}</span><div class="resource wild" style="transform: scale(0.7)">?</div>
+      <span>{{ buildQuantityText }}</span><div class="resource wild" style="transform: scale(0.7)"></div>
     </div>
     <div v-else-if="metadata.build.type === ColonyBenefit.VENUS_STEP_OR_ASTEROID" class="mercury-build-bonus">
       <div class="tile venus-tile venus-colony-bonus" style="transform: scale(0.6)"></div>

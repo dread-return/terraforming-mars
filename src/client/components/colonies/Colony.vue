@@ -65,7 +65,7 @@
       <template v-if="metadata.colony.type === ColonyBenefit.GAIN_ASSETS">
         <div class="card-mercury-asset"></div>
       </template>
-      <div v-if="metadata.colony.type === ColonyBenefit.GAIN_STANDARD_RESOURCE" class="resource wild">?</div>
+      <div v-if="metadata.colony.type === ColonyBenefit.GAIN_STANDARD_RESOURCE" class="resource wild"></div>
       <span class="colony-background-color">
         <template v-if="colony.name !== ColonyName.TITANIA"><span v-i18n>Bonus</span></template>
         <template v-else><span v-i18n>Colony Fee</span></template>

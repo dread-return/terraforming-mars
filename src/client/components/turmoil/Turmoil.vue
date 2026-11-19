@@ -6,7 +6,21 @@
       <GlobalEvent v-if="turmoil.current" :globalEventName="turmoil.current" type="current" :showDistance="true" />
     </div>
 
-    <div class="turmoil-board">
+    <!-- Giga Turmoil, before the party draft: all 12 parties are still in the running. -->
+    <div v-if="awaitingPartyDraft" class="turmoil-predraft" data-test="turmoil-predraft">
+      <div class="turmoil-predraft-title" v-i18n>Parties</div>
+      <div class="turmoil-predraft-note" v-i18n>6 of these 12 parties will be drafted once everyone has chosen their starting cards.</div>
+      <div class="turmoil-predraft-parties">
+        <div v-for="party in turmoil.parties" :key="party.name" class="turmoil-predraft-party">
+          <div :class="'party-name party-name--'+partyNameToCss(party.name)" v-i18n>{{ party.name }}</div>
+          <div class="party-bonus">
+            <TurmoilAgenda type="party-bonus" :id="getBonus(party.name)" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-else class="turmoil-board">
       <div class="turmoil-header">
         <div class="turmoil-lobby">
           <div class="lobby-spot" v-for="n in 5" :key="n">
@@ -96,6 +110,12 @@ export default defineComponent({
     turmoil: {
       type: Object as () => TurmoilModel,
       required: true,
+    },
+  },
+  computed: {
+    /** The party board has room for 6 parties; a Giga Turmoil game has 12 until the party draft. */
+    awaitingPartyDraft(): boolean {
+      return this.turmoil.parties.length > 6;
     },
   },
   methods: {

@@ -46,10 +46,24 @@
         :tileView="tileView"
         data-test="board-space"
       />
+
+      <!-- Inside #main_board, which SelectSpace already searches, so no #colony_spaces id here. -->
+      <div class="giga-off-mars-spaces">
+        <BoardSpace
+          v-for="space in placedOffMarsSpaces"
+          :key="space.id"
+          :space="space"
+          :text="spaceName(space)"
+          class="giga-off-mars"
+          :style="offMarsStyle(space)"
+          :tileView="tileView"
+          data-test="off-mars-space"
+        />
+      </div>
     </div>
 
-    <div class="giga-outer-spaces" id="colony_spaces">
-      <div v-for="space in offMarsSpaces" :key="space.id" class="giga-outer-space">
+    <div v-if="otherOffMarsSpaces.length > 0" class="giga-outer-spaces" id="colony_spaces">
+      <div v-for="space in otherOffMarsSpaces" :key="space.id" class="giga-outer-space">
         <BoardSpace :space="space" :text="spaceName(space)" :tileView="tileView" style="margin: 0" />
       </div>
     </div>
@@ -104,6 +118,29 @@ const OFF_MARS_NAMES: Partial<Record<SpaceId, string>> = {
   [SpaceName.SHADOW_FOREST]: 'Shadow Forest (Mercury)',
   [SpaceName.FLYING_GARDEN]: 'Flying Garden',
   [SpaceName.SPACE_SOLARIUM]: 'Space Solarium',
+};
+
+// Where the off-Mars spaces sit, in the corners around the planet, grouped like on the round maps:
+// Ganymede, Phobos and the other early ones top left, the Venus cities top right near the Venus
+// track, Pathfinders bottom right, Mercury and the off-world greeneries bottom left.
+const OFF_MARS_SLOTS: Partial<Record<SpaceId, {left: number, top: number}>> = {
+  [SpaceName.GANYMEDE_COLONY]: {left: 20, top: 28},
+  [SpaceName.PHOBOS_SPACE_HAVEN]: {left: 110, top: 28},
+  [SpaceName.STANFORD_TORUS]: {left: 200, top: 28},
+  [SpaceName.SIDERALIS]: {left: 290, top: 28},
+  [SpaceName.MAIN_DOCKING_STATION]: {left: 20, top: 128},
+  [SpaceName.LUNA_METROPOLIS]: {left: 1096, top: 28},
+  [SpaceName.DAWN_CITY]: {left: 1006, top: 28},
+  [SpaceName.STRATOPOLIS]: {left: 916, top: 28},
+  [SpaceName.VENERA_BASE]: {left: 826, top: 28},
+  [SpaceName.MAXWELL_BASE]: {left: 1096, top: 128},
+  [SpaceName.FLYING_GARDEN]: {left: 20, top: 530},
+  [SpaceName.NEW_POMPEII]: {left: 20, top: 646},
+  [SpaceName.SHADOW_FOREST]: {left: 110, top: 646},
+  [SpaceName.SPACE_SOLARIUM]: {left: 200, top: 646},
+  [SpaceName.CERES_SPACEPORT]: {left: 1096, top: 530},
+  [SpaceName.DYSON_SCREENS]: {left: 1096, top: 646},
+  [SpaceName.LUNAR_EMBASSY]: {left: 1006, top: 646},
 };
 
 type DialBonus = {
@@ -189,6 +226,10 @@ export default defineComponent({
     isPolar(space: SpaceModel): boolean {
       return GIGA_POLAR_SPACES.includes(space.id);
     },
+    offMarsStyle(space: SpaceModel): Record<string, string> {
+      const slot = OFF_MARS_SLOTS[space.id];
+      return slot === undefined ? {} : {margin: `${slot.top}px 0 0 ${slot.left}px`};
+    },
     spaceName(space: SpaceModel): string {
       return OFF_MARS_NAMES[space.id] ?? '';
     },
@@ -199,8 +240,12 @@ export default defineComponent({
         .filter((s) => s.spaceType !== SpaceType.COLONY)
         .toSorted((a, b) => parseInt(a.id) - parseInt(b.id));
     },
-    offMarsSpaces(): Array<SpaceModel> {
-      return this.spaces.filter((s) => s.spaceType === SpaceType.COLONY);
+    placedOffMarsSpaces(): Array<SpaceModel> {
+      return this.spaces.filter((s) => s.spaceType === SpaceType.COLONY && OFF_MARS_SLOTS[s.id] !== undefined);
+    },
+    // Any off-Mars space without a spot of its own goes in a row under the board.
+    otherOffMarsSpaces(): Array<SpaceModel> {
+      return this.spaces.filter((s) => s.spaceType === SpaceType.COLONY && OFF_MARS_SLOTS[s.id] === undefined);
     },
     maximums() {
       return getGlobalParameterMaximums(BoardName.GIGA);

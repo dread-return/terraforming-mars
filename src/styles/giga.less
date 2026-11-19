@@ -10,9 +10,11 @@
   width: @giga-board-width + 20px;
   background: none;
 
+  // Bottom left, between the off-Mars spaces and the oxygen track.
   .hide-tile-button-container .hide-tile-button {
     bottom: auto;
-    top: 8px;
+    top: 648px;
+    left: 310px;
   }
 }
 
@@ -181,6 +183,16 @@
     width: 30px;
     height: 34px;
     background: url(./assets/tiles/ocean.png) center / contain no-repeat;
+  }
+}
+
+// Off-Mars spaces in the corners of the board, their names above them as on the round maps.
+.board--giga > .giga-off-mars-spaces > .board-space.giga-off-mars {
+  // Unlike the Mars spaces, not clipped to a hex, so their names show (as outside the round maps).
+  clip-path: none;
+
+  .board-space-text {
+    margin: -26px 0 0 -21px;
   }
 }
 

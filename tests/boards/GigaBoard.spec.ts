@@ -78,9 +78,26 @@ describe('GigaBoard', () => {
     expect(mars.filter((s) => s.edge).length).is.lessThan(60);
   });
 
-  it('is not shuffled', () => {
+  it('shuffles like the other maps, keeping the special spaces', () => {
     const shuffled = GigaBoard.newInstance({...DEFAULT_GAME_OPTIONS, shuffleMapOption: true}, new SeededRandom(3));
-    expect(shuffled.spaces.map((s) => [s.id, s.spaceType, s.bonus])).deep.eq(board.spaces.map((s) => [s.id, s.spaceType, s.bonus]));
+    const shuffledMars = shuffled.spaces.filter((s) => s.spaceType !== SpaceType.COLONY);
+    expect(shuffledMars.map((s) => [s.spaceType, s.bonus])).not.deep.eq(mars.map((s) => [s.spaceType, s.bonus]));
+    // Same number of oceans, same bonuses overall.
+    expect(shuffled.getSpaces(SpaceType.OCEAN)).has.length(55);
+    const allBonuses = (spaces: ReadonlyArray<{bonus: ReadonlyArray<SpaceBonus>}>) => spaces.flatMap((s) => s.bonus).toSorted();
+    expect(allBonuses(shuffledMars)).deep.eq(allBonuses(mars));
+    // Volcanic, polar, Noctis City and the 5 M€ ocean space keep their place.
+    for (const id of [...board.volcanicSpaceIds, ...GIGA_POLAR_SPACES, GIGA_NOCTIS_CITY, '169'] as Array<SpaceId>) {
+      expect(shuffled.getSpaceOrThrow(id).spaceType, id).eq(board.getSpaceOrThrow(id).spaceType);
+      expect(shuffled.getSpaceOrThrow(id).bonus, id).deep.eq(board.getSpaceOrThrow(id).bonus);
+    }
+    // Same geometry and adjacency.
+    expect(shuffled.getAdjacentSpaces(shuffled.getSpaceOrThrow('50')).map((s) => s.id)).to.have.members(['33', '34', '49', '51', '67', '68']);
+  });
+
+  it('is not shuffled without the option', () => {
+    const again = GigaBoard.newInstance(DEFAULT_GAME_OPTIONS, new SeededRandom(3));
+    expect(again.spaces.map((s) => [s.id, s.spaceType, s.bonus])).deep.eq(board.spaces.map((s) => [s.id, s.spaceType, s.bonus]));
   });
 
   it('serializes and deserializes', () => {

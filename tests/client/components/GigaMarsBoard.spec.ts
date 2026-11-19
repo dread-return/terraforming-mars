@@ -25,20 +25,35 @@ describe('GigaMarsBoard', () => {
     const marsSpaces = wrapper.findAllComponents(BoardSpace).filter((w) => w.attributes('data-test') === 'board-space');
     expect(marsSpaces).has.length(175);
     // Space 1 is the first hex of the top row; space 175 the last hex of the bottom row.
-    expect(marsSpaces[0].attributes('style')).contains('margin: 8px 0px 0px 174px');
+    expect(marsSpaces[0].attributes('style')).contains('margin: 124px 0px 0px 300px');
     expect(wrapper.findAllComponents(BoardSpace)).has.length(177);
   });
 
-  it('shows the global parameters', () => {
+  it('shows the global parameters on the dial', () => {
     const wrapper = shallowMount(GigaMarsBoard, {
       ...globalConfig,
-      props: {spaces, expansions: {...DEFAULT_EXPANSIONS, venus: true}, venusScaleLevel: 24, temperature: 3, oxygen_level: 7.5, oceans_count: 21},
+      props: {spaces, expansions: {...DEFAULT_EXPANSIONS, venus: true}, venusScaleLevel: 24, temperature: 3, oxygen_level: 7.5, oceans_count: 4},
     });
-    expect(wrapper.find('[data-test=giga-track-value-temperature]').text()).eq('+3 °C');
-    expect(wrapper.find('[data-test=giga-track-value-oxygen]').text()).eq('7.5 %');
-    expect(wrapper.find('[data-test=giga-track-value-venus]').text()).eq('24 %');
-    // 21 oceans is the maximum.
-    expect(wrapper.find('[data-test=giga-track-value-oceans] img').exists()).is.true;
+    const active = (track: string) => wrapper.find(`[data-test=giga-track-${track}] .val-is-active`).text();
+    expect(wrapper.findAll('[data-test=giga-track-temperature] .global-numbers-value')).has.length(41);
+    expect(wrapper.findAll('[data-test=giga-track-oxygen] .global-numbers-value')).has.length(31);
+    expect(wrapper.findAll('[data-test=giga-track-venus] .global-numbers-value')).has.length(31);
+    expect(active('temperature')).eq('+3');
+    expect(active('oxygen')).eq('7.5');
+    expect(active('venus')).eq('24');
+    expect(wrapper.find('[data-test=giga-oceans]').text()).eq('4/21');
+    // Heat production x2, ocean, temperature, card, TR, colony.
+    expect(wrapper.findAll('.giga-dial-bonus')).has.length(7);
+  });
+
+  it('leaves out the Venus track without Venus, and ticks off the oceans when they are all placed', () => {
+    const wrapper = shallowMount(GigaMarsBoard, {
+      ...globalConfig,
+      props: {spaces, expansions: DEFAULT_EXPANSIONS, venusScaleLevel: 0, temperature: -30, oxygen_level: 0, oceans_count: 21},
+    });
+    expect(wrapper.find('[data-test=giga-track-venus]').exists()).is.false;
+    expect(wrapper.findAll('.giga-dial-bonus')).has.length(4);
+    expect(wrapper.find('[data-test=giga-oceans] img').exists()).is.true;
   });
 
   it('is what Board draws for the GIGA board', () => {

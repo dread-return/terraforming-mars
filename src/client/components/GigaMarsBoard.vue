@@ -1,7 +1,6 @@
 <!--
-  The fan GIGA expansion's board: its Mars map (175 spaces on the printed board art, with the
-  printed bonus icons removed so the client draws them like on every other map), its global parameter
-  tracks and the off-Mars spaces.
+  The fan GIGA expansion's board: its Mars map (175 spaces over a picture of Mars), its global
+  parameter tracks, drawn around the planet like the dial of the other maps, and the off-Mars spaces.
 -->
 <template>
   <div class="board-cont board-cont--giga">
@@ -11,27 +10,36 @@
       </div>
     </div>
 
-    <div class="giga-tracks">
-      <div v-for="track in tracks" :key="track.id" class="giga-track" :class="'giga-track--' + track.id" :data-test="'giga-track-' + track.id">
-        <div class="giga-track-label" :class="track.iconClass" :title="$t(track.title)"></div>
-        <div class="giga-track-bar">
-          <div class="giga-track-fill" :style="{width: track.percent + '%'}"></div>
-          <div v-for="(bonus, idx) in track.bonuses" :key="idx" class="giga-track-bonus" :style="{left: bonus.percent + '%'}" :title="$t(bonus.title)">
-            <span>{{ bonus.label }}</span>
-          </div>
+    <div class="board board--giga" :class="{'board--giga-venus': expansions.venus}" id="main_board">
+      <div class="global-numbers giga-dial">
+        <div v-for="track in dialTracks" :key="track.name" :class="'giga-dial-' + track.name" :data-test="'giga-track-' + track.name">
+          <div v-for="cell in track.cells" :key="cell.value" :class="cell.css" :style="cell.style">{{ cell.label }}</div>
         </div>
-        <div class="giga-track-value" :data-test="'giga-track-value-' + track.id">
-          <img v-if="track.done" width="18" src="assets/misc/circle-checkmark.png" :alt="$t('Completed!')">
-          <template v-else>{{ track.text }}</template>
+
+        <template v-for="bonus in dialBonuses" :key="bonus.key">
+          <div class="giga-dial-pointer" :style="bonus.pointerStyle"></div>
+          <div class="giga-dial-bonus" :class="'giga-dial-bonus--' + bonus.icon" :style="bonus.iconStyle" :title="$t(bonus.title)"></div>
+        </template>
+
+        <template v-if="expansions.venus">
+          <div class="giga-dial-cap giga-dial-cap--venus" :style="venusCaps.start"></div>
+          <div class="giga-dial-cap giga-dial-cap--percent" :style="venusCaps.end">%</div>
+        </template>
+        <div class="giga-dial-label" :style="labels.oxygen">O<sub>2</sub></div>
+        <div class="giga-dial-label" :style="labels.temperature">t<sup>o</sup>C</div>
+
+        <div class="global-numbers-oceans giga-dial-oceans" :style="oceansStyle" data-test="giga-oceans">
+          <div class="giga-dial-ocean-icon"></div>
+          <img v-if="oceans_count === maximums.oceans" width="26" src="assets/misc/circle-checkmark.png" class="board-ocean-checkmark" :alt="$t('Completed!')">
+          <span v-else>{{ oceans_count }}/{{ maximums.oceans }}</span>
         </div>
       </div>
-    </div>
 
-    <div class="board board--giga" id="main_board">
       <BoardSpace
         v-for="space in marsSpaces"
         :key="space.id"
         :space="space"
+        :class="{'giga-polar': isPolar(space)}"
         :style="positionStyle(space)"
         :aresExtension="expansions.ares"
         :nuclearExpansion="expansions.nuclear"
@@ -60,12 +68,13 @@ import {BoardName} from '@/common/boards/BoardName';
 import {Expansion} from '@/common/cards/GameModule';
 import {SpaceName} from '@/common/boards/SpaceName';
 import {getGlobalParameterMaximums} from '@/common/boards/GlobalParameterMaximums';
-import {GIGA_SPACES} from '@/common/boards/gigaMap';
+import {GIGA_POLAR_SPACES, GIGA_SPACES} from '@/common/boards/gigaMap';
+import {DIAL_TRACK_EXTENTS, DIAL_TRACK_WIDTH, DialTrackName, GIGA_MARS_LEFT, GIGA_MARS_TOP, dialCell, dialCells, dialPoint} from '@/client/components/board/gigaDial';
 
-// Where the spaces sit on the board art (assets/board/giga-mars.jpg, drawn at 908x475): the center of
-// the first hex of the top row, and the distance between neighbouring hexes and rows.
-const FIRST_HEX_X = 197.3;
-const FIRST_HEX_Y = 33.3;
+// Where the spaces sit on the board: the center of the first hex of the top row, and the distance
+// between neighbouring hexes and rows. They match the planet on assets/board/giga-mars.jpg.
+const FIRST_HEX_X = GIGA_MARS_LEFT + 256.3;
+const FIRST_HEX_Y = GIGA_MARS_TOP + 80.8;
 const HEX_STEP_X = 47.03;
 const ROW_STEP_Y = 40.44;
 const SPACE_WIDTH = 46;
@@ -94,22 +103,44 @@ const OFF_MARS_NAMES: Partial<Record<SpaceId, string>> = {
   [SpaceName.NEW_POMPEII]: 'New Pompeii (Mercury)',
   [SpaceName.SHADOW_FOREST]: 'Shadow Forest (Mercury)',
   [SpaceName.FLYING_GARDEN]: 'Flying Garden',
+  [SpaceName.SPACE_SOLARIUM]: 'Space Solarium',
 };
 
-type TrackBonus = {percent: number, label: string, title: string};
-type Track = {
-  id: string,
+type DialBonus = {
+  track: DialTrackName,
+  value: number,
+  icon: 'heat-production' | 'ocean' | 'temperature' | 'card' | 'tr' | 'colony',
   title: string,
-  iconClass: string,
-  percent: number,
-  text: string,
-  done: boolean,
-  bonuses: Array<TrackBonus>,
 };
 
-function percentOf(value: number, min: number, max: number): number {
-  return Math.max(0, Math.min(100, (value - min) / (max - min) * 100));
+// The bonuses printed next to the tracks.
+const BONUSES: ReadonlyArray<DialBonus> = [
+  {track: 'temperature', value: constants.TEMPERATURE_BONUS_FOR_HEAT_1, icon: 'heat-production', title: 'Heat production'},
+  {track: 'temperature', value: constants.TEMPERATURE_BONUS_FOR_HEAT_2, icon: 'heat-production', title: 'Heat production'},
+  {track: 'temperature', value: constants.TEMPERATURE_FOR_OCEAN_BONUS, icon: 'ocean', title: 'Ocean'},
+  {track: 'oxygen', value: constants.OXYGEN_LEVEL_FOR_TEMPERATURE_BONUS, icon: 'temperature', title: 'Temperature'},
+  {track: 'venus', value: constants.VENUS_LEVEL_FOR_CARD_BONUS, icon: 'card', title: 'Card'},
+  {track: 'venus', value: constants.VENUS_LEVEL_FOR_TR_BONUS, icon: 'tr', title: 'TR'},
+  {track: 'venus', value: constants.VENUS_LEVEL_FOR_GIGA_COLONY_BONUS, icon: 'colony', title: 'Colony'},
+];
+
+/** Centers an element on (x, y), turned by `rotation` degrees. */
+function placeAt(x: number, y: number, rotation: number = 0): Record<string, string> {
+  return {
+    left: `${x.toFixed(1)}px`,
+    top: `${y.toFixed(1)}px`,
+    transform: `translate(-50%, -50%) rotate(${rotation.toFixed(1)}deg)`,
+  };
 }
+
+function label(track: DialTrackName, value: number): string {
+  return track === 'temperature' && value > 0 ? `+${value}` : String(value);
+}
+
+type DialTrackView = {
+  name: DialTrackName,
+  cells: Array<{value: number, label: string, css: Array<string>, style: Record<string, string>}>,
+};
 
 export default defineComponent({
   name: 'GigaMarsBoard',
@@ -155,6 +186,9 @@ export default defineComponent({
       }
       return {margin: `${position.top}px 0 0 ${position.left}px`};
     },
+    isPolar(space: SpaceModel): boolean {
+      return GIGA_POLAR_SPACES.includes(space.id);
+    },
     spaceName(space: SpaceModel): string {
       return OFF_MARS_NAMES[space.id] ?? '';
     },
@@ -168,60 +202,69 @@ export default defineComponent({
     offMarsSpaces(): Array<SpaceModel> {
       return this.spaces.filter((s) => s.spaceType === SpaceType.COLONY);
     },
-    tracks(): Array<Track> {
-      const max = getGlobalParameterMaximums(BoardName.GIGA);
-      const minT = constants.MIN_TEMPERATURE;
-      const tracks: Array<Track> = [
-        {
-          id: 'temperature',
-          title: 'Temperature',
-          iconClass: 'temperature-tile',
-          percent: percentOf(this.temperature, minT, max.temperature),
-          text: `${this.temperature > 0 ? '+' : ''}${this.temperature} °C`,
-          done: this.temperature >= max.temperature,
-          bonuses: [
-            {percent: percentOf(constants.TEMPERATURE_BONUS_FOR_HEAT_1, minT, max.temperature), label: '♨', title: 'Heat production'},
-            {percent: percentOf(constants.TEMPERATURE_BONUS_FOR_HEAT_2, minT, max.temperature), label: '♨', title: 'Heat production'},
-            {percent: percentOf(constants.TEMPERATURE_FOR_OCEAN_BONUS, minT, max.temperature), label: '💧', title: 'Ocean'},
-          ],
-        },
-        {
-          id: 'oxygen',
-          title: 'Oxygen Level',
-          iconClass: 'oxygen-tile',
-          percent: percentOf(this.oxygen_level, constants.MIN_OXYGEN_LEVEL, max.oxygen),
-          text: `${this.oxygen_level} %`,
-          done: this.oxygen_level >= max.oxygen,
-          bonuses: [
-            {percent: percentOf(constants.OXYGEN_LEVEL_FOR_TEMPERATURE_BONUS, constants.MIN_OXYGEN_LEVEL, max.oxygen), label: '🌡', title: 'Temperature'},
-          ],
-        },
-        {
-          id: 'oceans',
-          title: 'Oceans',
-          iconClass: 'ocean-tile',
-          percent: percentOf(this.oceans_count, 0, max.oceans),
-          text: `${this.oceans_count}/${max.oceans}`,
-          done: this.oceans_count >= max.oceans,
-          bonuses: [],
-        },
-      ];
-      if (this.expansions.venus) {
-        tracks.push({
-          id: 'venus',
-          title: 'Venus Scale',
-          iconClass: 'venus-tile',
-          percent: percentOf(this.venusScaleLevel, constants.MIN_VENUS_SCALE, max.venus),
-          text: `${this.venusScaleLevel} %`,
-          done: this.venusScaleLevel >= max.venus,
-          bonuses: [
-            {percent: percentOf(constants.VENUS_LEVEL_FOR_CARD_BONUS, 0, max.venus), label: '🂠', title: 'Card'},
-            {percent: percentOf(constants.VENUS_LEVEL_FOR_TR_BONUS, 0, max.venus), label: 'TR', title: 'TR'},
-            {percent: percentOf(constants.VENUS_LEVEL_FOR_GIGA_COLONY_BONUS, 0, max.venus), label: '◒', title: 'Colony'},
-          ],
+    maximums() {
+      return getGlobalParameterMaximums(BoardName.GIGA);
+    },
+    dialTracks(): Array<DialTrackView> {
+      const current: Record<DialTrackName, number> = {
+        oxygen: this.oxygen_level,
+        temperature: this.temperature,
+        venus: this.venusScaleLevel,
+      };
+      const names: Array<DialTrackName> = this.expansions.venus ? ['oxygen', 'venus', 'temperature'] : ['oxygen', 'temperature'];
+      return names.map((name) => ({
+        name,
+        cells: dialCells(name).map((cell) => {
+          const css = ['global-numbers-value', 'giga-dial-value'];
+          if (!Number.isInteger(cell.value)) {
+            css.push('giga-dial-value--half');
+          }
+          if (cell.value === current[name]) {
+            css.push('val-is-active');
+          }
+          return {value: cell.value, label: label(name, cell.value), css, style: placeAt(cell.x, cell.y, cell.rotation)};
+        }),
+      }));
+    },
+    dialBonuses() {
+      return BONUSES
+        .filter((bonus) => bonus.track !== 'venus' || this.expansions.venus)
+        .map((bonus) => {
+          const cell = dialCell(bonus.track, bonus.value);
+          const s = (cell.start + cell.end) / 2;
+          const pointer = dialPoint(s, DIAL_TRACK_WIDTH / 2 + 8);
+          const icon = dialPoint(s, DIAL_TRACK_WIDTH / 2 + 30);
+          return {
+            key: `${bonus.track}-${bonus.value}`,
+            icon: bonus.icon,
+            title: bonus.title,
+            // The pointer points at the track.
+            pointerStyle: placeAt(pointer.x, pointer.y, pointer.normal),
+            iconStyle: placeAt(icon.x, icon.y),
+          };
         });
-      }
-      return tracks;
+    },
+    venusCaps(): {start: Record<string, string>, end: Record<string, string>} {
+      const {start, end} = DIAL_TRACK_EXTENTS.venus;
+      const first = dialPoint(start - 19, 4);
+      const last = dialPoint(end + 19, 4);
+      return {
+        start: placeAt(first.x, first.y, first.normal + 90),
+        end: placeAt(last.x, last.y, last.normal + 90),
+      };
+    },
+    labels(): Record<'oxygen' | 'temperature', Record<string, string>> {
+      // Just past the start of each track, outside the dial, as on the standard one.
+      const oxygen = dialPoint(DIAL_TRACK_EXTENTS.oxygen.start - 12, 34);
+      const temperature = dialPoint(DIAL_TRACK_EXTENTS.temperature.end + 16, 34);
+      return {
+        oxygen: placeAt(oxygen.x, oxygen.y),
+        temperature: placeAt(temperature.x, temperature.y),
+      };
+    },
+    oceansStyle(): Record<string, string> {
+      const bottom = dialPoint(0);
+      return placeAt(bottom.x, bottom.y);
     },
   },
 });

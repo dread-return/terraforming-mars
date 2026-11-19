@@ -1,7 +1,10 @@
 // The fan GIGA expansion's board (GigaMarsBoard.vue).
 
-@giga-board-width: 908px;
-@giga-board-height: 475px;
+// These match the layout in src/client/components/board/gigaDial.ts.
+@giga-board-width: 1164px;
+@giga-board-height: 704px;
+@giga-mars-left: 67px;
+@giga-mars-top: 69px;
 
 .board-cont--giga {
   width: @giga-board-width + 20px;
@@ -13,120 +16,171 @@
   }
 }
 
-.giga-tracks {
-  display: grid;
-  padding-top: 14px;
-  grid-template-columns: 1fr 1fr;
-  gap: 4px 18px;
-  margin: 0 0 6px 40px;
-  width: @giga-board-width - 60px;
-}
-
-.giga-track {
-  display: flex;
-  align-items: center;
-  height: 26px;
-}
-
-.giga-track-label {
-  flex: none;
-  width: 26px;
-  height: 26px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-
-  &.temperature-tile {
-    background-image: url(./assets/global-parameters/temperature.png);
-  }
-  &.oxygen-tile {
-    background-image: url(./assets/global-parameters/oxygen.png);
-  }
-  &.ocean-tile {
-    background-image: url(./assets/tiles/ocean.png);
-  }
-  &.venus-tile {
-    background-image: url(./assets/global-parameters/venus.png);
-  }
-}
-
-.giga-track-bar {
-  position: relative;
-  flex: auto;
-  height: 12px;
-  margin: 0 8px;
-  border: 1px solid #888;
-  border-radius: 6px;
-  background: #222;
-}
-
-.giga-track-fill {
-  height: 100%;
-  border-radius: 6px;
-}
-
-.giga-track--temperature .giga-track-fill {
-  background: linear-gradient(to right, #2448c8, #c8243a);
-}
-.giga-track--oxygen .giga-track-fill {
-  background: linear-gradient(to right, #6a4a2a, #4caf50);
-}
-.giga-track--oceans .giga-track-fill {
-  background: #2e8bd8;
-}
-.giga-track--venus .giga-track-fill {
-  background: linear-gradient(to right, #8a6a2a, #e8c25a);
-}
-
-.giga-track-bonus {
-  position: absolute;
-  top: -15px;
-  transform: translateX(-50%);
-  font-size: 11px;
-  line-height: 12px;
-  color: #eee;
-  pointer-events: auto;
-
-  &::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 13px;
-    width: 1px;
-    height: 14px;
-    background: rgba(255, 255, 255, 0.6);
-  }
-}
-
-.giga-track-value {
-  flex: none;
-  width: 62px;
-  font-size: 14px;
-  font-weight: bold;
-  color: #eee;
-  text-align: right;
-}
-
 .board--giga {
   position: relative;
   width: @giga-board-width;
   height: @giga-board-height;
   margin: 0 0 0 10px;
-  background: url(./assets/board/giga-mars.jpg) no-repeat;
-  background-size: @giga-board-width @giga-board-height;
+  // The tracks (drawn from the standard dial, see gigaDial.ts) around the planet.
+  background:
+    url(./assets/board/giga-dial.png) 38px 122px / 1087px 533px no-repeat,
+    url(./assets/board/giga-mars.jpg) @giga-mars-left @giga-mars-top / 1030px 566px no-repeat;
 
-  // The board art already shows the ocean, volcanic and Noctis City spaces, so empty spaces are not
-  // drawn over it.
-  .board-space-type-land,
-  .board-space-type-land-volcanic,
-  .board-space-type-land-noctis,
-  .board-space-type-ocean {
-    background: none;
+  &.board--giga-venus {
+    background:
+      url(./assets/board/giga-dial-venus.png) 243px 38px / 678px 96px no-repeat,
+      url(./assets/board/giga-dial.png) 38px 122px / 1087px 533px no-repeat,
+      url(./assets/board/giga-mars.jpg) @giga-mars-left @giga-mars-top / 1030px 566px no-repeat;
+  }
+
+  // Spaces draw their own land, ocean, volcanic and Noctis City hexes over the Mars art, as on the
+  // other maps, so the layout can be shuffled.
+  > .board-space {
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  }
+
+  // The polar spaces (snowflakes on the printed board) are frosted.
+  > .board-space.giga-polar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.55), rgba(220, 240, 255, 0.25) 70%);
+    pointer-events: none;
   }
 
   // The GIGA board's extra ocean costs 5 M€ rather than Hellas's 6 M€.
   .board-space-bonus--bonusocean {
     background-image: url(./assets/tiles/ocean.png), url(./assets/misc/giga-ocean-cost.png);
+  }
+}
+
+// The global parameter tracks. Markers use the standard .global-numbers-value / .val-is-active look.
+.global-numbers.giga-dial {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  pointer-events: none;
+
+  > div > .giga-dial-value,
+  > div,
+  > .giga-dial-pointer,
+  > .giga-dial-bonus,
+  > .giga-dial-cap,
+  > .giga-dial-label {
+    position: absolute;
+  }
+
+  > div:not(.global-numbers-oceans) {
+    left: 0;
+    top: 0;
+  }
+
+  .giga-dial-value {
+    color: #ddd;
+    text-shadow: 0 0 2px #000;
+  }
+
+  .giga-dial-value--half {
+    font-size: 11px;
+  }
+
+  .val-is-active {
+    background: @grey_900;
+    text-shadow: none;
+  }
+}
+
+.giga-dial-pointer {
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-right: 10px solid #9a9a9a;
+}
+
+.giga-dial-bonus {
+  width: 26px;
+  height: 26px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  pointer-events: auto;
+
+  &--heat-production {
+    background-image: url(./assets/resources/heat.png), url(./assets/misc/production.png);
+    background-size: 18px 18px, 26px 26px;
+    border-radius: 2px;
+    box-shadow: 0 0 2px #000;
+  }
+  &--ocean {
+    background-image: url(./assets/tiles/ocean.png);
+  }
+  &--temperature {
+    background-image: url(./assets/global-parameters/temperature.png);
+  }
+  &--card {
+    width: 20px;
+    height: 28px;
+    background-image: url(./assets/resources/card.png);
+    background-size: cover;
+    border: 2px solid #eee;
+    border-radius: 3px;
+    box-shadow: 0 0 2px #000;
+  }
+  &--tr {
+    background-image: url(./assets/resources/tr.png);
+  }
+  &--colony {
+    background-image: url(./assets/tiles/colony.png);
+  }
+}
+
+// The ends of the Venus track, as on the standard dial.
+.giga-dial-cap {
+  width: 26px;
+  height: 26px;
+  border: 2px solid #9c8f86;
+  border-radius: 2px;
+  box-sizing: border-box;
+
+  &--venus {
+    background: url(./assets/global-parameters/venus.png) center / 20px auto no-repeat, #c27a33;
+  }
+
+  &--percent {
+    background: #36a3d6;
+    color: white;
+    font-family: Prototype, sans-serif;
+    font-size: 17px;
+    line-height: 22px;
+    text-align: center;
+  }
+}
+
+.giga-dial-label {
+  color: #1a8fcb;
+  font-family: Prototype, sans-serif;
+  font-size: 26px;
+  font-weight: bold;
+  white-space: nowrap;
+
+  sub,
+  sup {
+    font-size: 14px;
+  }
+}
+
+.global-numbers .global-numbers-oceans.giga-dial-oceans {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  white-space: nowrap;
+
+  .giga-dial-ocean-icon {
+    width: 30px;
+    height: 34px;
+    background: url(./assets/tiles/ocean.png) center / contain no-repeat;
   }
 }
 

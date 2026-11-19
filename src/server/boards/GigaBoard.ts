@@ -7,7 +7,7 @@ import {GIGA_BONUS_OCEAN_COST, GIGA_MIN_COLUMN, GIGA_NOCTIS_CITY, GIGA_POLAR_SPA
 import {SpaceName} from '../../common/boards/SpaceName';
 import {Random} from '../../common/utils/Random';
 import {GameOptions} from '../game/GameOptions';
-import {colonySpace, expansionColonySpaces} from './BoardBuilder';
+import {colonySpace, expansionColonySpaces, preservingShuffle} from './BoardBuilder';
 import {SpaceCosts} from './Board';
 import {MarsBoard} from './MarsBoard';
 import {Space} from './Space';
@@ -22,25 +22,33 @@ const GIGA_A9: Partial<Record<SpaceId, string>> = Object.fromEntries(GIGA_SPACES
  * Rows are offset like a brick wall rather than forming a hexagon, so adjacency is computed here: a
  * space's `x` is its column (shifted to start at 0) and every odd row sits half a hex to the right.
  *
- * The map is not shuffled: the client draws the printed board art under the spaces.
+ * With "Randomize board tiles" the ocean/land layout and the bonuses are shuffled like on the other
+ * maps. The volcanic spaces, the polar spaces, Noctis City and the 5 M€ ocean space keep their place.
  */
 export class GigaBoard extends MarsBoard {
   public override readonly A9 = GIGA_A9;
   /** Card ocean requirements are doubled on this board. */
   public override readonly oceanRequirementMultiplier = 2;
 
-  public static newInstance(gameOptions: GameOptions, _rng: Random): GigaBoard {
+  public static newInstance(gameOptions: GameOptions, rng: Random): GigaBoard {
     const spaces: Array<Space> = [
       colonySpace(SpaceName.GANYMEDE_COLONY),
       colonySpace(SpaceName.PHOBOS_SPACE_HAVEN),
     ];
-    const marsSpaces: Array<Space> = GIGA_SPACES.map((s) => {
+    const spaceTypes = GIGA_SPACES.map((s) => s.kind === 'ocean' ? SpaceType.OCEAN : SpaceType.LAND);
+    const bonuses = GIGA_SPACES.map((s) => [...s.bonus]);
+    if (gameOptions.shuffleMapOption) {
+      const preserved = GigaBoard.unshufflableIndexes();
+      preservingShuffle(spaceTypes, preserved, rng);
+      preservingShuffle(bonuses, preserved, rng);
+    }
+    const marsSpaces: Array<Space> = GIGA_SPACES.map((s, idx) => {
       const space: Space = {
         id: s.id,
-        spaceType: s.kind === 'ocean' ? SpaceType.OCEAN : SpaceType.LAND,
+        spaceType: spaceTypes[idx],
         x: s.column - GIGA_MIN_COLUMN,
         y: s.row,
-        bonus: [...s.bonus],
+        bonus: bonuses[idx],
         edge: false,
       };
       if (s.kind === 'volcanic') {
@@ -56,6 +64,17 @@ export class GigaBoard extends MarsBoard {
     spaces.push(...marsSpaces);
     spaces.push(...expansionColonySpaces(gameOptions));
     return new GigaBoard(spaces);
+  }
+
+  /** Spaces that keep their type and bonuses when the map is shuffled, as indexes into GIGA_SPACES. */
+  public static unshufflableIndexes(): Array<number> {
+    const indexes: Array<number> = [];
+    GIGA_SPACES.forEach((s, idx) => {
+      if (s.kind === 'volcanic' || s.kind === 'polar' || s.kind === 'noctis' || s.bonus.includes(SpaceBonus.OCEAN)) {
+        indexes.push(idx);
+      }
+    });
+    return indexes;
   }
 
   public constructor(spaces: ReadonlyArray<Space>) {

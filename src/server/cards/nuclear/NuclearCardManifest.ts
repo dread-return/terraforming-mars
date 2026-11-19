@@ -82,6 +82,7 @@ import {ArtificialSun} from './ArtificialSun';
 import {CallistoFieldArrays} from './CallistoFieldArrays';
 import {EMFConnection} from './EMFConnection';
 import {EliteCommandBase} from './EliteCommandBase';
+import {SpaceSolarium} from './SpaceSolarium';
 import {WasteBurial} from './WasteBurial';
 
 export const NUCLEAR_CARD_MANIFEST = new ModuleManifest({
@@ -172,5 +173,6 @@ export const NUCLEAR_CARD_MANIFEST = new ModuleManifest({
     [CardName.EMF_CONNECTION]: {Factory: EMFConnection},
     [CardName.ELITE_COMMAND_BASE]: {Factory: EliteCommandBase},
     [CardName.WASTE_BURIAL]: {Factory: WasteBurial},
+    [CardName.SPACE_SOLARIUM]: {Factory: SpaceSolarium},
   },
 });

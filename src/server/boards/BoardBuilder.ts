@@ -38,6 +38,10 @@ export function expansionColonySpaces(gameOptions: GameOptions): Array<Space> {
     if (entry.card === CardName.FLYING_GARDEN && gameOptions.gigaTurmoil !== true) {
       continue;
     }
+    // Space Solarium is a prelude.
+    if (entry.card === CardName.SPACE_SOLARIUM && gameOptions.expansions.prelude !== true && !gameOptions.includedCards.includes(entry.card)) {
+      continue;
+    }
     if (gameOptions.expansions[entry.expansion] || gameOptions.includedCards.includes(entry.card)) {
       spaces.push(colonySpace(entry.name));
     }

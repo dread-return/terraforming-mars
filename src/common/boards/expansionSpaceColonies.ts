@@ -16,4 +16,5 @@ export const expansionSpaceColonies = [
   {name: SpaceName.NEW_POMPEII, expansion: 'mercury', card: CardName.NEW_POMPEII},
   {name: SpaceName.SHADOW_FOREST, expansion: 'mercury', card: CardName.FLORA_EXPERIMENTS},
   {name: SpaceName.FLYING_GARDEN, expansion: 'idesofmars', card: CardName.FLYING_GARDEN},
+  {name: SpaceName.SPACE_SOLARIUM, expansion: 'nuclear', card: CardName.SPACE_SOLARIUM},
 ] as const;

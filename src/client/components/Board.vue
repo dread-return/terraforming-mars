@@ -34,6 +34,7 @@
       <BoardSpace v-if="hasSpace(SpaceName.NEW_POMPEII)" :space="getSpace(SpaceName.NEW_POMPEII)" text="New Pompeii (Mercury)" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.SHADOW_FOREST)" :space="getSpace(SpaceName.SHADOW_FOREST)" text="Shadow Forest (Mercury)" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.FLYING_GARDEN)" :space="getSpace(SpaceName.FLYING_GARDEN)" text="Flying Garden" :tileView="tileView" />
+      <BoardSpace v-if="hasSpace(SpaceName.SPACE_SOLARIUM)" :space="getSpace(SpaceName.SPACE_SOLARIUM)" text="Space Solarium" :tileView="tileView" />
     </div>
 
     <div class="global-numbers" :class="{'global-numbers--large': isLargeBoard, 'global-numbers--venus2': venusPhase2Track}">

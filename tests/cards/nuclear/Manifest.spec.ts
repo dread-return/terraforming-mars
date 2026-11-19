@@ -12,10 +12,10 @@ describe('Nuclear manifest', () => {
     return cards.filter((c) => names.has(c.name));
   }
 
-  it('has 78 project cards and 5 preludes', () => {
+  it('has 78 project cards and 6 preludes', () => {
     expect(names.size).eq(78);
-    expect(preludes.size).eq(5);
-    expect(preludes.has(CardName.SPACE_SOLARIUM)).is.false;
+    expect(preludes.size).eq(6);
+    expect(preludes.has(CardName.SPACE_SOLARIUM)).is.true;
   });
 
   it('all cards join the deck with Colonies on', () => {

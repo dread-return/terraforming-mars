@@ -12,5 +12,5 @@ export type Tile = {
   covers?: Tile; // For Ares tiles
   upgrade?: TileUpgrade; // Domes and Wilderness: a dome on a city, a wilderness on a greenery
   postlude?: CardName; // Postludes: the postlude card sitting on top of this city, greenery or ocean
-  nextTo?: SpaceId; // Flying Garden: the off-world city this off-world greenery was placed next to
+  nextTo?: SpaceId; // Flying Garden, Space Solarium: the off-world city (space) this off-world greenery was placed next to
 }

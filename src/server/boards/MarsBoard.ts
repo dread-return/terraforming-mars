@@ -122,7 +122,7 @@ export class MarsBoard extends Board {
       return [];
     }
     if (space.spaceType === SpaceType.COLONY) {
-      // An off-world greenery (Flying Garden) is next to the off-world city it was placed by.
+      // An off-world greenery (Flying Garden, Space Solarium) is next to the off-world city space it was placed by.
       const linked = space.tile?.nextTo;
       return this.spaces.filter((s) => s.spaceType === SpaceType.COLONY && (s.id === linked || s.tile?.nextTo === space.id));
     }

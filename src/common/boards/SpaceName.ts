@@ -31,4 +31,7 @@ export const SpaceName = {
 
   // Flying Garden (Ides of Mars): an off-world greenery placed next to an off-world city.
   FLYING_GARDEN: 'c83',
+
+  // Space Solarium (Nuclear prelude): an off-world greenery next to a reserved off-world city space.
+  SPACE_SOLARIUM: 'c84',
 } as const;

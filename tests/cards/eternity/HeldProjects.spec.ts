@@ -7,7 +7,6 @@ import {IGame} from '../../../src/server/IGame';
 import {CardName} from '../../../src/common/cards/CardName';
 import {CardType} from '../../../src/common/cards/CardType';
 import {Tag} from '../../../src/common/cards/Tag';
-import {CardResource} from '../../../src/common/CardResource';
 import {TileType} from '../../../src/common/TileType';
 import {Payment} from '../../../src/common/inputs/Payment';
 import {SelectCard} from '../../../src/server/inputs/SelectCard';

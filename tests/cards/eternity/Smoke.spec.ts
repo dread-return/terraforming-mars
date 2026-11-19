@@ -94,7 +94,8 @@ function answer(player: TestPlayer, input: PlayerInput): PlayerInput | undefined
   }
   if (input instanceof SelectProjectCardToPlay) {
     const card = input.cards[0];
-    return input.cb(card, Payment.of({megacredits: player.getCardCost(card)})) ?? undefined;
+    input.payAndPlay(card, Payment.of({megacredits: player.getCardCost(card)}));
+    return undefined;
   }
   if (input instanceof SelectStandardProjectToPlay) {
     return undefined;

@@ -50,6 +50,9 @@ export default defineComponent({
     selected: {type: Array as () => Array<CardName>, required: true},
   },
   data() {
+    // Only preselect corporations whose other required expansions are also on (e.g. Epic corps that need Colonies).
+    const compatible = (name: CardName) => (getCard(name)?.compatibility ?? [])
+      .every((m) => this.expansions[m as Expansion] === true);
     const initialSelected: Array<CardName> = this.selected.length > 0 ? [...this.selected] : [
       ...corpCardNames('base'),
       ...this.expansions.corpera ? corpCardNames('corpera') : [],
@@ -63,7 +66,7 @@ export default defineComponent({
       ...this.expansions.moon ? corpCardNames('moon') : [],
       ...this.expansions.pathfinders ? corpCardNames('pathfinders') : [],
       ...this.expansions.underworld ? corpCardNames('underworld') : [],
-    ];
+    ].filter(compatible);
     return {initialSelected};
   },
   computed: {

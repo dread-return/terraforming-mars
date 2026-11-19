@@ -16,6 +16,7 @@ import {Tag} from '../../common/cards/Tag';
 import {asArray} from '../../common/utils/utils';
 import {isIStandardProjectCard} from '../cards/IStandardProjectCard';
 import {Eternity} from '../cards/eternity/Eternity';
+import {EpicHooks} from '../cards/epic/EpicHooks';
 
 export function cardsToModel(
   player: IPlayer,
@@ -56,7 +57,7 @@ export function cardsToModel(
       cloneTag: isICloneTagCard(card) ? card.cloneTag : undefined,
     };
     if (isIStandardProjectCard(card)) {
-      model.standardProjectCanPayWith = highOrbitStandardProjectPayWith(player, card, Postludes.standardProjectPayWith(player, card, Eternity.standardProjectPayWith(player, card, card.canPayWith(player))));
+      model.standardProjectCanPayWith = highOrbitStandardProjectPayWith(player, card, Postludes.standardProjectPayWith(player, card, Eternity.standardProjectPayWith(player, card, EpicHooks.standardProjectPayWith(player, card, card.canPayWith(player)))));
     }
     if (card.isDisabled) {
       model.isDisabled = true;
@@ -69,6 +70,9 @@ export function cardsToModel(
       model.additionalProjectCosts = card.additionalProjectCosts;
     }
 
+    if (playCardMetadata?.paymentOverrides !== undefined) {
+      model.paymentOverrides = playCardMetadata.paymentOverrides;
+    }
     const reserveUnits = playCardMetadata?.reserveUnits;
     if (reserveUnits !== undefined) {
       model.reserveUnits = reserveUnits;

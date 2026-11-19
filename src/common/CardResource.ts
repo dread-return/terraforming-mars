@@ -69,4 +69,11 @@ export enum CardResource {
   // Postludes
   FOOD = 'Food',
   PROBIOTIC = 'Probiotic',
+  // Epic Corporations
+  GALAXY = 'Galaxy',
+  INFLUENCE = 'Influence',
+  DEFICIT = 'Deficit',
+  WORKER = 'Worker',
+  PRISONER = 'Prisoner',
+  WILD_RESOURCE = 'Wild resource',
 }

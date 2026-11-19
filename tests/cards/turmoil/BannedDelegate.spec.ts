@@ -63,7 +63,9 @@ describe('Banned Delegate', () => {
     turmoil.sendDelegateToParty('NEUTRAL', PartyName.REDS, game);
 
     const orOptions = cast(card.play(player), OrOptions);
-    const selectDelegate = cast(orOptions.options[0], SelectDelegate);
+    // Other parties may also hold 2+ delegates (random starting delegates), so look for Greens.
+    const greens = orOptions.options.find((o) => String(o.title).includes(PartyName.GREENS));
+    const selectDelegate = cast(greens, SelectDelegate);
     expect(selectDelegate.players).has.members([player, player2, 'NEUTRAL']);
   });
 });

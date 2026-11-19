@@ -1,0 +1,955 @@
+import {CardName} from '../../../common/cards/CardName';
+import {CardType} from '../../../common/cards/CardType';
+import {Tag} from '../../../common/cards/Tag';
+import {GlobalParameter} from '../../../common/GlobalParameter';
+import {Resource} from '../../../common/Resource';
+import {CardResource} from '../../../common/CardResource';
+import {Phase} from '../../../common/Phase';
+import {ColonyBenefit} from '../../../common/colonies/ColonyBenefit';
+import {IPlayer} from '../../IPlayer';
+import {IGame} from '../../IGame';
+import {ICard} from '../ICard';
+import {IProjectCard} from '../IProjectCard';
+import {IColony} from '../../colonies/IColony';
+import {From, isFromPlayer} from '../../logs/From';
+import {OrOptions} from '../../inputs/OrOptions';
+import {SelectOption} from '../../inputs/SelectOption';
+import {AddResourcesToCard} from '../../deferredActions/AddResourcesToCard';
+import {IGlobalEvent} from '../../turmoil/globalEvents/IGlobalEvent';
+import {IStandardProjectCard} from '../IStandardProjectCard';
+import {StandardProjectCanPayWith} from '../../../common/cards/Types';
+import {SelectAmount} from '../../inputs/SelectAmount';
+import {message} from '../../logs/MessageBuilder';
+import {SelectResources} from '../../inputs/SelectResources';
+import {SelectCard} from '../../inputs/SelectCard';
+import {PlaceCityTile} from '../../deferredActions/PlaceCityTile';
+import {PlayerInput} from '../../PlayerInput';
+import {EpicUtils} from './EpicUtils';
+import {ICorporationCard} from '../corporation/ICorporationCard';
+
+/** True Mars Foundation: the tag sets a player can mark (one per action). */
+export const TRUE_MARS_FOUNDATION_SETS: ReadonlyArray<ReadonlyArray<Tag>> = [
+  [Tag.POWER, Tag.MARS, Tag.BUILDING],
+  [Tag.SPACE, Tag.JOVIAN],
+  [Tag.SCIENCE, Tag.RADIOACTIVE],
+  [Tag.PLANT, Tag.MICROBE, Tag.ANIMAL],
+  [Tag.VENUS, Tag.MOON, Tag.EARTH],
+];
+
+type GenerationData = {generation?: number};
+type RaisedData = GenerationData & {raised?: Array<Resource>};
+type TmfData = GenerationData & {set?: number};
+
+function dataOf<T>(card: ICard): T {
+  if (card.data === undefined || card.data === null || typeof card.data !== 'object') {
+    card.data = {};
+  }
+  return card.data as unknown as T;
+}
+
+function permutations<T>(items: ReadonlyArray<T>): Array<Array<T>> {
+  if (items.length <= 1) {
+    return [[...items]];
+  }
+  const result: Array<Array<T>> = [];
+  items.forEach((item, i) => {
+    const rest = [...items.slice(0, i), ...items.slice(i + 1)];
+    for (const p of permutations(rest)) {
+      result.push([item, ...p]);
+    }
+  });
+  return result;
+}
+
+/**
+ * Engine hooks for the Epic Corporations (part of Corporate Era in this fork).
+ *
+ * Each hook only does something when a player has the matching corporation,
+ * so they are cheap no-ops otherwise.
+ */
+export class EpicHooks {
+  /** Called whenever a player raises a global parameter during the action phase. */
+  public static onGlobalParameterIncrease(activePlayer: IPlayer, parameter: GlobalParameter, steps: number): void {
+    if (steps <= 0 || activePlayer.game === undefined) {
+      return;
+    }
+    // Jump-Start Corporation: a wild resource per step you raise.
+    const jumpStart = activePlayer.tableau.get(CardName.JUMP_START_CORPORATION);
+    if (jumpStart !== undefined) {
+      activePlayer.addResourceTo(jumpStart, {qty: steps, log: true});
+    }
+    for (const p of activePlayer.game.players) {
+      // Barsoomian Atmospherics: 2 M€ per oxygen step raised by anyone, plus 2 energy when it's you.
+      if (parameter === GlobalParameter.OXYGEN && p.tableau.has(CardName.BARSOOMIAN_ATMOSPHERICS)) {
+        p.stock.add(Resource.MEGACREDITS, 2 * steps, {log: true});
+        if (p.id === activePlayer.id) {
+          p.stock.add(Resource.ENERGY, 2 * steps, {log: true});
+        }
+      }
+      // Planetary Homeostasis Bureau: +1 M€ production per temperature step raised by anyone.
+      if (parameter === GlobalParameter.TEMPERATURE && p.tableau.has(CardName.PLANETARY_HOMEOSTASIS_BUREAU)) {
+        p.production.add(Resource.MEGACREDITS, steps, {log: true});
+      }
+    }
+  }
+
+  /** Called when a player uses the action on a card in their tableau. */
+  public static onCardAction(player: IPlayer, card: ICard): void {
+    // M.A.R.S.: 1 M€ each time you use the action of a blue card.
+    if (card.type === CardType.ACTIVE && player.tableau.has(CardName.MARS_ACTIVE_RESOURCES)) {
+      player.stock.add(Resource.MEGACREDITS, 1, {log: true});
+    }
+  }
+
+  /** Extra cards to look at during the research phase (Leviathan, Logos Research & Development). */
+  public static extraResearchCards(player: IPlayer): number {
+    let extra = 0;
+    if (player.tableau.has(CardName.LEVIATHAN)) {
+      extra++;
+    }
+    if (player.tableau.has(CardName.LOGOS_RESEARCH_AND_DEVELOPMENT)) {
+      extra++;
+    }
+    return extra;
+  }
+
+  /** Cards a player may keep for free during the research phase (Logos Research & Development). */
+  public static freeResearchCards(player: IPlayer): number {
+    return player.tableau.has(CardName.LOGOS_RESEARCH_AND_DEVELOPMENT) ? 1 : 0;
+  }
+
+  /** Lazarus Laboratories: after buying research cards, keep one of your discarded ones for free. */
+  public static keepsDiscardedResearchCard(player: IPlayer): boolean {
+    return player.tableau.has(CardName.LAZARUS_LABORATORIES);
+  }
+
+  /** Called when cards go into a player's hand, either bought or drawn (Dev Wright). */
+  public static onCardsKept(player: IPlayer, count: number, bought: boolean): void {
+    if (count > 0 && player.tableau.has(CardName.DEV_WRIGHT)) {
+      player.stock.add(Resource.MEGACREDITS, (bought ? 1 : 2) * count, {log: true});
+    }
+    // ProfiCoin: 1 M€ per card bought outside the research phase; research purchases are paid out at its end.
+    if (count > 0 && bought && player.game !== undefined) {
+      const researching = player.game.phase === Phase.RESEARCH || player.game.phase === Phase.DRAFTING;
+      for (const p of player.game.players) {
+        const proficoin = p.tableau.get(CardName.PROFICOIN);
+        if (proficoin === undefined) {
+          continue;
+        }
+        if (researching) {
+          const data = dataOf<{researchBought?: number}>(proficoin);
+          data.researchBought = (data.researchBought ?? 0) + count;
+        } else {
+          p.stock.add(Resource.MEGACREDITS, count, {log: true});
+        }
+      }
+    }
+  }
+
+  /** ProfiCoin: 1 M€ per 2 cards bought by all players during the research phase. */
+  public static onResearchPhaseEnd(game: IGame): void {
+    for (const p of game.players) {
+      const proficoin = p.tableau.get(CardName.PROFICOIN);
+      if (proficoin === undefined) {
+        continue;
+      }
+      const data = dataOf<{researchBought?: number}>(proficoin);
+      const gain = Math.floor((data.researchBought ?? 0) / 2);
+      data.researchBought = 0;
+      if (gain > 0) {
+        p.stock.add(Resource.MEGACREDITS, gain, {log: true});
+      }
+    }
+  }
+
+  /**
+   * Cheap Chispa: every decrease of the owner's energy production is 1 step smaller.
+   * Returns the adjusted amount.
+   */
+  public static adjustProductionChange(player: IPlayer, resource: Resource, amount: number): number {
+    if (resource === Resource.ENERGY && amount < 0 && player.tableau.has(CardName.CHEAP_CHISPA)) {
+      return amount + 1;
+    }
+    return amount;
+  }
+
+  /** Called after a player's production changed by `delta` (negative is a loss). */
+  public static onProductionChange(player: IPlayer, resource: Resource, delta: number, from?: From): void {
+    if (delta === 0) {
+      return;
+    }
+    const game = player.game;
+    if (game === undefined) {
+      return;
+    }
+    const fromOtherPlayer = isFromPlayer(from) && from.player.id !== player.id;
+
+    // Discount Conglomerate: a wild resource whenever your production is lowered.
+    const discount = player.tableau.get(CardName.DISCOUNT_CONGLOMERATE);
+    if (discount !== undefined && delta < 0) {
+      player.addResourceTo(discount, {qty: 1, log: true});
+    }
+
+    // Grothe Industries: remember productions raised during the first action of a turn.
+    const grothe = player.tableau.get(CardName.GROTHE_INDUSTRIES);
+    if (grothe !== undefined && delta > 0 && game.phase === Phase.ACTION && player.actionsTakenThisRound === 0) {
+      const data = dataOf<{action?: number, raised?: Array<Resource>}>(grothe);
+      if (data.action !== player.actionsTakenThisGame) {
+        data.action = player.actionsTakenThisGame;
+        data.raised = [];
+      }
+      data.raised = data.raised ?? [];
+      if (!data.raised.includes(resource)) {
+        data.raised.push(resource);
+      }
+    }
+
+    // The player's own corporations.
+    if (delta > 0) {
+      // Toyitsu and Ares Union: remember which productions were raised this generation.
+      for (const name of [CardName.TOYITSU, CardName.ARES_UNION]) {
+        const card = player.tableau.get(name);
+        if (card !== undefined) {
+          const data = dataOf<RaisedData>(card);
+          if (data.generation !== game.generation) {
+            data.generation = game.generation;
+            data.raised = [];
+          }
+          data.raised = data.raised ?? [];
+          if (!data.raised.includes(resource)) {
+            data.raised.push(resource);
+          }
+        }
+      }
+    } else {
+      // Thermex: lowering your energy production may raise heat production as much.
+      if (resource === Resource.ENERGY && player.tableau.has(CardName.THERMEX)) {
+        player.production.add(Resource.HEAT, -delta, {log: true});
+      }
+      // Princess Ltd.: once per generation, lose M€ production instead.
+      const princess = player.tableau.get(CardName.PRINCESS_LTD);
+      if (princess !== undefined && resource !== Resource.MEGACREDITS) {
+        const data = dataOf<GenerationData>(princess);
+        const steps = -delta;
+        if (data.generation !== game.generation && player.production.megacredits - steps >= -5) {
+          player.defer(new OrOptions(
+            new SelectOption(`Princess Ltd.: lose ${steps} M€ production instead of ${steps} ${resource} production`).andThen(() => {
+              data.generation = game.generation;
+              player.production.add(resource, steps, {log: true});
+              player.production.add(Resource.MEGACREDITS, -steps, {log: true});
+              return undefined;
+            }),
+            new SelectOption(`Keep the ${resource} production loss`).andThen(() => undefined),
+          ));
+        }
+      }
+    }
+
+    // M.I.N.E.: anyone raising steel production may get +1 M€ production; M.I.N.E. gets +1 titanium production.
+    if (resource === Resource.STEEL && delta > 0) {
+      for (const p of game.players) {
+        if (p.tableau.has(CardName.MINE_EPIC)) {
+          p.defer(new OrOptions(
+            new SelectOption(`M.I.N.E.: give ${player.name} +1 M€ production and gain +1 titanium production`, 'Do it').andThen(() => {
+              player.production.add(Resource.MEGACREDITS, 1, {log: true});
+              p.production.add(Resource.TITANIUM, 1, {log: true});
+              return undefined;
+            }),
+            new SelectOption('M.I.N.E.: do nothing', 'Skip').andThen(() => undefined),
+          ));
+        }
+      }
+    }
+
+    // Other players' corporations.
+    for (const p of game.players) {
+      if (p.id === player.id) {
+        continue;
+      }
+      // Acquire Unlimited: another player gains 2+ production at once during the action phase.
+      if (delta >= 2 && game.phase === Phase.ACTION && p.tableau.has(CardName.ACQUIRE_UNLIMITED)) {
+        p.production.add(resource, 1, {log: true});
+      }
+      // Opportunistic Consortium: another player's production decreases.
+      if (delta < 0 && p.tableau.has(CardName.OPPORTUNISTIC_CONSORTIUM)) {
+        p.stock.add(resource, -delta, {log: true});
+      }
+    }
+
+    if (delta < 0 && fromOtherPlayer) {
+      EpicHooks.onReducedByAnotherPlayer(player, resource, /* production */ true);
+      // Bentenmaru: the attack raises its production instead.
+      if (player.tableau.has(CardName.BENTENMARU)) {
+        player.production.add(resource, -2 * delta, {log: true});
+      }
+    }
+
+    // Schlockmeister: raising a non-M€ production may also raise M€ production, for a deficit.
+    const schlock = player.tableau.get(CardName.SCHLOCKMEISTER);
+    if (schlock !== undefined && delta > 0 && resource !== Resource.MEGACREDITS) {
+      player.defer(new OrOptions(
+        new SelectOption('Schlockmeister: also raise your M€ production 1 step (add 1 deficit)', 'Raise').andThen(() => {
+          player.production.add(Resource.MEGACREDITS, 1, {log: true});
+          player.addResourceTo(schlock, {qty: 1, log: true});
+          return undefined;
+        }),
+        new SelectOption('Schlockmeister: no', 'Skip').andThen(() => undefined),
+      ));
+    }
+  }
+
+  /** Called after a player's stock changed by `delta` (negative is a loss). */
+  public static onStockChange(player: IPlayer, resource: Resource, delta: number, from?: From): void {
+    if (delta === 0) {
+      return;
+    }
+    const game = player.game;
+    if (game === undefined) {
+      return;
+    }
+    // Marsanto: gaining plants also gains that many M€.
+    if (resource === Resource.PLANTS && delta > 0 && player.tableau.has(CardName.MARSANTO)) {
+      player.stock.add(Resource.MEGACREDITS, delta, {log: true});
+    }
+    if (delta >= 2 && game.phase === Phase.ACTION) {
+      for (const p of game.players) {
+        if (p.id !== player.id && p.tableau.has(CardName.ACQUIRE_UNLIMITED)) {
+          p.stock.add(resource, 1, {log: true});
+        }
+      }
+    }
+    if (delta < 0 && isFromPlayer(from) && from.player.id !== player.id) {
+      EpicHooks.onReducedByAnotherPlayer(player, resource, /* production */ false);
+      // Bentenmaru: the attack raises its resources instead.
+      if (player.tableau.has(CardName.BENTENMARU)) {
+        player.stock.add(resource, -2 * delta, {log: true});
+      }
+      // Corellian Engineering: a fighter can cancel the loss.
+      EpicHooks.offerCorellianShield(player, `${-delta} ${resource}`, () => player.stock.add(resource, -delta, {log: true}));
+      // Amityville: removing plants from others lets it gain them, or add radiation.
+      const thief = from.player;
+      if (resource === Resource.PLANTS && thief.tableau.has(CardName.AMITYVILLE)) {
+        const amount = -delta;
+        const options = [new SelectOption(`Amityville: gain ${amount} plants`, 'Gain').andThen(() => {
+          thief.stock.add(Resource.PLANTS, amount, {log: true});
+          return undefined;
+        })];
+        if (thief.getResourceCards(CardResource.RADIATION).length > 0) {
+          options.push(new SelectOption(`Amityville: add ${amount} radiation to a card`, 'Add').andThen(() => {
+            thief.game.defer(new AddResourcesToCard(thief, CardResource.RADIATION, {count: amount}));
+            return undefined;
+          }));
+        }
+        thief.defer(new OrOptions(...options, new SelectOption('Amityville: nothing', 'Skip').andThen(() => undefined)));
+      }
+    }
+    // Aerospace Alloys: titanium gained goes on the card until it holds 10.
+    if (resource === Resource.TITANIUM && delta > 0) {
+      EpicHooks.storeAerospaceTitanium(player, delta);
+    }
+  }
+
+  /** Aerospace Alloys: move newly gained titanium onto the card until 10 are there, then release them. */
+  public static storeAerospaceTitanium(player: IPlayer, amount: number): void {
+    const card = player.tableau.get(CardName.AEROSPACE_ALLOYS);
+    if (card === undefined || dataOf<{released?: boolean}>(card).released === true || amount <= 0) {
+      return;
+    }
+    const moved = Math.min(amount, 10 - card.resourceCount, player.titanium);
+    if (moved <= 0) {
+      return;
+    }
+    player.titanium -= moved;
+    card.resourceCount += moved;
+    player.game.log('${0} stored ${1} titanium on ${2}', (b) => b.player(player).number(moved).card(card));
+    if (card.resourceCount >= 10) {
+      dataOf<{released?: boolean}>(card).released = true;
+      player.titanium += card.resourceCount;
+      player.game.log('${0} moved the ${1} titanium from ${2} to their stock', (b) => b.player(player).number(card.resourceCount).card(card));
+      card.resourceCount = 0;
+    }
+  }
+
+  /** Called when resources were removed from a card. */
+  public static onCardResourceRemoved(owner: IPlayer, card: ICard, removingPlayer?: IPlayer, count: number = 1): void {
+    const type = card.resourceType;
+    if (type === undefined || removingPlayer === undefined || removingPlayer.id === owner.id) {
+      return;
+    }
+    // Bentenmaru: the attack adds to the card instead.
+    if (owner.tableau.has(CardName.BENTENMARU)) {
+      owner.addResourceTo(card, {qty: 2 * count, log: true});
+    }
+    // Corellian Engineering: a fighter can cancel the loss.
+    EpicHooks.offerCorellianShield(owner, `${count} ${type.toLowerCase()} on ${card.name}`, () => owner.addResourceTo(card, {qty: count, log: true}));
+    for (const p of owner.game.players) {
+      // Ares Security: 1 of that resource. Orbital Eye: 3 of it.
+      const qty = (p.tableau.has(CardName.ARES_SECURITY) ? 1 : 0) + (p.tableau.has(CardName.ORBITAL_EYE) ? 3 : 0);
+      if (qty > 0 && p.getResourceCards(type).length > 0) {
+        p.game.defer(new AddResourcesToCard(p, type as CardResource, {count: qty}));
+      }
+    }
+  }
+
+  /** Ares Security and Orbital Eye: a player's resources or production were reduced by another player. */
+  private static onReducedByAnotherPlayer(victim: IPlayer, resource: Resource, production: boolean): void {
+    for (const p of victim.game.players) {
+      if (p.tableau.has(CardName.ARES_SECURITY)) {
+        if (production) {
+          p.production.add(resource, 1, {log: true});
+        } else {
+          p.stock.add(resource, 1, {log: true});
+        }
+      }
+      if (p.tableau.has(CardName.ORBITAL_EYE)) {
+        p.stock.add(resource, 3, {log: true});
+      }
+    }
+  }
+
+  /**
+   * Card cost changes caused by OTHER players' Epic corporations (a corporation's effect on its own
+   * owner is in that corporation's getCardDiscount).
+   */
+  public static cardCostAdjustment(player: IPlayer, card: IProjectCard): number {
+    let adjustment = 0;
+    const game = player.game;
+    for (const p of game.players) {
+      if (p.id === player.id) {
+        continue;
+      }
+      // NOJO: opponents pay 2 M€ more per Jovian tag (NOJO gets it when the card is played).
+      if (p.tableau.has(CardName.NOJO)) {
+        adjustment += 2 * card.tags.filter((t) => t === Tag.JOVIAN).length;
+      }
+      // True Mars Foundation: the marked set is 1 M€ cheaper for everyone else.
+      const tmf = p.tableau.get(CardName.TRUE_MARS_FOUNDATION);
+      if (tmf !== undefined) {
+        const data = dataOf<TmfData>(tmf);
+        if (data.generation === game.generation && data.set !== undefined) {
+          const set = TRUE_MARS_FOUNDATION_SETS[data.set] ?? [];
+          if (card.tags.some((t) => set.includes(t))) {
+            adjustment -= 1;
+          }
+        }
+      }
+    }
+    return adjustment;
+  }
+
+  /** True when an Epic corporation forbids this player from playing the card. */
+  public static cannotPlay(player: IPlayer, card: IProjectCard): boolean {
+    // Twin Cities of Helium: you may not play Earth tags.
+    return player.tableau.has(CardName.TWIN_CITIES_OF_HELIUM) && card.tags.includes(Tag.EARTH);
+  }
+
+  /** Called after any player paid for a colony trade (Chaang Fuels Inc.). */
+  public static onTradePayment(trader: IPlayer, resource: Resource, amount: number): void {
+    const half = Math.floor(amount / 2);
+    if (half <= 0) {
+      return;
+    }
+    for (const p of trader.game.players) {
+      if (p.id !== trader.id && p.tableau.has(CardName.CHAANG_FUELS_INC)) {
+        p.stock.add(resource, half, {log: true});
+      }
+    }
+  }
+
+  /** Called when any player trades with a colony, before the track goes back down. */
+  public static onTrade(trader: IPlayer, colony: IColony): void {
+    for (const p of trader.game.players) {
+      // Solar Enterprises: 1 M€ for any trade, plus 1 M€ per empty space below the marker for your own.
+      if (p.tableau.has(CardName.SOLAR_ENTERPRISES)) {
+        let gain = 1;
+        if (p.id === trader.id) {
+          gain += Math.max(0, colony.trackPosition - colony.colonies.length);
+        }
+        p.stock.add(Resource.MEGACREDITS, gain, {log: true});
+      }
+      // Ether Enterprise: 1 unit of the trade income resource for any trade.
+      if (p.tableau.has(CardName.ETHER_ENTERPRISE)) {
+        EpicHooks.gainOneTradeIncome(p, colony);
+      }
+    }
+  }
+
+  private static gainOneTradeIncome(player: IPlayer, colony: IColony): void {
+    const trade = colony.metadata.trade;
+    const resource = Array.isArray(trade.resource) ? trade.resource[colony.trackPosition] : trade.resource;
+    switch (trade.type) {
+    case ColonyBenefit.GAIN_RESOURCES:
+      if (resource !== undefined) {
+        player.stock.add(resource, 1, {log: true});
+        return;
+      }
+      break;
+    case ColonyBenefit.GAIN_PRODUCTION:
+      if (resource !== undefined) {
+        player.stock.add(resource, 1, {log: true});
+        return;
+      }
+      break;
+    case ColonyBenefit.DRAW_CARDS:
+    case ColonyBenefit.DRAW_CARDS_AND_BUY_ONE:
+    case ColonyBenefit.DRAW_CARDS_AND_DISCARD_ONE:
+    case ColonyBenefit.DRAW_CARDS_AND_KEEP_ONE:
+      player.drawCard();
+      return;
+    case ColonyBenefit.ADD_RESOURCES_TO_CARD:
+    case ColonyBenefit.ADD_RESOURCES_TO_VENUS_CARD:
+      if (colony.metadata.cardResource !== undefined && player.getResourceCards(colony.metadata.cardResource).length > 0) {
+        player.game.defer(new AddResourcesToCard(player, colony.metadata.cardResource, {count: 1}));
+        return;
+      }
+      break;
+    }
+    // Anything else (TR, ocean, Venus...) has no single "unit" to copy: 1 M€ instead.
+    player.stock.add(Resource.MEGACREDITS, 1, {log: true});
+  }
+
+  /** Coeurl Industries: while its action is being used, steel and titanium pay for standard projects. */
+  public static standardProjectPayWith(player: IPlayer, project: IStandardProjectCard, base: StandardProjectCanPayWith): StandardProjectCanPayWith {
+    const coeurl = player.tableau.get(CardName.COEURL_INDUSTRIES);
+    if (coeurl === undefined || project.name === CardName.SELL_PATENTS_STANDARD_PROJECT) {
+      return base;
+    }
+    if (dataOf<{acting?: boolean}>(coeurl).acting !== true) {
+      return base;
+    }
+    return {...base, steel: true, titanium: true};
+  }
+
+  /** Mega ThermoElectric and MeissnerVolt: energy does not turn into heat in the production phase. */
+  public static keepsEnergy(player: IPlayer): boolean {
+    return player.tableau.has(CardName.MEGA_THERMOELECTRIC) || player.tableau.has(CardName.MEISSNERVOLT);
+  }
+
+  /** Called after energy became heat and before resources are produced. */
+  public static beforeProduction(player: IPlayer): void {
+    // ECME: lose every base resource except M€; +1 temperature per 8 heat lost.
+    if (!player.tableau.has(CardName.ECME_CORPORATION)) {
+      return;
+    }
+    const heat = player.heat;
+    const lost = player.steel + player.titanium + player.plants + player.energy + heat;
+    player.steel = 0;
+    player.titanium = 0;
+    player.plants = 0;
+    player.energy = 0;
+    player.heat = 0;
+    if (lost > 0) {
+      player.game.log('${0} removed ${1} base resources (ECME)', (b) => b.player(player).number(lost));
+    }
+    let steps = Math.floor(heat / 8);
+    while (steps > 0 && player.game.getTemperature() < 8) {
+      player.game.increaseTemperature(player, 1);
+      steps--;
+    }
+  }
+
+  /** Called when a player claims a milestone or funds an award. */
+  public static onMilestoneOrAward(player: IPlayer): void {
+    for (const p of player.game.players) {
+      const landmark = p.tableau.get(CardName.LANDMARK_ACHIEVEMENTS);
+      if (landmark === undefined) {
+        continue;
+      }
+      if (p.id !== player.id) {
+        p.drawCard(2);
+      } else {
+        const data = dataOf<{free?: boolean}>(landmark);
+        if (data.free === true) {
+          data.free = false; // Its own free award isn't bought.
+        } else {
+          p.increaseTerraformRating(1, {log: true});
+        }
+      }
+    }
+  }
+
+  /** ROD Association: selling patents gives resources for their tags. */
+  public static onPatentsSold(player: IPlayer, cards: ReadonlyArray<IProjectCard>): void {
+    if (player.tableau.has(CardName.ROD_ASSOCIATION) && cards.length > 0) {
+      EpicUtils.rodGain(player, cards);
+    }
+  }
+
+  /** Cryo (temperature) and Lorean (any): ignore maximum global requirements. */
+  public static ignoresMaxRequirement(player: IPlayer, parameter: GlobalParameter): boolean {
+    if (player.tableau.has(CardName.LOREAN)) {
+      return true;
+    }
+    return parameter === GlobalParameter.TEMPERATURE && player.tableau.has(CardName.CRYO);
+  }
+
+  /** Free conversions that don't use an action (Nitrogen'r'us, Prefab-U-Haus). */
+  public static freeActionOption(player: IPlayer): PlayerInput | undefined {
+    const options: Array<SelectOption> = [];
+    if (player.tableau.has(CardName.NITROGEN_R_US) && player.titanium >= 3 && player.canAfford({cost: 0, tr: {tr: 1}})) {
+      const max = Math.floor(player.titanium / 3);
+      const run = (times: number) => {
+        player.freeActionTaken = true;
+        player.stock.deduct(Resource.TITANIUM, 3 * times, {log: true});
+        player.increaseTerraformRating(times, {log: true});
+        return undefined;
+      };
+      options.push(new SelectOption('Nitrogen\'r\'us: 3 titanium → +1 TR', 'Convert').andThen(() =>
+        max === 1 ? run(1) : new SelectAmount('How many times?', 'Convert', 1, max, false).andThen(run)));
+    }
+    if (player.tableau.has(CardName.PREFAB_U_HAUS) && player.steel >= 8 && player.game.board.getAvailableSpacesForCity(player).length > 0) {
+      options.push(new SelectOption('Prefab-U-Haus: 8 steel → place a city', 'Build').andThen(() => {
+        player.freeActionTaken = true;
+        player.stock.deduct(Resource.STEEL, 8, {log: true});
+        player.game.defer(new PlaceCityTile(player));
+        return undefined;
+      }));
+    }
+    const elm = player.tableau.get(CardName.ELM);
+    if (elm !== undefined && elm.resourceCount > 0) {
+      options.push(new SelectOption('ELM: spend influence for 2 M€ each', 'Spend').andThen(() =>
+        new SelectAmount('How much influence?', 'Spend', 1, elm.resourceCount, true).andThen((x) => {
+          player.freeActionTaken = true;
+          player.removeResourceFrom(elm, x, {log: true});
+          player.stock.add(Resource.MEGACREDITS, 2 * x, {log: true});
+          return undefined;
+        })));
+    }
+    const microbes = player.getResourceCount(CardResource.MICROBE);
+    if (player.tableau.has(CardName.HEINDL_AQUATIC) && microbes > 0) {
+      options.push(new SelectOption('HeindlAquatic: use microbes as plants', 'Convert').andThen(() =>
+        new SelectCard('Take microbes from', 'Select', player.getCardsWithResources(CardResource.MICROBE)).andThen(([card]) =>
+          new SelectAmount('How many microbes?', 'Convert', 1, card.resourceCount, true).andThen((x) => {
+            player.freeActionTaken = true;
+            player.removeResourceFrom(card, x, {log: true});
+            player.stock.add(Resource.PLANTS, x, {log: true});
+            return undefined;
+          }))));
+    }
+    if (player.tableau.has(CardName.BIOFUSION) && player.getResourceCount(CardResource.RADIATION) > 0 && player.getResourceCards(CardResource.MICROBE).length > 0) {
+      options.push(new SelectOption('Biofusion: use radiation as microbes', 'Move').andThen(() =>
+        new SelectCard('Take radiation from', 'Select', player.getCardsWithResources(CardResource.RADIATION)).andThen(([from]) =>
+          new SelectCard('Put microbes on', 'Select', player.getResourceCards(CardResource.MICROBE)).andThen(([to]) =>
+            new SelectAmount('How many?', 'Move', 1, from.resourceCount, true).andThen((n) => {
+              player.freeActionTaken = true;
+              player.removeResourceFrom(from, n, {log: true});
+              player.addResourceTo(to, {qty: n, log: true});
+              return undefined;
+            })))));
+    }
+    const gaia = player.tableau.get(CardName.G_AI_A);
+    if (gaia !== undefined && gaia.resourceCount > 0) {
+      const exchange = (label: string, rate: number, give: (n: number) => void) => new SelectOption(`G-AI-A: ${label}`, 'Exchange').andThen(() =>
+        new SelectAmount('How many?', 'Exchange', 1, Math.floor(gaia.resourceCount / rate), true).andThen((n) => {
+          player.freeActionTaken = true;
+          player.removeResourceFrom(gaia, n * rate, {log: true});
+          give(n);
+          return undefined;
+        }));
+      if (player.getResourceCards(CardResource.MICROBE).length > 0) {
+        options.push(exchange('1 science → 1 microbe', 1, (n) => player.game.defer(new AddResourcesToCard(player, CardResource.MICROBE, {count: n}))));
+      }
+      if (gaia.resourceCount >= 2) {
+        options.push(exchange('2 science → 1 plant', 2, (n) => player.stock.add(Resource.PLANTS, n, {log: true})));
+      }
+      if (gaia.resourceCount >= 3 && player.getResourceCards(CardResource.ANIMAL).length > 0) {
+        options.push(exchange('3 science → 1 animal', 3, (n) => player.game.defer(new AddResourcesToCard(player, CardResource.ANIMAL, {count: n}))));
+      }
+    }
+    // Wild resources (Discount Conglomerate, Flexi-Change, ...): use as any standard resource.
+    for (const card of player.tableau) {
+      if (card.resourceType !== CardResource.WILD_RESOURCE || card.resourceCount === 0) {
+        continue;
+      }
+      const take = (n: number) => new SelectResources(message('Gain ${0} standard resources', (b) => b.number(n)), n).andThen((units) => {
+        player.freeActionTaken = true;
+        player.removeResourceFrom(card, n, {log: true});
+        player.stock.adjust(units, {log: true});
+        return undefined;
+      });
+      options.push(new SelectOption(`${card.name}: use wild resources as standard resources`, 'Convert').andThen(() =>
+        card.resourceCount === 1 ? take(1) : new SelectAmount('How many wild resources?', 'Convert', 1, card.resourceCount, true).andThen(take)));
+    }
+    if (options.length === 0) {
+      return undefined;
+    }
+    return new OrOptions(...options).setTitle('Free conversions (Epic corporations)');
+  }
+
+  /** Planet Forge (Venus cards) and Plutonic Prototyping (space cards) may pay with steel. */
+  public static canUseSteel(player: IPlayer, card: IProjectCard): boolean {
+    return (player.tableau.has(CardName.PLANET_FORGE) && card.tags.includes(Tag.VENUS)) ||
+      (player.tableau.has(CardName.PLUTONIC_PROTOTYPING) && card.tags.includes(Tag.SPACE)) ||
+      (player.tableau.has(CardName.VANGUARD) && card.tags.includes(Tag.VENUS));
+  }
+
+  /** Planet Forge (Venus cards) and Plutonic Prototyping (building cards) may pay with titanium. */
+  public static canUseTitanium(player: IPlayer, card: IProjectCard): boolean {
+    return (player.tableau.has(CardName.PLANET_FORGE) && card.tags.includes(Tag.VENUS)) ||
+      (player.tableau.has(CardName.PLUTONIC_PROTOTYPING) && card.tags.includes(Tag.BUILDING));
+  }
+
+  /** Vanguard: steel is worth 3 M€ for cards with a Venus tag. Undefined means the usual value. */
+  public static steelValueForCard(player: IPlayer, card: IProjectCard): number | undefined {
+    if (player.tableau.has(CardName.VANGUARD) && card.tags.includes(Tag.VENUS)) {
+      return Math.max(3, player.getSteelValue());
+    }
+    return undefined;
+  }
+
+  /** New Grounds and Steel Ridge Constructions place cities ignoring the normal rules. */
+  public static ignoresCityPlacement(player: IPlayer): boolean {
+    return player.tableau.has(CardName.NEW_GROUNDS) || player.tableau.has(CardName.STEEL_RIDGE_CONSTRUCTIONS);
+  }
+
+  /** New Grounds places greeneries ignoring the normal rules. */
+  public static ignoresGreeneryPlacement(player: IPlayer): boolean {
+    return player.tableau.has(CardName.NEW_GROUNDS);
+  }
+
+  /** Space Guild: its events stay face up, so their tags count. */
+  public static eventsFaceUp(player: IPlayer): boolean {
+    return player.tableau.has(CardName.SPACE_GUILD);
+  }
+
+  /** First Wave: the first 4 cards kept during setup are free. */
+  public static freeSetupCards(corp: ICorporationCard): number {
+    return corp.name === CardName.FIRST_WAVE ? 4 : 0;
+  }
+
+  /** Called when a player passes. */
+  public static onPass(player: IPlayer): void {
+    // Bentenmaru: discard all remaining M€.
+    if (player.tableau.has(CardName.BENTENMARU) && player.megaCredits > 0) {
+      player.game.log('${0} discarded ${1} M€ (Bentenmaru)', (b) => b.player(player).number(player.megaCredits));
+      player.megaCredits = 0;
+    }
+  }
+
+  /** Corellian Engineering: spend 1 fighter to undo a resource loss caused by another player. */
+  private static offerCorellianShield(player: IPlayer, what: string, restore: () => void): void {
+    const corellian = player.tableau.get(CardName.CORELLIAN_ENGINEERING);
+    if (corellian === undefined || corellian.resourceCount === 0) {
+      return;
+    }
+    player.defer(new OrOptions(
+      new SelectOption(`Corellian Engineering: spend 1 fighter to keep your ${what}`, 'Spend').andThen(() => {
+        player.removeResourceFrom(corellian, 1, {log: true});
+        restore();
+        return undefined;
+      }),
+      new SelectOption('Accept the loss', 'Accept').andThen(() => undefined),
+    ));
+  }
+
+  /** Carbon Nanosystems (Epic): graphene pays for space and building cards. */
+  public static canUseGraphene(player: IPlayer, card: IProjectCard): boolean {
+    return player.tableau.has(CardName.CARBON_NANOSYSTEMS_EPIC) && (card.tags.includes(Tag.SPACE) || card.tags.includes(Tag.BUILDING));
+  }
+
+  /** Carbon Nanosystems (Epic): graphene is worth 5 M€. Undefined means the usual value. */
+  public static grapheneValue(player: IPlayer): number | undefined {
+    return player.tableau.has(CardName.CARBON_NANOSYSTEMS_EPIC) ? 5 : undefined;
+  }
+
+  /** Darwin Evolution: animal tags also count as science tags. */
+  public static animalsAreScience(player: IPlayer): boolean {
+    return player.tableau.has(CardName.DARWIN_EVOLUTION);
+  }
+
+  /**
+   * Darwin Evolution: an animal card may miss a global requirement by up to 2 steps per science resource;
+   * the science needed is spent when the card is played.
+   */
+  public static bendGlobalRequirement(player: IPlayer, card: IProjectCard, distance: number): boolean {
+    // Jump-Start Corporation: during its action, each wild resource shifts a global requirement 1 step.
+    const jumpStart = player.tableau.get(CardName.JUMP_START_CORPORATION);
+    if (jumpStart !== undefined && distance > 0 && distance <= jumpStart.resourceCount) {
+      const data = dataOf<{pending?: boolean, spend?: Record<string, number>}>(jumpStart);
+      if (data.pending === true) {
+        data.spend = data.spend ?? {};
+        data.spend[card.name] = Math.max(data.spend[card.name] ?? 0, distance);
+        return true;
+      }
+    }
+    const darwin = player.tableau.get(CardName.DARWIN_EVOLUTION);
+    if (darwin === undefined || !card.tags.includes(Tag.ANIMAL) || distance <= 0) {
+      return false;
+    }
+    const needed = Math.ceil(distance / 2);
+    if (needed > darwin.resourceCount) {
+      return false;
+    }
+    const data = dataOf<{spend?: Record<string, number>}>(darwin);
+    data.spend = data.spend ?? {};
+    data.spend[card.name] = Math.max(data.spend[card.name] ?? 0, needed);
+    return true;
+  }
+
+  /**
+   * Sky Ranchers (a wild tag for animal cards) and Space Penal Colonies (prisoners as wild tags)
+   * for tag requirements that are `missing` tags short.
+   */
+  public static extraTagsForRequirement(player: IPlayer, card: IProjectCard, missing: number): boolean {
+    if (missing <= 0) {
+      return true;
+    }
+    let extra = 0;
+    if (player.tableau.has(CardName.SKY_RANCHERS) && card.tags.includes(Tag.ANIMAL)) {
+      extra++;
+    }
+    if (missing <= extra) {
+      return true;
+    }
+    // Short-Cut Enterprise: during its action, each wild resource lowers a tag requirement by 1.
+    const shortCut = player.tableau.get(CardName.SHORT_CUT_ENTERPRISE);
+    if (shortCut !== undefined && missing - extra <= shortCut.resourceCount) {
+      const data = dataOf<{pending?: boolean, spend?: Record<string, number>}>(shortCut);
+      if (data.pending === true) {
+        data.spend = data.spend ?? {};
+        data.spend[card.name] = Math.max(data.spend[card.name] ?? 0, missing - extra);
+        return true;
+      }
+    }
+    const penal = player.tableau.get(CardName.SPACE_PENAL_COLONIES);
+    if (penal !== undefined && missing - extra <= penal.resourceCount) {
+      const data = dataOf<{spend?: Record<string, number>}>(penal);
+      data.spend = data.spend ?? {};
+      data.spend[card.name] = Math.max(data.spend[card.name] ?? 0, missing - extra);
+      return true;
+    }
+    return false;
+  }
+
+  /** Xenos Zoological: after its action, the chosen non-Venus animal card ignores all requirements. */
+  public static ignoresAllRequirements(player: IPlayer, card: ICard): boolean {
+    const xenos = player.tableau?.get(CardName.XENOS_ZOOLOGICAL);
+    if (xenos === undefined || dataOf<{pending?: boolean}>(xenos).pending !== true) {
+      return false;
+    }
+    return card.tags.includes(Tag.ANIMAL) && !card.tags.includes(Tag.VENUS);
+  }
+
+  /** Top-Up Operation: during its action, the chosen card ignores its maximum requirements. */
+  public static ignoresMaxRequirements(player: IPlayer): boolean {
+    const topUp = player.tableau?.get(CardName.TOP_UP_OPERATION);
+    return topUp !== undefined && dataOf<{pending?: boolean}>(topUp).pending === true;
+  }
+
+  /** Short-Cut Enterprise: during its action, tag requirements are checked one by one (wild resources fill gaps). */
+  public static checksTagsSeparately(player: IPlayer): boolean {
+    const shortCut = player.tableau?.get(CardName.SHORT_CUT_ENTERPRISE);
+    return shortCut !== undefined && dataOf<{pending?: boolean}>(shortCut).pending === true;
+  }
+
+  /** Called just before the production phase, while players can still be asked things. */
+  public static beforeProductionPhase(game: IGame): void {
+    for (const p of game.players) {
+      const syndicat = p.tableau.get(CardName.SYNDICAT_DES_TRAVAILLEURS_MARTIENS);
+      if (syndicat === undefined) {
+        continue;
+      }
+      const data = dataOf<{chosen?: Array<Resource>, current?: Resource}>(syndicat);
+      const all = [Resource.MEGACREDITS, Resource.STEEL, Resource.TITANIUM, Resource.PLANTS, Resource.ENERGY, Resource.HEAT];
+      let open = all.filter((r) => !(data.chosen ?? []).includes(r));
+      if (open.length === 0) {
+        data.chosen = [];
+        open = all;
+      }
+      p.defer(new OrOptions(...open.map((r) => new SelectOption(`Other players produce 5 less ${r}`).andThen(() => {
+        data.chosen = [...(data.chosen ?? []), r];
+        data.current = r;
+        game.log('${0} strikes: other players produce 5 less ${1} this generation', (b) => b.player(p).string(r));
+        return undefined;
+      }))).setTitle('Syndicat des Travailleurs Martiens: choose a resource'));
+    }
+  }
+
+  /** Called right after a player received this generation's production. */
+  public static afterProduction(player: IPlayer): void {
+    for (const p of player.game.players) {
+      if (p.id === player.id) {
+        continue;
+      }
+      const syndicat = p.tableau.get(CardName.SYNDICAT_DES_TRAVAILLEURS_MARTIENS);
+      const resource = syndicat !== undefined ? dataOf<{current?: Resource}>(syndicat).current : undefined;
+      if (resource === undefined) {
+        continue;
+      }
+      const produced = resource === Resource.MEGACREDITS ? player.production.megacredits + player.terraformRating : player.production.get(resource);
+      const loss = Math.min(5, Math.max(0, produced), player.stock.get(resource));
+      if (loss > 0) {
+        player.stock.add(resource, -loss);
+        player.game.log('${0} produced ${1} less ${2} (Syndicat des Travailleurs Martiens)', (b) => b.player(player).number(loss).string(resource));
+      }
+    }
+  }
+
+  /** Called at the start of each generation. */
+  public static onGenerationStart(game: IGame): void {
+    for (const p of game.players) {
+      // Aether Vial: after production, add or discard up to 5 M€ on the card.
+      const vial = p.tableau.get(CardName.AETHER_VIAL);
+      if (vial !== undefined) {
+        const data = dataOf<{stored?: number}>(vial);
+        const stored = data.stored ?? 0;
+        const options: Array<SelectOption> = [];
+        if (p.megaCredits > 0) {
+          options.push(new SelectOption(`Aether Vial: add up to 5 M€ (now ${stored})`, 'Add').andThen(() =>
+            new SelectAmount('Add how many M€?', 'Add', 1, Math.min(5, p.megaCredits), true).andThen((n) => {
+              p.stock.deduct(Resource.MEGACREDITS, n);
+              data.stored = stored + n;
+              game.log('${0} added ${1} M€ to Aether Vial (now ${2})', (b) => b.player(p).number(n).number(stored + n));
+              return undefined;
+            })));
+        }
+        if (stored > 0) {
+          options.push(new SelectOption(`Aether Vial: discard up to 5 M€ (now ${stored})`, 'Discard').andThen(() =>
+            new SelectAmount('Discard how many M€?', 'Discard', 1, Math.min(5, stored), true).andThen((n) => {
+              data.stored = stored - n;
+              game.log('${0} discarded ${1} M€ from Aether Vial (now ${2})', (b) => b.player(p).number(n).number(stored - n));
+              return undefined;
+            })));
+        }
+        if (options.length > 0) {
+          p.defer(new OrOptions(...options, new SelectOption(`Aether Vial: leave it at ${stored} M€`, 'Keep').andThen(() => undefined)));
+        }
+      }
+      // New Tech: its action is only available as the first action of a generation.
+      const newTech = p.tableau.get(CardName.NEW_TECH);
+      if (newTech !== undefined) {
+        dataOf<{actionsAtStart?: number}>(newTech).actionsAtStart = p.actionsTakenThisGame;
+      }
+    }
+  }
+
+  /**
+   * Called just before the Turmoil step, while players can still be asked things.
+   * Ares Technology: reorder the top 3 global events before the distant event is revealed.
+   */
+  public static beforeTurmoilPhase(game: IGame): void {
+    const turmoil = game.turmoil;
+    if (turmoil === undefined) {
+      return;
+    }
+    for (const p of game.players) {
+      if (!p.tableau.has(CardName.ARES_TECHNOLOGY)) {
+        continue;
+      }
+      const deck = turmoil.globalEventDealer.deck;
+      const n = Math.min(3, deck.length);
+      if (n < 2) {
+        continue;
+      }
+      // The deck draws from the end, so top[0] is the next event to be revealed.
+      const top: Array<IGlobalEvent> = deck.slice(deck.length - n).reverse();
+      const options = permutations(top).map((order) =>
+        new SelectOption(order.map((e, i) => `${i + 1}. ${e.name}`).join('   ')).andThen(() => {
+          deck.splice(deck.length - n, n, ...[...order].reverse());
+          game.log('${0} reordered the top global events', (b) => b.player(p));
+          return undefined;
+        }));
+      p.defer(new OrOptions(...options).setTitle('Ares Technology: order the next global events (1 is revealed first)'));
+    }
+  }
+}

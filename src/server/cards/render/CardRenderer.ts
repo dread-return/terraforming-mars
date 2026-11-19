@@ -365,6 +365,11 @@ abstract class Builder<T> {
     return this._appendToRow(new CardRenderItem(CardRenderItemType.FIRST_PLAYER));
   }
 
+  /** A player silhouette, for "per other player" (Epic Corporations). */
+  public otherPlayer() {
+    return this._appendToRow(new CardRenderItem(CardRenderItemType.OTHER_PLAYER));
+  }
+
   public rulingParty() {
     return this._appendToRow(new CardRenderItem(CardRenderItemType.RULING_PARTY));
   }

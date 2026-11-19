@@ -147,6 +147,12 @@ const CARD_TAGS: ReadonlyArray<IconEntry> = [
   {iconClass: 'card-resource-root', label: 'Root', official: false, expansions: ['eternity']},
   {iconClass: 'card-resource-food', label: 'Food', official: false, expansions: ['postludes']},
   {iconClass: 'card-resource-probiotic', label: 'Probiotic', official: false, expansions: ['postludes']},
+  {iconClass: 'card-resource-galaxy', label: 'Galaxy', official: false, expansions: ['corpera']},
+  {iconClass: 'card-resource-influence', label: 'Influence', official: false, expansions: ['corpera']},
+  {iconClass: 'card-resource-deficit', label: 'Deficit', official: false, expansions: ['corpera']},
+  {iconClass: 'card-resource-worker', label: 'Worker', official: false, expansions: ['corpera']},
+  {iconClass: 'card-resource-prisoner', label: 'Prisoner', official: false, expansions: ['corpera']},
+  {iconClass: 'card-resource-wild-resource', label: 'Wild resource', official: false, expansions: ['corpera']},
 ];
 
 const STANDARD_RESOURCES: ReadonlyArray<IconEntry> = [

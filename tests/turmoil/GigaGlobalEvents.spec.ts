@@ -175,11 +175,14 @@ describe('Giga global events', () => {
   });
 
   describe('neutral delegates', () => {
-    function sendEvent(game: IGame, revealed: PartyName): Turmoil {
+    function sendEvent(game: IGame, revealed: PartyName, distantRevealed?: PartyName): Turmoil {
       const turmoil = Turmoil.getTurmoil(game);
       const e = event(GlobalEventName.INTERSTELLAR_SIGNAL);
       Object.defineProperty(e, 'revealedDelegate', {value: revealed});
-      turmoil.globalEventDealer.deck.push(e);
+      // initGlobalEvent also draws a distant event: make it one that adds no delegate, so the test doesn't depend on the shuffle.
+      const distant = event(GlobalEventName.INTERSTELLAR_SIGNAL);
+      Object.defineProperty(distant, 'revealedDelegate', {value: distantRevealed});
+      turmoil.globalEventDealer.deck.push(distant, e);
       turmoil.initGlobalEvent(game);
       return turmoil;
     }
@@ -198,6 +201,10 @@ describe('Giga global events', () => {
       const seen = new Set<PartyName>();
       for (let i = 0; i < 40; i++) {
         const [game] = setup(PartyName.MARS, PartyName.GREENS);
+        // Games are seeded the same way; advance the RNG so each iteration samples a different party.
+        for (let j = 0; j < i; j++) {
+          game.rng.next();
+        }
         const turmoil = Turmoil.getTurmoil(game);
         const absent = BOARD_ORDER.find((name) => !turmoil.isInPlay(name))!;
         const count = (name: PartyName) => turmoil.getPartyByName(name).delegates.get('NEUTRAL');
@@ -205,7 +212,8 @@ describe('Giga global events', () => {
 
         sendEvent(game, absent);
 
-        const changed = turmoil.parties.filter((p) => count(p.name) === before.get(p.name)! + 1);
+        // >= because the event's delegate and the reveal's delegate can land on the same party.
+        const changed = turmoil.parties.filter((p) => count(p.name) >= before.get(p.name)! + 1);
         // The reveal of the first event also puts a neutral delegate on one party in play.
         expect(changed.length, absent).is.greaterThan(0);
         expect(turmoil.getPartyByName(absent).delegates.size).eq(0);
@@ -220,7 +228,7 @@ describe('Giga global events', () => {
       const absent = BOARD_ORDER.find((name) => !turmoil.isInPlay(name))!;
       const reserve = turmoil.delegateReserve.get('NEUTRAL');
 
-      sendEvent(game, absent);
+      sendEvent(game, absent, absent);
 
       // Both revealed events put one neutral delegate on the board, the same as for a party in play.
       expect(turmoil.delegateReserve.get('NEUTRAL')).eq(reserve - 2);

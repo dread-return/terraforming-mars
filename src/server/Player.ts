@@ -93,6 +93,7 @@ import {Eternity} from './cards/eternity/Eternity';
 import {Mercury} from './mercury/Mercury';
 import {mercuryCanUseSteel} from './mercury/MercuryCards';
 import {IActCard, isActCard} from './mercury/ActCard';
+import {EpicHooks} from './cards/epic/EpicHooks';
 
 const THROW_STATE_ERRORS = Boolean(process.env.THROW_STATE_ERRORS);
 const DEFAULT_GLOBAL_PARAMETER_STEPS = {
@@ -420,7 +421,9 @@ export class Player implements IPlayer {
   public plantsAreProtected(): boolean {
     return this.withinDeflectionZone || antiFraudActive(this.game) ||
       this.playedCards.has(CardName.PROTECTED_HABITATS) ||
-      this.playedCards.has(CardName.ASTEROID_DEFLECTION_SYSTEM);
+      this.playedCards.has(CardName.ASTEROID_DEFLECTION_SYSTEM) ||
+      // Epic Corporations: G-AI-A.
+      this.tableau.has(CardName.G_AI_A);
   }
 
   public alloysAreProtected(): boolean {
@@ -557,6 +560,7 @@ export class Player implements IPlayer {
     this.globalParameterSteps[parameter] += steps;
     IndividualTracks.onGlobalParameterIncrease(this, parameter, steps);
     HighOrbit.onGlobalParameterIncrease(this, parameter, steps);
+    EpicHooks.onGlobalParameterIncrease(this, parameter, steps);
   }
 
   public removeResourceFrom(card: ICard, count: number = 1, options?: {removingPlayer? : IPlayer, log?: boolean}): void {
@@ -580,6 +584,8 @@ export class Player implements IPlayer {
             .player(this)
             .card(card));
       }
+
+      EpicHooks.onCardResourceRemoved(this, card, removingPlayer, amountRemoved);
 
       // Lawsuit hook
       if (removingPlayer !== undefined && removingPlayer !== this && this.removingPlayers.includes(removingPlayer.id) === false) {
@@ -676,12 +682,17 @@ export class Player implements IPlayer {
     } else if (energyStorageCapacity(this) > 0) {
       onProductionWithEnergyStorage(this);
     } else {
-      convertEnergyToHeat(this, this.energy);
+      // Epic Corporations: Mega ThermoElectric and MeissnerVolt keep their energy.
+      if (!EpicHooks.keepsEnergy(this)) {
+        convertEnergyToHeat(this, this.energy);
+      }
       this.finishProductionPhase();
     }
   }
 
   public finishProductionPhase() {
+    // Epic Corporations: ECME empties its stock (after energy became heat) before producing.
+    EpicHooks.beforeProduction(this);
     // Eternity: Price Manipulation Subsidies turns this generation's other production into 2 M€ each.
     if (Eternity.priceManipulationActive(this.game)) {
       const p = this.production;
@@ -704,6 +715,8 @@ export class Player implements IPlayer {
     this.plants += this.production.plants;
     this.energy += this.production.energy;
     this.heat += this.production.heat;
+    // Epic Corporations: Syndicat des Travailleurs Martiens.
+    EpicHooks.afterProduction(this);
 
     for (const card of this.tableau) {
       card.onProductionPhase?.(this);
@@ -767,7 +780,13 @@ export class Player implements IPlayer {
       // TODO(kberg): Using .execute to rely on directly calling setWaitingFor is not great.
       // It's because all players is drafting at the same time. Once again, the server isn't ideal
       // when it comes to handling multiple players at once.
-      const action = new ChooseCards(this, cards, {paying: true, keepMax: selectable}).execute();
+      const action = new ChooseCards(this, cards, {
+        paying: true,
+        keepMax: selectable,
+        // Epic Corporations: Logos Research & Development, Lazarus Laboratories.
+        freeCards: EpicHooks.freeResearchCards(this),
+        keepOneDiscardFree: EpicHooks.keepsDiscardedResearchCard(this),
+      }).execute();
 
       // ChooseCards.execute returns an action with an andThen set. That means
       // this has to wrap it around and do clever things.
@@ -828,17 +847,19 @@ export class Player implements IPlayer {
     cost += Nuclear.cardCostAdjustment(this, card);
     // Eternity: Astral Bog, Exoplanet Builders, Mars Conservationists.
     cost += Eternity.cardCostAdjustment(this, card);
+    // Epic Corporations: NOJO, True Mars Foundation.
+    cost += EpicHooks.cardCostAdjustment(this, card);
 
     return Math.max(cost, 0);
   }
 
-  private paymentOptionsForCard(card: IProjectCard): PaymentOptions {
+  public paymentOptionsForCard(card: IProjectCard): PaymentOptions & {steelValue?: number, grapheneValue?: number} {
     return {
       heat: this.canUseHeatAsMegaCredits,
       energy: this.canUseEnergyAsMegaCredits,
-      steel: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card) || Eternity.canUseSteel(this, card) || mercuryCanUseSteel(this, card),
+      steel: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card) || Eternity.canUseSteel(this, card) || mercuryCanUseSteel(this, card) || EpicHooks.canUseSteel(this, card),
       plants: card.tags.includes(Tag.BUILDING) && this.playedCards.has(CardName.MARTIAN_LUMBER_CORP),
-      titanium: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.SPACE) || Nuclear.canUseTitanium(this, card) || Eternity.canUseTitanium(this, card),
+      titanium: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.SPACE) || Nuclear.canUseTitanium(this, card) || Eternity.canUseTitanium(this, card) || EpicHooks.canUseTitanium(this, card),
       lunaTradeFederationTitanium: this.canUseTitaniumAsMegacredits,
       seeds: card.tags.includes(Tag.PLANT) || card.name === CardName.GREENERY_STANDARD_PROJECT,
       floaters: card.tags.includes(Tag.VENUS),
@@ -846,11 +867,14 @@ export class Player implements IPlayer {
       lunaArchivesScience: card.tags.includes(Tag.MOON),
       spireScience: card.type === CardType.STANDARD_PROJECT,
       auroraiData: card.type === CardType.STANDARD_PROJECT,
-      graphene: card.tags.includes(Tag.CITY) || card.tags.includes(Tag.SPACE),
+      graphene: card.tags.includes(Tag.CITY) || card.tags.includes(Tag.SPACE) || EpicHooks.canUseGraphene(this, card),
       kuiperAsteroids: card.name === CardName.AQUIFER_STANDARD_PROJECT || card.name === CardName.ASTEROID_STANDARD_PROJECT,
       propellantOre: HighOrbit.canPayWithPropellantOre(card),
       shipyardOre: false,
       hephaestusAsteroids: card.tags.includes(Tag.MARS) || card.tags.includes(Tag.VENUS),
+      // Epic Corporations: Vanguard's steel is worth more for Venus cards; Carbon Nanosystems' graphene is worth 5.
+      steelValue: EpicHooks.steelValueForCard(this, card),
+      grapheneValue: EpicHooks.grapheneValue(this),
     };
   }
 
@@ -913,6 +937,10 @@ export class Player implements IPlayer {
     if (SpendableResource === 'shipyardOre') {
       return HighOrbit.shipyardOre(this);
     }
+    // Epic Corporations: graphene on Carbon Nanosystems (Epic) can pay too.
+    if (SpendableResource === 'graphene') {
+      return this.resourcesOnCard(CARD_FOR_SPENDABLE_RESOURCE.graphene) + this.resourcesOnCard(CardName.CARBON_NANOSYSTEMS_EPIC);
+    }
     return this.resourcesOnCard(CARD_FOR_SPENDABLE_RESOURCE[SpendableResource]);
   }
 
@@ -942,6 +970,19 @@ export class Player implements IPlayer {
       }
       if (resource === 'shipyardOre') {
         HighOrbit.spendShipyardOre(this, count);
+        continue;
+      }
+      if (resource === 'graphene' && this.tableau.has(CardName.CARBON_NANOSYSTEMS_EPIC)) {
+        // Epic Corporations: take graphene from the Moon card first, then from Carbon Nanosystems (Epic).
+        const moon = this.playedCards.get(CARD_FOR_SPENDABLE_RESOURCE.graphene);
+        const fromMoon = Math.min(count, moon?.resourceCount ?? 0);
+        if (moon !== undefined && fromMoon > 0) {
+          this.removeResourceFrom(moon, fromMoon, {log: true});
+        }
+        const epic = this.tableau.get(CardName.CARBON_NANOSYSTEMS_EPIC);
+        if (epic !== undefined && count - fromMoon > 0) {
+          this.removeResourceFrom(epic, count - fromMoon, {log: true});
+        }
         continue;
       }
       const name = CARD_FOR_SPENDABLE_RESOURCE[resource];
@@ -1103,6 +1144,7 @@ export class Player implements IPlayer {
         const action = card.action(this);
         this.defer(action);
         this.actionsThisGeneration.add(card.name);
+        EpicHooks.onCardAction(this, card);
         return undefined;
       });
   }
@@ -1124,7 +1166,8 @@ export class Player implements IPlayer {
     // and log "kept N project cards" in its andThen.
     let deferredCardCost = 0;
     if (additionalCorp === false && corporationCard.name !== CardName.BEGINNER_CORPORATION) {
-      const diff = this.cardsInHand.length * this.cardCost;
+      // Epic Corporations: First Wave keeps its first 4 setup cards for free.
+      const diff = Math.max(0, this.cardsInHand.length - EpicHooks.freeSetupCards(corporationCard)) * this.cardCost;
       if (corporationCard.name === CardName.LUNA_TRADE_FEDERATION) {
         deferredCardCost = diff;
       } else {
@@ -1229,6 +1272,7 @@ export class Player implements IPlayer {
         player: this,
         milestone: milestone,
       });
+      EpicHooks.onMilestoneOrAward(this);
       // VanAllen CEO Hook for Milestones
       const vanAllen = this.game.getCardPlayerOrUndefined(CardName.VANALLEN);
       if (vanAllen !== undefined) {
@@ -1295,6 +1339,8 @@ export class Player implements IPlayer {
   }
 
   public pass(): void {
+    // Epic Corporations: Bentenmaru loses its M€ when it passes.
+    EpicHooks.onPass(this);
     // Eternity: DGT Mars Crew may still play after passing, so passing only ends its turn.
     if (Eternity.keepsPlayingAfterPass(this)) {
       this.actionsTakenThisRound = this.availableActionsThisRound;
@@ -1415,6 +1461,9 @@ export class Player implements IPlayer {
 
   public canPlay(card: IProjectCard): boolean {
     card.additionalProjectCosts = undefined;
+    if (EpicHooks.cannotPlay(this, card)) {
+      return false;
+    }
     const options = this.affordOptionsForCard(card);
     const canAfford = this.canAffordInternal(options);
     if (!canAfford.canAfford) {
@@ -1473,10 +1522,11 @@ export class Player implements IPlayer {
    * ../..param {PaymentOptions} options any configuration defining the accepted form of payment.
    * ../..return {number} a number representing the value of payment in M€.
    */
-  public payingAmount(payment: Payment, options?: Partial<PaymentOptions>): number {
+  public payingAmount(payment: Payment, options?: Partial<PaymentOptions> & {steelValue?: number, grapheneValue?: number}): number {
     const multiplier = {
       ...DEFAULT_PAYMENT_VALUES,
-      steel: this.getSteelValue(),
+      steel: options?.steelValue ?? this.getSteelValue(),
+      graphene: options?.grapheneValue ?? DEFAULT_PAYMENT_VALUES.graphene,
       titanium: this.getTitaniumValue(),
       energy: this.energyValue,
     };
@@ -1834,6 +1884,12 @@ export class Player implements IPlayer {
         .filter((award: IAward) => this.game.hasBeenFunded(award) === false)
         .map((award: IAward) => this.fundAward(award));
       action.options.push(remainingAwards);
+    }
+
+    // Epic Corporations: free conversions (Nitrogen'r'us, Prefab-U-Haus).
+    const epicFree = EpicHooks.freeActionOption(this);
+    if (epicFree !== undefined) {
+      action.options.push(epicFree);
     }
 
     // High Orbit: free ore conversions (Asteroid Mine, Auto Factory, Space Trading Station).

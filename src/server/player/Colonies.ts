@@ -20,6 +20,7 @@ import {TradeWithHecateSpeditions} from '../cards/underworld/HecateSpeditions';
 import {ColonyName} from '../../../src/common/colonies/ColonyName';
 import {Eternity} from '../cards/eternity/Eternity';
 import {Mercury} from '../mercury/Mercury';
+import {EpicHooks} from '../cards/epic/EpicHooks';
 
 export class Colonies {
   private player: IPlayer;
@@ -198,6 +199,7 @@ export class TradeWithEnergy implements IColonyTrader {
 
   public trade(colony: IColony) {
     this.player.stock.deduct(Resource.ENERGY, this.tradeCost);
+    EpicHooks.onTradePayment(this.player, Resource.ENERGY, this.tradeCost);
     this.player.game.log('${0} spent ${1}:r:energy: to trade with ${2}', (b) => b.player(this.player).number(this.tradeCost).colony(colony));
     colony.trade(this.player);
   }
@@ -219,6 +221,7 @@ export class TradeWithTitanium implements IColonyTrader {
 
   public trade(colony: IColony) {
     this.player.pay(Payment.of({titanium: this.tradeCost}));
+    EpicHooks.onTradePayment(this.player, Resource.TITANIUM, this.tradeCost);
     this.player.game.log('${0} spent ${1}:r:titanium: to trade with ${2}', (b) => b.player(this.player).number(this.tradeCost).colony(colony));
     colony.trade(this.player);
   }
@@ -248,6 +251,7 @@ export class TradeWithMegacredits implements IColonyTrader {
     this.player.game.defer(new SelectPaymentDeferred(this.player, this.tradeCost,
       {title: message('Select how to pay ${0} for colony trade', (b) => b.number(this.tradeCost))}))
       .andThen(() => {
+        EpicHooks.onTradePayment(this.player, Resource.MEGACREDITS, this.tradeCost);
         this.player.game.log('${0} spent ${1}:r:mc: to trade with ${2}', (b) => b.player(this.player).number(this.tradeCost).colony(colony));
         colony.trade(this.player);
       });

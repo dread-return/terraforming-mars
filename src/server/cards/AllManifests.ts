@@ -29,6 +29,7 @@ import {ETERNITY_CARD_MANIFEST} from './eternity/EternityCardManifest';
 import {INDUSTRIES_CARD_MANIFEST} from './industries/IndustriesCardManifest';
 import {DOMES_WILDERNESS_CARD_MANIFEST} from './domeswilderness/DomesWildernessCardManifest';
 import {DELTA_PROJECT_CARD_MANIFEST} from './delta/DeltaProjectCardManifest';
+import {EPIC_CARD_MANIFEST} from './epic/EpicCardManifest';
 
 export const ALL_MODULE_MANIFESTS: Array<ModuleManifest> = [
   BASE_CARD_MANIFEST,
@@ -59,4 +60,5 @@ export const ALL_MODULE_MANIFESTS: Array<ModuleManifest> = [
   POSTLUDES_CARD_MANIFEST,
   HIGH_ORBIT_CARD_MANIFEST,
   MERCURY_CARD_MANIFEST,
+  EPIC_CARD_MANIFEST,
 ];

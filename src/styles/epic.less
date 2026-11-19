@@ -1,0 +1,946 @@
+// ---------------------------------------------------------------------------
+// Epic Corporations: corporation names in the lettering of the printed cards.
+// Fonts: assets/epic/fonts (see its README for licences), plus the Eternity ones.
+// ---------------------------------------------------------------------------
+@font-face {
+  font-family: 'EpOrbitron';
+  src: url('./assets/epic/fonts/orbitron-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EpOrbitron';
+  src: url('./assets/epic/fonts/orbitron-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EpAudiowide';
+  src: url('./assets/epic/fonts/audiowide-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EpCinzel';
+  src: url('./assets/epic/fonts/cinzel-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EpBebas';
+  src: url('./assets/epic/fonts/bebas-neue-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EpRighteous';
+  src: url('./assets/epic/fonts/righteous-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EpPacifico';
+  src: url('./assets/epic/fonts/pacifico-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EpRusso';
+  src: url('./assets/epic/fonts/russo-one-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EpRajdhani';
+  src: url('./assets/epic/fonts/rajdhani-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EpRajdhani';
+  src: url('./assets/epic/fonts/rajdhani-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EpComfortaa';
+  src: url('./assets/epic/fonts/comfortaa-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EpBlackOps';
+  src: url('./assets/epic/fonts/black-ops-one-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'EpMarker';
+  src: url('./assets/epic/fonts/permanent-marker-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@ep-dark: -1px 0 #222, 0 1px #222, 1px 0 #222, 0 -1px #222;
+@ep-white: -1px 0 #fff, 0 1px #fff, 1px 0 #fff, 0 -1px #fff;
+@ep-navy: -1px 0 #0d2a5c, 0 1px #0d2a5c, 1px 0 #0d2a5c, 0 -1px #0d2a5c;
+
+.card-corporation-logo .et-logo {
+  // Small subtitle lines (taglines, full names under an acronym).
+  .ep-sub() { font-family: 'EtUbuntu', sans-serif; font-weight: 500; font-size: 8px; letter-spacing: 0; text-shadow: none; }
+
+  &.et-logo-ep-aquarin {
+    font-family: 'EtExo', sans-serif; font-weight: 900; font-style: italic; font-size: 21px; color: #1d55c0;
+    text-shadow: @ep-white, 2px 2px 3px #6aa0e8;
+  }
+  &.et-logo-ep-aquatix {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: 3px; color: #1b4a9c;
+    text-shadow: 1px 1px 2px #8fb7ee;
+  }
+  &.et-logo-ep-artemis {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 20px; color: #1f3b14; line-height: 0.95;
+    .et-line-1 { padding-left: 22px; }
+  }
+  &.et-logo-ep-artographers {
+    font-family: 'EtPlayfair', serif; font-weight: 900; font-style: italic; font-size: 17px; color: #2363ad; line-height: 1;
+    .et-line-1 { padding-left: 14px; color: #7b3fa8; }
+  }
+  &.et-logo-ep-astro-biotics {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 1px; color: #fff;
+    background: #2f6b3c; padding: 4px 6px; border-radius: 6px; box-shadow: 1px 1px 3px #333;
+  }
+  &.et-logo-ep-barsoom {
+    font-family: 'EpRighteous', sans-serif; font-size: 22px; color: #fff; line-height: 1;
+    text-shadow: @ep-dark, 2px 2px 3px #4a1a5a;
+    .et-line-1 { font-family: 'EpAudiowide', sans-serif; font-size: 15px; color: #e75ad6; text-shadow: -1px 0 #3b1060, 0 1px #3b1060, 1px 0 #3b1060, 0 -1px #3b1060; }
+  }
+  &.et-logo-ep-barsoomian {
+    font-family: 'EpRusso', sans-serif; font-size: 16px; color: #1f3f8f; line-height: 1.05;
+    .et-line-1 { color: #8b1a2b; font-size: 14px; }
+  }
+  &.et-logo-ep-biome {
+    font-family: 'EtBaloo', sans-serif; font-weight: 800; font-size: 30px; color: #0f7a35; line-height: 0.9;
+    text-shadow: 1px 1px 2px #c9e8c0;
+  }
+  &.et-logo-ep-bradbury {
+    font-family: 'EtTinos', serif; font-weight: 700; font-size: 12px; color: #fff; line-height: 1.25; letter-spacing: 0.5px;
+    background: linear-gradient(to bottom, #7a4520, #5a2f12); padding: 3px 8px; border-radius: 3px; text-align: center;
+    box-shadow: 2px 2px 3px #333;
+  }
+  &.et-logo-ep-bnl {
+    font-family: 'EtArchivoBlack', sans-serif; font-style: italic; font-size: 21px; color: #1f47b8;
+    border-bottom: 3px solid #d61f1f; padding-right: 4px;
+  }
+  &.et-logo-ep-cfi {
+    font-family: 'EtFjalla', sans-serif; font-size: 15px; color: #c8102e; line-height: 1;
+    border-left: 6px solid #c8102e; padding-left: 5px;
+  }
+  &.et-logo-ep-catnip {
+    font-family: 'EpPacifico', cursive; font-size: 26px; color: #1d1d1d; line-height: 1.2;
+    text-shadow: @ep-white, 2px 2px 3px #8fbf8f;
+  }
+  &.et-logo-ep-crh {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 14px; color: #3b5f8a; line-height: 1.15;
+    .et-line-1 { padding-left: 30px; }
+  }
+  &.et-logo-ep-core {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 26px; color: #d81f1f; line-height: 0.95;
+    text-shadow: 1px 1px 0 #111, 2px 2px 3px #f2b21b;
+    .et-line-1 { .ep-sub(); font-size: 9px; color: #222; letter-spacing: 0.5px; }
+  }
+  &.et-logo-ep-crit {
+    font-family: 'EpRusso', sans-serif; font-size: 16px; color: #1d1d1d; line-height: 1.05;
+    .et-line-0 { color: #c8102e; text-shadow: 1px 1px 0 #111; }
+  }
+  &.et-logo-ep-cultured {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 18px; color: #fff; letter-spacing: 1px;
+    background: #8b0d1f; padding: 3px 8px; transform: skewX(-8deg); box-shadow: 2px 2px 3px #333;
+  }
+  &.et-logo-ep-ers {
+    font-family: 'EpBebas', sans-serif; font-size: 34px; color: #1a1a1a; line-height: 0.85; letter-spacing: 2px;
+    .et-line-1 { font-family: 'EpBebas', sans-serif; font-size: 12px; letter-spacing: 0.5px; color: #2f5f2f; }
+  }
+  &.et-logo-ep-eca {
+    font-family: 'EtFjalla', sans-serif; font-size: 34px; color: #e0521b; line-height: 0.95; letter-spacing: 1px;
+    .et-line-1 { .ep-sub(); font-size: 8px; color: #e0521b; font-weight: 700; }
+  }
+  &.et-logo-ep-eye {
+    font-family: 'EpBlackOps', sans-serif; font-size: 22px; color: #111; line-height: 0.95;
+    .et-line-1 { padding-left: 10px; }
+  }
+  &.et-logo-ep-feastfair {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 500; font-size: 22px; letter-spacing: 5px; color: #333;
+    border-top: 6px solid transparent; border-image: linear-gradient(to right, #f2c21b 25%, #3b8fd9 25%, #3b8fd9 50%, #e8701b 50%, #e8701b 75%, #f2c21b 75%) 1;
+  }
+  &.et-logo-ep-forj {
+    font-family: 'EtTinos', serif; font-weight: 400; font-style: italic; font-size: 34px; color: #b8340f; letter-spacing: 2px;
+    text-shadow: 0 0 6px #ffb347, 1px 1px 0 #3a0d00;
+  }
+  &.et-logo-ep-fractal {
+    font-family: 'EpComfortaa', sans-serif; font-weight: 700; font-size: 28px; color: #1b1b1b;
+    text-shadow: 2px 2px 0 #7cc23a;
+  }
+  &.et-logo-ep-freedome {
+    font-family: 'EpRighteous', sans-serif; font-size: 22px; color: #2c6fd1; line-height: 0.95; letter-spacing: 2px;
+    text-shadow: @ep-dark, 2px 2px 3px #8fb7ee;
+    .et-line-1 { padding-left: 18px; }
+  }
+  &.et-logo-ep-galactic-park {
+    font-family: 'EtBaloo', sans-serif; font-weight: 800; font-size: 19px; color: #fff; line-height: 0.95;
+    background: #3f9a2f; padding: 3px 14px 3px 8px; border-radius: 0 60% 0 60%; text-shadow: 1px 1px 0 #1f4f17;
+  }
+  &.et-logo-ep-galacticer {
+    font-family: 'EpAudiowide', sans-serif; font-size: 14px; color: #fff; letter-spacing: 0;
+    text-shadow: -1px 0 #4a1a9a, 0 1px #4a1a9a, 1px 0 #4a1a9a, 0 -1px #4a1a9a, 0 0 8px #b07aff;
+  }
+  &.et-logo-ep-genecraft {
+    font-family: 'EpComfortaa', sans-serif; font-weight: 700; font-style: italic; font-size: 22px; color: #6a3fa0;
+    text-shadow: 2px 2px 0 #9ad04a;
+  }
+  &.et-logo-ep-growbit {
+    font-family: 'EpAudiowide', sans-serif; font-size: 25px; color: #2f8a3a;
+    text-shadow: 1px 1px 0 #0f3f17, 2px 2px 3px #9ad09a;
+  }
+  &.et-logo-ep-harbinger {
+    font-family: 'EtFjalla', sans-serif; font-size: 20px; color: #d9b04a; letter-spacing: 1px; line-height: 1;
+    background: linear-gradient(to bottom, #333, #111); padding: 3px 8px; border-radius: 3px; box-shadow: 2px 2px 3px #555;
+    .et-line-1 { .ep-sub(); font-size: 7px; color: #d9b04a; letter-spacing: 1px; }
+  }
+  &.et-logo-ep-hera {
+    font-family: 'EpRusso', sans-serif; font-size: 32px; color: #1f7a3a; letter-spacing: 2px;
+    text-shadow: 1px 1px 0 #0d3a17, 2px 2px 3px #9ad09a;
+  }
+  &.et-logo-ep-heyer {
+    font-family: 'EtFjalla', sans-serif; font-size: 20px; color: #1d4f9f; line-height: 1; letter-spacing: 3px;
+    .et-line-1 { font-size: 13px; letter-spacing: 2px; color: #2b6fd0; }
+  }
+  &.et-logo-ep-hydrosol {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 500; font-size: 28px; color: #1e5fa8;
+    text-shadow: 1px 1px 2px #a8cdf0;
+  }
+  &.et-logo-ep-hydrodynamics {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 400; font-size: 21px; color: #8a3fb0;
+    text-shadow: 1px 1px 0 #2a7ad1;
+  }
+  &.et-logo-ep-leviathan {
+    font-family: 'EpPacifico', cursive; font-size: 24px; color: #fff; line-height: 1.3;
+    text-shadow: -1px 0 #0f6b5a, 0 1px #0f6b5a, 1px 0 #0f6b5a, 0 -1px #0f6b5a, 2px 2px 4px #1fbf9a;
+  }
+  &.et-logo-ep-liandri {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 20px; color: #1a1a1a; line-height: 1; letter-spacing: 1px;
+    text-shadow: 1px 1px 0 #8b1a1a;
+    .et-line-1 { font-family: 'EtExo', sans-serif; font-weight: 900; font-style: italic; font-size: 15px; color: #6b0d0d; text-shadow: none; }
+  }
+  &.et-logo-ep-lobos {
+    font-family: 'EpPacifico', cursive; font-size: 19px; color: #c0171f; line-height: 1.1;
+    text-shadow: @ep-white, 1px 2px 3px #777;
+    .et-line-1 { padding-left: 16px; font-size: 15px; }
+  }
+  &.et-logo-ep-mars-ar {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 700; font-size: 22px; color: #e0601b; letter-spacing: 2px; line-height: 1.05;
+    text-shadow: 1px 1px 0 #3a1500;
+    .et-line-1 { .ep-sub(); font-size: 7px; color: #333; }
+  }
+  &.et-logo-ep-mmbio {
+    font-family: 'EpBlackOps', sans-serif; font-size: 22px; color: #1a1a1a; line-height: 0.9;
+    background: #8cbf5a; padding: 3px 8px; border: 2px solid #2f4f1f; transform: skewX(-10deg);
+    .et-line-1 { font-size: 11px; letter-spacing: 3px; color: #2f4f1f; }
+  }
+  &.et-logo-ep-marin {
+    font-family: 'EtExo', sans-serif; font-weight: 800; font-style: italic; font-size: 28px; color: #3a6bd1; letter-spacing: 3px;
+    text-shadow: @ep-white, 2px 2px 3px #8fb0e8;
+  }
+  &.et-logo-ep-mars-inc {
+    font-family: 'EtBaloo', sans-serif; font-weight: 800; font-size: 30px; color: #7a2410; line-height: 0.85;
+    .et-line-1 { font-family: 'EtUbuntu', sans-serif; font-weight: 700; font-size: 12px; color: #222; padding-left: 22px; }
+  }
+  &.et-logo-ep-micromass {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 400; font-size: 22px; color: #111; line-height: 1;
+  }
+  &.et-logo-ep-o2 {
+    font-family: 'EpRighteous', sans-serif; font-size: 40px; color: #1f8a8a; line-height: 1;
+    text-shadow: 2px 2px 0 #0d3f3f;
+  }
+  &.et-logo-ep-olympic {
+    font-family: 'EpRusso', sans-serif; font-size: 13px; color: #1f5fd1; line-height: 1.15; letter-spacing: 1px;
+    text-shadow: 1px 1px 0 #0d2a5c;
+  }
+  &.et-logo-ep-ocp {
+    font-family: 'EpBlackOps', sans-serif; font-size: 32px; color: #111; line-height: 0.95; letter-spacing: 3px;
+    .et-line-1 { .ep-sub(); font-size: 8px; letter-spacing: 1px; }
+  }
+  &.et-logo-ep-ophir {
+    font-family: 'EtPlayfair', serif; font-weight: 900; font-style: italic; font-size: 19px; color: #2a2a2a; line-height: 1.05;
+    .et-line-1 { font-size: 14px; padding-left: 18px; color: #3f6b2a; }
+  }
+  &.et-logo-ep-prg {
+    font-family: 'EtBaloo', sans-serif; font-weight: 800; font-size: 34px; color: #111; line-height: 1;
+    text-shadow: 3px 3px 0 #f29a5a;
+  }
+  &.et-logo-ep-pallas {
+    font-family: 'EpRusso', sans-serif; font-size: 30px; color: #4a4a4a; letter-spacing: 2px;
+    text-shadow: 1px 1px 0 #111, 2px 2px 3px #aaa;
+    .et-line-0::first-letter { color: #e8c21b; }
+  }
+  &.et-logo-ep-petriolium {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 16px; color: #d24fa8; line-height: 1.05; letter-spacing: 1px;
+    background: radial-gradient(circle, #2f8f4f 60%, #1f5f2f); padding: 4px 12px; border-radius: 50%;
+    text-shadow: 1px 1px 0 #3a0d2a;
+  }
+  &.et-logo-ep-photo {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 500; font-size: 22px; color: #9a9a9a; line-height: 0.95; letter-spacing: 2px;
+    .et-line-1 { font-weight: 700; font-size: 17px; color: #5aa02a; letter-spacing: 1px; }
+  }
+  &.et-logo-ep-phb {
+    font-family: 'EtFjalla', sans-serif; font-size: 16px; color: #8b2a2a; line-height: 1; letter-spacing: 1px;
+    .et-line-2 { color: #2a2a2a; }
+  }
+  &.et-logo-ep-protogen {
+    font-family: 'EtFjalla', sans-serif; font-size: 28px; color: #4a6b2a; letter-spacing: 3px;
+    text-shadow: 1px 1px 0 #1f2f0f;
+  }
+  &.et-logo-ep-psi {
+    font-family: 'EtTinos', serif; font-weight: 700; font-size: 26px; color: #7a4a1a; line-height: 1;
+    border-bottom: 2px solid #7a4a1a;
+    .et-line-1 { .ep-sub(); font-size: 7px; color: #222; font-weight: 700; }
+  }
+  &.et-logo-ep-purnkleen {
+    font-family: 'EpRighteous', sans-serif; font-size: 22px; color: #f2e01b; line-height: 0.95; letter-spacing: 1px;
+    background: #22b2d6; padding: 3px 12px; border-radius: 50%; border: 2px solid #0d2a5c;
+    text-shadow: @ep-navy; text-align: center;
+  }
+  &.et-logo-ep-red-life {
+    font-family: 'EtBaloo', sans-serif; font-weight: 800; font-size: 18px; line-height: 0.95;
+    .et-line-0 { color: #c0171f; }
+    .et-line-1 { color: #2f8a2f; padding-left: 8px; }
+    .et-line-2 { color: #6b3a1a; padding-left: 16px; }
+  }
+  &.et-logo-ep-red-ship {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 24px; color: #b0171f; letter-spacing: 1px;
+    border-top: 2px solid #b0171f; border-bottom: 2px solid #b0171f; padding: 1px 4px;
+  }
+  &.et-logo-ep-scolex {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 500; font-size: 22px; color: #1a2f5f; line-height: 1; letter-spacing: 1px;
+    .et-line-1 { font-size: 14px; letter-spacing: 2px; }
+  }
+  &.et-logo-ep-shinra {
+    font-family: 'EtTinos', serif; font-weight: 400; font-size: 26px; color: #222; line-height: 1; letter-spacing: 2px;
+    border-left: 8px solid #8b0d0d; padding-left: 5px;
+    .et-line-1 { font-size: 12px; letter-spacing: 1px; }
+  }
+  &.et-logo-ep-sirenia {
+    font-family: 'EpRusso', sans-serif; font-size: 28px; color: #3a9ae8; letter-spacing: 1px;
+    text-shadow: @ep-navy, 2px 2px 3px #555;
+  }
+  &.et-logo-ep-solar-voyager {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 400; font-size: 17px; color: #3a3a3a; letter-spacing: 2px; line-height: 1.05;
+    text-shadow: 1px 1px 2px #f2a21b;
+  }
+  &.et-logo-ep-soukai {
+    font-family: 'EpMarker', cursive; font-size: 21px; color: #8b0d0d; line-height: 1; letter-spacing: 1px;
+    text-shadow: 1px 1px 2px #3a0000;
+  }
+  &.et-logo-ep-shs {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 21px; color: #6aaa1f; line-height: 1;
+    text-shadow: 1px 1px 0 #1a1a1a;
+    .et-line-1 { .ep-sub(); font-size: 10px; color: #2a2a2a; letter-spacing: 1px; padding-left: 24px; }
+  }
+  &.et-logo-ep-symbiotic {
+    font-family: 'EpComfortaa', sans-serif; font-weight: 700; font-size: 20px; color: #6a2fa0; line-height: 1;
+    .et-line-1 { padding-left: 20px; color: #222; }
+  }
+  &.et-logo-ep-tepco {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 30px; color: #f2d21b; letter-spacing: 1px;
+    text-shadow: @ep-dark, 2px 2px 3px #555;
+  }
+  &.et-logo-ep-pigfarts {
+    font-family: 'EtTinos', serif; font-weight: 700; font-size: 15px; color: #2a1a0a; line-height: 1.1; text-align: center;
+    background: #d49a6a; padding: 2px 10px; border-left: 4px solid #8b5a2a; border-right: 4px solid #8b5a2a;
+  }
+  &.et-logo-ep-troidco {
+    font-family: 'EpAudiowide', sans-serif; font-size: 20px; color: #fff; letter-spacing: 4px;
+    background: #111; padding: 6px 14px; border-radius: 50%; border: 2px solid #f2d21b;
+  }
+  &.et-logo-ep-undersec {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 21px; color: #111; letter-spacing: 2px;
+    background: linear-gradient(to bottom, #eee, #9a9a9a); padding: 2px 8px; border: 2px dashed #555;
+  }
+  &.et-logo-ep-uac {
+    font-family: 'EpRusso', sans-serif; font-size: 30px; color: #8ad01b; line-height: 0.95; letter-spacing: 3px;
+    text-shadow: -1px 0 #4a1a6a, 0 1px #4a1a6a, 1px 0 #4a1a6a, 0 -1px #4a1a6a, 0 0 8px #c04ae8;
+    .et-line-1 { font-size: 10px; letter-spacing: 1px; }
+  }
+  &.et-logo-ep-vulcan {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 500; font-size: 24px; color: #111; line-height: 1;
+    .et-line-0::first-letter { color: #e8501b; }
+  }
+  &.et-logo-ep-weyland {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 400; font-size: 16px; color: #1f3fb0; line-height: 1.05; letter-spacing: 1px;
+    .et-line-1 { font-weight: 700; font-size: 20px; letter-spacing: 6px; }
+  }
+  // Batch 2
+  &.et-logo-ep-acquire {
+    font-family: 'EtBaloo', sans-serif; font-weight: 800; font-size: 22px; color: #c8102e; line-height: 0.9;
+    text-shadow: 1px 1px 0 #111;
+    .et-line-1 { color: #111; text-shadow: none; padding-left: 16px; }
+  }
+  &.et-logo-ep-ama {
+    font-family: 'EpBlackOps', sans-serif; font-size: 28px; color: #fff; line-height: 1;
+    text-shadow: -1px 0 #b3202a, 0 1px #b3202a, 1px 0 #b3202a, 0 -1px #b3202a, 2px 2px 2px #333;
+    .et-line-1 { font-size: 9px; color: #b3202a; text-shadow: none; letter-spacing: 0.5px; }
+  }
+  &.et-logo-ep-aquatech {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 700; font-size: 18px; color: #1a6fb5; letter-spacing: 0;
+    text-shadow: 1px 1px 2px #9cc7ef;
+  }
+  &.et-logo-ep-ares-security {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 700; font-size: 26px; color: #4a4a4a; line-height: 0.95; letter-spacing: 4px;
+    text-shadow: 2px 2px 0 #c0282d;
+    .et-line-1 { font-size: 12px; letter-spacing: 3px; color: #222; text-shadow: none; }
+  }
+  &.et-logo-ep-ares-tech {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 700; font-size: 24px; color: #3fa0ff; line-height: 1; letter-spacing: 3px;
+    background: #0d1b3d; padding: 3px 10px; border-radius: 3px;
+    .et-line-1 { font-size: 10px; color: #e83a3a; letter-spacing: 2px; }
+  }
+  &.et-logo-ep-ares-union {
+    font-family: 'EpRusso', sans-serif; font-size: 24px; color: #2a2a2a; line-height: 0.95; letter-spacing: 2px;
+    text-shadow: 0 0 4px #ff2a2a, 0 0 8px #ff6a6a;
+  }
+  &.et-logo-ep-aria {
+    font-family: 'EtPlayfair', serif; font-style: italic; font-weight: 700; font-size: 30px; color: #2a6db0;
+    text-shadow: 1px 1px 2px #a9c9ec;
+  }
+  &.et-logo-ep-astra {
+    font-family: 'EtPlayfair', serif; font-style: italic; font-weight: 700; font-size: 16px; color: #3a3a3a;
+    text-shadow: 1px 1px 1px #aaa;
+  }
+  &.et-logo-ep-blizzcorp {
+    font-family: 'EpBebas', sans-serif; font-size: 26px; color: #fff; letter-spacing: 2px;
+    background: #1e5aa0; padding: 2px 10px; border: 2px solid #9cc7ef;
+  }
+  &.et-logo-ep-chaang {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 18px; color: #5a2a7a; line-height: 1; letter-spacing: 1px;
+    text-shadow: 2px 2px 0 #c9a3e0;
+  }
+  &.et-logo-ep-chispa {
+    font-family: 'EpPacifico', cursive; font-size: 20px; color: #f5c400;
+    text-shadow: @ep-dark, 2px 2px 3px #4a1a6a;
+  }
+  &.et-logo-ep-cloudmind {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 700; font-size: 20px; color: #111; letter-spacing: 2px;
+    border-bottom: 3px solid #111; padding-bottom: 1px;
+  }
+  &.et-logo-ep-coeurl {
+    font-family: 'EpMarker', cursive; font-size: 20px; color: #6b4a1f; line-height: 0.95;
+    text-shadow: 1px 1px 0 #e8c98a;
+    .et-line-1 { padding-left: 18px; }
+  }
+  &.et-logo-ep-colonial-one {
+    font-family: 'EpBebas', sans-serif; font-size: 25px; color: #fff; letter-spacing: 2px;
+    background: #1a1a1a; padding: 2px 10px; box-shadow: 2px 2px 3px #555;
+  }
+  &.et-logo-ep-dev-wright {
+    font-family: 'EpComfortaa', sans-serif; font-weight: 700; font-size: 24px; color: #222; line-height: 0.85;
+    .et-line-1 { padding-left: 20px; color: #666; }
+  }
+  &.et-logo-ep-dci {
+    font-family: 'EpRusso', sans-serif; font-size: 28px; color: #c8102e; line-height: 1; letter-spacing: 6px;
+    text-shadow: 2px 2px 0 #111;
+    .et-line-1 { .ep-sub(); font-size: 8px; color: #1a6b2a; font-weight: 700; }
+  }
+  &.et-logo-ep-earth-first {
+    font-family: 'EpAudiowide', sans-serif; font-size: 20px; color: #2a7ad0;
+    text-shadow: 1px 1px 0 #0d3a6b, 2px 2px 3px #8fc0ee;
+  }
+  &.et-logo-ep-ether {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 20px; color: #5fd7f2; line-height: 1; letter-spacing: 3px;
+    background: #0a2a3a; padding: 3px 10px; text-shadow: 0 0 4px #1fa7d2;
+    .et-line-1 { font-size: 11px; letter-spacing: 2px; }
+  }
+  &.et-logo-ep-hermetic {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 15px; color: #4a2a10; line-height: 1;
+    text-shadow: 1px 1px 0 #d9b38a;
+    .et-line-1 { font-size: 14px; color: #a0281e; }
+  }
+  &.et-logo-ep-imperio {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 16px; color: #e0b23a; line-height: 1.05; letter-spacing: 1px;
+    background: #111; padding: 3px 9px; border: 1px solid #e0b23a;
+  }
+  &.et-logo-ep-lazarus {
+    font-family: 'EtBaloo', sans-serif; font-weight: 800; font-size: 22px; color: #f2d21b; line-height: 0.9;
+    text-shadow: @ep-dark, 2px 2px 2px #777;
+  }
+  &.et-logo-ep-logos {
+    font-family: 'EtTinos', serif; font-size: 17px; color: #333; line-height: 1.05;
+    border-left: 4px solid #555; padding-left: 6px;
+  }
+  &.et-logo-ep-marabout {
+    font-family: 'EpRighteous', sans-serif; font-size: 20px; color: #fff; line-height: 0.95;
+    background: #1d3f7a; padding: 3px 10px; border-radius: 8px; text-shadow: 1px 1px 0 #0a1a3a;
+    .et-line-1 { padding-left: 14px; }
+  }
+  &.et-logo-ep-neptune {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 700; font-size: 20px; color: #1b7f9a; line-height: 1; letter-spacing: 2px;
+    text-shadow: 1px 1px 2px #8fd0e0;
+    .et-line-1 { .ep-sub(); font-size: 8px; color: #1b4f6a; letter-spacing: 2px; }
+  }
+  &.et-logo-ep-new-tech {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 500; font-size: 24px; color: #1b2b4a; letter-spacing: 5px;
+    border-bottom: 2px solid #2a8ad0;
+  }
+  &.et-logo-ep-nojo {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 32px; color: #d8261c; letter-spacing: 2px;
+    text-shadow: 2px 2px 0 #5a0a06;
+  }
+  &.et-logo-ep-oasis {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 30px; color: #1a1a1a; letter-spacing: 4px;
+    text-shadow: 2px 2px 0 #e8c26a;
+  }
+  &.et-logo-ep-opportunistic {
+    font-family: 'EpMarker', cursive; font-size: 18px; color: #222; line-height: 1;
+    text-shadow: 2px 2px 0 #f2a03a;
+    .et-line-1 { padding-left: 20px; }
+  }
+  &.et-logo-ep-orbital-eye {
+    font-family: 'EpBlackOps', sans-serif; font-size: 18px; color: #e8e8e8; line-height: 1; letter-spacing: 2px;
+    background: #111; padding: 3px 14px; border-radius: 20px; border: 2px solid #d01818;
+    .et-line-1 { color: #ff2a2a; font-size: 20px; }
+  }
+  &.et-logo-ep-ouroboros {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 24px; color: #b0151b; letter-spacing: 2px;
+    text-shadow: 1px 1px 0 #3a0508;
+  }
+  &.et-logo-ep-pathfinder {
+    font-family: 'EpBebas', sans-serif; font-size: 28px; color: #333; line-height: 0.95; letter-spacing: 2px;
+    .et-line-1 { .ep-sub(); font-size: 8px; color: #333; letter-spacing: 1px; }
+  }
+  &.et-logo-ep-politicorp {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 20px; color: #111;
+    background: #f5e11b; padding: 2px 10px; border: 2px solid #111;
+  }
+  &.et-logo-ep-princess {
+    font-family: 'EpPacifico', cursive; font-size: 22px; color: #e8569a; line-height: 1;
+    text-shadow: @ep-white, 2px 2px 3px #b02a6a;
+    .et-line-1 { font-size: 12px; padding-left: 40px; }
+  }
+  &.et-logo-ep-solar {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 700; font-size: 24px; color: #1d3a7a; line-height: 0.9; letter-spacing: 3px;
+    .et-line-1 { font-size: 13px; letter-spacing: 2px; color: #5a6a8a; }
+  }
+  &.et-logo-ep-spartans {
+    font-family: 'EtFjalla', sans-serif; font-size: 22px; color: #d11a1a; line-height: 0.95; letter-spacing: 1px;
+    text-shadow: 2px 2px 0 #111;
+  }
+  &.et-logo-ep-teo {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 700; font-size: 36px; color: #1b3a5a; letter-spacing: 8px;
+    text-shadow: 2px 2px 3px #9ab0c8;
+  }
+  &.et-logo-ep-thermex {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 22px; color: #111; letter-spacing: 1px;
+    text-shadow: 2px 2px 0 #f07a1b;
+  }
+  &.et-logo-ep-toyitsu {
+    font-family: 'EpBlackOps', sans-serif; font-size: 26px; color: #111; line-height: 1; letter-spacing: 3px;
+    .et-line-1 { .ep-sub(); font-size: 8px; color: #c8102e; letter-spacing: 2px; font-weight: 700; }
+  }
+  &.et-logo-ep-tmf {
+    font-family: 'EpRusso', sans-serif; font-size: 30px; color: #e07a1b; line-height: 1; letter-spacing: 4px;
+    text-shadow: 1px 1px 0 #6a2a06, 2px 2px 2px #333;
+    .et-line-1 { .ep-sub(); font-size: 8px; color: #6a2a06; letter-spacing: 1px; }
+  }
+  &.et-logo-ep-twin-cities {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 700; font-size: 18px; color: #2a5ab0; line-height: 1; letter-spacing: 1px;
+    .et-line-1 { font-weight: 400; font-size: 13px; letter-spacing: 3px; }
+  }  // Batch 3
+  &.et-logo-ep-ace {
+    font-family: 'EtFjalla', sans-serif; font-size: 36px; color: #1f3a5f; letter-spacing: 4px;
+    text-shadow: 2px 2px 0 #c9a54a;
+  }
+  &.et-logo-ep-astro-alliance {
+    font-family: 'EpComfortaa', sans-serif; font-weight: 700; font-size: 20px; color: #fff; line-height: 0.95;
+    background: radial-gradient(circle at 30% 40%, #6a3fb0, #1a0f3a); padding: 3px 10px; border-radius: 10px;
+    .et-line-1 { padding-left: 14px; }
+  }
+  &.et-logo-ep-chance {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 700; font-size: 20px; color: #2a2a2a; line-height: 0.95; letter-spacing: 2px;
+    .et-line-0 { color: #c0287a; }
+  }
+  &.et-logo-ep-discarded {
+    font-family: 'EpBlackOps', sans-serif; font-size: 18px; color: #1f8a3a; line-height: 1; letter-spacing: 1px;
+    text-shadow: 1px 1px 0 #0a3a12;
+    .et-line-1 { padding-left: 30px; color: #c8102e; }
+  }
+  &.et-logo-ep-dnagency {
+    font-family: 'EpRighteous', sans-serif; font-size: 26px; color: #c8102e;
+    text-shadow: 1px 1px 0 #fff, 2px 2px 2px #555;
+  }
+  &.et-logo-ep-ecme {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 28px; color: #d8261c; line-height: 0.95;
+    text-shadow: 2px 2px 0 #111;
+    .et-line-1 { font-size: 12px; color: #111; text-shadow: none; letter-spacing: 1px; }
+  }
+  &.et-logo-ep-edgars {
+    font-family: 'EtTinos', serif; font-size: 19px; color: #3a2a1a;
+    border-left: 6px solid #7a1a12; padding-left: 6px;
+  }
+  &.et-logo-ep-elon {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 400; font-size: 28px; color: #e01b24; line-height: 1; letter-spacing: 6px;
+    .et-line-1 { font-size: 11px; letter-spacing: 3px; }
+  }
+  &.et-logo-ep-evo {
+    font-family: 'EpAudiowide', sans-serif; font-size: 26px; color: #6ab42a; line-height: 0.9;
+    text-shadow: 1px 1px 0 #1f4a0a;
+    .et-line-1 { font-size: 11px; color: #3a7a1a; letter-spacing: 1px; }
+  }
+  &.et-logo-ep-jcn {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 500; font-size: 15px; color: #2a6db0; line-height: 0.95; letter-spacing: 2px;
+    .et-line-1 { font-weight: 700; font-size: 17px; color: #1b2b4a; }
+  }
+  &.et-logo-ep-mine {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 26px; color: #f0f0f0; letter-spacing: 2px;
+    text-shadow: 2px 2px 0 #3a2a1a, 0 0 4px #000;
+  }
+  &.et-logo-ep-marsanto {
+    font-family: 'EpComfortaa', sans-serif; font-weight: 700; font-size: 24px; color: #2f8a3a; letter-spacing: 2px;
+  }
+  &.et-logo-ep-mega-thermo {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 700; font-size: 14px; color: #555; line-height: 1; letter-spacing: 1px;
+    .et-line-0 { font-size: 20px; letter-spacing: 4px; color: #333; }
+    .et-line-1 { color: #2a6db0; }
+  }
+  &.et-logo-ep-meissner {
+    font-family: 'EpMarker', cursive; font-size: 20px; color: #f07a1b; line-height: 0.95;
+    text-shadow: 1px 1px 0 #6a2a06;
+    .et-line-1 { padding-left: 24px; }
+  }
+  &.et-logo-ep-olympus {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 700; font-size: 14px; color: #f2e6c8; line-height: 1.05; letter-spacing: 1px;
+    background: #6a3a1a; padding: 3px 8px; border-radius: 3px;
+  }
+  &.et-logo-ep-omega {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 700; font-size: 18px; color: #111;
+  }
+  &.et-logo-ep-pax {
+    font-family: 'EtPlayfair', serif; font-size: 19px; color: #888; text-shadow: 1px 1px 0 #333;
+  }
+  &.et-logo-ep-poly {
+    font-family: 'EtPlayfair', serif; font-weight: 700; font-size: 22px; color: #1f6a3a;
+    text-shadow: 1px 1px 0 #b8e0a8;
+  }
+  &.et-logo-ep-quash {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 22px; color: #f5e11b;
+    background: #7a2a9a; padding: 4px 12px; border-radius: 40% 60% 50% 45%; text-shadow: 1px 1px 0 #111;
+  }
+  &.et-logo-ep-redux {
+    font-family: 'EpAudiowide', sans-serif; font-size: 24px; color: #fff; letter-spacing: 2px;
+    background: #1d3a7a; padding: 2px 12px; border-radius: 50%; border: 2px solid #5ab0e8;
+  }
+  &.et-logo-ep-resourceful {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 400; font-size: 15px; color: #1b3a5a; line-height: 1.05; letter-spacing: 2px;
+  }
+  &.et-logo-ep-storyteller {
+    font-family: 'EpBlackOps', sans-serif; font-size: 21px; color: #222; line-height: 0.95;
+    .et-line-1 { font-size: 11px; padding-left: 70px; }
+  }
+  &.et-logo-ep-vpg {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 17px; color: #c0281e; line-height: 1;
+    text-shadow: 1px 1px 0 #f5c400;
+  }
+  &.et-logo-ep-medium {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 20px; color: #e8c26a; line-height: 0.95;
+    background: #111a2a; padding: 3px 10px;
+    .et-line-0 { font-size: 13px; letter-spacing: 3px; }
+  }
+  &.et-logo-ep-helix {
+    font-family: 'EpRighteous', sans-serif; font-size: 30px; color: #2a2a2a;
+    text-shadow: 2px 2px 0 #c9d24a;
+  }
+  &.et-logo-ep-hh {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 28px; color: #c8941b; line-height: 0.95; letter-spacing: 8px;
+    text-shadow: 1px 1px 0 #5a3a06;
+    .et-line-1 { font-size: 11px; letter-spacing: 2px; }
+  }
+  &.et-logo-ep-rod {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 24px; color: #222; line-height: 0.95;
+    .et-line-1 { font-size: 10px; color: #7a2a8a; letter-spacing: 1px; }
+  }
+  &.et-logo-ep-talos {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 500; font-size: 26px; color: #e8e8f8; line-height: 0.95; letter-spacing: 8px;
+    background: #10162a; padding: 3px 10px;
+    .et-line-1 { font-size: 10px; letter-spacing: 3px; color: #8fb7ee; }
+  }
+  &.et-logo-ep-nitrogen {
+    font-family: 'EtBaloo', sans-serif; font-weight: 800; font-size: 22px; color: #e8d21b;
+    text-shadow: @ep-dark, 2px 2px 2px #555;
+  }
+  &.et-logo-ep-prefab {
+    font-family: 'EpRusso', sans-serif; font-size: 20px; color: #555; letter-spacing: 1px;
+    text-shadow: 1px 1px 0 #ccc;
+  }
+  &.et-logo-ep-cryo {
+    font-family: 'EpAudiowide', sans-serif; font-size: 32px; color: #1f5ad0; letter-spacing: 4px;
+    text-shadow: 1px 1px 0 #fff, 2px 2px 3px #8fb7ee;
+  }
+  &.et-logo-ep-lorean {
+    font-family: 'EpBebas', sans-serif; font-size: 30px; color: #1b3a7a; letter-spacing: 3px;
+    border-left: 8px solid #1b3a7a; padding-left: 6px;
+  }
+  &.et-logo-ep-landmark {
+    font-family: 'EpBlackOps', sans-serif; font-size: 17px; color: #d8261c; line-height: 1;
+    text-shadow: 1px 1px 0 #111;
+  }  // Batch 4
+  &.et-logo-ep-aerospace {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 700; font-size: 18px; color: #1d3a7a; line-height: 0.95; letter-spacing: 2px;
+    border: 2px solid #1d3a7a; padding: 2px 8px; background: #e8eef8;
+    .et-line-1 { padding-left: 30px; color: #5a6a8a; }
+  }
+  &.et-logo-ep-amityville {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 400; font-size: 26px; color: #1a1a1a;
+  }
+  &.et-logo-ep-bentenmaru {
+    font-family: 'EpMarker', cursive; font-size: 22px; color: #e01b24;
+    background: #f5e11b; padding: 2px 8px; text-shadow: 1px 1px 0 #6a0a0a;
+  }
+  &.et-logo-ep-elm {
+    font-family: 'EpBlackOps', sans-serif; font-size: 34px; color: #2a5ab0; letter-spacing: 4px;
+    text-shadow: 2px 2px 0 #c0281e;
+  }
+  &.et-logo-ep-first-wave {
+    font-family: 'EpRusso', sans-serif; font-size: 19px; color: #7a1a12; letter-spacing: 1px;
+    text-shadow: 1px 1px 0 #f2b38a;
+  }
+  &.et-logo-ep-futura {
+    font-family: 'EpComfortaa', sans-serif; font-weight: 700; font-size: 26px; color: #c0287a; letter-spacing: 5px;
+  }
+  &.et-logo-ep-gaia {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 400; font-size: 28px; color: #2a2a2a; letter-spacing: 3px;
+  }
+  &.et-logo-ep-heindl {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 16px; color: #1f8a5a;
+    text-shadow: 1px 1px 0 #0a3a5a;
+  }
+  &.et-logo-ep-mimix {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 700; font-size: 26px; color: #2f9a3a; line-height: 1; letter-spacing: 6px;
+    .et-line-1 { .ep-sub(); font-size: 7px; color: #333; letter-spacing: 0; font-family: 'EtUbuntu', sans-serif; font-weight: 400; }
+  }
+  &.et-logo-ep-new-grounds {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 700; font-size: 22px; color: #f2e6c8; letter-spacing: 3px;
+    background: #6a3a1a; padding: 2px 10px; border-radius: 12px;
+  }
+  &.et-logo-ep-planet-forge {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 700; font-size: 20px; color: #f5c400; line-height: 0.95; letter-spacing: 3px;
+    background: #111; padding: 3px 10px; text-shadow: 0 0 4px #e07a1b;
+  }
+  &.et-logo-ep-planet-wave {
+    font-family: 'EpBebas', sans-serif; font-size: 24px; color: #fff; letter-spacing: 2px;
+    background: linear-gradient(#2a6db0, #1b3a7a); padding: 2px 10px;
+  }
+  &.et-logo-ep-plutonic {
+    font-family: 'EtUbuntu', sans-serif; font-weight: 700; font-size: 18px; color: #1a1a1a; line-height: 1;
+    .et-line-1 { padding-left: 16px; color: #4a7a1a; }
+  }
+  &.et-logo-ep-schlock {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 13px; color: #111; letter-spacing: 0;
+    border-bottom: 4px solid #111; padding-bottom: 1px;
+  }
+  &.et-logo-ep-space-guild {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 20px; color: #1d3a7a; letter-spacing: 2px;
+  }
+  &.et-logo-ep-st-joseph {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 18px; color: #5a3a10; line-height: 1;
+    .et-line-1 { font-size: 11px; }
+  }
+  &.et-logo-ep-steel-ridge {
+    font-family: 'EpRusso', sans-serif; font-size: 17px; color: #c0281e; line-height: 1; letter-spacing: 1px;
+    text-shadow: 1px 1px 0 #111;
+  }
+  &.et-logo-ep-rosenburg {
+    font-family: 'EtTinos', serif; font-size: 18px; color: #333; line-height: 0.95; letter-spacing: 1px;
+    .et-line-0 { font-size: 11px; }
+  }  // Batch 5
+  &.et-logo-ep-aether {
+    font-family: 'EtPlayfair', serif; font-style: italic; font-weight: 700; font-size: 22px; color: #f2d21b; line-height: 0.95;
+    background: #b0181a; padding: 3px 12px; border: 2px solid #4a1a6a;
+    .et-line-1 { padding-left: 20px; }
+  }
+  &.et-logo-ep-biofusion {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 500; font-size: 28px; color: #111; letter-spacing: 1px;
+  }
+  &.et-logo-ep-carbon {
+    font-family: 'EpComfortaa', sans-serif; font-weight: 700; font-size: 20px; color: #333; line-height: 0.95;
+    .et-line-0 { padding-left: 22px; }
+  }
+  &.et-logo-ep-castle {
+    font-family: 'EtFjalla', sans-serif; font-size: 22px; color: #111; line-height: 0.95;
+  }
+  &.et-logo-ep-corellian {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 700; font-size: 18px; color: #1b1f5a; line-height: 1; letter-spacing: 2px;
+    .et-line-1 { font-size: 11px; letter-spacing: 3px; }
+  }
+  &.et-logo-ep-darwin {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 700; font-size: 20px; color: #111; letter-spacing: 1px;
+    border-bottom: 3px solid #3a7a2a;
+  }
+  &.et-logo-ep-grothe {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 700; font-size: 22px; color: #1d4fa0; line-height: 0.95; letter-spacing: 3px;
+    .et-line-1 { font-size: 12px; color: #3a8ad0; }
+  }
+  &.et-logo-ep-hard-hat {
+    font-family: 'EtArchivoBlack', sans-serif; font-size: 16px; color: #fff; line-height: 1;
+    background: #8a1a1a; padding: 4px 10px;
+    .et-line-1 { font-size: 9px; letter-spacing: 1px; }
+  }
+  &.et-logo-ep-pinpoint {
+    font-family: 'EpBlackOps', sans-serif; font-size: 17px; color: #111;
+    border-bottom: 3px solid #c8102e;
+  }
+  &.et-logo-ep-proficoin {
+    font-family: 'EpMarker', cursive; font-size: 28px; color: #f5c400;
+    text-shadow: @ep-dark, 2px 2px 2px #555;
+  }
+  &.et-logo-ep-sky-ranchers {
+    font-family: 'EpPacifico', cursive; font-size: 20px; color: #fff;
+    background: #5a9a5a; padding: 2px 10px;
+  }
+  &.et-logo-ep-penal {
+    font-family: 'EpBlackOps', sans-serif; font-size: 17px; color: #fff; line-height: 1.05;
+    background: #2a2a2a; padding: 3px 10px; border: 2px solid #aaa;
+  }
+  &.et-logo-ep-syndicat {
+    font-family: 'EtFjalla', sans-serif; font-size: 15px; color: #111; line-height: 1;
+    .et-line-1 { font-size: 19px; color: #c0281e; }
+  }
+  &.et-logo-ep-vanguard {
+    font-family: 'EpRusso', sans-serif; font-size: 26px; color: #222; line-height: 1; letter-spacing: 3px;
+    .et-line-1 { .ep-sub(); font-size: 8px; letter-spacing: 1px; color: #444; }
+  }
+  &.et-logo-ep-wind-meyer {
+    font-family: 'EtPlayfair', serif; font-size: 26px; color: #2a2a2a; line-height: 0.9; letter-spacing: 2px;
+    .et-line-0 { font-size: 13px; color: #8a1a1a; letter-spacing: 3px; }
+  }
+  &.et-logo-ep-xenos {
+    font-family: 'EpBlackOps', sans-serif; font-size: 24px; color: #111; line-height: 0.95;
+    .et-line-1 { font-size: 12px; color: #c0281e; }
+  }
+
+  // Batch 6: the wild-resource corps share a rainbow accent.
+  .ep-rainbow() {
+    background: linear-gradient(90deg, #e8302a, #f39c12, #f1d21b, #2fb34a, #1f8fe0, #8e44ad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: none;
+  }
+  &.et-logo-ep-discount {
+    font-family: 'EpBebas', sans-serif; font-size: 25px; color: #111; letter-spacing: 1px; line-height: 0.9;
+    .et-line-0 { color: #d9481c; }
+  }
+  &.et-logo-ep-flexi {
+    font-family: 'EpRusso', sans-serif; font-style: italic; font-size: 19px; color: #111; line-height: 1;
+    .et-line-0 { .ep-rainbow(); font-size: 21px; }
+    .et-line-1 { font-size: 12px; letter-spacing: 4px; }
+  }
+  &.et-logo-ep-jump-start {
+    font-family: 'EpBlackOps', sans-serif; font-size: 21px; color: #222; line-height: 0.95;
+    .et-line-0 { color: #2e7d32; }
+    .et-line-1 { font-size: 13px; color: #e07b12; letter-spacing: 1px; }
+  }
+  &.et-logo-ep-short-cut {
+    font-family: 'EpRighteous', sans-serif; font-size: 22px; color: #1767b5; line-height: 0.95;
+    .et-line-1 { font-size: 15px; color: #222; letter-spacing: 2px; }
+  }
+  &.et-logo-ep-standard-business {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 21px; color: #111; line-height: 0.95;
+    .et-line-1 { .ep-rainbow(); font-size: 19px; }
+  }
+  &.et-logo-ep-streamline {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 18px; color: #1d2b4c; letter-spacing: 3px; line-height: 1;
+    .et-line-1 { color: #1b8fb5; letter-spacing: 5px; font-size: 14px; }
+  }
+  &.et-logo-ep-terra-invest {
+    font-family: 'EpRusso', sans-serif; font-size: 20px; color: #111; line-height: 0.95;
+    .et-line-1 { .ep-rainbow(); font-size: 16px; letter-spacing: 6px; }
+  }
+  &.et-logo-ep-top-up {
+    font-family: 'EpBebas', sans-serif; font-size: 28px; color: #1c4f8a; letter-spacing: 1px; line-height: 0.85;
+    .et-line-1 { font-size: 17px; color: #8a6d1c; letter-spacing: 3px; }
+  }
+
+
+
+}
+
+// A red cross over a forbidden or cancelled icon (tags, VP icons, cards, tiles).
+.card-container .card-item-cancelled {
+  position: relative;
+  &::after {
+    content: '\2715';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e01b1b;
+    font-family: sans-serif;
+    font-weight: 900;
+    font-size: 26px;
+    line-height: 1;
+    text-shadow: -1px 0 #fff, 0 1px #fff, 1px 0 #fff, 0 -1px #fff;
+    pointer-events: none;
+  }
+}
+
+// Epic: badges with two scoring terms (e.g. 1/3 microbes + 1/ocean) are drawn a little tighter.
+.card-container .card-points.card-points-also {
+  font-size: 21px;
+  > div { margin-left: 1px; }
+  .card-points-plus { margin: 0 2px; }
+}
+// On a VP badge the cross sits in the corner so the crossed-out value stays readable.
+.card-container .card-points .card-item-cancelled::after {
+  inset: auto -6px -4px auto;
+  font-size: 18px;
+}
+
+// ROD Association: its tag → resource table is drawn smaller so it fits above the action box.
+.card-container.card-rod-association .card-row:has(.card-resource-tag):not(:has(.card-corporation-box, .card-effect-box)) {
+  zoom: 0.6;
+  margin: 0;
+}
+
+// Wild-resource corps with a busy start row: smaller start icons and a slightly smaller box so everything fits.
+.card-container.card-discount-conglomerate,
+.card-container.card-flexi-change-industry,
+.card-container.card-jump-start-corporation,
+.card-container.card-short-cut-enterprise,
+.card-container.card-top-up-operation {
+  .card-row:not(:has(.card-corporation-box, .card-effect-box)) {
+    zoom: 0.8;
+  }
+  .card-corporation-box {
+    zoom: 0.9;
+  }
+}
+
+.card-container.card-short-cut-enterprise .card-corporation-box,
+.card-container.card-top-up-operation .card-corporation-box {
+  zoom: 0.85;
+}
+
+.card-container.card-standard-business .card-corporation-box {
+  zoom: 0.9;
+}

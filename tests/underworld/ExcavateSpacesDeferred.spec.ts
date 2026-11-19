@@ -15,6 +15,8 @@ describe('ExcavateSpacesDeferred', () => {
   beforeEach(() => {
     [game, player] = testGame(2, {underworldExpansion: true});
     game.phase = Phase.ACTION;
+    // Don't depend on which random tokens come out: the next ones give nothing.
+    game.underworldData.tokens.push('nothing', 'nothing', 'nothing');
   });
 
   it('sanity', () => {

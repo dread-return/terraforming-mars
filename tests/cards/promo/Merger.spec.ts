@@ -314,7 +314,8 @@ describe('Merger', () => {
         if (corporations.length > 1) {
           player.playCorporationCard(corporations[1]);
         }
-        game.corporationDeck.drawPile.push(candidate);
+        // Teractor (60 M€) guarantees at least one affordable corporation is dealt, whatever else is in the deck.
+        game.corporationDeck.drawPile.push(new Teractor(), candidate);
 
         player.stock.override(Units.of({megacredits})); // Clear all resources but MC.
         merger.play(player);

@@ -5,6 +5,7 @@ import {Resource} from '../../common/Resource';
 import {CrashSiteCleanup} from '../cards/promo/CrashSiteCleanup';
 import {From, isFromPlayer} from '../logs/From';
 import {BaseStock} from './StockBase';
+import {EpicHooks} from '../cards/epic/EpicHooks';
 
 export class Stock extends BaseStock {
   public add(
@@ -61,6 +62,7 @@ export class Stock extends BaseStock {
     if (options?.from !== undefined && delta < 0 && (isFromPlayer(from) && from.player.id !== this.player.id)) {
       this.player.resolveInsurance();
     }
+    EpicHooks.onStockChange(this.player, resource, delta, options?.from);
   }
 
   /**

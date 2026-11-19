@@ -5,6 +5,7 @@ import {CardName} from '../../../common/cards/CardName';
 import {IProjectCard} from '../IProjectCard';
 import {CardResource} from '../../../common/CardResource';
 import {Eternity} from '../eternity/Eternity';
+import {EpicHooks} from '../epic/EpicHooks';
 
 
 /**
@@ -27,8 +28,16 @@ export abstract class GlobalParameterRequirement extends InequalityRequirement {
     if (Eternity.ignoresGlobalRequirement(player, card)) {
       return true;
     }
+    // Epic Corporations: Cryo and Lorean ignore maximum requirements.
+    if (this.max && EpicHooks.ignoresMaxRequirement(player, this.parameter)) {
+      return true;
+    }
     const eternityBonus = Eternity.globalRequirementBonus(player, card, this.parameter);
     if (eternityBonus > 0 && this.distance(player) <= eternityBonus) {
+      return true;
+    }
+    // Epic Corporations: Darwin Evolution spends science to bend animal cards' requirements.
+    if (EpicHooks.bendGlobalRequirement(player, card, this.distance(player))) {
       return true;
     }
     const aeronGenomicsResources = (card.resourceType === CardResource.ANIMAL) ?

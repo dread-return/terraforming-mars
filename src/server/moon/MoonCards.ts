@@ -16,5 +16,10 @@ export class MoonCards {
       .filter((d) => d.name === CardName.OBSERVATORY || d.name === CardName.PROBE || d.name === CardName.SCIENCE_FACILITY)
       .flatMap((d) => d.copies),
     CardName.JUDGES_OF_CHANGE,
+    // Epic Corporations
+    CardName.HEYER_EDUCATION,
+    CardName.HELIX,
+    CardName.G_AI_A,
+    CardName.DARWIN_EVOLUTION,
   ]);
 }

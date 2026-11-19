@@ -193,6 +193,14 @@ describe('ServeAsset', () => {
     expect(res.content).match(/assets\/eternity\/fonts\/ubuntu-latin-700-normal\.woff2$/);
   });
 
+  it('Epic Corporations logo font', async () => {
+    instance = new ServeAsset(undefined, false, fileApi);
+    scaffolding.url = '/assets/epic/fonts/cinzel-latin-700-normal.woff2';
+    scaffolding.req.headers['accept-encoding'] = '';
+    await scaffolding.get(instance, res);
+    expect(res.content).match(/assets\/epic\/fonts\/cinzel-latin-700-normal\.woff2$/);
+  });
+
   it('rejects woff2 files outside the Eternity fonts folder', async () => {
     instance = new ServeAsset(undefined, false, fileApi);
     scaffolding.url = '/assets/eternity/fonts/../../secret.woff2';

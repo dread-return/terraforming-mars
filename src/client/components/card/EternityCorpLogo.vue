@@ -7,6 +7,7 @@
 <script lang="ts">
 import {defineComponent} from 'vue';
 import {CardName} from '@/common/cards/CardName';
+import {EPIC_LOGOS} from '@/client/components/card/epicLogos';
 
 type EternityLogo = {slug: string, lines: ReadonlyArray<string>};
 
@@ -15,6 +16,8 @@ type EternityLogo = {slug: string, lines: ReadonlyArray<string>};
  * Fonts and colours are in src/styles/eternity.less (`.et-logo-<slug>`).
  */
 export const ETERNITY_LOGOS: Partial<Record<CardName, EternityLogo>> = {
+  // Epic Corporations use the same mechanism (styles in src/styles/epic.less).
+  ...EPIC_LOGOS,
   // High Orbit corporations use the same mechanism (styles in src/styles/highorbit.less).
   [CardName.LAGRANGE_COLLECTIVE]: {slug: 'ho-lagrange', lines: ['Lagrange', 'Collective']},
   [CardName.PLANETARY_ENGINEERING_CORPS]: {slug: 'ho-pec', lines: ['Planetary', 'Engineering Corps']},

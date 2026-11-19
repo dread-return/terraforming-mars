@@ -33,6 +33,11 @@ describe('TheNewSpaceRace', () => {
         draftVariant: false,
         initialDraftVariant: false,
         skipInitialCardSelection: false,
+        // Corporations that ask nothing when played, so the test doesn't depend on which ones are dealt.
+        customCorporationsList: [
+          CardName.CREDICOR, CardName.ECOLINE, CardName.HELION, CardName.MINING_GUILD,
+          CardName.PHOBOLOG, CardName.SATURN_SYSTEMS, CardName.TERACTOR, CardName.THORGATE,
+        ],
       });
   });
 

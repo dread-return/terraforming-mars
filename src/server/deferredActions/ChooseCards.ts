@@ -9,6 +9,8 @@ import {oneWayDifference} from '../../common/utils/utils';
 import {message} from '../logs/MessageBuilder';
 import {Message} from '../../common/logs/Message';
 import {Aerotech} from '../cards/community/Aerotech';
+import {EpicHooks} from '../cards/epic/EpicHooks';
+import {SimpleDeferredAction} from './DeferredAction';
 
 export const LogType = {
   DREW: 'drew',
@@ -24,6 +26,10 @@ export type ChooseOptions = {
   paying?: boolean,
   /** When true (and paying), log the bought cards publicly by name instead of just the count. */
   logBoughtCards?: boolean,
+  /** Epic Corporations (Logos Research & Development): this many of the selected cards cost nothing. */
+  freeCards?: number,
+  /** Epic Corporations (Lazarus Laboratories): afterwards, keep one of the unselected cards for free. */
+  keepOneDiscardFree?: boolean,
 }
 
 export class ChooseCards extends DeferredAction {
@@ -42,7 +48,7 @@ export class ChooseCards extends DeferredAction {
     let msg: string | Message = message('Select ${0} card(s) to keep', (b) => b.number(max));
     if (options.paying) {
       const spendableMegacredits = this.player.spendableMegacredits();
-      const affordableCards = Math.floor(spendableMegacredits / this.player.cardCost);
+      const affordableCards = Math.floor(spendableMegacredits / this.player.cardCost) + (options.freeCards ?? 0);
       max = Math.min(max, affordableCards);
       if (max === 0) {
         msg = 'You cannot afford any cards';
@@ -68,16 +74,30 @@ export class ChooseCards extends DeferredAction {
           LogHelper.logRevealedCards(player, cards);
         }
         const boughtLogType = options.logBoughtCards === true ? LogType.BOUGHT_VERBOSE : LogType.BOUGHT;
-        if (options.paying && selected.length > 0) {
-          const cost = selected.length * player.cardCost;
+        const finish = (logType: LogType) => {
+          if (options.keepOneDiscardFree === true && unselected.length > 0) {
+            keep(player, selected, [], logType);
+            player.game.defer(new SimpleDeferredAction(player, () =>
+              new SelectCard('Lazarus Laboratories: keep one of the discarded cards for free', 'Keep', unselected)
+                .andThen(([card]) => {
+                  keep(player, [card], unselected.filter((c) => c !== card), LogType.DREW);
+                  return undefined;
+                })));
+          } else {
+            keep(player, selected, unselected, logType);
+          }
+        };
+        const paidCount = Math.max(0, selected.length - (options.freeCards ?? 0));
+        if (options.paying && paidCount > 0) {
+          const cost = paidCount * player.cardCost;
           player.game.defer(
             new SelectPaymentDeferred(
               player,
               cost,
               {title: message('Select how to spend ${0} M€ for ${1} cards', (b) => b.number(cost).number(selected.length))})
-              .andThen(() => keep(player, selected, unselected, boughtLogType)));
+              .andThen(() => finish(boughtLogType)));
         } else {
-          keep(player, selected, unselected, options.paying ? boughtLogType : LogType.DREW);
+          finish(options.paying ? boughtLogType : LogType.DREW);
         }
         return undefined;
       });
@@ -90,6 +110,8 @@ export class ChooseCards extends DeferredAction {
 export function keep(player: IPlayer, cards: ReadonlyArray<IProjectCard>, discards: ReadonlyArray<IProjectCard>, logType: LogType = LogType.DREW): void {
   player.cardsInHand.push(...cards);
   player.game.projectDeck.discard(...discards);
+  // Epic Corporations: Dev Wright.
+  EpicHooks.onCardsKept(player, cards.length, logType === LogType.BOUGHT || logType === LogType.BOUGHT_VERBOSE);
 
   switch (logType) {
   case LogType.DREW_VERBOSE:

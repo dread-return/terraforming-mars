@@ -107,6 +107,7 @@ import {IdesOfMars} from './cards/idesofmars/IdesOfMars';
 import {Nuclear} from './cards/nuclear/Nuclear';
 import {IndividualTracks} from './individualTracks/IndividualTracks';
 import {Eternity} from './cards/eternity/Eternity';
+import {EpicHooks} from './cards/epic/EpicHooks';
 
 // Can be overridden by tests
 let createGameLog: () => Array<LogMessage> = () => [];
@@ -765,6 +766,7 @@ export class Game implements IGame, Logger {
       player: player,
     });
     Postludes.onAwardFunded(player);
+    EpicHooks.onMilestoneOrAward(player);
   }
 
   public hasBeenFunded(award: IAward): boolean {
@@ -961,7 +963,9 @@ export class Game implements IGame, Logger {
     this.drainQueue(() => {
       ColoniesHandler.endGeneration(this);
       UnderworldExpansion.endGeneration(this);
-      this.gotoTurmoilPhase();
+      // Epic Corporations: Ares Technology reorders the global events (may ask its owner).
+      EpicHooks.beforeTurmoilPhase(this);
+      this.drainQueue(() => this.gotoTurmoilPhase());
     });
   }
 
@@ -1021,6 +1025,7 @@ export class Game implements IGame, Logger {
     Postludes.onGenerationStart(this);
     HighOrbit.onGenerationStart(this);
     Mercury.onGenerationStart(this);
+    EpicHooks.onGenerationStart(this);
 
     this.players.forEach((player) => {
       player.hasIncreasedTerraformRatingThisGeneration = false;
@@ -1180,6 +1185,8 @@ export class Game implements IGame, Logger {
       this.researchedPlayers.add(player.id);
       if (this.researchedPlayers.size === this.players.length) {
         this.researchedPlayers.clear();
+        // Epic Corporations: ProfiCoin is paid for the cards bought this research phase.
+        EpicHooks.onResearchPhaseEnd(this);
         this.phase = Phase.ACTION;
         this.passedPlayers.clear();
         this.potentiallyChangeFirstPlayer();
@@ -1216,7 +1223,9 @@ export class Game implements IGame, Logger {
 
       // This next section can be done more simply.
       if (this.allPlayersHavePassed()) {
-        this.gotoProductionPhase();
+        // Epic Corporations: Syndicat des Travailleurs Martiens picks a resource first (may ask its owner).
+        EpicHooks.beforeProductionPhase(this);
+        this.drainQueue(() => this.gotoProductionPhase());
         return;
       }
 

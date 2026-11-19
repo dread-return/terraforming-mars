@@ -56,6 +56,19 @@ describe('CorporationsFilter', () => {
     expect(selected).not.to.include(CardName.BEGINNER_CORPORATION);
   });
 
+  it('preselects Epic corporations only when the expansions they need are on', () => {
+    const select = (extra: object) => {
+      const wrapper = shallowMount(CorporationsFilter, {
+        ...globalConfig,
+        props: {expansions: {...DEFAULT_EXPANSIONS, corpera: true, ...extra}, selected: []},
+      });
+      return findModuleItemFilter(wrapper).props('selected') as Array<string>;
+    };
+    expect(select({})).to.include(CardName.BIOME);
+    expect(select({})).not.to.include(CardName.HARBINGER);
+    expect(select({colonies: true})).to.include(CardName.HARBINGER);
+  });
+
   it('emits corporation-list-changed when ModuleItemFilter emits update:selected', async () => {
     const wrapper = shallowMount(CorporationsFilter, {
       ...globalConfig,

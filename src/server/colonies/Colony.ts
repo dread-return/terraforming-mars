@@ -35,6 +35,7 @@ import {ErodeSpacesDeferred} from '../underworld/ErodeSpacesDeferred';
 import {CardName} from '../../common/cards/CardName';
 import {GlobalParameter} from '@/common/GlobalParameter';
 import {NEUTRAL_COLONY_ID} from './NeutralColony';
+import {EpicHooks} from '../cards/epic/EpicHooks';
 
 export abstract class Colony implements IColony {
   // Players can't build colonies on Miranda until someone has played an Animal card.
@@ -199,6 +200,8 @@ export abstract class Colony implements IColony {
     HighOrbit.onTrade(player);
     // Mercury vs Mars: Interplanetary Trade Center.
     Mercury.onTrade(player);
+    // Epic Corporations: Solar Enterprises, Ether Enterprise.
+    EpicHooks.onTrade(player, this);
 
     // !== false because default is true.
     if (options.decreaseTrackAfterTrade !== false) {

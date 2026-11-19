@@ -393,6 +393,9 @@ describe('RoboticWorkforce', () => {
         player.production.override({megacredits: 2, steel: 2, titanium: 2, plants: 2, energy: 2, heat: 2});
         player2.production.override({megacredits: 2, steel: 2, titanium: 2, plants: 2, energy: 2, heat: 2});
 
+        // Excavation tokens are random: make them all empty so they can't add undeclared production.
+        game.underworldData.tokens = game.underworldData.tokens.map(() => 'nothing');
+
         // Set Moon rates.
         game.moonData!.miningRate = 3;
         game.moonData!.habitatRate = 3;

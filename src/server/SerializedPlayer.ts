@@ -21,6 +21,8 @@ export interface SerializedPlayer extends DeprecatedFields{
   alliedParty: AlliedParty | undefined;
   autoPass: boolean;
   beginner: boolean;
+  /** Optional so older saved games still load. */
+  isBot?: boolean;
   canUseHeatAsMegaCredits: boolean;
   canUseTitaniumAsMegacredits: boolean;
   canUsePlantsAsMegaCredits: boolean;

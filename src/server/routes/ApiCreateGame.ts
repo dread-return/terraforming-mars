@@ -5,6 +5,7 @@ import {Database} from '../database/Database';
 import {Cloner} from '../database/Cloner';
 import {Game} from '../Game';
 import {GameOptions} from '../game/GameOptions';
+import {gameOptionsFromConfig} from '../game/GameOptionsFromConfig';
 import {Player} from '../Player';
 import {Server} from '../models/ServerModel';
 import {NewGameConfig} from '../../common/game/NewGameConfig';
@@ -19,7 +20,7 @@ import {readBody} from './readBody';
 import {RouteError} from './RouteError';
 import {CEO_CARDS_DEALT_PER_PLAYER} from '../../common/constants';
 import {validateCustomMA} from '../../common/ma/CustomMA';
-import {hasNegativeEscapeVelocityOption, sanitizeEscapeVelocityOptions} from '../../common/game/escapeVelocity';
+import {hasNegativeEscapeVelocityOption} from '../../common/game/escapeVelocity';
 
 function parseQuotaConfig(struct: any): QuotaConfig {
   let {limit} = struct;
@@ -116,13 +117,15 @@ export class ApiCreateGame extends Handler {
       const gameId = safeCast(generateRandomId('g'), isGameId);
       const spectatorId = safeCast(generateRandomId('s'), isSpectatorId);
       const players = gameReq.players.map((p) => {
-        return new Player(
+        const player = new Player(
           p.name,
           p.color,
           p.beginner,
           Number(p.handicap), // For some reason handicap is coming up a string.
           safeCast(generateRandomId('p'), isPlayerId),
         );
+        player.isBot = p.bot === true;
+        return player;
       });
       let firstPlayerIdx = 0;
       for (let i = 0; i < gameReq.players.length; i++) {
@@ -134,85 +137,7 @@ export class ApiCreateGame extends Handler {
 
       const boardName = gameReq.boards[Math.floor(Math.random() * gameReq.boards.length)];
 
-      const gigaTurmoil = gameReq.expansions.turmoil === true && gameReq.gigaTurmoil === true;
-      const gameOptions: GameOptions = {
-        // Venus Phase 2's Venus track replaces the Alt. Venus board.
-        altVenusBoard: gameReq.altVenusBoard && !(gameReq.expansions.venusphase2 === true && gameReq.expansions.venus === true),
-        altContaminationTrack: gameReq.altContaminationTrack ?? false,
-        aresExtension: gameReq.expansions.ares,
-        aresHazards: true, // Not a runtime option.
-        aresExtremeVariant: gameReq.aresExtremeVariant,
-        automa: false, // No create-game UI yet.
-        bannedCards: gameReq.bannedCards,
-        boardName: boardName,
-        ceoExtension: gameReq.expansions.ceo,
-        clonedGamedId: gameReq.clonedGamedId,
-        coloniesExtension: gameReq.expansions.colonies,
-        communityCardsOption: gameReq.expansions.community,
-        expansions: gameReq.expansions,
-        ceosDraftVariant: gameReq.ceosDraftVariant,
-        corporateEra: gameReq.expansions.corpera,
-        customCeos: gameReq.customCeos,
-        customColoniesList: gameReq.customColoniesList,
-        customCorporationsList: gameReq.customCorporationsList,
-        customMA: gameReq.customMA,
-        customPreludes: gameReq.customPreludes,
-        draftVariant: gameReq.draftVariant,
-        escapeVelocity: gameReq.escapeVelocity === undefined ? undefined : sanitizeEscapeVelocityOptions(gameReq.escapeVelocity),
-        fastModeOption: gameReq.fastModeOption,
-        includedCards: gameReq.includedCards,
-        includeFanMA: gameReq.includeFanMA,
-        initialDraftVariant: gameReq.initialDraft,
-        modularMA: gameReq.modularMA,
-        moonExpansion: gameReq.expansions.moon,
-        moonStandardProjectVariant: gameReq.moonStandardProjectVariant,
-        moonStandardProjectVariant1: gameReq.moonStandardProjectVariant1,
-        pathfindersExpansion: gameReq.expansions.pathfinders,
-        // With Giga Turmoil the chairman always chooses the bonus and policy.
-        politicalAgendasExtension: gigaTurmoil ? 'Chairman' : gameReq.politicalAgendasExtension,
-        gigaTurmoil: gigaTurmoil,
-        domesWilderness: gameReq.domesWilderness === true,
-        // Postludes are gained from the individual tracks, so they turn the tracks on.
-        individualTracks: gameReq.individualTracks === true || gameReq.expansions.postludes === true,
-        // This fork always shows 3 milestones and 3 awards.
-        threeMilestonesAndAwards: true,
-        prelude2Expansion: gameReq.expansions.prelude2,
-        preludeDraftVariant: gameReq.preludeDraftVariant,
-        preludeExtension: gameReq.expansions.prelude,
-        promoCardsOption: gameReq.expansions.promo,
-        randomMA: gameReq.randomMA,
-        removeNegativeGlobalEventsOption: gameReq.removeNegativeGlobalEventsOption,
-        requiresMoonTrackCompletion: gameReq.requiresMoonTrackCompletion,
-        requiresVenusTrackCompletion: gameReq.requiresVenusTrackCompletion,
-        showOtherPlayersVP: gameReq.showOtherPlayersVP,
-        showTimers: gameReq.showTimers,
-        shuffleMapOption: gameReq.shuffleMapOption,
-        solarPhaseOption: gameReq.solarPhaseOption,
-        soloTR: gameReq.soloTR,
-        startingCeos: gameReq.startingCeos,
-        startingCorporations: gameReq.startingCorporations,
-        startingPreludes: gameReq.startingPreludes,
-        starWarsExpansion: gameReq.expansions.starwars,
-        turmoilExtension: gameReq.expansions.turmoil,
-        twoCorpsVariant: gameReq.twoCorpsVariant || gameReq.mergerPlus2P === true,
-        mergerPlus2P: gameReq.mergerPlus2P ?? false,
-        underworldExpansion: gameReq.expansions.underworld,
-        deltaProjectExpansion: gameReq.expansions.deltaProject,
-        bettermentsExpansion: gameReq.expansions.betterments,
-        robAntillesExpansion: gameReq.expansions.robantilles,
-        solarisExpansion: gameReq.expansions.solaris,
-        idesofmarsExpansion: gameReq.expansions.idesofmars,
-        nuclearExpansion: gameReq.expansions.nuclear,
-        // Venus Phase 2 needs Venus Next.
-        venusPhase2Expansion: gameReq.expansions.venusphase2 === true && gameReq.expansions.venus === true,
-        eternityExpansion: gameReq.expansions.eternity ?? false,
-        industriesExpansion: gameReq.expansions.industries ?? false,
-        postludesExpansion: gameReq.expansions.postludes ?? false,
-        highOrbitExpansion: gameReq.expansions.highorbit ?? false,
-        mercuryExpansion: gameReq.expansions.mercury ?? false,
-        undoOption: gameReq.undoOption,
-        venusNextExtension: gameReq.expansions.venus,
-      };
+      const gameOptions: GameOptions = gameOptionsFromConfig(gameReq, boardName);
 
       try {
         validateCustomMA(gameOptions.customMA, gameOptions.randomMA, gameOptions.venusNextExtension);

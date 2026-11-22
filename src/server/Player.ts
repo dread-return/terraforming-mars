@@ -271,6 +271,9 @@ export class Player implements IPlayer {
     alliedPolicy?.onPolicyStartForPlayer?.(this);
   }
 
+  /** True when a computer plays this seat (see src/server/bots). Bots have no browser: BotDriver answers their inputs. */
+  public isBot: boolean = false;
+
   constructor(
     public name: string,
     public color: Color,
@@ -1489,7 +1492,7 @@ export class Player implements IPlayer {
   /**
    * Returns the most you can spend if the given reserved units are excluded.
    */
-  private maxSpendable(reserveUnits: Units = Units.EMPTY): Payment {
+  public maxSpendable(reserveUnits: Units = Units.EMPTY): Payment {
     const payment: Payment = {
       ...Payment.EMPTY,
       megacredits: this.megaCredits - reserveUnits.megacredits,
@@ -2104,6 +2107,7 @@ export class Player implements IPlayer {
       name: this.name,
       color: this.color,
       beginner: this.beginner,
+      isBot: this.isBot,
       handicap: this.handicap,
       timer: this.timer.serialize(),
       // Stats
@@ -2127,6 +2131,7 @@ export class Player implements IPlayer {
 
   public static deserialize(d: SerializedPlayer): Player {
     const player = new Player(d.name, d.color, d.beginner, Number(d.handicap), d.id);
+    player.isBot = d.isBot === true;
 
     player.actionsTakenThisGame = d.actionsTakenThisGame;
     player.actionsThisGeneration = new Set(d.actionsThisGeneration);

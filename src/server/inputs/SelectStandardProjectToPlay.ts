@@ -7,6 +7,7 @@ import {SelectProjectCardToPlayResponse} from '../../common/inputs/InputResponse
 import {CardName} from '../../common/cards/CardName';
 import {InputError} from './InputError';
 import {PaymentOptions} from '../../common/inputs/Payment';
+import {StandardProjectCanPayWith} from '../../common/cards/Types';
 import {Message} from '../../common/logs/Message';
 import {PlayCardMetadata, SelectCardToPlay} from './SelectCardToPlay';
 import {VenusPhase2Expansion} from '../venus2/VenusPhase2Expansion';
@@ -29,6 +30,27 @@ export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProje
     this.buttonLabel = config?.buttonLabel ?? 'Play Standard Project';
   }
 
+  /**
+   * What `card` may be paid with right now: its own rules plus every expansion's hooks (Coeurl's steel and titanium,
+   * Venus floaters, High Orbit ore...). `validate` checks payments against this, and bots build theirs from it.
+   */
+  public paymentRulesFor(card: IStandardProjectCard): {canPayWith: StandardProjectCanPayWith, paymentOptions: Partial<PaymentOptions>} {
+    const canPayWith = highOrbitStandardProjectPayWith(this.player, card, Postludes.standardProjectPayWith(this.player, card, Eternity.standardProjectPayWith(this.player, card, EpicHooks.standardProjectPayWith(this.player, card, card.canPayWith(this.player)))));
+    const paymentOptions: Partial<PaymentOptions> = {
+      heat: this.player.canUseHeatAsMegaCredits,
+      energy: this.player.canUseEnergyAsMegaCredits,
+      steel: canPayWith.steel,
+      titanium: canPayWith.titanium,
+      lunaTradeFederationTitanium: this.player.canUseTitaniumAsMegacredits,
+      seeds: canPayWith.seeds,
+      auroraiData: this.player.tableau.has(CardName.AURORAI),
+      spireScience: this.player.tableau.has(CardName.SPIRE),
+      kuiperAsteroids: canPayWith.kuiperAsteroids ? this.player.tableau.has(CardName.KUIPER_COOPERATIVE) : false,
+      shipyardOre: canPayWith.shipyardOre === true,
+    };
+    return {canPayWith, paymentOptions};
+  }
+
   public validate(card: IStandardProjectCard, input: SelectProjectCardToPlayResponse, details: PlayCardMetadata) {
     // The client greys out projects whose canAct is false (via the `enabled` array), but the
     // server must enforce it too: process() never consults `enabled`, and projects whose
@@ -43,19 +65,7 @@ export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProje
     if (details.overriddenCost === undefined && !card.canAct(this.player)) {
       throw new InputError('You cannot play this standard project');
     }
-    const canPayWith = highOrbitStandardProjectPayWith(this.player, card, Postludes.standardProjectPayWith(this.player, card, Eternity.standardProjectPayWith(this.player, card, EpicHooks.standardProjectPayWith(this.player, card, card.canPayWith(this.player)))));
-    const paymentOptions: Partial<PaymentOptions> = {
-      heat: this.player.canUseHeatAsMegaCredits,
-      energy: this.player.canUseEnergyAsMegaCredits,
-      steel: canPayWith.steel,
-      titanium: canPayWith.titanium,
-      lunaTradeFederationTitanium: this.player.canUseTitaniumAsMegacredits,
-      seeds: canPayWith.seeds,
-      auroraiData: this.player.tableau.has(CardName.AURORAI),
-      spireScience: this.player.tableau.has(CardName.SPIRE),
-      kuiperAsteroids: canPayWith.kuiperAsteroids ? this.player.tableau.has(CardName.KUIPER_COOPERATIVE) : false,
-      shipyardOre: canPayWith.shipyardOre === true,
-    };
+    const {canPayWith, paymentOptions} = this.paymentRulesFor(card);
 
     const reserveUnits = details.reserveUnits;
 

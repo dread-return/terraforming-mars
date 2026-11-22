@@ -14,6 +14,8 @@ export interface NewPlayerModel {
   beginner: boolean;
   handicap: number;
   first: boolean;
+  /** A computer plays this seat. Optional so older saved configs still load. */
+  bot?: boolean;
 }
 
 export type EscapeVelocityOptions = {

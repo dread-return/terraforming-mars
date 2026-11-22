@@ -72,6 +72,8 @@ export interface IPlayer {
   name: string;
   color: Color;
   beginner: boolean;
+  /** True when a computer plays this seat. */
+  isBot: boolean;
   handicap: number;
 
   readonly game: IGame;
@@ -377,6 +379,8 @@ export interface IPlayer {
   getPlayableCards(): Array<IProjectCard>;
   canPlay(card: IProjectCard): boolean;
   canSpend(payment: Payment, reserveUnits?: Units): boolean;
+  /** The most this player could spend of each resource, excluding `reserveUnits`. */
+  maxSpendable(reserveUnits?: Units): Payment;
   payingAmount(payment: Payment, options?: Partial<PaymentOptions> & {steelValue?: number, grapheneValue?: number}): number;
   /** How this player may pay for this card (steel, titanium, ...), including expansion effects. */
   paymentOptionsForCard(card: IProjectCard): PaymentOptions & {steelValue?: number, grapheneValue?: number};

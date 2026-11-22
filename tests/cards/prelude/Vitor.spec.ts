@@ -31,6 +31,14 @@ describe('Vitor', () => {
     expect(game.hasBeenFunded(game.awards[0])).is.true;
   });
 
+  it('No initial action when every award is already funded', () => {
+    const other = game.players[1];
+    while (!game.allAwardsFunded()) {
+      game.fundAward(other, game.awards.find((award) => !game.hasBeenFunded(award))!);
+    }
+    cast(card.initialAction(player), undefined);
+  });
+
   it('No initial action for solo games', () => {
     testGame(1);
     const action = player.defer(card.initialAction(player));

@@ -147,6 +147,16 @@ describe('Ides of Mars interaction cards', () => {
     expect(card.resourceCount).eq(3);
   });
 
+  it('Universal Fighters: cannot be used by a player with nowhere to put the resource', () => {
+    const card = new UniversalFighters();
+    const [, player, opponent] = testGame(2);
+    // Someone else's copy of the card, e.g. borrowed through Patent Theft.
+    opponent.playedCards.push(card);
+    card.resourceCount = 2;
+    expect(card.canAct(opponent)).is.true;
+    expect(card.canAct(player)).is.false;
+  });
+
   it('Mining the Belt: discard building/space cards for production', () => {
     const card = new MiningTheBelt();
     const [, player] = testGame(2);

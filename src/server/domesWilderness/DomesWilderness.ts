@@ -132,12 +132,16 @@ export class DomesWilderness {
     return player.canAfford({cost: 0, tr: {tr: 1}, reserveUnits: Units.of({plants: cheapest})}) ? spaces : [];
   }
 
-  /** Whether a tile placed next to `space` is protected from hazard production loss by one of `player`'s domes. */
-  public static protectedFromHazards(player: IPlayer, space: Space): boolean {
+  /**
+   * Whether a tile placed next to `space` is protected from hazard production loss by one of `player`'s domes.
+   *
+   * @param board the board `space` is on. The Moon's spaces are not on the game's main board.
+   */
+  public static protectedFromHazards(player: IPlayer, space: Space, board: Board = player.game.board): boolean {
     if (!this.enabled(player.game)) {
       return false;
     }
-    return player.game.board.getAdjacentSpaces(space)
+    return board.getAdjacentSpaces(space)
       .some((adjacent) => adjacent.tile?.upgrade === 'dome' && Board.spaceOwnedBy(adjacent, player));
   }
 

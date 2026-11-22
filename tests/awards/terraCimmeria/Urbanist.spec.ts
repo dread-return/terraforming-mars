@@ -7,6 +7,7 @@ import {Capital} from '../../../src/server/cards/base/Capital';
 import {SelectSpace} from '../../../src/server/inputs/SelectSpace';
 import {RedCity} from '../../../src/server/cards/pathfinders/RedCity';
 import {cast} from '../../../src/common/utils/utils';
+import {TileType} from '../../../src/common/TileType';
 
 describe('Urbanist', () => {
   const award = new Urbanist();
@@ -30,6 +31,17 @@ describe('Urbanist', () => {
     citySpace.tile = undefined;
 
     expect(award.getScore(player)).eq(0);
+  });
+
+  it('counts the fork\'s extra city tiles like ordinary cities instead of throwing', () => {
+    const [game, player] = testGame(2);
+    const [citySpace] = game.board.getAvailableSpacesForCity(player);
+    addCity(player, citySpace.id);
+    addGreenery(player, game.board.getAdjacentSpaces(citySpace)[0].id);
+    for (const tileType of [TileType.SUBURBS, TileType.METROPOLIS, TileType.PARADISE_CITY, TileType.INVAK_CITY, TileType.ESOTERIC_COMMUNITY]) {
+      citySpace.tile = {tileType};
+      expect(award.getScore(player), tileType.toString()).eq(1);
+    }
   });
 
   it('Score with Capital', () => {

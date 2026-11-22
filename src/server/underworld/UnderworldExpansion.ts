@@ -162,6 +162,11 @@ export class UnderworldExpansion {
       return false;
     }
 
+    // The bag can run out on big boards. Nothing more gets identified then.
+    if (game.underworldData.tokens.length === 0) {
+      return false;
+    }
+
     const undergroundResource = this.drawExcavationToken(game);
     space.undergroundResources = undergroundResource;
     game.triggerForAllCards((p, c) => c.onIdentificationByAnyPlayer?.(p, player, undergroundResource));
@@ -211,6 +216,11 @@ export class UnderworldExpansion {
       }
       // Players may still excavate from Martian Nature Wonders, but Rey Skywalker blocks tokens.
       if (space.cube === 'rey-skywalker') {
+        return false;
+      }
+
+      // Nothing can be excavated from a space that has no token and there are none left to identify it with.
+      if (space.undergroundResources === undefined && player.game.gameOptions.underworldExpansion && player.game.underworldData.tokens.length === 0) {
         return false;
       }
 

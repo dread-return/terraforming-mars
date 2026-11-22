@@ -7,6 +7,7 @@ import {TestPlayer} from '../TestPlayer';
 import {Payment} from '../../src/common/inputs/Payment';
 import {CardName} from '../../src/common/cards/CardName';
 import {TileType} from '../../src/common/TileType';
+import {MoonExpansion} from '../../src/server/moon/MoonExpansion';
 import {SpaceType} from '../../src/common/boards/SpaceType';
 import {SelectSpace} from '../../src/server/inputs/SelectSpace';
 import {OrOptions} from '../../src/server/inputs/OrOptions';
@@ -432,5 +433,13 @@ describe('Domes and Wilderness', () => {
     const serialized = game.serialize();
     const space = serialized.board.spaces.find((s) => s.id === city.id)!;
     expect(space.tile?.upgrade).eq('dome');
+  });
+
+  it('protectedFromHazards works for spaces on the Moon board', () => {
+    const [game, player] = testGame(2, {domesWilderness: true, moonExpansion: true});
+    const moon = MoonExpansion.moonData(game).moon;
+    const [space] = moon.spaces.filter((s) => s.spaceType === SpaceType.LUNAR_MINE || s.spaceType === SpaceType.LAND);
+    // These ids do not exist on the main board, which used to throw "Unexpected space ID".
+    expect(DomesWilderness.protectedFromHazards(player, space, moon)).is.false;
   });
 });

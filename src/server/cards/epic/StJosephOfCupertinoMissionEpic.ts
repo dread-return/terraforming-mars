@@ -62,7 +62,8 @@ export class StJosephOfCupertinoMissionEpic extends ActiveCorporationCard implem
         const game = player.game;
         const cards = game.projectDeck.drawN(game, 2);
         const owner = space.player;
-        if (owner === undefined || owner === player || cards.length < 2) {
+        // The neutral player (solo games, Castle Queen Mary) owns cities but is not a player: nobody to give a card to.
+        if (owner === undefined || owner === player || owner.color === 'neutral' || cards.length < 2) {
           keep(player, cards, [], LogType.DREW);
           return;
         }

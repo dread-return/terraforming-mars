@@ -9,6 +9,7 @@ import {Space} from '../../boards/Space';
 import {Board} from '../../boards/Board';
 import {BoardType} from '../../boards/BoardType';
 import {MoonExpansion} from '../../moon/MoonExpansion';
+import {VenusPhase2Expansion} from '../../venus2/VenusPhase2Expansion';
 import {Phase} from '../../../common/Phase';
 
 export class ExpeditionVehicles extends Card implements IProjectCard {
@@ -46,7 +47,9 @@ export class ExpeditionVehicles extends Card implements IProjectCard {
 
     if (cardOwner === activePlayer) {
       const game = activePlayer.game;
-      const board = boardType === BoardType.MARS ? game.board : MoonExpansion.moonData(game).moon;
+      const board = boardType === BoardType.MARS ? game.board :
+        boardType === BoardType.VENUS ? VenusPhase2Expansion.board(game) :
+          MoonExpansion.moonData(game).moon;
       const adjacentSpacesWithTiles = board.getAdjacentSpaces(space).filter(Board.hasRealTile);
       if (adjacentSpacesWithTiles.length === 0) {
         cardOwner.drawCard(1);

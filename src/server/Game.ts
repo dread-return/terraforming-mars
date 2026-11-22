@@ -1386,7 +1386,7 @@ export class Game implements IGame, Logger {
         const minimumBonus = venusPhase2Track ? constants.VENUS_PHASE_2_MINIMUM_RESOURCE_BONUS : constants.ALT_VENUS_MINIMUM_BONUS;
         const minimalBaseline = Math.max(this.venusScaleLevel, minimumBonus);
         const maximumBaseline = Math.min(newValue, this.max.venus);
-        const standardResourcesGranted = Math.max(venusStepsBetween(minimalBaseline, maximumBaseline, this.max.venus), 0);
+        const standardResourcesGranted = Math.max(venusStepsBetween(minimalBaseline, maximumBaseline, this.max.venus, this.max.venusStep), 0);
 
         const grantWildResource = newValue >= this.max.venus;
         // The second half of this expression removes any increases before the first resource step.

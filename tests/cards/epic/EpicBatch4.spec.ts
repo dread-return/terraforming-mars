@@ -35,6 +35,8 @@ import {StJosephOfCupertinoMissionEpic} from '../../../src/server/cards/epic/StJ
 import {SteelRidgeConstructions} from '../../../src/server/cards/epic/SteelRidgeConstructions';
 import {RosenburgInitiative} from '../../../src/server/cards/epic/RosenburgInitiative';
 import {Payment} from '../../../src/common/inputs/Payment';
+import {GameSetup} from '../../../src/server/GameSetup';
+import {TileType} from '../../../src/common/TileType';
 
 function withCorp(corp: ICorporationCard, options = {}): [IGame, TestPlayer, TestPlayer] {
   const [game, player, other] = testGame(2, options);
@@ -208,6 +210,19 @@ describe('Epic Corporations batch 4', () => {
     expect(player.production.megacredits).eq(1);
     expect(player.megaCredits).eq(0);
     expect(joseph.getVictoryPoints(player)).gte(1);
+  });
+
+  it('St. Joseph: a temple in a neutral city keeps both cards (the neutral player is not a player)', () => {
+    const joseph = new StJosephOfCupertinoMissionEpic();
+    const [game, player] = withCorp(joseph);
+    const city = game.board.getAvailableSpacesForCity(player)[0];
+    game.simpleAddTile(GameSetup.neutralPlayerFor(game.id), city, {tileType: TileType.CITY});
+    player.megaCredits = 12;
+    cast(joseph.action(player), SelectSpace).cb(city);
+    runAllActions(game);
+    expect(player.popWaitingFor()).is.undefined;
+    expect(player.cardsInHand).has.length(2);
+    expect(player.production.megacredits).eq(1);
   });
 
   it('Rosenburg: cubes on greeneries become plants', () => {

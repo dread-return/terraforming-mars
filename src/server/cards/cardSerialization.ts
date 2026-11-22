@@ -9,11 +9,12 @@ import {isPreludeCard} from './prelude/IPreludeCard';
 import {isCeoCard} from './ceos/ICeoCard';
 import {ICard} from './ICard';
 import {ProxyCard} from './ProxyCard';
+import {isActCard} from '../mercury/ActCard';
 
 export function serializeCard(card: ICard): SerializedCard {
   if (isICorporationCard(card)) {
     return serializeCorporationCard(card);
-  } else if (isIProjectCard(card) || isPreludeCard(card) || isCeoCard(card) || card instanceof ProxyCard) {
+  } else if (isIProjectCard(card) || isActCard(card) || isPreludeCard(card) || isCeoCard(card) || card instanceof ProxyCard) {
     return serializeProjectCard(card);
   }
   throw new Error('Unknown card type ' + card.type + ' for ' + card.name);

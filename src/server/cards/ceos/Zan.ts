@@ -24,12 +24,18 @@ export class Zan extends CeoCard {
     });
   }
 
+  public override canAct(player: IPlayer): boolean {
+    // Giga Turmoil leaves some parties out. Without Reds there is nowhere to place the delegates.
+    return super.canAct(player) && Turmoil.getTurmoil(player.game).isInPlay(PartyName.REDS);
+  }
+
   public action(player: IPlayer): PlayerInput | undefined {
     this.isDisabled = true;
     const game = player.game;
     const turmoil = Turmoil.getTurmoil(game);
     const totalAvailableDelegates = turmoil.delegateReserve.get(player);
-    while (turmoil.delegateReserve.get(player) > 0) {
+    // Bounded by the count so that a delegate that cannot be sent can never spin this forever.
+    for (let i = 0; i < totalAvailableDelegates; i++) {
       turmoil.sendDelegateToParty(player, PartyName.REDS, game);
     }
     // If we don't do this player will not get the bonus for POLITICIAN Awards

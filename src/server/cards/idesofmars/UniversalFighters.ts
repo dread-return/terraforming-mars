@@ -51,7 +51,8 @@ export class UniversalFighters extends Card implements IProjectCard, IActionCard
   }
 
   public canAct(player: IPlayer) {
-    return this.sources(player).length > 0;
+    // Without a card of your own that holds a floater or a fighter there is nowhere to put the resource.
+    return this.sources(player).length > 0 && this.targets(player).length > 0;
   }
 
   public action(player: IPlayer) {

@@ -2,6 +2,7 @@ import {Tag} from '../../../common/cards/Tag';
 import {IPlayer} from '../../IPlayer';
 import {CorporationCard} from '../corporation/CorporationCard';
 import {ICard} from '../ICard';
+import {IndividualTracks} from '../../individualTracks/IndividualTracks';
 import {OrOptions} from '../../inputs/OrOptions';
 import {SelectOption} from '../../inputs/SelectOption';
 import {IAward} from '../../awards/IAward';
@@ -54,6 +55,11 @@ export class Vitor extends CorporationCard implements ICorporationCard {
 
     // If Vitor isn't going first and someone else funds awards, filter them out.
     const availableAwards = game.awards.filter((award) => !game.fundedAwards.map((fa) => fa.award).includes(award));
+    // Nothing to offer once the funding limit is reached (or every award is funded). An empty prompt would leave the
+    // player with no way to answer.
+    if (availableAwards.length === 0 || (game.allAwardsFunded() && !IndividualTracks.hasExtraClaim(player))) {
+      return undefined;
+    }
     freeAward.options = availableAwards.map((award) => this.selectAwardToFund(player, award));
 
     return freeAward;

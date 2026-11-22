@@ -44,12 +44,13 @@ function activateAgain(player: IPlayer, remaining: number): void {
       new SelectCard('Select an active card to activate again', 'Take action', cards)
         .andThen(([card]) => {
           player.game.log('${0} activated ${1} again for Digitalization', (b) => b.player(player).card(card));
-          const result = card.action(player);
-          // Queued after the card's own effects, so those resolve first.
+          // The card's own prompt is queued first, so it is answered before the next card is chosen. Returning it
+          // directly would let the next selection (and its action) be built from the state before this one resolved.
+          player.defer(card.action(player));
           if (remaining > 1) {
             activateAgain(player, remaining - 1);
           }
-          return result;
+          return undefined;
         }),
       new SelectOption('Do not activate another card').andThen(() => undefined));
     options.setTitle('Digitalization Global Event - activate a card again');

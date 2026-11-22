@@ -6,7 +6,8 @@ import {testGame} from '../../TestGame';
 import {Zan} from '../../../src/server/cards/ceos/Zan';
 import {ReleaseOfInertGases} from '../../../src/server/cards/base/ReleaseOfInertGases';
 import {forceGenerationEnd, setRulingParty, runAllActions} from '../../TestingUtils';
-import {PartyName} from '../../../src/common/turmoil/PartyName';
+import {BOARD_ORDER, Turmoil} from '../../../src/server/turmoil/Turmoil';
+import {GIGA_PARTIES_IN_PLAY, PartyName} from '../../../src/common/turmoil/PartyName';
 import {TPolitician} from '../../../src/server/awards/terraCimmeria/TPolitician';
 
 describe('Zan', () => {
@@ -51,6 +52,20 @@ describe('Zan', () => {
     expect(turmoil.dominantParty.name).eq(PartyName.REDS);
     expect(turmoil.dominantParty.partyLeader).eq(player);
     expect(card.isDisabled).is.true;
+  });
+
+  it('Cannot act when Giga Turmoil leaves Reds out, and never loops forever', () => {
+    const [gigaGame, gigaPlayer] = testGame(2, {ceoExtension: true, turmoilExtension: true, gigaTurmoil: true});
+    const zan = new Zan();
+    gigaPlayer.playedCards.push(zan);
+    const turmoil = Turmoil.getTurmoil(gigaGame);
+    turmoil.startGigaGovernment(gigaGame, BOARD_ORDER.filter((name) => name !== PartyName.REDS).slice(0, GIGA_PARTIES_IN_PLAY));
+
+    expect(turmoil.isInPlay(PartyName.REDS)).is.false;
+    expect(zan.canAct(gigaPlayer)).is.false;
+    // Even if something forces the action, it must end.
+    zan.action(gigaPlayer);
+    expect(zan.isDisabled).is.true;
   });
 
   it('OPG Counts for POLITICIAN Award', () => {

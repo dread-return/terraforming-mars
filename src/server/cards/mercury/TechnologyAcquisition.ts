@@ -6,6 +6,7 @@ import {IPlayer} from '../../IPlayer';
 import {SelectCard} from '../../inputs/SelectCard';
 import {CardType} from '../../../common/cards/CardType';
 import {IProjectCard} from '../IProjectCard';
+import {PostludeCard} from '../postludes/PostludeCard';
 import {placesSpecialTile} from '../../mercury/MercuryCards';
 
 export class TechnologyAcquisition extends ActCard {
@@ -31,7 +32,9 @@ export class TechnologyAcquisition extends ActCard {
     }
     victor.defer(() => {
       const cards = defeated.playedCards.asArray().filter((card): card is IProjectCard =>
-        card.type === CardType.AUTOMATED && (card.cost ?? 0) <= 8 && !placesSpecialTile(card));
+        card.type === CardType.AUTOMATED && (card.cost ?? 0) <= 8 && !placesSpecialTile(card) &&
+          // Requirements are ignored, but a postlude that has to be placed still needs somewhere to go.
+          !(card instanceof PostludeCard && !card.bespokeCanPlay(victor)));
       if (cards.length === 0) {
         return undefined;
       }

@@ -7,6 +7,7 @@ import {setVenusScaleLevel} from '../TestingUtils';
 import {TestPlayer} from '../TestPlayer';
 import {GrantVenusAltTrackBonusDeferred} from '../../src/server/venusNext/GrantVenusAltTrackBonusDeferred';
 import {testGame} from '../TestGame';
+import {BoardName} from '../../src/common/boards/BoardName';
 import {cast} from '@/common/utils/utils';
 
 describe('AltVenusTrackBonuses', () => {
@@ -21,6 +22,13 @@ describe('AltVenusTrackBonuses', () => {
     const deferred = cast(game.deferredActions.pop(), GrantVenusAltTrackBonusDeferred);
     return {standardResourceCount: deferred.standardResourceCount, wildResource: deferred.wildResource};
   }
+
+  it('GIGA board, whose Venus steps are 1%, grants whole resources', () => {
+    const [gigaGame, gigaPlayer] = testGame(1, {altVenusBoard: true, boardName: BoardName.GIGA});
+    setVenusScaleLevel(gigaGame, 16);
+    gigaGame.increaseVenusScaleLevel(gigaPlayer, 1);
+    expect(getAction(gigaGame)).to.deep.eq({standardResourceCount: 1, wildResource: false});
+  });
 
   it('14-16 grants no standard resource.', () => {
     setVenusScaleLevel(game, 14);

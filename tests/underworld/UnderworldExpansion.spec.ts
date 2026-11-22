@@ -82,6 +82,16 @@ describe('UnderworldExpansion', () => {
     expect(space.excavator).is.undefined;
   });
 
+  it('an empty token bag identifies nothing and leaves unidentified spaces unexcavatable', () => {
+    underworldData.tokens.length = 0;
+    const space = game.board.getAvailableSpacesOnLand(player1)[0];
+
+    expect(UnderworldExpansion.identify(game, space, player1)).is.false;
+    expect(space.undergroundResources).is.undefined;
+    expect(UnderworldExpansion.excavatableSpaces(player1)).does.not.include(space);
+    expect(UnderworldExpansion.canExcavateN(player1, 1)).is.false;
+  });
+
   it('identify calls card callbacks', () => {
     const responses: Array<string> = [];
     const space = game.board.getAvailableSpacesOnLand(player1)[0];

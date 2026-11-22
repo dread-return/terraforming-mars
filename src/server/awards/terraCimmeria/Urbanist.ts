@@ -27,7 +27,8 @@ export class Urbanist implements IAward {
           score += this.getVictoryPoints(player, space);
           break;
         default:
-          throw new Error('foo');
+          // Every other city tile (Suburbs, Metropolis, Paradise City, Invak City, Esoteric Community...) is an ordinary city here.
+          score += this.countGreeneries(player, space);
         }
       }
     });

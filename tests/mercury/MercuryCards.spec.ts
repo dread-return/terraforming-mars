@@ -23,6 +23,8 @@ import {SelectCard} from '../../src/server/inputs/SelectCard';
 import {SelectPlayer} from '../../src/server/inputs/SelectPlayer';
 import {SelectAmount} from '../../src/server/inputs/SelectAmount';
 import {SelectSpace} from '../../src/server/inputs/SelectSpace';
+import {TechnologyAcquisition} from '../../src/server/cards/mercury/TechnologyAcquisition';
+import {CloudGenerator} from '../../src/server/cards/postludes/CloudGenerator';
 import {SelectColony} from '../../src/server/inputs/SelectColony';
 import {SelectResource} from '../../src/server/inputs/SelectResource';
 import {SelectOption} from '../../src/server/inputs/SelectOption';
@@ -235,5 +237,19 @@ describe('Mercury vs Mars cards', () => {
     player.playCard(new (MERCURY_CARD_MANIFEST.preludeCards[CardName.MERCURIAL_BASE]!.Factory)());
     settle(game);
     expect(player.playedCards.has(CardName.ZERO_GRAVITY_RACING) || game.mercury!.developments.some((d) => d.progress[0] === 4)).is.true;
+  });
+});
+
+describe('Technology Acquisition', () => {
+  it('does not offer a stolen postlude that has nowhere to be placed', () => {
+    const [game, victor, defeated] = testGame(2, {mercuryExpansion: true, postludesExpansion: true});
+    const act = new TechnologyAcquisition();
+    // Cloud Generator needs an ocean to sit on and there are none.
+    defeated.playedCards.push(new CloudGenerator());
+
+    act.victory(victor, defeated);
+    runAllActions(game);
+
+    expect(victor.popWaitingFor()).is.undefined;
   });
 });

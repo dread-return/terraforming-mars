@@ -23,6 +23,8 @@ import {CardResource} from '../../src/common/CardResource';
 import {Resource} from '../../src/common/Resource';
 import {Phase} from '../../src/common/Phase';
 import {Luna} from '../../src/server/colonies/Luna';
+import {DeltaProject} from '../../src/server/cards/delta/DeltaProject';
+import {DeltaProjectInput} from '../../src/server/delta/DeltaProjectInput';
 import {Tardigrades} from '../../src/server/cards/base/Tardigrades';
 import {GIGA_PARTIES_IN_PLAY} from '../../src/common/turmoil/PartyName';
 import {startPartyDraft} from '../../src/server/turmoil/giga/PartyDraft';
@@ -621,6 +623,42 @@ describe('Giga global events', () => {
       expect(tardigrades.resourceCount).eq(1);
       // A second activation is offered.
       expect(player.popWaitingFor()).instanceOf(OrOptions);
+    });
+
+    it('Digitalization: the first card\'s own prompt is answered before the second card is chosen', () => {
+      const [game, player] = testGame(2, {...OPTIONS, deltaProjectExpansion: true});
+      Turmoil.getTurmoil(game).startGigaGovernment(game, BOARD_ORDER.slice(0, GIGA_PARTIES_IN_PLAY));
+      for (const p of game.players) {
+        (p as TestPlayer).popWaitingFor();
+      }
+      const delta = new DeltaProject();
+      player.playedCards.push(delta);
+      player.energy = 3;
+      cardsWithTags(player, Tag.WILD, Tag.WILD, Tag.WILD, Tag.WILD);
+
+      resolve(game, GlobalEventName.DIGITALIZATION);
+      const options = cast(player.popWaitingFor(), OrOptions);
+      cast(options.options[0], SelectCard).process({type: 'card', cards: [delta.name]});
+      runAllActions(game);
+
+      // The Delta Project prompt comes first. Answering it must not invalidate the next one.
+      const first = cast(player.popWaitingFor(), DeltaProjectInput);
+      first.process({type: 'deltaProject', amount: 1});
+      runAllActions(game);
+      expect(player.energy).eq(2);
+
+      const second = cast(player.popWaitingFor(), OrOptions);
+      cast(second.options[0], SelectCard).process({type: 'card', cards: [delta.name]});
+      runAllActions(game);
+      // Landing on a track space may offer a reward first.
+      let third = player.popWaitingFor();
+      if (third instanceof OrOptions) {
+        third.options[0].process({type: 'option'});
+        runAllActions(game);
+        third = player.popWaitingFor();
+      }
+      cast(third, DeltaProjectInput);
+      expect((third as DeltaProjectInput).validSteps).deep.eq([1, 2]);
     });
 
     it('Construction of the Dyson Swarm: nothing yet, without the infrastructure tag', () => {

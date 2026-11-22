@@ -3,6 +3,7 @@ import {ExpeditionVehicles} from '../../../src/server/cards/underworld/Expeditio
 import {testGame} from '../../TestGame';
 import {addCity, addOcean} from '../../TestingUtils';
 import {TileType} from '../../../src/common/TileType';
+import {VenusPhase2Expansion} from '../../../src/server/venus2/VenusPhase2Expansion';
 import {Phase} from '../../../src/common/Phase';
 
 describe('ExpeditionVehicles', () => {
@@ -31,6 +32,18 @@ describe('ExpeditionVehicles', () => {
       expect(player.cardsInHand).has.length(run.expected.cardsInHand);
     });
   }
+
+  it('onTilePlaced on the Venus Phase 2 map does not crash and draws for an isolated tile', () => {
+    const card = new ExpeditionVehicles();
+    const [game, player] = testGame(2, {underworldExpansion: true, venusNextExtension: true, venusPhase2Expansion: true});
+    player.playedCards.push(card);
+
+    const [space] = VenusPhase2Expansion.availableSpaces(player, TileType.CITY);
+    VenusPhase2Expansion.addTile(player, space.id, {tileType: TileType.CITY});
+
+    expect(game.moonData).is.undefined;
+    expect(player.cardsInHand).has.length(1);
+  });
 
   it('A neutral cube is not an adjacent tile', () => {
     const card = new ExpeditionVehicles();

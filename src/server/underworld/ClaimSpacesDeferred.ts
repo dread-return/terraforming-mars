@@ -49,7 +49,9 @@ export class ClaimSpacesDeferred extends RunNTimes<void> {
     this.player.defer(() => {
       // slicing a copy because the spaces array is mutated between calls.
       const p = partition(this.spaces, (s) => typeof s === 'object');
-      const spaces = p[0] as Array<Space>;
+      // A space that was never identified has nothing to claim once the token bag is empty.
+      const bagEmpty = this.player.game.underworldData.tokens.length === 0;
+      const spaces = (p[0] as Array<Space>).filter((space) => !bagEmpty || space.undergroundResources !== undefined);
       const tokens: Array<ClaimedToken> = (p[1] as Array<UndergroundResourceToken>).map((t) => {
         return {
           token: t,
@@ -65,6 +67,9 @@ export class ClaimSpacesDeferred extends RunNTimes<void> {
         return this.createSelectSpace(spaces);
       } else if (tokens.length > 0) {
         return this.createSelectToken(tokens);
+      } else if (bagEmpty && p[0].length > 0) {
+        // Everything that was left to claim needed a token that no longer exists.
+        return undefined;
       } else {
         throw new Error('No spaces or tokens to claim');
       }

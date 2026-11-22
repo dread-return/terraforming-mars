@@ -166,7 +166,7 @@ export class AresHandler {
   }
 
   public static computePlacementCosts(player: IPlayer, board: Board, space: Space, subjectToHazardAdjacency: boolean): AdjacencyCost {
-    if (player.tableau.has(CardName.ATHENA) || DomesWilderness.protectedFromHazards(player, space)) {
+    if (player.tableau.has(CardName.ATHENA) || DomesWilderness.protectedFromHazards(player, space, board)) {
       subjectToHazardAdjacency = false;
     }
 

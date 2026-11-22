@@ -7,6 +7,8 @@ import {Asimov} from '../../src/server/cards/ceos/Asimov';
 import {SerializedCard} from '../../src/server/SerializedCard';
 import {CardName} from '../../src/common/cards/CardName';
 import {cast} from '../../src/common/utils/utils';
+import {TerraformingTechnologies} from '../../src/server/cards/mercury/TerraformingTechnologies';
+import {deserializeCard, serializeCard} from '../../src/server/cards/cardSerialization';
 
 describe('CardSerialization', () => {
   it('undefiend clone tags serialize and deserialize', () => {
@@ -76,5 +78,11 @@ describe('CardSerialization', () => {
     // const newCard = deserializeProjectCard(serialized);
     // expect(deserializedCalled).is.true;
     // expect(newCard.data).eq('hello');
+  });
+
+  it('Mercury Act cards that were developed (and so sit among played cards) serialize and deserialize', () => {
+    const serialized = serializeCard(new TerraformingTechnologies());
+    expect(serialized.name).eq(CardName.TERRAFORMING_TECHNOLOGIES);
+    expect(deserializeCard(serialized)).instanceOf(TerraformingTechnologies);
   });
 });

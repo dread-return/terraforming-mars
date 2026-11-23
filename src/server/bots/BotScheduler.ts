@@ -8,6 +8,10 @@ const DEFAULT_DELAY_MS = 800;
 
 const running = new Set<GameId>();
 
+/** Games whose bots got stuck, and when. Every poll of the game page asks again, so don't retry at once. */
+const stuckAt = new Map<GameId, number>();
+const RETRY_AFTER_STUCK_MS = 30_000;
+
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -22,9 +26,17 @@ export function playBots(game: IGame, delayMs: number = Number(process.env.BOT_D
   if (!BotDriver.hasWaitingBot(game) || running.has(game.id)) {
     return;
   }
+  const stuck = stuckAt.get(game.id);
+  if (stuck !== undefined && Date.now() - stuck < RETRY_AFTER_STUCK_MS) {
+    return;
+  }
+  stuckAt.delete(game.id);
   running.add(game.id);
   loop(game.id, delayMs)
-    .catch((e) => console.error(`Bots stopped in game ${game.id}:`, e))
+    .catch((e) => {
+      stuckAt.set(game.id, Date.now());
+      console.error(`Bots stopped in game ${game.id}:`, e);
+    })
     .finally(() => running.delete(game.id));
 }
 

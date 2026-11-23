@@ -21,6 +21,8 @@ import {RouteError} from './RouteError';
 import {CEO_CARDS_DEALT_PER_PLAYER} from '../../common/constants';
 import {validateCustomMA} from '../../common/ma/CustomMA';
 import {hasNegativeEscapeVelocityOption} from '../../common/game/escapeVelocity';
+import {playBots} from '../bots/BotScheduler';
+import {BOT_DIFFICULTIES} from '../../common/game/NewGameConfig';
 
 function parseQuotaConfig(struct: any): QuotaConfig {
   let {limit} = struct;
@@ -116,6 +118,14 @@ export class ApiCreateGame extends Handler {
       }
       const gameId = safeCast(generateRandomId('g'), isGameId);
       const spectatorId = safeCast(generateRandomId('s'), isSpectatorId);
+      for (const p of gameReq.players) {
+        if (p.botDifficulty !== undefined && !(BOT_DIFFICULTIES as ReadonlyArray<string>).includes(p.botDifficulty)) {
+          throw RouteError.badRequest(`Unknown bot difficulty '${String(p.botDifficulty)}'`);
+        }
+      }
+      if (gameReq.players.length === 1 && gameReq.players[0].botDifficulty !== undefined) {
+        throw RouteError.badRequest('A solo game needs a human player');
+      }
       const players = gameReq.players.map((p) => {
         const player = new Player(
           p.name,
@@ -124,7 +134,7 @@ export class ApiCreateGame extends Handler {
           Number(p.handicap), // For some reason handicap is coming up a string.
           safeCast(generateRandomId('p'), isPlayerId),
         );
-        player.isBot = p.bot === true;
+        player.botDifficulty = p.botDifficulty;
         return player;
       });
       let firstPlayerIdx = 0;
@@ -154,6 +164,7 @@ export class ApiCreateGame extends Handler {
         game = Game.newInstance(gameId, players, players[firstPlayerIdx], spectatorId, gameOptions, seed);
       }
       ctx.gameLoader.add(game);
+      playBots(game);
       // Only games that are actually created count against the quota.
       this.quotaHandlers.forEach((handler) => handler.record(ctx));
       responses.writeJson(res, ctx, Server.getSimpleGameModel(game));

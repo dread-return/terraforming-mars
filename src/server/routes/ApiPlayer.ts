@@ -5,6 +5,7 @@ import {Context} from './IHandler';
 import {Request} from '../Request';
 import {Response} from '../Response';
 import {RouteError} from './RouteError';
+import {playBots} from '../bots/BotScheduler';
 
 export class ApiPlayer extends Handler {
   public static readonly INSTANCE = new ApiPlayer();
@@ -27,6 +28,8 @@ export class ApiPlayer extends Handler {
 
       ctx.ipTracker.addParticipant(playerId, ctx.ip);
       responses.writeJson(res, ctx, Server.getPlayerModel(player));
+      // A game loaded after a restart may have a bot waiting. Cheap when there is none.
+      playBots(game);
     } catch (err) {
       console.warn(`unable to find player ${playerId}`, err);
       throw RouteError.notFound();

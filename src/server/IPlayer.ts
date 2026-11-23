@@ -38,6 +38,7 @@ import {PlayedCards} from './cards/PlayedCards';
 import {From} from './logs/From';
 import {Tag} from '../common/cards/Tag';
 import {SelectStandardProjectToPlay} from './inputs/SelectStandardProjectToPlay';
+import {BotDifficulty} from '../common/game/NewGameConfig';
 
 /**
  * Represents additional costs a player must pay to execute an action.
@@ -73,7 +74,9 @@ export interface IPlayer {
   color: Color;
   beginner: boolean;
   /** True when a computer plays this seat. */
-  isBot: boolean;
+  /** Set when the server plays this seat. */
+  botDifficulty: BotDifficulty | undefined;
+  readonly isBot: boolean;
   handicap: number;
 
   readonly game: IGame;

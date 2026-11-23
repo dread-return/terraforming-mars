@@ -3,7 +3,9 @@ import {IPlayer} from '../IPlayer';
 import {PlayerInput} from '../PlayerInput';
 import {InputError} from '../inputs/InputError';
 import {IBot} from './IBot';
+import {HeuristicBot} from './HeuristicBot';
 import {RandomBot} from './RandomBot';
+import {BotDifficulty} from '../../common/game/NewGameConfig';
 
 /** The most times one input is answered before the bot gives up on it. */
 export const MAX_ATTEMPTS = 100;
@@ -40,7 +42,7 @@ export class BotDriver {
   /** Where the first rejection with each message came from: the top of its stack, for finding the cause. */
   public readonly rejectionOrigins = new Map<string, string>();
 
-  constructor(private readonly bot: IBot = new RandomBot()) {}
+  constructor(private readonly bots: Record<BotDifficulty, IBot> = {easy: new RandomBot(), medium: new HeuristicBot()}) {}
 
   /**
    * The bot seat that has a question to answer, if any.
@@ -92,7 +94,7 @@ export class BotDriver {
     let lastError: unknown;
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
       try {
-        const response = this.bot.decide(input, player, attempt);
+        const response = this.bots[player.botDifficulty ?? 'easy'].decide(input, player, attempt);
         // Player.process puts the input back when it throws, so the next attempt answers the same question.
         player.process(response);
         const name = input.constructor.name;

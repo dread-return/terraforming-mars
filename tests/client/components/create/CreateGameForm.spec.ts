@@ -89,6 +89,33 @@ describe('CreateGameForm', () => {
     expect(wrapper.vm.solarPhaseOption).eq(true);
   });
 
+  it('offers a Bot checkbox per player that picks Easy or Medium', async () => {
+    const wrapper = mount(CreateGameForm, {...globalConfig});
+    wrapper.vm.playersCount = 2;
+    await wrapper.vm.$nextTick();
+    expect(wrapper.vm.players[0].botDifficulty).is.undefined;
+    expect(wrapper.find('#bot-difficulty-1').exists()).is.false;
+
+    await wrapper.find('#bot-checkbox-1').setValue(true);
+    expect(wrapper.vm.players[0].botDifficulty).eq('easy');
+    const select = wrapper.find('#bot-difficulty-1');
+    expect(select.exists()).is.true;
+    expect(select.findAll('option').map((o) => o.element.value)).deep.eq(['easy', 'medium']);
+
+    await select.setValue('medium');
+    expect(wrapper.vm.players[0].botDifficulty).eq('medium');
+    expect(wrapper.vm.players[1].botDifficulty).is.undefined;
+
+    await wrapper.find('#bot-checkbox-1').setValue(false);
+    expect(wrapper.vm.players[0].botDifficulty).is.undefined;
+    expect(wrapper.find('#bot-difficulty-1').exists()).is.false;
+
+    // A solo game needs a human.
+    wrapper.vm.playersCount = 1;
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('#bot-checkbox-1').exists()).is.false;
+  });
+
   it('shows warnings when restoring saved settings', async () => {
     PreferencesManager.INSTANCE.set('remember_create_game_settings', true);
     const alerts: Array<{title: string, message: string}> = [];

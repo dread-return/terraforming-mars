@@ -561,6 +561,14 @@
                         </label>
                         <!-- </template> -->
 
+                        <label v-if="playersCount > 1" class="form-switch form-inline create-game-bot-option-label">
+                          <input type="checkbox" :checked="newPlayer.botDifficulty !== undefined" @change="setBot(newPlayer, ($event.target as HTMLInputElement).checked)" :id="'bot-checkbox-' + (index + 1)">
+                          <i class="form-icon"></i> <span v-i18n>Bot</span>
+                        </label>
+                        <select v-if="playersCount > 1 && newPlayer.botDifficulty !== undefined" class="form-select form-inline create-game-bot-difficulty" v-model="newPlayer.botDifficulty" :id="'bot-difficulty-' + (index + 1)">
+                          <option v-for="difficulty in BOT_DIFFICULTIES" :key="difficulty" :value="difficulty" v-i18n>{{ botDifficultyLabel(difficulty) }}</option>
+                        </select>
+
                         <label class="form-radio form-inline" v-if="!randomFirstPlayer">
                           <input type="radio" name="firstIndex" :value="index + 1" v-model="firstIndex">
                           <i class="form-icon"></i> <span v-i18n>Goes First?</span>
@@ -688,7 +696,7 @@ import {BoardName} from '@/common/boards/BoardName';
 import {AgendaStyle} from '@/common/turmoil/Types';
 import PreferencesIcon from '@/client/components/PreferencesIcon.vue';
 import {getCard} from '@/client/cards/ClientCardManifest';
-import {NewGameConfig, NewPlayerModel} from '@/common/game/NewGameConfig';
+import {BOT_DIFFICULTIES, BotDifficulty, NewGameConfig, NewPlayerModel} from '@/common/game/NewGameConfig';
 import {vueRoot} from '@/client/components/vueRoot';
 import {CreateGameModel} from './CreateGameModel';
 import {paths} from '@/common/app/paths';
@@ -985,6 +993,9 @@ export default defineComponent({
     constants(): typeof constants {
       return constants;
     },
+    BOT_DIFFICULTIES(): typeof BOT_DIFFICULTIES {
+      return BOT_DIFFICULTIES;
+    },
     PLAYER_COLORS(): typeof PLAYER_COLORS {
       return PLAYER_COLORS;
     },
@@ -1150,6 +1161,15 @@ export default defineComponent({
         }
       }
     },
+    setBot(player: NewPlayerModel, isBot: boolean) {
+      player.botDifficulty = isBot ? 'easy' : undefined;
+    },
+    botDifficultyLabel(difficulty: BotDifficulty): string {
+      switch (difficulty) {
+      case 'easy': return 'Easy';
+      case 'medium': return 'Medium';
+      }
+    },
     getPlayerNamePlaceholder(index: number): string {
       return translateTextWithParams('Player ${0} name', [String(index + 1)]);
     },
@@ -1268,7 +1288,7 @@ export default defineComponent({
             player.name = this.$t('You');
           } else {
             const defaultPlayerName = this.$t(player.color.charAt(0).toUpperCase() + player.color.slice(1));
-            player.name = defaultPlayerName;
+            player.name = player.botDifficulty === undefined ? defaultPlayerName : `${defaultPlayerName} (${this.$t('Bot')})`;
           }
         }
       });

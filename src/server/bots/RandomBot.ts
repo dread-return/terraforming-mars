@@ -32,6 +32,8 @@ import {SelectStandardProjectToPlay} from '../inputs/SelectStandardProjectToPlay
 import {ShiftAresGlobalParameters} from '../inputs/ShiftAresGlobalParameters';
 import {UndoActionOption} from '../inputs/UndoActionOption';
 import {IProjectCard} from '../cards/IProjectCard';
+import {ICard} from '../cards/ICard';
+import {IStandardProjectCard} from '../cards/IStandardProjectCard';
 import {IBot} from './IBot';
 import {autoPayment} from './AutoPayment';
 
@@ -198,13 +200,17 @@ export class RandomBot implements IBot {
     if (candidates.length === 0) {
       throw new InputError('No card is playable');
     }
-    const card = this.pick(candidates);
-    const cost = input.toModel(player).cards.find((c) => c.name === card.name)?.calculatedCost ?? card.cost;
+    return this.cardToPlay(input, player, this.pick(candidates), attempt);
+  }
+
+  /** Plays `card`, paying with whatever covers the cost. */
+  public cardToPlay(input: SelectCardToPlay<any>, player: IPlayer, card: ICard, attempt: number, spendOthersFirst: boolean = false): InputResponse {
+    const cost = input.toModel(player).cards.find((c) => c.name === card.name)?.calculatedCost ?? card.cost ?? 0;
     const options = input instanceof SelectStandardProjectToPlay ?
-      input.paymentRulesFor(card).paymentOptions :
+      input.paymentRulesFor(card as IStandardProjectCard).paymentOptions :
       player.paymentOptionsForCard(card as IProjectCard);
     const reserve = input.extras.get(card.name)?.reserveUnits;
-    const payment: Payment | undefined = autoPayment(player, cost, options, reserve, this.rng, attempt);
+    const payment: Payment | undefined = autoPayment(player, cost, options, reserve, this.rng, attempt, spendOthersFirst);
     if (payment === undefined) {
       throw new InputError(`The bot cannot afford ${card.name}`);
     }

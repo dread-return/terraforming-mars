@@ -9,6 +9,7 @@ import {DiscordId} from './server/auth/discord';
 import {UnderworldPlayerData} from '../common/underworld/UnderworldPlayerData';
 import {DeltaProjectPlayerModel} from '../common/models/DeltaProjectPlayerModel';
 import {IndividualTracksPlayerModel} from '../common/models/IndividualTracksPlayerModel';
+import {BotDifficulty} from '../common/game/NewGameConfig';
 
 interface DeprecatedFields {
 }
@@ -22,7 +23,9 @@ export interface SerializedPlayer extends DeprecatedFields{
   autoPass: boolean;
   beginner: boolean;
   /** Optional so older saved games still load. */
+  /** Legacy: saved before bot difficulties. Read as 'easy'. */
   isBot?: boolean;
+  botDifficulty?: BotDifficulty;
   canUseHeatAsMegaCredits: boolean;
   canUseTitaniumAsMegacredits: boolean;
   canUsePlantsAsMegaCredits: boolean;

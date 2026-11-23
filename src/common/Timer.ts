@@ -27,6 +27,19 @@ export class Timer {
   private static lastStoppedAt: number = 0;
 
   /**
+   * Runs `fn`, then puts back the time of the last stop. For work on a throwaway copy of a game, whose timers would
+   * otherwise leave their stops behind for every other game.
+   */
+  public static preservingLastStop<T>(fn: () => T): T {
+    const saved = Timer.lastStoppedAt;
+    try {
+      return fn();
+    } finally {
+      Timer.lastStoppedAt = saved;
+    }
+  }
+
+  /**
    *  Sum of elapsed closed time intervals, in milliseconds.
    */
   private sumElapsed: number = 0;

@@ -150,6 +150,21 @@ describe('ApiCreateGame', () => {
 
   const twoPlayers = [{name: 'a', color: 'red'}, {name: 'b', color: 'blue'}];
 
+  it('rejects an unknown bot difficulty', async () => {
+    const config = newGameConfigForTest();
+    config.players = [{name: 'a', color: 'red', beginner: false, handicap: 0, first: true}, {name: 'b', color: 'blue', beginner: false, handicap: 0, first: false, botDifficulty: 'impossible' as any}];
+    await postConfig(config);
+    expect(res.statusCode).eq(statusCode.badRequest);
+    expect(res.content).contains('Unknown bot difficulty');
+  });
+
+  it('rejects a solo game whose only player is a bot', async () => {
+    const config = newGameConfigForTest();
+    config.players[0].botDifficulty = 'easy';
+    await postConfig(config);
+    expect(res.statusCode).eq(statusCode.badRequest);
+  });
+
   it('rejects a custom corporation list smaller than players × starting corporations', async () => {
     await postConfig({
       players: twoPlayers,

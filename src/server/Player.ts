@@ -94,6 +94,7 @@ import {Mercury} from './mercury/Mercury';
 import {mercuryCanUseSteel} from './mercury/MercuryCards';
 import {IActCard, isActCard} from './mercury/ActCard';
 import {EpicHooks} from './cards/epic/EpicHooks';
+import {BotDifficulty} from '../common/game/NewGameConfig';
 
 const THROW_STATE_ERRORS = Boolean(process.env.THROW_STATE_ERRORS);
 const DEFAULT_GLOBAL_PARAMETER_STEPS = {
@@ -272,7 +273,12 @@ export class Player implements IPlayer {
   }
 
   /** True when a computer plays this seat (see src/server/bots). Bots have no browser: BotDriver answers their inputs. */
-  public isBot: boolean = false;
+  /** Set when the server plays this seat. */
+  public botDifficulty: BotDifficulty | undefined = undefined;
+
+  public get isBot(): boolean {
+    return this.botDifficulty !== undefined;
+  }
 
   constructor(
     public name: string,
@@ -2107,7 +2113,7 @@ export class Player implements IPlayer {
       name: this.name,
       color: this.color,
       beginner: this.beginner,
-      isBot: this.isBot,
+      botDifficulty: this.botDifficulty,
       handicap: this.handicap,
       timer: this.timer.serialize(),
       // Stats
@@ -2131,7 +2137,8 @@ export class Player implements IPlayer {
 
   public static deserialize(d: SerializedPlayer): Player {
     const player = new Player(d.name, d.color, d.beginner, Number(d.handicap), d.id);
-    player.isBot = d.isBot === true;
+    // Games saved before difficulties existed only had a flag.
+    player.botDifficulty = d.botDifficulty ?? (d.isBot === true ? 'easy' : undefined);
 
     player.actionsTakenThisGame = d.actionsTakenThisGame;
     player.actionsThisGeneration = new Set(d.actionsThisGeneration);

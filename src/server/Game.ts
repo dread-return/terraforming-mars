@@ -70,6 +70,7 @@ import {DeltaProject} from './cards/delta/DeltaProject';
 import {AddResourcesToCard} from './deferredActions/AddResourcesToCard';
 import {ColonyDeserializer} from './colonies/ColonyDeserializer';
 import {GameLoader} from './database/GameLoader';
+import {Simulation} from './game/Simulation';
 import {DEFAULT_GAME_OPTIONS, GameOptions} from './game/GameOptions';
 import {CorporationDeck, PreludeDeck, ProjectDeck, CeoDeck} from './cards/Deck';
 import {Logger} from './logs/Logger';
@@ -570,6 +571,9 @@ export class Game implements IGame, Logger {
   }
 
   public save(): void {
+    if (Simulation.active) {
+      return;
+    }
     GameLoader.getInstance().saveGame(this);
   }
 
@@ -1257,6 +1261,10 @@ export class Game implements IGame, Logger {
       scores.push({corporation: corporation, playerScore: vpb.total});
     });
 
+    if (Simulation.active) {
+      this.phase = Phase.END;
+      return;
+    }
     Database.getInstance().saveGameResults(this.id, this.players.length, this.generation, this.gameOptions, scores);
     this.phase = Phase.END;
     const gameLoader = GameLoader.getInstance();
@@ -2080,7 +2088,7 @@ export class Game implements IGame, Logger {
       game.activePlayer.takeAction();
     }
 
-    if (game.phase === Phase.END) {
+    if (game.phase === Phase.END && !Simulation.active) {
       GameLoader.getInstance().mark(game.id);
     }
     return game;

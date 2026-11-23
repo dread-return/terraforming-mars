@@ -17,6 +17,7 @@ import {INVALID_REQUEST_ID, INVALID_RUN_ID, RESPONDING_TOO_QUICKLY} from '../../
 import {RouteError} from './RouteError';
 import {readBody} from './readBody';
 import {stringToNumber} from '../database/utils';
+import {playBots} from '../bots/BotScheduler';
 
 export const playerInputMetrics = {
   responseInterval: new prometheus.Histogram({
@@ -101,9 +102,14 @@ export class PlayerInput extends Handler {
 
       if (this.isWaitingForUndo(player, entity)) {
         await this.performUndo(req, res, ctx, player);
+        const restored = await ctx.gameLoader.getGame(player.game.id);
+        if (restored !== undefined) {
+          playBots(restored);
+        }
       } else {
         player.process(entity);
         responses.writeJson(res, ctx, Server.getPlayerModel(player));
+        playBots(player.game);
       }
     } catch (e) {
       if (!(e instanceof AppError || e instanceof InputError)) {

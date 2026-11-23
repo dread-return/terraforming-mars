@@ -13,6 +13,8 @@ type Options = Partial<PaymentOptions> & {steelValue?: number, grapheneValue?: n
  * building tags, Helion's heat, Luna Trade Federation...) stays in one place. A resource the options don't allow is
  * worth 0 and is skipped.
  *
+ * @param spendOthersFirst spend what only matters for paying (steel, titanium, card resources, heat) before M€, and
+ * plants last. Only on attempt 0: retries go back to varying the order.
  * @param attempt 0 spends M€ first. Higher attempts shuffle the order, and half of them leave M€ for last, so retries
  * try other ways to pay (and so exercise the other payment rules).
  */
@@ -22,7 +24,8 @@ export function autoPayment(
   options: Options,
   reserveUnits: Units | undefined,
   rng: Random,
-  attempt: number): Payment | undefined {
+  attempt: number,
+  spendOthersFirst: boolean = false): Payment | undefined {
   const payment: Payment = {...Payment.EMPTY};
   if (cost <= 0) {
     return payment;
@@ -31,7 +34,9 @@ export function autoPayment(
 
   const others = SPENDABLE_RESOURCES.filter((r) => r !== 'megacredits');
   let order: Array<SpendableResource>;
-  if (attempt === 0) {
+  if (attempt === 0 && spendOthersFirst) {
+    order = [...others.filter((r) => r !== 'plants'), 'megacredits', 'plants'];
+  } else if (attempt === 0) {
     order = ['megacredits', ...others];
   } else {
     const shuffled = [...others];

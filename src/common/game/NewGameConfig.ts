@@ -8,6 +8,10 @@ import {GameId} from '../Types';
 import {Expansion} from '../cards/GameModule';
 import {CustomMA} from '../ma/CustomMA';
 
+/** How a bot seat plays. Easy plays random legal moves; medium weighs its options. */
+export const BOT_DIFFICULTIES = ['easy', 'medium'] as const;
+export type BotDifficulty = typeof BOT_DIFFICULTIES[number];
+
 export interface NewPlayerModel {
   name: string;
   color: Color;
@@ -15,7 +19,8 @@ export interface NewPlayerModel {
   handicap: number;
   first: boolean;
   /** A computer plays this seat. Optional so older saved configs still load. */
-  bot?: boolean;
+  /** Set when the seat is played by the server. */
+  botDifficulty?: BotDifficulty;
 }
 
 export type EscapeVelocityOptions = {

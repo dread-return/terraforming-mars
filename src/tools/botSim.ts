@@ -6,7 +6,7 @@
  *   npx tsx src/tools/botSim.ts --mode sink --games 30        everything switched on
  *   npx tsx src/tools/botSim.ts --repro report.json 17        replay job 17 of a report in this process, with stack traces
  *
- * Options: --seed N (default 1), --max-gen N (default 30), --out FILE (default botsim-report.json),
+ * Options: --bots easy|medium|mixed (default easy), --seed N (default 1), --max-gen N (default 30), --out FILE (default botsim-report.json),
  *          --max-steps N (answers per game before it counts as going in circles, default 20000), --jobs N (parallel workers, default 2), --timeout SEC (per game, default 180), --only TEXT (label filter),
  *          --no-roundtrip (don't reload the game from its last save every generation).
  *
@@ -24,11 +24,11 @@ import {fork} from 'node:child_process';
 import * as fs from 'node:fs';
 import {BoardName} from '../common/boards/BoardName';
 import {DEFAULT_EXPANSIONS, Expansion} from '../common/cards/GameModule';
-import {NewGameConfig, NewPlayerModel} from '../common/game/NewGameConfig';
+import {BOT_DIFFICULTIES, BotDifficulty, NewGameConfig} from '../common/game/NewGameConfig';
 import {RandomMAOptionType} from '../common/ma/RandomMAOptionType';
 import {Phase} from '../common/Phase';
-import {PLAYER_COLORS} from '../common/Color';
 import {SeededRandom} from '../common/utils/Random';
+import {baseConfig} from './botGameConfig';
 import {generateRandomId} from '../server/utils/server-ids';
 import {safeCast, isGameId, isPlayerId, isSpectatorId} from '../common/Types';
 
@@ -76,59 +76,6 @@ const NEEDS: Partial<Record<Expansion, Array<Expansion>>> = {
   venusphase2: ['venus'],
   mercury: ['colonies', 'turmoil'],
 };
-
-function baseConfig(playerCount: number): NewGameConfig {
-  const players: Array<NewPlayerModel> = [];
-  for (let i = 0; i < playerCount; i++) {
-    players.push({name: `Bot ${i + 1}`, color: PLAYER_COLORS[i], beginner: false, handicap: 0, first: i === 0, bot: true});
-  }
-  return {
-    players,
-    expansions: {...DEFAULT_EXPANSIONS},
-    boards: [BoardName.THARSIS],
-    seed: 0,
-    randomFirstPlayer: false,
-    clonedGamedId: undefined,
-    undoOption: false,
-    showTimers: false,
-    fastModeOption: false,
-    showOtherPlayersVP: false,
-    aresExtremeVariant: false,
-    politicalAgendasExtension: 'Standard',
-    gigaTurmoil: false,
-    domesWilderness: false,
-    individualTracks: false,
-    solarPhaseOption: false,
-    removeNegativeGlobalEventsOption: false,
-    modularMA: false,
-    draftVariant: false,
-    initialDraft: false,
-    preludeDraftVariant: false,
-    ceosDraftVariant: false,
-    startingCorporations: 2,
-    shuffleMapOption: false,
-    randomMA: RandomMAOptionType.NONE,
-    includeFanMA: false,
-    soloTR: false,
-    customCorporationsList: [],
-    bannedCards: [],
-    includedCards: [],
-    customColoniesList: [],
-    customPreludes: [],
-    requiresMoonTrackCompletion: false,
-    requiresVenusTrackCompletion: false,
-    moonStandardProjectVariant: false,
-    moonStandardProjectVariant1: false,
-    altVenusBoard: false,
-    altContaminationTrack: false,
-    escapeVelocity: undefined,
-    twoCorpsVariant: false,
-    mergerPlus2P: false,
-    customCeos: [],
-    startingCeos: 3,
-    startingPreludes: 4,
-  };
-}
 
 function withExpansions(config: NewGameConfig, ...list: Array<Expansion>): NewGameConfig {
   const expansions = {...config.expansions};
@@ -258,6 +205,7 @@ async function runJob(job: Job, index: number): Promise<JobResult> {
   const {gameOptionsFromConfig} = await import('../server/game/GameOptionsFromConfig');
   const {BotDriver, BotStuckError} = await import('../server/bots/BotDriver');
   const {RandomBot, UnsupportedInputError} = await import('../server/bots/RandomBot');
+  const {HeuristicBot} = await import('../server/bots/HeuristicBot');
 
   const started = Date.now();
   if (!initialized) {
@@ -288,7 +236,7 @@ async function runJob(job: Job, index: number): Promise<JobResult> {
   Math.random = () => engineRandom.next();
 
   const rng = new SeededRandom(job.seed);
-  const driver = new BotDriver(new RandomBot(rng));
+  const driver = new BotDriver({easy: new RandomBot(rng), medium: new HeuristicBot(rng, Infinity)});
   let steps = 0;
   let generation = 1;
   let finding: Finding | undefined;
@@ -306,7 +254,7 @@ async function runJob(job: Job, index: number): Promise<JobResult> {
     const config = job.config;
     const players = config.players.map((p) => {
       const player = new Player(p.name, p.color, p.beginner, p.handicap, safeCast(generateRandomId('p'), isPlayerId));
-      player.isBot = true;
+      player.botDifficulty = p.botDifficulty ?? 'easy';
       return player;
     });
     const options = gameOptionsFromConfig(config, config.boards[0]);
@@ -552,6 +500,17 @@ async function main() {
   const only = arg('only');
   if (only !== undefined) {
     configs = configs.filter((c) => c.label.includes(only));
+  }
+  // --bots easy|medium|mixed: which bots sit at the tables ('mixed' gives every seat a random one).
+  const botsArg = arg('bots', 'easy') ?? 'easy';
+  if (botsArg !== 'mixed' && !(BOT_DIFFICULTIES as ReadonlyArray<string>).includes(botsArg)) {
+    throw new Error(`--bots must be one of ${BOT_DIFFICULTIES.join(', ')}, mixed`);
+  }
+  const seatRng = new SeededRandom(((seed * 31 + 7) * 0.6180339887) % 1);
+  for (const c of configs) {
+    for (const p of c.config.players) {
+      p.botDifficulty = botsArg === 'mixed' ? BOT_DIFFICULTIES[seatRng.nextInt(BOT_DIFFICULTIES.length)] : botsArg as BotDifficulty;
+    }
   }
   const jobs: Array<Job> = configs.map((c, i) => ({...c, seed: (seed * 7919 + i * 104729) % 1000003 / 1000003, maxGen, roundtrip, maxSteps: Number(arg('max-steps', '20000'))}));
   console.log(`Running ${jobs.length} games (${mode}, seed ${seed}, up to generation ${maxGen}).`);

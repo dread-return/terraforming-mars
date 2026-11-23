@@ -103,6 +103,8 @@ export type GameOptions = {
   moonStandardProjectVariant: boolean;
   /** Standard projects can be paid for with steel or titanium at a 1MC loss per alloy */
   moonStandardProjectVariant1: boolean;
+  /** Colonies: adds a standard project that buys a trade fleet, at an escalating price. */
+  coloniesTradeFleetProject: boolean;
   altVenusBoard: boolean;
   /** Nuclear (GIGA): use the contamination track from the GIGA rules instead of the GIGA board's. */
   altContaminationTrack: boolean;
@@ -169,6 +171,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   moonExpansion: false,
   moonStandardProjectVariant: false,
   moonStandardProjectVariant1: false,
+  coloniesTradeFleetProject: false,
   pathfindersExpansion: false,
   politicalAgendasExtension: 'Standard',
   gigaTurmoil: false,

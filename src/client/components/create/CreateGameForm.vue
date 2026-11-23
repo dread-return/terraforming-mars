@@ -59,6 +59,13 @@
                   <span v-i18n>Colonies</span>
                 </label>
 
+                <template v-if="expansions.colonies">
+                  <input type="checkbox" v-model="coloniesTradeFleetProject" id="coloniesTradeFleetProject-checkbox">
+                  <label for="coloniesTradeFleetProject-checkbox">
+                    <span v-i18n>Trade Fleet Standard Project</span>
+                  </label>
+                </template>
+
                 <input type="checkbox" name="turmoil" id="turmoil-checkbox" v-model="expansions.turmoil">
                 <label for="turmoil-checkbox" class="expansion-button">
                   <div class="create-game-expansion-icon expansion-icon-turmoil"></div>
@@ -805,6 +812,7 @@ export default defineComponent({
       // Mercury vs Mars needs Colonies.
       if (value === false) {
         this.expansions.mercury = false;
+        this.coloniesTradeFleetProject = false;
       }
     },
     'expansions.mercury': function(value: boolean) {
@@ -952,6 +960,7 @@ export default defineComponent({
         requiresMoonTrackCompletion: this.requiresMoonTrackCompletion,
         moonStandardProjectVariant: this.moonStandardProjectVariant,
         moonStandardProjectVariant1: this.moonStandardProjectVariant1,
+        coloniesTradeFleetProject: this.expansions.colonies && this.coloniesTradeFleetProject,
         altVenusBoard: this.altVenusBoard,
         altContaminationTrack: this.altContaminationTrack,
         // Not sanitized, so validation can catch negative values.

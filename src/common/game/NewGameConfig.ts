@@ -83,6 +83,7 @@ export type NewGameConfig = {
   requiresVenusTrackCompletion: boolean; // Venus must be completed to end the game
   moonStandardProjectVariant: boolean;
   moonStandardProjectVariant1: boolean;
+  coloniesTradeFleetProject: boolean;
   altVenusBoard: boolean;
   // Nuclear (GIGA). Optional so older saved configs still load.
   altContaminationTrack?: boolean;

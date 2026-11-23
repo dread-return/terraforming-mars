@@ -82,6 +82,7 @@ function newGameConfigForTest(): NewGameConfig {
     requiresVenusTrackCompletion: false,
     moonStandardProjectVariant: false,
     moonStandardProjectVariant1: false,
+    coloniesTradeFleetProject: false,
     altVenusBoard: false,
     escapeVelocity: undefined,
     twoCorpsVariant: false,

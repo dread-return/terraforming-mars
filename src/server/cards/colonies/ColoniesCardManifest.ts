@@ -55,6 +55,7 @@ import {TradingColony} from './TradingColony';
 import {UrbanDecomposers} from './UrbanDecomposers';
 import {WarpDrive} from './WarpDrive';
 import {BuildColonyStandardProject} from './BuildColonyStandardProject';
+import {TradeFleetStandardProject} from './TradeFleetStandardProject';
 
 export const COLONIES_CARD_MANIFEST = new ModuleManifest({
   module: 'colonies',
@@ -112,6 +113,7 @@ export const COLONIES_CARD_MANIFEST = new ModuleManifest({
   },
   standardProjects: {
     [CardName.BUILD_COLONY_STANDARD_PROJECT]: {Factory: BuildColonyStandardProject},
+    [CardName.TRADE_FLEET_STANDARD_PROJECT]: {Factory: TradeFleetStandardProject},
   },
   corporationCards: {
     [CardName.ARIDOR]: {Factory: Aridor, compatibility: 'colonies'},

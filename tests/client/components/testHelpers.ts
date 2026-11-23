@@ -81,6 +81,7 @@ export function fakeGameOptionsModel(overrides?: RecursivePartial<GameOptionsMod
     modularMA: false,
     moonStandardProjectVariant: false,
     moonStandardProjectVariant1: false,
+    coloniesTradeFleetProject: false,
     startingCeos: 3,
     startingCorporations: 2,
     startingPreludes: 4,

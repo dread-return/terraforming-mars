@@ -50,6 +50,7 @@ export type GameOptionsModel = {
   modularMA: boolean,
   moonStandardProjectVariant: boolean,
   moonStandardProjectVariant1: boolean,
+  coloniesTradeFleetProject: boolean,
   startingCeos: number,
   startingCorporations: number,
   startingPreludes: number,

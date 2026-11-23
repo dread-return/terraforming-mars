@@ -62,6 +62,7 @@ export function defaultCreateGameModel(): CreateGameModel {
     requiresMoonTrackCompletion: false,
     moonStandardProjectVariant: false,
     moonStandardProjectVariant1: false,
+    coloniesTradeFleetProject: false,
     altVenusBoard: false,
     altContaminationTrack: false,
     escapeVelocityMode: false,

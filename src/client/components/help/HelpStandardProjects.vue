@@ -56,6 +56,7 @@ export default defineComponent({
       CardName.MOON_ROAD_STANDARD_PROJECT_VARIANT_2,
       CardName.EXCAVATE_STANDARD_PROJECT,
       CardName.COLLUSION_STANDARD_PROJECT,
+      CardName.TRADE_FLEET_STANDARD_PROJECT,
     ],
   },
 });

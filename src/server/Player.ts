@@ -2084,6 +2084,7 @@ export class Player implements IPlayer {
       cardDiscount: this.colonies.cardDiscount,
       // Colonies
       fleetSize: this.colonies.getFleetSize(),
+      fleetsBought: this.colonies.fleetsBought > 0 ? this.colonies.fleetsBought : undefined,
       tradesThisGeneration: this.colonies.usedTradeFleets,
       colonyTradeOffset: this.colonies.tradeOffset,
       colonyTradeDiscount: this.colonies.tradeDiscount,
@@ -2152,6 +2153,7 @@ export class Player implements IPlayer {
     player.colonies.tradeDiscount = d.colonyTradeDiscount;
     player.colonies.tradeOffset = d.colonyTradeOffset;
     player.colonies.setFleetSize(d.fleetSize);
+    player.colonies.fleetsBought = d.fleetsBought ?? 0;
     player.colonies.victoryPoints = d.colonyVictoryPoints;
     player.victoryPointsByGeneration = d.victoryPointsByGeneration;
     player.energy = d.energy;

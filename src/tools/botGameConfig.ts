@@ -47,6 +47,7 @@ export function baseConfig(playerCount: number, botDifficulty: BotDifficulty = '
     requiresVenusTrackCompletion: false,
     moonStandardProjectVariant: false,
     moonStandardProjectVariant1: false,
+    coloniesTradeFleetProject: false,
     altVenusBoard: false,
     altContaminationTrack: false,
     escapeVelocity: undefined,

@@ -108,6 +108,7 @@ const OPTION_TOGGLES: Array<{name: string, needs?: Array<Expansion>, apply: (c: 
   {name: 'individualTracks', apply: (c) => ({...c, individualTracks: true})},
   {name: 'moonStdProjects', needs: ['moon'], apply: (c) => ({...c, moonStandardProjectVariant: true})},
   {name: 'moonStdProjects1', needs: ['moon'], apply: (c) => ({...c, moonStandardProjectVariant1: true})},
+  {name: 'tradeFleetProject', needs: ['colonies'], apply: (c) => ({...c, coloniesTradeFleetProject: true})},
   {name: 'requireMoon', needs: ['moon'], apply: (c) => ({...c, requiresMoonTrackCompletion: true})},
   {name: 'requireVenus', needs: ['venus'], apply: (c) => ({...c, requiresVenusTrackCompletion: true})},
   {name: 'altVenusBoard', needs: ['venus'], apply: (c) => ({...c, altVenusBoard: true})},

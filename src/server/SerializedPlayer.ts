@@ -48,6 +48,7 @@ export interface SerializedPlayer extends DeprecatedFields{
   energy: number;
   energyProduction: number;
   fleetSize: number;
+  fleetsBought?: number;
   globalParameterSteps: Record<GlobalParameter, number>;
   handicap: number;
   hasIncreasedTerraformRatingThisGeneration: boolean;

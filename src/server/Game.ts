@@ -1876,6 +1876,8 @@ export class Game implements IGame, Logger {
         case CardName.MOON_MINE_STANDARD_PROJECT_VARIANT_1:
         case CardName.MOON_ROAD_STANDARD_PROJECT_VARIANT_1:
           return gameOptions.moonStandardProjectVariant1 === true;
+        case CardName.TRADE_FLEET_STANDARD_PROJECT:
+          return gameOptions.coloniesExtension === true && gameOptions.coloniesTradeFleetProject === true;
         case CardName.FLOATING_ARRAY_STANDARD_PROJECT:
         case CardName.GAS_MINE_STANDARD_PROJECT:
         case CardName.CLOUD_CITY_STANDARD_PROJECT:

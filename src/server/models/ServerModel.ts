@@ -536,6 +536,7 @@ export class Server {
       modularMA: options.modularMA,
       moonStandardProjectVariant: options.moonStandardProjectVariant,
       moonStandardProjectVariant1: options.moonStandardProjectVariant1,
+      coloniesTradeFleetProject: options.coloniesTradeFleetProject,
       startingCeos: options.startingCeos,
       startingCorporations: options.startingCorporations,
       startingPreludes: options.startingPreludes,

@@ -27,6 +27,8 @@ export class Colonies {
 
   /** The number of trade fleets assigned to this player. */
   private fleetSize: number = 1;
+  /** The number of trade fleets this player bought with the Trade Fleet standard project. It sets that project's price. */
+  public fleetsBought: number = 0;
   /** The number of consumed trade fleets. When this == `fleetSize` the player has no trade fleets. */
   public usedTradeFleets: number = 0;
   // When trading you may increase the Colony track this many steps.

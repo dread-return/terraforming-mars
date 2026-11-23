@@ -43,6 +43,7 @@ export function gameOptionsFromConfig(gameReq: NewGameConfig, boardName: BoardNa
     moonExpansion: gameReq.expansions.moon,
     moonStandardProjectVariant: gameReq.moonStandardProjectVariant,
     moonStandardProjectVariant1: gameReq.moonStandardProjectVariant1,
+    coloniesTradeFleetProject: gameReq.coloniesTradeFleetProject === true && gameReq.expansions.colonies,
     pathfindersExpansion: gameReq.expansions.pathfinders,
     // With Giga Turmoil the chairman always chooses the bonus and policy.
     politicalAgendasExtension: gigaTurmoil ? 'Chairman' : gameReq.politicalAgendasExtension,

@@ -65,7 +65,7 @@ import {message} from './logs/MessageBuilder';
 import {calculateVictoryPoints} from './game/calculateVictoryPoints';
 import {VictoryPointsBreakdown} from '../common/game/VictoryPointsBreakdown';
 import {Supercapacitors} from './cards/promo/Supercapacitors';
-import {CanAffordOptions, CardAction, IPlayer} from './IPlayer';
+import {CanAffordOptions, CardAction, ExtraPaymentValues, IPlayer} from './IPlayer';
 import {IPreludeCard} from './cards/prelude/IPreludeCard';
 import {copyAndClear, inplaceRemove, sum, toName} from '../common/utils/utils';
 import {generateRandomId} from './utils/server-ids';
@@ -862,12 +862,17 @@ export class Player implements IPlayer {
     return Math.max(cost, 0);
   }
 
-  public paymentOptionsForCard(card: IProjectCard): PaymentOptions & {steelValue?: number, grapheneValue?: number} {
+  public paymentOptionsForCard(card: IProjectCard): PaymentOptions & ExtraPaymentValues {
+    // Epic Corporations: plants (OmniDrone Labs), energy (Milky Skyway) and corporation resources for some cards.
+    const omniDronePlants = EpicHooks.plantsValueFor(this, card);
+    const milkyEnergy = EpicHooks.energyValueFor(this, card);
+    const epic = EpicHooks.epicPayment(this, card);
+    const martianLumber = card.tags.includes(Tag.BUILDING) && this.playedCards.has(CardName.MARTIAN_LUMBER_CORP);
     return {
       heat: this.canUseHeatAsMegaCredits,
-      energy: this.canUseEnergyAsMegaCredits,
+      energy: this.canUseEnergyAsMegaCredits || milkyEnergy !== undefined,
       steel: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card) || Eternity.canUseSteel(this, card) || mercuryCanUseSteel(this, card) || EpicHooks.canUseSteel(this, card),
-      plants: card.tags.includes(Tag.BUILDING) && this.playedCards.has(CardName.MARTIAN_LUMBER_CORP),
+      plants: martianLumber || omniDronePlants !== undefined,
       titanium: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.SPACE) || Nuclear.canUseTitanium(this, card) || Eternity.canUseTitanium(this, card) || EpicHooks.canUseTitanium(this, card),
       lunaTradeFederationTitanium: this.canUseTitaniumAsMegacredits,
       seeds: card.tags.includes(Tag.PLANT) || card.name === CardName.GREENERY_STANDARD_PROJECT,
@@ -884,6 +889,10 @@ export class Player implements IPlayer {
       // Epic Corporations: Vanguard's steel is worth more for Venus cards; Carbon Nanosystems' graphene is worth 5.
       steelValue: EpicHooks.steelValueForCard(this, card),
       grapheneValue: EpicHooks.grapheneValue(this),
+      plantsValue: martianLumber ? undefined : omniDronePlants,
+      energyValue: milkyEnergy,
+      epicResources: epic !== undefined,
+      epicValue: epic?.value,
     };
   }
 
@@ -946,6 +955,10 @@ export class Player implements IPlayer {
     if (SpendableResource === 'shipyardOre') {
       return HighOrbit.shipyardOre(this);
     }
+    // Epic Corporations: resources on the paying corporation (Pegasus Group, Xanthum, Microfac...).
+    if (SpendableResource === 'epicResources') {
+      return EpicHooks.epicPaymentSource(this)?.resourceCount ?? 0;
+    }
     // Epic Corporations: graphene on Carbon Nanosystems (Epic) can pay too.
     if (SpendableResource === 'graphene') {
       return this.resourcesOnCard(CARD_FOR_SPENDABLE_RESOURCE.graphene) + this.resourcesOnCard(CardName.CARBON_NANOSYSTEMS_EPIC);
@@ -979,6 +992,14 @@ export class Player implements IPlayer {
       }
       if (resource === 'shipyardOre') {
         HighOrbit.spendShipyardOre(this, count);
+        continue;
+      }
+      if (resource === 'epicResources') {
+        const source = EpicHooks.epicPaymentSource(this);
+        if (source === undefined) {
+          throw new Error('No corporation resources to spend');
+        }
+        this.removeResourceFrom(source, count, {log: true});
         continue;
       }
       if (resource === 'graphene' && this.tableau.has(CardName.CARBON_NANOSYSTEMS_EPIC)) {
@@ -1531,13 +1552,15 @@ export class Player implements IPlayer {
    * ../..param {PaymentOptions} options any configuration defining the accepted form of payment.
    * ../..return {number} a number representing the value of payment in M€.
    */
-  public payingAmount(payment: Payment, options?: Partial<PaymentOptions> & {steelValue?: number, grapheneValue?: number}): number {
+  public payingAmount(payment: Payment, options?: Partial<PaymentOptions> & ExtraPaymentValues): number {
     const multiplier = {
       ...DEFAULT_PAYMENT_VALUES,
       steel: options?.steelValue ?? this.getSteelValue(),
       graphene: options?.grapheneValue ?? DEFAULT_PAYMENT_VALUES.graphene,
       titanium: this.getTitaniumValue(),
-      energy: this.energyValue,
+      energy: options?.energyValue ?? this.energyValue,
+      plants: options?.plantsValue ?? DEFAULT_PAYMENT_VALUES.plants,
+      epicResources: options?.epicValue ?? DEFAULT_PAYMENT_VALUES.epicResources,
     };
 
     const usable: {[key in SpendableResource]: boolean} = {
@@ -1545,7 +1568,7 @@ export class Player implements IPlayer {
       steel: options?.steel ?? false,
       titanium: options?.titanium ?? false,
       heat: this.canUseHeatAsMegaCredits,
-      energy: this.canUseEnergyAsMegaCredits,
+      energy: this.canUseEnergyAsMegaCredits || (options?.energy === true && options?.energyValue !== undefined),
       plants: options?.plants ?? false,
       microbes: options?.microbes ?? false,
       floaters: options?.floaters ?? false,
@@ -1558,6 +1581,7 @@ export class Player implements IPlayer {
       propellantOre: options?.propellantOre ?? false,
       shipyardOre: options?.shipyardOre ?? false,
       hephaestusAsteroids: options?.hephaestusAsteroids ?? false,
+      epicResources: options?.epicResources ?? false,
     };
 
     // HOOK: Luna Trade Federation
@@ -1654,6 +1678,7 @@ export class Player implements IPlayer {
   public takeAction(): void {
     this.game.drainQueue(() => {
       const game = this.game;
+      EpicHooks.onTakeAction(this);
 
       if (this.actionsTakenThisRound === 0 || game.gameOptions.undoOption) {
         game.save();

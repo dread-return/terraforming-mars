@@ -1,6 +1,7 @@
 import {mount} from '@vue/test-utils';
 import {globalConfig} from './getLocalVue';
 import {expect} from 'chai';
+import {CardResource} from '@/common/CardResource';
 import {CardName} from '@/common/cards/CardName';
 import SelectProjectCardToPlay from '@/client/components/SelectProjectCardToPlay.vue';
 import {SelectProjectCardToPlayModel} from '@/common/models/PlayerInputModel';
@@ -512,6 +513,47 @@ describe('SelectProjectCardToPlay', () => {
     expect(saveResponse.payment).deep.eq(Payment.of({graphene: 7, megacredits: 2}));
   });
 
+  it('Epic Corporations: corporation resources pay at the card\'s rate, with their own icon', async () => {
+    // Pegasus Group: science worth 2 M€ each. 30 = 10 M€ + 10 science.
+    const wrapper = setupCardForPurchase(
+      CardName.ASTEROID_MINING, 30,
+      {megacredits: 10},
+      {epicResources: 10, epicResourceType: CardResource.SCIENCE},
+      {paymentOverrides: {epicResources: true, epicValue: 2}});
+
+    const tester = new PaymentTester(wrapper);
+    await tester.nextTick();
+    tester.expectPayment({megacredits: 10, epicResources: 10});
+    expect(wrapper.find('.resource_icon--epic-science').exists()).is.true;
+
+    await tester.clickSave();
+    expect(saveResponse.payment).deep.eq(Payment.of({megacredits: 10, epicResources: 10}));
+  });
+
+  it('Epic Corporations: Microfac microbes pay 3 M€ each for standard projects', async () => {
+    const wrapper = setupCardForPurchase(
+      CardName.POWER_PLANT_STANDARD_PROJECT, 11,
+      {megacredits: 5},
+      {epicResources: 2, epicResourceType: CardResource.MICROBE},
+      {canPayWith: {epicResources: true, epicValue: 3}});
+
+    const tester = new PaymentTester(wrapper);
+    await tester.nextTick();
+    tester.expectPayment({megacredits: 5, epicResources: 2});
+  });
+
+  it('Epic Corporations: Milky Skyway energy pays 2 M€ each for city cards', async () => {
+    const wrapper = setupCardForPurchase(
+      CardName.CAPITAL, 26,
+      {megacredits: 20, energy: 3},
+      {},
+      {paymentOverrides: {energy: true, energyValue: 2}});
+
+    const tester = new PaymentTester(wrapper);
+    await tester.nextTick();
+    expect(wrapper.find('[data-test="energy"]').exists()).is.true;
+  });
+
   it('High Orbit: Orbital Shipyard ore pays 3 M€ each for Build Colony', async () => {
     // Build Colony costs 17. 5 M€ and 4 ore (12 M€) cover it.
     const wrapper = setupCardForPurchase(
@@ -799,7 +841,7 @@ describe('SelectProjectCardToPlay', () => {
     cardCost: number,
     playerFields: Partial<PublicPlayerModel>,
     playerInputFields: Partial<SelectProjectCardToPlayModel>,
-    options?: {reserveUnits?: Units, canPayWith?: CardModel['standardProjectCanPayWith']}) {
+    options?: {reserveUnits?: Units, canPayWith?: CardModel['standardProjectCanPayWith'], paymentOverrides?: CardModel['paymentOverrides']}) {
     const thisPlayer: Partial<PublicPlayerModel> = Object.assign({
       cards: [{name: cardName, calculatedCost: cardCost}],
       steel: 0,
@@ -839,6 +881,7 @@ describe('SelectProjectCardToPlay', () => {
     if (options !== undefined) {
       playerInput.cards![0].reserveUnits = options.reserveUnits;
       playerInput.cards![0].standardProjectCanPayWith = options.canPayWith;
+      playerInput.cards![0].paymentOverrides = options.paymentOverrides;
     }
 
     return mount(SelectProjectCardToPlay, {

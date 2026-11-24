@@ -18,6 +18,9 @@ type LedgerEntry = {
    * which happens the majority of the time.
    */
   nonGreedy?: boolean,
+  /** Icon class and name to show instead of the unit's usual ones (Epic Corporations' corporation resources). */
+  icon?: string,
+  label?: string,
 };
 
 /**

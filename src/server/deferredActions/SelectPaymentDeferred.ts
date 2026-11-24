@@ -1,3 +1,4 @@
+import {EpicHooks} from '../cards/epic/EpicHooks';
 import {IPlayer} from '../IPlayer';
 import {SelectPayment} from '../inputs/SelectPayment';
 import {Payment} from '../../common/inputs/Payment';
@@ -57,6 +58,10 @@ export class SelectPaymentDeferred extends DeferredAction<Payment> {
     if (this.options.canUseSpireScience && (this.player.resourcesOnCard(CardName.SPIRE) > 0)) {
       return false;
     }
+    // Epic Corporations: Technonauts' robots pay for card actions.
+    if (EpicHooks.actionPaymentValue(this.player) !== undefined) {
+      return false;
+    }
 
     return true;
   }
@@ -91,7 +96,8 @@ export class SelectPaymentDeferred extends DeferredAction<Payment> {
         lunaTradeFederationTitanium: this.player.canUseTitaniumAsMegacredits,
         kuiperAsteroids: this.options.canUseAsteroids || false,
         graphene: this.options.canUseGraphene || false,
-      }, this.options.reserveUnits)
+        epicResources: EpicHooks.actionPaymentValue(this.player) !== undefined,
+      }, this.options.reserveUnits, EpicHooks.actionPaymentValue(this.player))
       .andThen((payment) => {
         this.player.pay(payment);
         this.cb(payment);

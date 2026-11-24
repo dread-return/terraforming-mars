@@ -76,4 +76,6 @@ export enum CardResource {
   WORKER = 'Worker',
   PRISONER = 'Prisoner',
   WILD_RESOURCE = 'Wild resource',
+  ROBOT = 'Robot',
+  ALLOY = 'Alloy',
 }

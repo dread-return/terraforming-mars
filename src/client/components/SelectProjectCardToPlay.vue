@@ -107,6 +107,7 @@ export default defineComponent({
         'hephaestusAsteroids',
         'propellantOre',
         'shipyardOre',
+        'epicResources',
         'auroraiData',
         'spireScience',
         'megacredits',
@@ -227,7 +228,11 @@ export default defineComponent({
         case 'heat':
           return this.playerinput.paymentOptions.heat === true || canPayWith.heat === true;
         case 'energy':
-          return this.playerinput.paymentOptions.energy === true;
+          // Epic Corporations (Milky Skyway): energy pays for the city standard project.
+          return this.playerinput.paymentOptions.energy === true || canPayWith.energy === true;
+        // Epic Corporations: Microfac's microbes pay for standard projects.
+        case 'epicResources':
+          return canPayWith.epicResources === true;
         case 'steel':
           return canPayWith.steel === true;
         case 'titanium':
@@ -260,7 +265,10 @@ export default defineComponent({
         case 'heat':
           return this.playerinput.paymentOptions.heat === true;
         case 'energy':
-          return this.playerinput.paymentOptions.energy === true;
+          return this.playerinput.paymentOptions.energy === true || this.card?.paymentOverrides?.energy === true;
+        // Epic Corporations: resources on the corporation card (see EpicHooks.epicPayment).
+        case 'epicResources':
+          return this.card?.paymentOverrides?.epicResources === true;
         case 'steel':
           return this.tags.includes(Tag.BUILDING) ||
           this.playerView.thisPlayer.lastCardPlayed === CardName.LAST_RESORT_INGENUITY ||
@@ -269,7 +277,8 @@ export default defineComponent({
           return this.canUseTitaniumRegularly ||
           this.playerinput.paymentOptions.lunaTradeFederationTitanium === true;
         case 'plants':
-          return this.tags.includes(Tag.BUILDING) && this.playerinput.paymentOptions.plants === true;
+          return (this.tags.includes(Tag.BUILDING) && this.playerinput.paymentOptions.plants === true) ||
+            this.card?.paymentOverrides?.plants === true;
         case 'microbes':
           return this.tags.includes(Tag.PLANT);
         case 'floaters':

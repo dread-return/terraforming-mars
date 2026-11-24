@@ -2183,4 +2183,15 @@ export enum CardName {
   STREAMLINE_LOGISTICS = 'Streamline Logistics',
   TERRA_INVEST_FIRM = 'Terra-Invest Firm',
   TOP_UP_OPERATION = 'Top-Up Operation',
+  // Epic Corporations, batch 7 (new ways to pay)
+  LE_MARTIAN = 'Le Martian',
+  OMNIDRONE_LABS = 'OmniDrone Labs',
+  PEGASUS_GROUP = 'Pegasus Group',
+  STELLAR_ROBOTICS = 'Stellar Robotics',
+  TECHNONAUTS = 'Technonauts',
+  XANTHUM = 'Xanthum',
+  OCEANUS = 'Oceanus',
+  SAGA_BIOENGINEERING = 'Saga Bioengineering',
+  MICROFAC = 'Microfac',
+  MILKY_SKYWAY = 'Milky Skyway',
 }

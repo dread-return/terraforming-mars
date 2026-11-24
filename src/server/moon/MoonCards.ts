@@ -21,5 +21,6 @@ export class MoonCards {
     CardName.HELIX,
     CardName.G_AI_A,
     CardName.DARWIN_EVOLUTION,
+    CardName.PEGASUS_GROUP,
   ]);
 }

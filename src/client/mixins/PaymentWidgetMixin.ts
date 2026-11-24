@@ -65,6 +65,12 @@ export const PaymentWidgetMixin = defineComponent({
           reserved: isStandardResource(unit) ? reserveUnits[unit] > 0 : false,
           nonGreedy: !this.isGreedy(unit, rate),
         };
+        // Epic Corporations: show the corporation's own resource (robots, alloy, science...).
+        const epicType = this.playerinput.epicResourceType;
+        if (unit === 'epicResources' && epicType !== undefined) {
+          ledger[unit].icon = 'resource_icon--epic-' + epicType.toLowerCase().replace(/ /g, '-');
+          ledger[unit].label = epicType;
+        }
       }
       return ledger;
     },
@@ -96,8 +102,19 @@ export const PaymentWidgetMixin = defineComponent({
       case 'titanium':
         return this.getTitaniumResourceRate();
       case 'energy':
+        // Epic Corporations (Milky Skyway): energy is worth 2 M€ for city cards and the city standard project.
         // Giga Turmoil (Empower policy 1): energy is worth more than 1 M€.
-        return this.playerView.thisPlayer.energyValue ?? DEFAULT_PAYMENT_VALUES[unit];
+        return (this as any).card?.paymentOverrides?.energyValue ??
+          (this as any).card?.standardProjectCanPayWith?.energyValue ??
+          this.playerView.thisPlayer.energyValue ?? DEFAULT_PAYMENT_VALUES[unit];
+      case 'plants':
+        // Epic Corporations (OmniDrone Labs): plants are worth 2 M€ for science cards.
+        return (this as any).card?.paymentOverrides?.plantsValue ?? DEFAULT_PAYMENT_VALUES[unit];
+      case 'epicResources':
+        // Epic Corporations: each corporation resource's value depends on the card.
+        return (this as any).card?.paymentOverrides?.epicValue ??
+          (this as any).card?.standardProjectCanPayWith?.epicValue ??
+          (this.playerinput.type === 'payment' ? this.playerinput.epicValue : undefined) ?? DEFAULT_PAYMENT_VALUES[unit];
       case 'heat': {
         // Eternity (Venusia): heat pays for standard projects at its own rate.
         const heatValue = (this as any).card?.standardProjectCanPayWith?.heatValue;
@@ -142,6 +159,7 @@ export const PaymentWidgetMixin = defineComponent({
         hephaestusAsteroids: this.playerinput.type === 'projectCard' ? this.playerinput.hephaestusAsteroids : 0,
         propellantOre: this.playerinput.propellantOre,
         shipyardOre: this.playerinput.shipyardOre,
+        epicResources: this.playerinput.epicResources ?? 0,
       };
 
       // Stratospheric Birds requires discarding one floater from any card.

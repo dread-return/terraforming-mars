@@ -44,6 +44,10 @@ export const SPENDABLE_CARD_RESOURCES = [
   'propellantOre',
   // High Orbit: ore on Orbital Shipyard pays 3 M€ each for the Build Colony standard project.
   'shipyardOre',
+  // Epic Corporations: resources on a corporation card that pays for some things (Pegasus Group science, Stellar
+  // Robotics and Technonauts robots, Xanthum alloy, Oceanus floaters, Saga and OmniDrone animals, Microfac microbes).
+  // Which card, what it pays for and how much each is worth come from EpicHooks.epicPayment.
+  'epicResources',
 ] as const;
 
 export const SPENDABLE_RESOURCES = [...SPENDABLE_STANDARD_RESOURCES, ...SPENDABLE_CARD_RESOURCES] as const;
@@ -67,4 +71,6 @@ export const CARD_FOR_SPENDABLE_RESOURCE = {
   hephaestusAsteroids: CardName.HEPHAESTUS_NETS,
   propellantOre: CardName.PROPELLANT_DEPOT,
   shipyardOre: CardName.ORBITAL_SHIPYARD,
+  // Not used: the card depends on the player's corporation (see Player.getSpendable).
+  epicResources: CardName.PEGASUS_GROUP,
 } satisfies Record<SpendableCardResource, CardName>;

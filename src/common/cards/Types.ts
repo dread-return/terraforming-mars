@@ -40,6 +40,12 @@ export type StandardProjectCanPayWith = {
   heatValue?: number,
   /** High Orbit: ore on Orbital Shipyard (3 M€ each) for the Build Colony standard project. */
   shipyardOre?: boolean,
+  /** Epic Corporations: resources on the corporation card (Microfac's microbes) pay at this rate. */
+  epicResources?: boolean,
+  epicValue?: number,
+  /** Epic Corporations (Milky Skyway): energy pays for the city standard project at this rate. */
+  energy?: boolean,
+  energyValue?: number,
 }
 
 /**

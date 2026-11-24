@@ -38,7 +38,6 @@ export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProje
     const canPayWith = highOrbitStandardProjectPayWith(this.player, card, Postludes.standardProjectPayWith(this.player, card, Eternity.standardProjectPayWith(this.player, card, EpicHooks.standardProjectPayWith(this.player, card, card.canPayWith(this.player)))));
     const paymentOptions: Partial<PaymentOptions> = {
       heat: this.player.canUseHeatAsMegaCredits,
-      energy: this.player.canUseEnergyAsMegaCredits,
       steel: canPayWith.steel,
       titanium: canPayWith.titanium,
       lunaTradeFederationTitanium: this.player.canUseTitaniumAsMegacredits,
@@ -47,6 +46,9 @@ export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProje
       spireScience: this.player.tableau.has(CardName.SPIRE),
       kuiperAsteroids: canPayWith.kuiperAsteroids ? this.player.tableau.has(CardName.KUIPER_COOPERATIVE) : false,
       shipyardOre: canPayWith.shipyardOre === true,
+      // Epic Corporations: Microfac's microbes and Milky Skyway's energy.
+      epicResources: canPayWith.epicResources === true,
+      energy: this.player.canUseEnergyAsMegaCredits || canPayWith.energy === true,
     };
     return {canPayWith, paymentOptions};
   }
@@ -92,7 +94,7 @@ export class SelectStandardProjectToPlay extends SelectCardToPlay<IStandardProje
     if (!this.player.canSpend(payment, reserveUnits)) {
       throw new InputError('You do not have that many resources');
     }
-    const amountPaid = this.player.payingAmount(payment, paymentOptions) + floaterCredit;
+    const amountPaid = this.player.payingAmount(payment, {...paymentOptions, epicValue: canPayWith.epicValue, energyValue: canPayWith.energyValue}) + floaterCredit;
     const requiredCost = details.overriddenCost ?? card.getAdjustedCost(this.player);
     if (amountPaid < requiredCost) {
       throw new InputError('Did not spend enough to pay for standard project');

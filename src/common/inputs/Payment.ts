@@ -47,6 +47,8 @@ export const DEFAULT_PAYMENT_VALUES = {
   hephaestusAsteroids: 6,
   propellantOre: 2,
   shipyardOre: 3,
+  // The real value depends on the card (see EpicHooks.epicPayment).
+  epicResources: 3,
 } satisfies Record<SpendableResource, number>;
 
 export namespace Payment {
@@ -68,6 +70,7 @@ export namespace Payment {
     hephaestusAsteroids: 0,
     propellantOre: 0,
     shipyardOre: 0,
+    epicResources: 0,
   } as const;
 
   export function of(payment: Partial<Payment>) : Payment {
@@ -88,6 +91,7 @@ export namespace Payment {
       hephaestusAsteroids: payment.hephaestusAsteroids ?? 0,
       propellantOre: payment.propellantOre ?? 0,
       shipyardOre: payment.shipyardOre ?? 0,
+      epicResources: payment.epicResources ?? 0,
       plants: payment.plants ?? 0,
     };
   }
@@ -110,6 +114,7 @@ export namespace Payment {
     hephaestusAsteroids: ':cr:asteroid:',
     propellantOre: ':cr:ore:',
     shipyardOre: ':cr:ore:',
+    epicResources: ' corporation resources',
   } satisfies Record<SpendableResource, string>;
 
   const SORTED_FOR_LOG = SPENDABLE_RESOURCES.toSorted(reversed(comparing((key) => DEFAULT_PAYMENT_VALUES[key])));

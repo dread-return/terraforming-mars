@@ -1,3 +1,4 @@
+import {EpicHooks} from '../cards/epic/EpicHooks';
 import {BasePlayerInput} from '../PlayerInput';
 import {isPayment, Payment} from '../../common/inputs/Payment';
 import {IProjectCard} from '../cards/IProjectCard';
@@ -76,6 +77,8 @@ export abstract class SelectCardToPlay<T extends IProjectCard | IStandardProject
       hephaestusAsteroids: player.getSpendable('hephaestusAsteroids'),
       propellantOre: player.getSpendable('propellantOre'),
       shipyardOre: player.getSpendable('shipyardOre'),
+      epicResources: player.getSpendable('epicResources'),
+      epicResourceType: EpicHooks.epicPaymentResource(player),
       auroraiData: player.getSpendable('auroraiData'),
       spireScience: player.getSpendable('spireScience'),
     };

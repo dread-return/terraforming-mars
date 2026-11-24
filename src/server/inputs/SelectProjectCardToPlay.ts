@@ -1,3 +1,4 @@
+import {CardModel} from '../../common/models/CardModel';
 import {Payment} from '../../common/inputs/Payment';
 import {IProjectCard} from '../cards/IProjectCard';
 import {Units} from '../../common/Units';
@@ -8,9 +9,9 @@ import {SelectCardToPlay} from './SelectCardToPlay';
 import {Tag} from '../../common/cards/Tag';
 
 /** Steel/titanium rules for this card that its tags alone don't show (sent to the client's payment widget). */
-function paymentOverrides(player: IPlayer, card: IProjectCard): {steel?: boolean, titanium?: boolean, steelValue?: number, graphene?: boolean, grapheneValue?: number} | undefined {
+function paymentOverrides(player: IPlayer, card: IProjectCard): NonNullable<CardModel['paymentOverrides']> | undefined {
   const options = player.paymentOptionsForCard(card);
-  const result: {steel?: boolean, titanium?: boolean, steelValue?: number, graphene?: boolean, grapheneValue?: number} = {};
+  const result: NonNullable<CardModel['paymentOverrides']> = {};
   if (options.steel && !card.tags.includes(Tag.BUILDING)) {
     result.steel = true;
   }
@@ -25,6 +26,19 @@ function paymentOverrides(player: IPlayer, card: IProjectCard): {steel?: boolean
   }
   if (options.grapheneValue !== undefined) {
     result.grapheneValue = options.grapheneValue;
+  }
+  // Epic Corporations: OmniDrone Labs' plants, Milky Skyway's energy and corporation resources.
+  if (options.plantsValue !== undefined) {
+    result.plants = true;
+    result.plantsValue = options.plantsValue;
+  }
+  if (options.energyValue !== undefined) {
+    result.energy = true;
+    result.energyValue = options.energyValue;
+  }
+  if (options.epicResources && options.epicValue !== undefined) {
+    result.epicResources = true;
+    result.epicValue = options.epicValue;
   }
   return Object.keys(result).length > 0 ? result : undefined;
 }

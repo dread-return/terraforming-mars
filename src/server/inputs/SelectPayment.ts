@@ -1,3 +1,4 @@
+import {EpicHooks} from '../cards/epic/EpicHooks';
 import {Message} from '../../common/logs/Message';
 import {BasePlayerInput} from '../PlayerInput';
 import {isPayment, Payment, PaymentOptions} from '../../common/inputs/Payment';
@@ -13,6 +14,8 @@ export class SelectPayment extends BasePlayerInput<Payment> {
     public amount: number,
     public paymentOptions: Partial<PaymentOptions>,
     public reserveUnits?: Units | undefined,
+    /** Epic Corporations (Technonauts): what each corporation resource is worth here. */
+    public epicValue?: number,
   ) {
     super('payment', title);
     this.buttonLabel = 'Pay'; // no input button
@@ -35,6 +38,9 @@ export class SelectPayment extends BasePlayerInput<Payment> {
       kuiperAsteroids: player.getSpendable('kuiperAsteroids'),
       spireScience: player.getSpendable('spireScience'),
       reserveUnits: this.reserveUnits,
+      epicResources: this.paymentOptions.epicResources === true ? player.getSpendable('epicResources') : 0,
+      epicResourceType: EpicHooks.epicPaymentResource(player),
+      epicValue: this.epicValue,
 
       floaters: 0,
       microbes: 0,
@@ -55,7 +61,7 @@ export class SelectPayment extends BasePlayerInput<Payment> {
     if (!player.canSpend(payment, this.reserveUnits)) {
       throw new InputError('You do not have that many resources');
     }
-    const amountPaid = player.payingAmount(payment, this.paymentOptions);
+    const amountPaid = player.payingAmount(payment, {...this.paymentOptions, epicValue: this.epicValue});
     if (amountPaid < this.amount) {
       throw new InputError('Did not spend enough');
     }

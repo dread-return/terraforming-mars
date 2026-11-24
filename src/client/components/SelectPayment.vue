@@ -61,6 +61,7 @@ export default defineComponent({
         'auroraiData',
         'kuiperAsteroids',
         'spireScience',
+        'epicResources',
         'megacredits',
       ] as const).filter(this.canUse);
     },

@@ -19,5 +19,9 @@ export interface CardModel {
     cloneTag?: Tag; // Used with Pathfinders
     standardProjectCanPayWith?: StandardProjectCanPayWith; // Set for standard projects; undefined for regular project cards
     /** Steel/titanium allowed (or steel worth more) for this card beyond its tags, e.g. from an Epic corporation. */
-    paymentOverrides?: {steel?: boolean, titanium?: boolean, steelValue?: number, graphene?: boolean, grapheneValue?: number};
+    paymentOverrides?: {
+      steel?: boolean, titanium?: boolean, steelValue?: number, graphene?: boolean, grapheneValue?: number,
+      // Epic Corporations: plants (OmniDrone Labs), energy (Milky Skyway) and corporation resources at these rates.
+      plants?: boolean, plantsValue?: number, energy?: boolean, energyValue?: number, epicResources?: boolean, epicValue?: number,
+    };
 }

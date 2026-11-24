@@ -218,6 +218,8 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       [CardResource.WORKER]: true,
       [CardResource.PRISONER]: true,
       [CardResource.WILD_RESOURCE]: true,
+      [CardResource.ROBOT]: true,
+      [CardResource.ALLOY]: true,
     },
     searchIndex: SearchIndex.create(),
     namesOnly: true,

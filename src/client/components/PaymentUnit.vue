@@ -38,12 +38,20 @@ export default defineComponent({
       default: true,
       required: false,
     },
+    // Overrides the unit's usual icon class (Epic Corporations' corporation resources).
+    icon: {
+      type: String,
+      required: false,
+    },
   },
   components: {
     AppButton,
   },
   computed: {
     iconClass(): string {
+      if (this.icon !== undefined) {
+        return this.icon;
+      }
       switch (this.unit) {
       case 'kuiperAsteroids': return 'resource_icon--asteroid';
       case 'hephaestusAsteroids': return 'resource_icon--asteroid';

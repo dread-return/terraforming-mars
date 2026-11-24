@@ -193,4 +193,15 @@ export const EPIC_LOGOS: Partial<Record<CardName, {slug: string, lines: Readonly
   [CardName.STREAMLINE_LOGISTICS]: {slug: 'ep-streamline', lines: ['STREAMLINE', 'LOGISTICS']},
   [CardName.TERRA_INVEST_FIRM]: {slug: 'ep-terra-invest', lines: ['€ TERRA-INVEST', 'FIRM']},
   [CardName.TOP_UP_OPERATION]: {slug: 'ep-top-up', lines: ['TOP-UP', 'OPERATION']},
+  // Batch 7: new ways to pay
+  [CardName.LE_MARTIAN]: {slug: 'ep-le-martian', lines: ['Le Martian']},
+  [CardName.OMNIDRONE_LABS]: {slug: 'ep-omnidrone', lines: ['OmniDrone Labs']},
+  [CardName.PEGASUS_GROUP]: {slug: 'ep-pegasus', lines: ['Pegasus', 'Group']},
+  [CardName.STELLAR_ROBOTICS]: {slug: 'ep-stellar', lines: ['Stellar Robotics']},
+  [CardName.TECHNONAUTS]: {slug: 'ep-technonauts', lines: ['TECHNONAUTS']},
+  [CardName.XANTHUM]: {slug: 'ep-xanthum', lines: ['alloys', 'Xanthum']},
+  [CardName.OCEANUS]: {slug: 'ep-oceanus', lines: ['OCEANUS']},
+  [CardName.SAGA_BIOENGINEERING]: {slug: 'ep-saga', lines: ['SAGA', 'BIOENGINEERING']},
+  [CardName.MICROFAC]: {slug: 'ep-microfac', lines: ['microfac']},
+  [CardName.MILKY_SKYWAY]: {slug: 'ep-milky', lines: ['MILKY SKYWAY']},
 };

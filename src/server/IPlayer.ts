@@ -47,12 +47,22 @@ import {BotDifficulty} from '../common/game/NewGameConfig';
  * that the player must also pay some additional costs (e.g. additional TR from the
  * card's action, or resources they have to spend.)
  */
-export type CanAffordOptions = Partial<PaymentOptions> & {
-  cost: number,
+/** Payment units worth something other than their usual value for one card (Epic Corporations). */
+export type ExtraPaymentValues = {
   /** Steel is worth this much instead of the usual value (e.g. Vanguard for Venus cards). */
   steelValue?: number,
   /** Graphene is worth this much instead of the usual value (Carbon Nanosystems (Epic)). */
   grapheneValue?: number,
+  /** Plants (OmniDrone Labs: 2 for science cards). */
+  plantsValue?: number,
+  /** Energy (Milky Skyway: 2 for city cards and the city standard project). */
+  energyValue?: number,
+  /** Resources on the paying corporation (see EpicHooks.epicPayment). */
+  epicValue?: number,
+};
+
+export type CanAffordOptions = Partial<PaymentOptions> & ExtraPaymentValues & {
+  cost: number,
   reserveUnits?: Units,
   tr?: TRSource,
   /** Represents when the action rewards the tile space more than once. */
@@ -384,9 +394,9 @@ export interface IPlayer {
   canSpend(payment: Payment, reserveUnits?: Units): boolean;
   /** The most this player could spend of each resource, excluding `reserveUnits`. */
   maxSpendable(reserveUnits?: Units): Payment;
-  payingAmount(payment: Payment, options?: Partial<PaymentOptions> & {steelValue?: number, grapheneValue?: number}): number;
+  payingAmount(payment: Payment, options?: Partial<PaymentOptions> & ExtraPaymentValues): number;
   /** How this player may pay for this card (steel, titanium, ...), including expansion effects. */
-  paymentOptionsForCard(card: IProjectCard): PaymentOptions & {steelValue?: number, grapheneValue?: number};
+  paymentOptionsForCard(card: IProjectCard): PaymentOptions & ExtraPaymentValues;
   /**
    * Returns a summary of how much a player would have to spend to play a card,
    * any associated costs, and ways the player can pay.

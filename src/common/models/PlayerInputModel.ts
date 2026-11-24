@@ -1,3 +1,4 @@
+import {CardResource} from '../CardResource';
 import {InfrastructureSectorModel} from '../highOrbit/HighOrbit';
 import {CardModel} from './CardModel';
 import {ColonyModel} from './ColonyModel';
@@ -61,6 +62,10 @@ export type SelectProjectCardToPlayModel = BaseInputModel & {
   propellantOre: number;
   /** High Orbit: ore on Orbital Shipyard (3 M€ each for the Build Colony standard project). */
   shipyardOre: number;
+  /** Epic Corporations: resources on the corporation card that can pay (see EpicHooks.epicPayment). */
+  epicResources?: number;
+  /** The kind of those resources, for the payment icon. */
+  epicResourceType?: CardResource;
   auroraiData: number;
   spireScience: number;
 }
@@ -90,6 +95,10 @@ export type SelectPaymentModel = BaseInputModel & {
   kuiperAsteroids: number;
   spireScience: number;
   reserveUnits: Readonly<Units> | undefined; // Built to support the Merchant milestone.
+  /** Epic Corporations (Technonauts): corporation resources that can pay, their kind and value. */
+  epicResources?: number;
+  epicResourceType?: CardResource;
+  epicValue?: number;
 
   floaters: 0,
   microbes: 0,

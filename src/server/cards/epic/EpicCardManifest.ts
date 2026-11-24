@@ -183,6 +183,16 @@ import {StandardBusiness} from './StandardBusiness';
 import {StreamlineLogistics} from './StreamlineLogistics';
 import {TerraInvestFirm} from './TerraInvestFirm';
 import {TopUpOperation} from './TopUpOperation';
+import {LeMartian} from './LeMartian';
+import {OmniDroneLabs} from './OmniDroneLabs';
+import {PegasusGroup} from './PegasusGroup';
+import {StellarRobotics} from './StellarRobotics';
+import {Technonauts} from './Technonauts';
+import {Xanthum} from './Xanthum';
+import {Oceanus} from './Oceanus';
+import {SagaBioengineering} from './SagaBioengineering';
+import {Microfac} from './Microfac';
+import {MilkySkyway} from './MilkySkyway';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -383,5 +393,16 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.STREAMLINE_LOGISTICS]: {Factory: StreamlineLogistics},
     [CardName.TERRA_INVEST_FIRM]: {Factory: TerraInvestFirm},
     [CardName.TOP_UP_OPERATION]: {Factory: TopUpOperation},
+    // Batch 7: new ways to pay
+    [CardName.LE_MARTIAN]: {Factory: LeMartian},
+    [CardName.OMNIDRONE_LABS]: {Factory: OmniDroneLabs},
+    [CardName.PEGASUS_GROUP]: {Factory: PegasusGroup},
+    [CardName.STELLAR_ROBOTICS]: {Factory: StellarRobotics},
+    [CardName.TECHNONAUTS]: {Factory: Technonauts},
+    [CardName.XANTHUM]: {Factory: Xanthum},
+    [CardName.OCEANUS]: {Factory: Oceanus},
+    [CardName.SAGA_BIOENGINEERING]: {Factory: SagaBioengineering},
+    [CardName.MICROFAC]: {Factory: Microfac},
+    [CardName.MILKY_SKYWAY]: {Factory: MilkySkyway},
   },
 });

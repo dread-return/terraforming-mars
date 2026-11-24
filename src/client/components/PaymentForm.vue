@@ -13,7 +13,8 @@
                 <PaymentUnitComponent
                   v-model:count.number="payment[unit]"
                   :unit="unit"
-                  :description="descriptions[unit]"
+                  :description="ledger[unit].label ?? descriptions[unit]"
+                  :icon="ledger[unit].icon"
                   :rate="ledger[unit].rate"
                   @plus="addValue(unit)"
                   @minus="reduceValue(unit)"
@@ -74,6 +75,7 @@ const DESCRIPTIONS: Record<SpendableResource, string> = {
   graphene: 'Graphene',
   propellantOre: 'Ore',
   shipyardOre: 'Ore',
+  epicResources: 'Resources',
   lunaArchivesScience: 'Science',
   microbes: 'Microbes',
   plants: 'Plants',

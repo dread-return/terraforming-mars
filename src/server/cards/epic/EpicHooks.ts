@@ -67,6 +67,12 @@ function permutations<T>(items: ReadonlyArray<T>): Array<Array<T>> {
  * Each hook only does something when a player has the matching corporation,
  * so they are cheap no-ops otherwise.
  */
+/** Epic corporations whose own resources can pay for some cards (see EpicHooks.epicPayment). */
+const EPIC_PAYMENT_CORPS: ReadonlyArray<CardName> = [
+  CardName.PEGASUS_GROUP, CardName.OMNIDRONE_LABS, CardName.STELLAR_ROBOTICS, CardName.TECHNONAUTS,
+  CardName.XANTHUM, CardName.OCEANUS, CardName.SAGA_BIOENGINEERING, CardName.MICROFAC,
+];
+
 export class EpicHooks {
   /** Called whenever a player raises a global parameter during the action phase. */
   public static onGlobalParameterIncrease(activePlayer: IPlayer, parameter: GlobalParameter, steps: number): void {
@@ -99,6 +105,28 @@ export class EpicHooks {
     if (card.type === CardType.ACTIVE && player.tableau.has(CardName.MARS_ACTIVE_RESOURCES)) {
       player.stock.add(Resource.MEGACREDITS, 1, {log: true});
     }
+    // Technonauts: robots pay for this action (until the player's next action starts).
+    const technonauts = player.tableau.get(CardName.TECHNONAUTS);
+    if (technonauts !== undefined && card.name !== CardName.TECHNONAUTS) {
+      dataOf<{inAction?: boolean}>(technonauts).inAction = true;
+    }
+  }
+
+  /** Called as a player's next action starts: card-action effects are over. */
+  public static onTakeAction(player: IPlayer): void {
+    const technonauts = player.tableau?.get(CardName.TECHNONAUTS);
+    if (technonauts !== undefined) {
+      dataOf<{inAction?: boolean}>(technonauts).inAction = false;
+    }
+  }
+
+  /** Technonauts: robots worth 6 M€ each while paying for a card action. */
+  public static actionPaymentValue(player: IPlayer): number | undefined {
+    const technonauts = player.tableau.get(CardName.TECHNONAUTS);
+    if (technonauts === undefined || technonauts.resourceCount === 0) {
+      return undefined;
+    }
+    return dataOf<{inAction?: boolean}>(technonauts).inAction === true ? 6 : undefined;
   }
 
   /** Extra cards to look at during the research phase (Leviathan, Logos Research & Development). */
@@ -510,6 +538,18 @@ export class EpicHooks {
 
   /** Coeurl Industries: while its action is being used, steel and titanium pay for standard projects. */
   public static standardProjectPayWith(player: IPlayer, project: IStandardProjectCard, base: StandardProjectCanPayWith): StandardProjectCanPayWith {
+    if (project.name !== CardName.SELL_PATENTS_STANDARD_PROJECT) {
+      // Microfac: microbes on it pay 3 M€ each for standard projects.
+      const epic = EpicHooks.epicPayment(player, project);
+      if (epic !== undefined) {
+        base = {...base, epicResources: true, epicValue: epic.value};
+      }
+      // Milky Skyway: energy pays 2 M€ each for the city standard project.
+      const energyValue = EpicHooks.energyValueFor(player, project);
+      if (energyValue !== undefined) {
+        base = {...base, energy: true, energyValue};
+      }
+    }
     const coeurl = player.tableau.get(CardName.COEURL_INDUSTRIES);
     if (coeurl === undefined || project.name === CardName.SELL_PATENTS_STANDARD_PROJECT) {
       return base;
@@ -518,6 +558,87 @@ export class EpicHooks {
       return base;
     }
     return {...base, steel: true, titanium: true};
+  }
+
+  /**
+   * Epic corporations whose own resources pay for some cards (the `epicResources` payment unit): the corporation
+   * holding them and what each is worth for `card`, or undefined when none can pay for it.
+   */
+  public static epicPayment(player: IPlayer, card: ICard): {source: ICard, value: number} | undefined {
+    for (const name of EPIC_PAYMENT_CORPS) {
+      const source = player.tableau.get(name);
+      if (source === undefined || source.resourceCount === 0) {
+        continue;
+      }
+      const value = EpicHooks.epicPaymentValue(player, name, card);
+      if (value !== undefined) {
+        return {source, value};
+      }
+    }
+    return undefined;
+  }
+
+  /** The corporation whose resources the `epicResources` payment unit spends. */
+  public static epicPaymentSource(player: IPlayer): ICard | undefined {
+    for (const name of EPIC_PAYMENT_CORPS) {
+      const source = player.tableau.get(name);
+      if (source !== undefined && source.resourceCount > 0) {
+        return source;
+      }
+    }
+    return undefined;
+  }
+
+  /** The kind of resource the player's paying corporation holds (for the payment icon). */
+  public static epicPaymentResource(player: IPlayer): CardResource | undefined {
+    for (const name of EPIC_PAYMENT_CORPS) {
+      const source = player.tableau.get(name);
+      if (source !== undefined) {
+        return source.resourceType;
+      }
+    }
+    return undefined;
+  }
+
+  private static epicPaymentValue(player: IPlayer, corp: CardName, card: ICard): number | undefined {
+    const has = (tag: Tag) => card.tags.includes(tag);
+    switch (corp) {
+    case CardName.PEGASUS_GROUP:
+      return has(Tag.SPACE) || has(Tag.SCIENCE) ? 2 : undefined;
+    case CardName.OMNIDRONE_LABS:
+      return has(Tag.SCIENCE) ? 2 : undefined;
+    case CardName.STELLAR_ROBOTICS:
+      return card.type === CardType.AUTOMATED ? 5 : undefined;
+    case CardName.TECHNONAUTS:
+      return card.type === CardType.ACTIVE ? 6 : undefined;
+    case CardName.XANTHUM:
+      // Worth 5, plus whatever raises the value of steel and titanium.
+      return has(Tag.SPACE) || has(Tag.BUILDING) ? 5 + (player.getSteelValue() - 2) + (player.getTitaniumValue() - 3) : undefined;
+    case CardName.OCEANUS:
+      return has(Tag.JOVIAN) ? 3 : undefined;
+    case CardName.SAGA_BIOENGINEERING:
+      return has(Tag.ANIMAL) ? 3 : undefined;
+    case CardName.MICROFAC:
+      return card.type === CardType.STANDARD_PROJECT ? 3 : undefined;
+    default:
+      return undefined;
+    }
+  }
+
+  /** OmniDrone Labs: plants pay 2 M€ each for cards with a science tag. */
+  public static plantsValueFor(player: IPlayer, card: ICard): number | undefined {
+    return player.tableau.has(CardName.OMNIDRONE_LABS) && card.tags.includes(Tag.SCIENCE) ? 2 : undefined;
+  }
+
+  /** Milky Skyway: energy pays 2 M€ each for cards with a city tag and the city standard project. */
+  public static energyValueFor(player: IPlayer, card: ICard): number | undefined {
+    if (!player.tableau.has(CardName.MILKY_SKYWAY)) {
+      return undefined;
+    }
+    if (card.tags.includes(Tag.CITY) || card.name === CardName.CITY_STANDARD_PROJECT) {
+      return Math.max(2, player.energyValue);
+    }
+    return undefined;
   }
 
   /** Mega ThermoElectric and MeissnerVolt: energy does not turn into heat in the production phase. */
@@ -614,6 +735,29 @@ export class EpicHooks {
           player.stock.add(Resource.MEGACREDITS, 2 * x, {log: true});
           return undefined;
         })));
+    }
+    // Le Martian: plants as 2 M€ and animals from your cards as 3 M€.
+    if (player.tableau.has(CardName.LE_MARTIAN)) {
+      if (player.plants > 0) {
+        options.push(new SelectOption('Le Martian: use plants as 2 M€ each', 'Convert').andThen(() =>
+          new SelectAmount('How many plants?', 'Convert', 1, player.plants, true).andThen((x) => {
+            player.freeActionTaken = true;
+            player.stock.deduct(Resource.PLANTS, x, {log: true});
+            player.stock.add(Resource.MEGACREDITS, 2 * x, {log: true});
+            return undefined;
+          })));
+      }
+      const animalCards = player.getCardsWithResources(CardResource.ANIMAL);
+      if (animalCards.length > 0) {
+        options.push(new SelectOption('Le Martian: use animals from your cards as 3 M€ each', 'Convert').andThen(() =>
+          new SelectCard('Take animals from', 'Select', animalCards).andThen(([card]) =>
+            new SelectAmount('How many animals?', 'Convert', 1, card.resourceCount, true).andThen((x) => {
+              player.freeActionTaken = true;
+              player.removeResourceFrom(card, x, {log: true});
+              player.stock.add(Resource.MEGACREDITS, 3 * x, {log: true});
+              return undefined;
+            }))));
+      }
     }
     const microbes = player.getResourceCount(CardResource.MICROBE);
     if (player.tableau.has(CardName.HEINDL_AQUATIC) && microbes > 0) {

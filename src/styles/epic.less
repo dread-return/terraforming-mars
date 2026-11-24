@@ -875,6 +875,47 @@
     font-family: 'EpRusso', sans-serif; font-size: 20px; color: #111; line-height: 0.95;
     .et-line-1 { .ep-rainbow(); font-size: 16px; letter-spacing: 6px; }
   }
+  // Batch 7: new ways to pay.
+  &.et-logo-ep-le-martian {
+    font-family: 'EpPacifico', cursive; font-size: 26px; color: #2b2b2b; line-height: 1.1;
+  }
+  &.et-logo-ep-omnidrone {
+    font-family: 'EpRajdhani', sans-serif; font-weight: 600; font-size: 19px; color: #1d1d1d;
+  }
+  &.et-logo-ep-pegasus {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 22px; color: #9aa3b5; line-height: 0.9;
+    -webkit-text-stroke: 0.6px #1c2a5a;
+    .et-line-1 { font-size: 18px; color: #c7ccd8; }
+  }
+  &.et-logo-ep-stellar {
+    font-family: 'EpBlackOps', sans-serif; font-size: 18px; color: #f08a1c; letter-spacing: 0.5px;
+    text-shadow: 1px 1px 0 #2a1600;
+  }
+  &.et-logo-ep-technonauts {
+    font-family: 'EpAudiowide', sans-serif; font-size: 20px; color: #2f6db5; letter-spacing: 1px;
+  }
+  &.et-logo-ep-xanthum {
+    font-family: 'EpRusso', sans-serif; font-size: 27px; color: #111; line-height: 0.85;
+    .et-line-0 { font-size: 11px; color: #555; letter-spacing: 1px; text-align: right; padding-right: 18px; }
+  }
+  &.et-logo-ep-oceanus {
+    font-family: 'EpBlackOps', sans-serif; font-size: 25px; color: #c99a2e; letter-spacing: 2px;
+    text-shadow: 1px 1px 0 #6b4c10;
+  }
+  &.et-logo-ep-saga {
+    font-family: 'EpBebas', sans-serif; font-size: 30px; color: #f2f2f2; line-height: 0.85;
+    background: #2c2c2c; padding: 2px 8px; border-radius: 3px;
+    .et-line-1 { font-size: 13px; letter-spacing: 1px; }
+  }
+  &.et-logo-ep-microfac {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 700; font-size: 25px; color: #1f6e5a; letter-spacing: 1px;
+    border-top: 2px solid #1f6e5a; border-bottom: 2px solid #1f6e5a;
+  }
+  &.et-logo-ep-milky {
+    font-family: 'EpBlackOps', sans-serif; font-style: italic; font-size: 15px; color: #fff; letter-spacing: 1px;
+    background: linear-gradient(90deg, #b3121f, #e0262f 80%, transparent); padding: 3px 18px 3px 6px;
+    clip-path: polygon(0 0, 88% 0, 100% 50%, 88% 100%, 0 100%);
+  }
   &.et-logo-ep-top-up {
     font-family: 'EpBebas', sans-serif; font-size: 28px; color: #1c4f8a; letter-spacing: 1px; line-height: 0.85;
     .et-line-1 { font-size: 17px; color: #8a6d1c; letter-spacing: 3px; }
@@ -941,6 +982,15 @@
   zoom: 0.85;
 }
 
-.card-container.card-standard-business .card-corporation-box {
+.card-container.card-standard-business .card-corporation-box,
+.card-container.card-stellar-robotics .card-corporation-box {
   zoom: 0.9;
 }
+
+// Batch 7: the corporation-resource payment row shows the corporation's own resource.
+.resource_icon--epic-robot { background-image: url("assets/resources/robot.png"); }
+.resource_icon--epic-alloy { background-image: url("assets/resources/alloy.png"); }
+.resource_icon--epic-science { background-image: url("assets/resources/science.png"); }
+.resource_icon--epic-floater { background-image: url("assets/resources/floater.png"); }
+.resource_icon--epic-animal { background-image: url("assets/resources/animal.png"); }
+.resource_icon--epic-microbe { background-image: url("assets/resources/microbe.png"); }

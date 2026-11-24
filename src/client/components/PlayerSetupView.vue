@@ -96,6 +96,7 @@
         <MoonBoard v-if="game.moon !== undefined" :model="game.moon" :tileView="tileView" />
         <VenusMapBoard v-if="game.venusMap !== undefined" :model="game.venusMap" :tileView="tileView" />
         <DeltaProjectBoard v-if="game.gameOptions.expansions.deltaProject" :players="playerView.players" />
+        <MercuryBoard v-if="game.mercury !== undefined" :model="game.mercury" :spaces="game.spaces" :players="playerView.players" />
       </div>
     </details>
   </div>
@@ -108,6 +109,7 @@ import Board from '@/client/components/Board.vue';
 import ContaminationTrack from '@/client/components/nuclear/ContaminationTrack.vue';
 import Card from '@/client/components/card/Card.vue';
 import DeltaProjectBoard from '@/client/components/delta/DeltaProjectBoard.vue';
+import MercuryBoard from '@/client/components/mercury/MercuryBoard.vue';
 import DynamicTitle from '@/client/components/common/DynamicTitle.vue';
 import Milestones from '@/client/components/Milestones.vue';
 import Awards from '@/client/components/Awards.vue';
@@ -151,6 +153,7 @@ export default defineComponent({
     ContaminationTrack,
     Card,
     DeltaProjectBoard,
+    MercuryBoard,
     DynamicTitle,
     WaitingFor,
     Milestones,

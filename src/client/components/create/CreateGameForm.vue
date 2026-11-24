@@ -15,13 +15,13 @@
             </div>
           </div>
 
-          <div class="create-game-page-column">
-            <h4 v-i18n>Expansions</h4>
+          <div class="create-game-page-column create-game-page-column--expansions">
             <!--
-              The official expansions take the first column. The fan-made ones start the next column, under their title,
-              and go on in more columns when they are taller than the screen, see expansionRows.
+              The official expansions take the first column under "Expansions". The fan-made ones start the next column,
+              under "Fan Expansions", and go on in more columns when they are taller than the screen, see expansionRows.
             -->
-            <div ref="expansionsGrid" class="create-game-expansions-grid" :style="{'--expansion-rows': expansionRows}">
+            <div ref="expansionsGrid" class="create-game-expansions-grid" :style="{'--expansion-rows': expansionRows, '--fan-columns': fanColumns}">
+              <h4 class="create-game-expansions-heading" v-i18n>Expansions</h4>
 
               <div class="create-game-expansions-official" ref="officialExpansions">
                 <input type="checkbox" name="allOfficialExpansions" id="allOfficialExpansions-checkbox" v-model="allOfficialExpansions">
@@ -109,7 +109,12 @@
                 </label>
               </div>
 
-              <div class="create-game-subsection-label create-game-fan-label" v-i18n>Fan-made</div>
+              <h4 class="create-game-expansions-heading create-game-fan-heading" v-i18n>Fan Expansions</h4>
+
+              <input type="checkbox" name="allFanExpansions" id="allFanExpansions-checkbox" v-model="allFanExpansions">
+              <label for="allFanExpansions-checkbox">
+                <span v-i18n>All</span>
+              </label>
 
               <input type="checkbox" name="ares" id="ares-checkbox" v-model="expansions.ares">
               <label for="ares-checkbox" class="expansion-button">
@@ -706,6 +711,7 @@ import {getCard} from '@/client/cards/ClientCardManifest';
 import {BOT_DIFFICULTIES, BotDifficulty, NewGameConfig, NewPlayerModel} from '@/common/game/NewGameConfig';
 import {vueRoot} from '@/client/components/vueRoot';
 import {CreateGameModel} from './CreateGameModel';
+import {Expansion} from '@/common/cards/GameModule';
 import {paths} from '@/common/app/paths';
 import {JSONProcessor} from './JSONProcessor';
 import {defaultCreateGameModel} from './defaultCreateGameModel';
@@ -731,12 +737,19 @@ type FormModel = {
   previousViewport: string;
   /** How many rows the expansions list takes before it goes on in another column. */
   expansionRows: number;
+  fanColumns: number;
 };
 
 /** The height of one expansion button, including its margins. */
 const EXPANSION_BUTTON_HEIGHT = 68;
 /** The list always gets at least this many rows, so a short window does not spread it very wide. */
 const MIN_EXPANSION_ROWS = 6;
+// The fan-made expansions in the Expansions list, which their "All" ticks and unticks.
+// (Industries, Postludes and High Orbit live in the Options column.)
+const FAN_EXPANSIONS: ReadonlyArray<Expansion> = [
+  'ares', 'community', 'moon', 'pathfinders', 'ceo', 'starwars', 'underworld', 'deltaProject', 'betterments',
+  'robantilles', 'solaris', 'idesofmars', 'nuclear', 'venusphase2', 'eternity', 'mercury',
+];
 /** Enough rows for every expansion, so the list is one column. */
 const SINGLE_COLUMN = 100;
 /** Expansions wrap onto more columns only on screens wide enough for the columns side by side (see create_game_form.less). */
@@ -752,6 +765,7 @@ export default defineComponent({
       uploading: false,
       previousViewport: '',
       expansionRows: SINGLE_COLUMN,
+      fanColumns: 1,
     };
   },
   components: {
@@ -904,6 +918,17 @@ export default defineComponent({
       ?.setAttribute('content', this.previousViewport);
   },
   computed: {
+    // Ticks or unticks every fan-made expansion in the Expansions list, like "All" does for the official ones.
+    allFanExpansions: {
+      get(): boolean {
+        return FAN_EXPANSIONS.every((module) => this.expansions[module]);
+      },
+      set(value: boolean) {
+        for (const module of FAN_EXPANSIONS) {
+          this.expansions[module] = value;
+        }
+      },
+    },
     rememberSettings: {
       get(): boolean {
         return getPreferences().remember_create_game_settings;
@@ -1039,13 +1064,16 @@ export default defineComponent({
       }
       let rows = SINGLE_COLUMN;
       if (window.innerWidth >= WIDE_SCREEN) {
-        const room = panel.getBoundingClientRect().bottom - grid.getBoundingClientRect().top - panel.scrollTop;
+        // Rows start under the headings.
+        const heading = grid.querySelector('.create-game-fan-heading');
+        const top = heading?.getBoundingClientRect().bottom ?? grid.getBoundingClientRect().top;
+        const room = panel.getBoundingClientRect().bottom - top - panel.scrollTop;
         const fitRows = Math.floor(room / EXPANSION_BUTTON_HEIGHT);
         const countItems = (parent: HTMLElement) => Array.from(parent.children).filter((child) => child.tagName !== 'INPUT').length;
         // The official column spans every row, so there are always enough rows for it.
         const officialRows = countItems(official);
-        // The fan-made title and buttons, without the official column.
-        const fanItems = countItems(grid) - 1;
+        // The fan-made buttons, without the two headings and the official column.
+        const fanItems = countItems(grid) - 3;
 
         // Every column is as wide as the widest button.
         const button = grid.querySelector('label');
@@ -1060,6 +1088,7 @@ export default defineComponent({
         const maxColumns = columnWidth > 0 ? Math.floor((container.clientWidth - otherColumns - padding) / columnWidth) : 2;
         const fanColumns = Math.max(1, maxColumns - 1);
         rows = Math.max(MIN_EXPANSION_ROWS, officialRows, fitRows, Math.ceil(fanItems / fanColumns));
+        this.fanColumns = Math.max(1, Math.ceil(fanItems / rows));
       }
       if (rows !== this.expansionRows) {
         this.expansionRows = rows;

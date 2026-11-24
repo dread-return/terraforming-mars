@@ -1,54 +1,28 @@
 <!--
-  Mercury vs Mars: the Mercury board, drawn like the printed one. Mercury (NASA MESSENGER enhanced-colour
-  map) with Market Colonies' stock, the New Pompeii and Shadow Forest areas, the Act deck and the curved
-  Mercury track; the Acts in development are laid out under it as cards with their asset tracks filled in.
+  Mercury vs Mars: the Mercury board, at the size of the Moon and Venus maps. Mercury (NASA MESSENGER
+  enhanced-colour map) carries Market Colonies' stock and the New Pompeii and Shadow Forest areas; the
+  Mercury track curves around its right side, and Market Colonies' rules and the Act deck sit to its left.
+  The Acts in development are laid out under it as cards with their asset tracks filled in.
 -->
 <template>
   <div class="mercury-board" data-test="mercury-board">
-    <div id="mercury_board" class="mercury-board__planet">
-      <div class="mercury-board__title"><span class="mercury-board__symbol">☿</span><span v-i18n>Mercury</span></div>
-      <div class="mercury-board__flavour" v-i18n>The smallest and innermost planet. Its shadowed polar craters hold water ice, its crust rare minerals and metals.</div>
-
-      <!-- Market Colonies -->
-      <div class="mercury-market" data-test="mercury-market">
+    <div id="mercury_board" class="mercury-board__map">
+      <!-- Market Colonies: rules on the left, stock on the planet -->
+      <div class="mercury-market__info" data-test="mercury-market">
         <div class="mercury-market__title"><span class="mercury-board__symbol">☿</span><span v-i18n>Market Colonies</span></div>
-        <div class="mercury-market__rules">
-          <div class="mercury-market__rule">
-            <i class="mercury-icon mercury-icon--asset"></i>
-            <span v-i18n>Colony bonus</span>
-          </div>
-          <div class="mercury-market__rule">
-            <span><span v-i18n>Trade income</span><small v-i18n>gathered resources, one type, max 3</small></span>
-          </div>
-          <div class="mercury-market__rule">
-            <span><span v-i18n>Colony charge</span><small v-i18n>unused resources</small></span>
-            <span class="mercury-market__charge"><i class="mercury-icon mercury-icon--wild"></i>:<i class="mercury-icon mercury-icon--asset"></i></span>
-          </div>
+        <div class="mercury-market__rule">
+          <span v-i18n>Colony bonus</span>
+          <i class="mercury-icon mercury-icon--asset"></i>
         </div>
-        <div class="mercury-market__grid">
-          <div v-for="column in marketColumns" :key="column" class="mercury-market__column" :data-test="'market-' + column" :title="marketLabel(column) + ': ' + model.market[column] + ' / ' + marketCap">
-            <div class="mercury-market__head"><i class="mercury-icon" :class="'mercury-icon--' + column"></i></div>
-            <div v-for="row in marketCap" :key="row" class="mercury-market__cell" :class="{'mercury-market__cell--full': row <= model.market[column]}">
-              <i v-if="row <= model.market[column]" :class="marketResourceCss(column, row - 1)" data-test="market-resource"></i>
-            </div>
-          </div>
-          <div class="mercury-market__rows">
-            <span v-for="row in marketCap" :key="row">{{ row }}</span>
-          </div>
+        <div class="mercury-market__rule">
+          <span><span v-i18n>Trade income</span><small v-i18n>gathered resources, one type, max 3</small></span>
+        </div>
+        <div class="mercury-market__rule">
+          <span><span v-i18n>Colony charge</span><small v-i18n>unused resources</small></span>
+          <span class="mercury-market__charge"><i class="mercury-icon mercury-icon--wild"></i>:<i class="mercury-icon mercury-icon--asset"></i></span>
         </div>
       </div>
 
-      <!-- New Pompeii and Shadow Forest: board spaces, so tiles can be placed here. -->
-      <div v-for="area in shownAreas" :key="area.space.id" class="mercury-area" :class="'mercury-area--' + area.kind">
-        <svg class="mercury-area__frame" viewBox="0 0 120 138" aria-hidden="true">
-          <polygon points="60,3 117,36 117,102 60,135 3,102 3,36" />
-        </svg>
-        <div class="mercury-area__art" :class="'mercury-area__art--' + area.kind"></div>
-        <div class="mercury-area__name" v-i18n>{{ area.name }}</div>
-        <BoardSpace :space="area.space" tileView="show" />
-      </div>
-
-      <!-- Act deck -->
       <div class="mercury-deck" :title="$t('Act deck') + ': ' + model.actDeckSize">
         <div class="mercury-deck__pile">
           <div class="mercury-deck__card"></div>
@@ -59,11 +33,28 @@
         <div class="mercury-deck__label"><span v-i18n>Act deck</span> · <span v-i18n>discard</span> {{ model.actDiscardSize }}</div>
       </div>
 
+      <div class="mercury-board__planet" :title="$t('Mercury') + ' (NASA/JHUAPL/Carnegie Institution of Washington)'"></div>
+
+      <div class="mercury-market__grid">
+        <div v-for="column in marketColumns" :key="column" class="mercury-market__column" :data-test="'market-' + column" :title="marketLabel(column) + ': ' + model.market[column] + ' / ' + marketCap">
+          <div class="mercury-market__head"><i class="mercury-icon" :class="'mercury-icon--' + column"></i></div>
+          <div v-for="row in marketCap" :key="row" class="mercury-market__cell" :class="{'mercury-market__cell--full': row <= model.market[column]}">
+            <i v-if="row <= model.market[column]" :class="marketResourceCss(column, row - 1)" data-test="market-resource"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- New Pompeii and Shadow Forest: board spaces, so tiles can be placed here. -->
+      <div v-for="area in shownAreas" :key="area.space.id" class="mercury-area" :class="'mercury-area--' + area.kind">
+        <BoardSpace :space="area.space" tileView="show" />
+        <div class="mercury-area__name" v-i18n>{{ area.name }}</div>
+      </div>
+
       <!-- Mercury track -->
       <div class="mercury-track" data-test="mercury-track">
-        <svg class="mercury-track__arc" :viewBox="'0 0 ' + PANEL_WIDTH + ' ' + PANEL_HEIGHT" aria-hidden="true">
+        <svg class="mercury-track__arc" :viewBox="'0 0 ' + MAP_WIDTH + ' ' + MAP_HEIGHT" aria-hidden="true">
           <path :d="arcPath" class="mercury-track__rail" />
-          <line v-for="tick in ticks" :key="tick.step" :x1="tick.x - 7" :y1="tick.y" :x2="tick.x + 9" :y2="tick.y" class="mercury-track__tick" />
+          <line v-for="tick in ticks" :key="tick.step" :x1="tick.x - tick.nx * 6" :y1="tick.y - tick.ny * 6" :x2="tick.x + tick.nx * 6" :y2="tick.y + tick.ny * 6" class="mercury-track__tick" />
         </svg>
         <div
           v-for="tick in ticks"
@@ -75,21 +66,21 @@
           :data-step="tick.step"
         >
           <span v-if="prize(tick.step) !== undefined" class="mercury-track__dot"></span>
-          <span class="mercury-track__number">{{ tick.step }}</span>
-          <span v-if="prize(tick.step) !== undefined" class="mercury-track__everyone">
-            <i v-for="(reward, i) in prize(tick.step)?.everyone" :key="i" class="mercury-icon" :class="'mercury-icon--' + reward"></i>
-            <span class="mercury-track__star">*</span>
-          </span>
-          <span v-if="(prize(tick.step)?.risingPlayer.length ?? 0) > 0" class="mercury-track__rising">
-            <i v-for="(reward, i) in prize(tick.step)?.risingPlayer" :key="i" class="mercury-icon" :class="'mercury-icon--' + reward"></i>
-            <span class="mercury-track__caret">^</span>
+          <span class="mercury-track__label">
+            <span class="mercury-track__number">{{ tick.step }}</span>
+            <span v-if="prize(tick.step) !== undefined" class="mercury-track__everyone">
+              <i v-for="(reward, i) in prize(tick.step)?.everyone" :key="i" class="mercury-icon" :class="'mercury-icon--' + reward"></i>
+              <span class="mercury-track__star">*</span>
+            </span>
+            <span v-if="(prize(tick.step)?.risingPlayer.length ?? 0) > 0" class="mercury-track__rising">
+              <i v-for="(reward, i) in prize(tick.step)?.risingPlayer" :key="i" class="mercury-icon" :class="'mercury-icon--' + reward"></i>
+              <span class="mercury-track__caret">^</span>
+            </span>
           </span>
         </div>
         <div class="mercury-track__marker" :style="markerStyle" :title="$t('Mercury track') + ': ' + model.track" data-test="mercury-marker"></div>
         <div class="mercury-track__finish" :style="finishStyle" :title="$t('When the track is finished, the player with the most Mercury tags gets 2 VP at the end of the game.')">2</div>
       </div>
-
-      <div class="mercury-board__credit">Mercury vs Mars · fan expansion by Aphi · Mercury: NASA/JHUAPL/Carnegie Institution of Washington</div>
     </div>
 
     <!-- Acts in development -->
@@ -136,10 +127,11 @@ const props = withDefaults(defineProps<{
   players: () => [],
 });
 
-const PANEL_WIDTH = 890;
-const PANEL_HEIGHT = 600;
-// The track bends around Mercury like on the printed board: a slice of a large circle whose centre is far to the left.
-const ARC = {cx: 168, cy: 300, r: 600, bottom: 566, top: 46};
+const MAP_WIDTH = 660;
+const MAP_HEIGHT = 370;
+// The planet (see .mercury-board__planet in mercury.less) and the track, which follows its rim just outside it.
+const PLANET = {cx: 340, cy: 185, r: 170};
+const TRACK = {r: 190, from: -54, to: 54}; // degrees, measured upwards from the planet's right-hand side
 
 const marketColumns = MARKET_RESOURCES;
 const marketCap = MARKET_COLUMN_CAP;
@@ -149,19 +141,22 @@ const areas: ReadonlyArray<{id: SpaceId, name: string, kind: 'forest' | 'city'}>
   {id: SpaceName.NEW_POMPEII, name: 'New Pompeii', kind: 'city'},
 ];
 
-function arcX(y: number): number {
-  return ARC.cx + Math.sqrt(ARC.r * ARC.r - (y - ARC.cy) * (y - ARC.cy));
+function pointAt(degrees: number) {
+  const a = degrees * Math.PI / 180;
+  const nx = Math.cos(a);
+  const ny = -Math.sin(a);
+  return {x: PLANET.cx + TRACK.r * nx, y: PLANET.cy + TRACK.r * ny, nx, ny};
 }
 
 const ticks = range(MERCURY_TRACK_MAX + 1).map((step) => {
-  const y = ARC.bottom - step * (ARC.bottom - ARC.top) / MERCURY_TRACK_MAX;
-  return {step, x: Math.round(arcX(y)), y: Math.round(y)};
+  const p = pointAt(TRACK.from + step * (TRACK.to - TRACK.from) / MERCURY_TRACK_MAX);
+  return {step, x: Math.round(p.x), y: Math.round(p.y), nx: p.nx, ny: p.ny};
 });
 
 const arcPath = (() => {
-  const top = ARC.top - 18;
-  const bottom = ARC.bottom + 18;
-  return `M ${arcX(bottom).toFixed(1)} ${bottom} A ${ARC.r} ${ARC.r} 0 0 0 ${arcX(top).toFixed(1)} ${top}`;
+  const start = pointAt(TRACK.from - 5);
+  const end = pointAt(TRACK.to + 5);
+  return `M ${start.x.toFixed(1)} ${start.y.toFixed(1)} A ${TRACK.r} ${TRACK.r} 0 0 0 ${end.x.toFixed(1)} ${end.y.toFixed(1)}`;
 })();
 
 const markerStyle = computed(() => {
@@ -169,9 +164,10 @@ const markerStyle = computed(() => {
   return {left: tick.x + 'px', top: tick.y + 'px'};
 });
 
+// The 2 VP bonus sits just inside the track's last step.
 const finishStyle = (() => {
   const tick = ticks[MERCURY_TRACK_MAX];
-  return {left: (tick.x - 48) + 'px', top: (tick.y - 4) + 'px'};
+  return {left: Math.round(tick.x - tick.nx * 28) + 'px', top: Math.round(tick.y - tick.ny * 28) + 'px'};
 })();
 
 const REWARD_TEXT: Record<MercuryTrackReward, string> = {

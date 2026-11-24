@@ -268,66 +268,34 @@
 }
 
 // ---- The Mercury board -------------------------------------------------------------------------------------------
+// The size of the Moon and Venus maps, on the page's own starry background.
 
 .mercury-board {
-  margin: 20px;
-  width: 896px;
+  margin: 20px 0 0 0;
   color: #f0ece6;
 }
 
-.mercury-board__planet {
+.mercury-board__map {
   position: relative;
-  width: 890px;
-  height: 600px;
-  overflow: hidden;
-  border: 3px solid #5e1b10;
-  border-radius: 6px;
-  background: #050508 url(./assets/mercury/mercury_board.jpg) no-repeat center / 890px 600px;
-  box-shadow: 0 0 0 1px #c0503a, 0 6px 18px rgba(0, 0, 0, 0.7);
+  width: 660px;
+  height: 370px;
+}
+
+.mercury-board__planet {
+  position: absolute;
+  left: 170px;
+  top: 15px;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background: url(./assets/mercury/mercury_planet.png) no-repeat center / 340px 340px;
+  box-shadow: 0 0 18px 2px rgba(170, 185, 220, 0.18);
 }
 
 .mercury-board__symbol {
-  margin-right: 8px;
+  margin-right: 5px;
   font-family: "DejaVu Sans", "Segoe UI Symbol", sans-serif;
   font-weight: bold;
-}
-
-.mercury-board__title {
-  position: absolute;
-  top: 14px;
-  left: 0;
-  padding: 2px 120px 0 16px;
-  font-family: Prototype, sans-serif;
-  font-size: 36px;
-  line-height: 42px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #141414;
-  background: linear-gradient(90deg, rgba(232, 214, 200, 0.96) 0%, rgba(232, 214, 200, 0.85) 55%, rgba(232, 214, 200, 0));
-}
-
-.mercury-board__flavour {
-  position: absolute;
-  top: 60px;
-  left: 0;
-  width: 430px;
-  padding: 4px 90px 5px 16px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 12.5px;
-  font-style: italic;
-  line-height: 15px;
-  color: #161616;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.65) 65%, rgba(255, 255, 255, 0));
-}
-
-.mercury-board__credit {
-  position: absolute;
-  left: 255px;
-  width: 440px;
-  bottom: 3px;
-  text-align: center;
-  font-size: 9px;
-  color: rgba(255, 255, 255, 0.45);
 }
 
 // Small icons used on the board.
@@ -339,89 +307,74 @@
   filter: drop-shadow(0 0 1px #000);
 
   &.mercury-icon--asset {
-    width: 30px;
-    height: 26px;
+    width: 22px;
+    height: 19px;
     background-image: url(./assets/mercury/asset.png);
-    background-size: 30px 26px;
+    background-size: 22px 19px;
   }
 
   &.mercury-icon--card {
-    width: 22px;
-    height: 29px;
+    width: 16px;
+    height: 22px;
+    border-radius: 2px;
     background-image: url(./assets/resources/card.png);
-    background-size: 22px 29px;
+    background-size: 16px 22px;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7);
   }
 
   &.mercury-icon--act {
-    width: 30px;
-    height: 24px;
-    border-radius: 3px;
+    width: 24px;
+    height: 19px;
+    border-radius: 2px;
     background-image: url(./assets/mercury/act_back.jpg);
     background-size: cover;
   }
 
   &.mercury-icon--standardResource, &.mercury-icon--wild, &.mercury-icon--other {
-    width: 24px;
-    height: 24px;
+    width: 19px;
+    height: 19px;
     background-image: url(./assets/resources/wild.png);
-    background-size: 24px;
+    background-size: 19px;
+  }
+
+  &.mercury-icon--microbe, &.mercury-icon--floater, &.mercury-icon--data {
+    width: 22px;
+    height: 22px;
+    background-size: 22px;
   }
 
   &.mercury-icon--microbe {
-    width: 30px;
-    height: 30px;
     background-image: url(./assets/resources/microbe.png);
-    background-size: 30px;
   }
 
   &.mercury-icon--floater {
-    width: 30px;
-    height: 30px;
     background-image: url(./assets/resources/floater.png);
-    background-size: 30px;
   }
 
   &.mercury-icon--data {
-    width: 30px;
-    height: 30px;
     background-image: url(./assets/resources/data.png);
-    background-size: 30px;
   }
 }
 
-// Market Colonies.
-.mercury-market {
+// Market Colonies: the rules to the left of the planet, the stock on it.
+.mercury-market__info {
   position: absolute;
-  top: 112px;
-  left: 18px;
-  width: 470px;
-  height: 330px;
-  border-radius: 150px 40px 40px 150px;
-  background: radial-gradient(ellipse at 40% 50%, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05) 70%);
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.18);
+  top: 40px;
+  left: 0;
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 
   .mercury-market__title {
-    position: absolute;
-    top: 10px;
-    left: 70px;
-    padding: 2px 30px 0 10px;
+    margin-bottom: 2px;
     font-family: Prototype, sans-serif;
-    font-size: 20px;
-    line-height: 20px;
+    font-size: 15px;
+    line-height: 18px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #141414;
-    background: linear-gradient(90deg, rgba(232, 214, 200, 0.95), rgba(232, 214, 200, 0));
-  }
-
-  .mercury-market__rules {
-    position: absolute;
-    top: 64px;
-    left: 34px;
-    width: 172px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    color: #f3e3cf;
+    text-shadow: 0 0 3px #000;
   }
 
   .mercury-market__rule {
@@ -429,11 +382,11 @@
     align-items: center;
     justify-content: space-between;
     gap: 4px;
-    min-height: 30px;
+    min-height: 26px;
     padding: 2px 6px;
     font-family: Prototype, sans-serif;
-    font-size: 12px;
-    line-height: 13px;
+    font-size: 11px;
+    line-height: 12px;
     text-transform: uppercase;
     color: #141414;
     background: linear-gradient(90deg, #f2f2f2, #c9c9c9);
@@ -442,16 +395,9 @@
 
     small {
       display: block;
-      font-size: 9px;
-      line-height: 10px;
+      font-size: 8px;
+      line-height: 9px;
       color: #444;
-    }
-
-    .mercury-icon--asset {
-      order: 2;
-      width: 26px;
-      height: 23px;
-      background-size: 26px 23px;
     }
   }
 
@@ -461,169 +407,109 @@
     font-weight: bold;
 
     .mercury-icon {
-      width: 22px;
-      height: 20px;
+      width: 18px;
+      height: 16px;
       background-size: contain;
     }
   }
+}
 
-  .mercury-market__grid {
-    position: absolute;
-    top: 40px;
-    left: 222px;
-    display: flex;
-    gap: 4px;
-  }
+.mercury-market__grid {
+  position: absolute;
+  top: 82px;
+  left: 270px;
+  display: flex;
+  gap: 3px;
 
   .mercury-market__column {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 2px;
   }
 
   .mercury-market__head {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 46px;
-    height: 34px;
+    width: 32px;
+    height: 24px;
   }
 
   .mercury-market__cell {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 46px;
-    height: 36px;
+    width: 32px;
+    height: 26px;
     border-radius: 2px;
-    background: linear-gradient(170deg, rgba(240, 240, 240, 0.85), rgba(140, 144, 150, 0.85) 60%, rgba(200, 204, 208, 0.85));
+    background: linear-gradient(170deg, rgba(240, 240, 240, 0.8), rgba(140, 144, 150, 0.8) 60%, rgba(200, 204, 208, 0.8));
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.5);
   }
 
   .mercury-market__resource {
     display: inline-block;
-    width: 28px;
-    height: 28px;
-    background-size: 28px;
+    width: 21px;
+    height: 21px;
+    background-size: 21px;
     filter: drop-shadow(0 0 1px #000);
-  }
-
-  .mercury-market__rows {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    padding-top: 37px;
-
-    span {
-      height: 36px;
-      line-height: 36px;
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.8);
-    }
   }
 }
 
-// New Pompeii and Shadow Forest.
+// New Pompeii and Shadow Forest, at the normal size of a board space.
 .mercury-area {
   position: absolute;
-  width: 120px;
-  height: 138px;
+  width: 70px;
+  text-align: center;
 
   &.mercury-area--forest {
-    top: 160px;
-    left: 520px;
+    top: 128px;
+    left: 418px;
   }
 
   &.mercury-area--city {
-    top: 440px;
-    left: 130px;
+    top: 255px;
+    left: 200px;
   }
 
-  .mercury-area__frame {
-    position: absolute;
-    inset: 0;
-
-    polygon {
-      fill: rgba(255, 255, 255, 0.07);
-      stroke: rgba(255, 255, 255, 0.75);
-      stroke-width: 2.5;
-      stroke-dasharray: 2 5;
-      stroke-linecap: round;
-    }
+  .board-space {
+    position: relative;
+    margin: 0 auto;
   }
 
-  .mercury-area__art {
-    position: absolute;
-    top: 24px;
-    left: 30px;
-    width: 60px;
-    height: 46px;
-    opacity: 0.55;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    filter: grayscale(1) brightness(2.2);
-
-    &.mercury-area__art--forest {
-      background-image: url(./assets/tiles/greenery.png);
-    }
-
-    &.mercury-area__art--city {
-      background-image: url(./assets/tiles/city.png);
-    }
+  // An empty area keeps a faint outline so it is visible on the planet.
+  .board-space-selectable > .board-space-type-land {
+    opacity: 0.45;
   }
 
   .mercury-area__name {
-    position: absolute;
-    top: 78px;
-    width: 100%;
-    font-size: 16px;
-    line-height: 18px;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.9);
+    margin-top: 2px;
+    font-size: 12px;
+    line-height: 13px;
+    color: #fff;
     text-shadow: 0 0 3px #000, 0 0 2px #000;
-  }
-
-  // The board space itself, enlarged to fill the frame. Empty, it only shows when it can be picked.
-  .board-space {
-    position: absolute;
-    top: 10px;
-    left: 14px;
-    margin: 0;
-    transform: scale(2) translate(12px, 14px);
-    transform-origin: top left;
-  }
-
-  // An empty area shows the printed frame only; the land hex appears when the area can be picked.
-  .board-space-selectable > .board-space-type-land {
-    opacity: 0;
-  }
-
-  .board-space-selectable.board-space--available > .board-space-type-land {
-    opacity: 0.55;
   }
 }
 
-// The Act deck.
+// The Act deck, off the planet.
 .mercury-deck {
   position: absolute;
-  top: 452px;
-  left: 330px;
-  width: 170px;
+  top: 228px;
+  left: 18px;
+  width: 124px;
   text-align: center;
 
   .mercury-deck__pile {
     position: relative;
-    width: 120px;
-    height: 98px;
+    width: 96px;
+    height: 80px;
     margin: 0 auto;
   }
 
   .mercury-deck__card {
     position: absolute;
-    width: 112px;
-    height: 91px;
-    border-radius: 7px;
+    width: 90px;
+    height: 74px;
+    border-radius: 6px;
     background: url(./assets/mercury/act_back.jpg) no-repeat center / cover;
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35), 2px 2px 4px rgba(0, 0, 0, 0.8);
 
@@ -634,28 +520,28 @@
 
   .mercury-deck__count {
     position: absolute;
-    right: -4px;
+    right: -6px;
     bottom: -4px;
-    min-width: 26px;
-    padding: 2px 4px;
-    border-radius: 13px;
+    min-width: 24px;
+    padding: 1px 4px;
+    border-radius: 12px;
     font-family: Prototype, sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     color: #111;
     background: linear-gradient(180deg, #fbe9a6, #d9a93c);
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6);
   }
 
   .mercury-deck__label {
-    margin-top: 8px;
-    font-size: 12px;
+    margin-top: 6px;
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 1px;
     text-shadow: 0 0 3px #000;
   }
 }
 
-// The Mercury track, bent around the planet.
+// The Mercury track, following the planet's rim.
 .mercury-track {
   position: absolute;
   inset: 0;
@@ -664,15 +550,15 @@
   .mercury-track__arc {
     position: absolute;
     inset: 0;
-    width: 890px;
-    height: 600px;
+    width: 660px;
+    height: 370px;
+    overflow: visible;
   }
 
   .mercury-track__rail {
     fill: none;
     stroke: rgba(230, 200, 190, 0.85);
-    stroke-width: 6;
-    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
+    stroke-width: 5;
   }
 
   .mercury-track__tick {
@@ -689,21 +575,31 @@
 
   .mercury-track__dot {
     position: absolute;
-    left: -5px;
-    top: -7px;
-    width: 10px;
-    height: 14px;
+    left: -4px;
+    top: -5px;
+    width: 8px;
+    height: 10px;
     border-radius: 50%;
     background: #fff;
     box-shadow: 0 0 0 1px #333;
   }
 
-  .mercury-track__number {
+  // Number, then everybody's prize (*), then the raiser's (^), all outside the track.
+  .mercury-track__label {
     position: absolute;
-    left: 12px;
-    top: -9px;
-    font-size: 14px;
-    line-height: 16px;
+    left: 9px;
+    top: -10px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    height: 20px;
+    white-space: nowrap;
+  }
+
+  .mercury-track__number {
+    min-width: 15px;
+    font-size: 12px;
+    line-height: 14px;
     color: #f4ece8;
     text-shadow: 0 0 2px #000;
   }
@@ -712,28 +608,22 @@
     color: #d8b45a;
   }
 
-  .mercury-track__everyone {
-    position: absolute;
-    left: 32px;
-    top: -15px;
+  .mercury-track__everyone, .mercury-track__rising {
     display: flex;
     align-items: center;
-    gap: 2px;
-    white-space: nowrap;
+    gap: 1px;
   }
 
   .mercury-track__rising {
-    position: absolute;
-    right: 14px;
-    top: -15px;
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
+    margin-left: 4px;
+    padding-left: 5px;
+    border-left: 1px solid rgba(255, 255, 255, 0.35);
   }
 
   .mercury-track__star, .mercury-track__caret {
     align-self: flex-start;
-    font-size: 13px;
+    font-size: 11px;
+    line-height: 11px;
     font-weight: bold;
     color: #fff;
     text-shadow: 0 0 2px #000;
@@ -741,29 +631,29 @@
 
   .mercury-track__caret {
     order: -1;
-    margin-right: 1px;
   }
 
   .mercury-track__marker {
     position: absolute;
-    width: 32px;
-    height: 32px;
-    margin: -16px 0 0 -16px;
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
     border-radius: 50%;
-    background: url(./assets/tags/mercury.png) no-repeat center / 36px 36px;
-    box-shadow: 0 0 0 2px #f3d77a, 0 0 8px 2px rgba(243, 215, 122, 0.8);
+    background: url(./assets/tags/mercury.png) no-repeat center / 28px 28px;
+    box-shadow: 0 0 0 2px #f3d77a, 0 0 6px 2px rgba(243, 215, 122, 0.8);
     transition: top 0.4s, left 0.4s;
     pointer-events: auto;
   }
 
   .mercury-track__finish {
     position: absolute;
-    width: 30px;
-    height: 30px;
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
     border-radius: 50%;
     font-family: Prototype, sans-serif;
-    font-size: 20px;
-    line-height: 30px;
+    font-size: 15px;
+    line-height: 22px;
     text-align: center;
     color: #3b2200;
     background: radial-gradient(circle at 35% 35%, #ffe7b0, #c8862f 70%, #7a4a12);
@@ -772,19 +662,17 @@
   }
 }
 
-// The Acts in development, laid out under the board.
+// The Acts in development, laid out under the board on the page background.
 .mercury-acts {
-  margin-top: 10px;
-  padding: 8px 12px 12px;
-  border-radius: 6px;
-  background: linear-gradient(180deg, rgba(40, 34, 48, 0.92), rgba(18, 16, 24, 0.92));
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  margin-top: 6px;
+  padding: 4px 0 12px;
 
   .mercury-acts__title {
     font-family: Prototype, sans-serif;
     font-size: 18px;
     letter-spacing: 1px;
     text-transform: uppercase;
+    text-shadow: 0 0 3px #000;
   }
 
   .mercury-acts__empty {

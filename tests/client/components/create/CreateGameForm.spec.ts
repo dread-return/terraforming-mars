@@ -268,15 +268,40 @@ describe('CreateGameForm', () => {
     expect(ids.slice(0, 3)).deep.eq(['industries-checkbox', 'domesWilderness-checkbox', 'postludes-checkbox']);
   });
 
-  it('the fan-made title starts the column next to the official expansions', async () => {
+  it('"Expansions" and "Fan Expansions" head their columns, each starting with an All button', async () => {
     const wrapper = shallowMount(CreateGameForm, {
       ...globalConfig,
     });
     await wrapper.vm.$nextTick();
     const grid = wrapper.find('.create-game-expansions-grid');
-    const children = grid.element.children;
-    expect(children[0].classList.contains('create-game-expansions-official')).is.true;
-    expect(children[1].classList.contains('create-game-fan-label')).is.true;
+    const children = Array.from(grid.element.children).filter((child) => child.tagName !== 'INPUT');
+    expect(children[0].tagName).eq('H4');
+    expect(children[0].textContent).eq('Expansions');
+    expect(children[1].classList.contains('create-game-expansions-official')).is.true;
+    expect(children[2].tagName).eq('H4');
+    expect(children[2].textContent).eq('Fan Expansions');
+    expect(children[3].getAttribute('for')).eq('allFanExpansions-checkbox');
+  });
+
+  it('the fan All button ticks and unticks every fan-made expansion in the list', async () => {
+    const wrapper = shallowMount(CreateGameForm, {
+      ...globalConfig,
+    });
+    const model = wrapper.vm as unknown as CreateGameModel;
+    const all = wrapper.find('#allFanExpansions-checkbox');
+    await all.setValue(true);
+    expect(model.expansions.ares).is.true;
+    expect(model.expansions.eternity).is.true;
+    expect(model.expansions.mercury).is.true;
+    // Options-column modules are left alone.
+    expect(model.expansions.industries).is.false;
+    expect((all.element as HTMLInputElement).checked).is.true;
+
+    await all.setValue(false);
+    expect(model.expansions.ares).is.false;
+    expect(model.expansions.mercury).is.false;
+    // The official expansions that fan ones turned on stay on.
+    expect(model.expansions.colonies).is.true;
   });
 
   it('the expansions list wraps into columns of the size set by expansionRows', async () => {

@@ -77,21 +77,28 @@
 .create-game-expansions-grid {
   display: grid;
   grid-auto-flow: column;
-  grid-template-rows: repeat(var(--expansion-rows), auto);
+  // A row for the two headings, then the buttons.
+  grid-template-rows: auto repeat(var(--expansion-rows), auto);
   grid-auto-columns: 1fr;
   align-content: start;
 }
 
-.create-game-expansions-official {
+// "Expansions" over the official column, "Fan Expansions" over the fan-made ones, in the same row as the
+// other columns' titles.
+.create-game-expansions-heading {
+  grid-row: 1;
   grid-column: 1;
-  grid-row: 1 / -1;
-  display: flex;
-  flex-direction: column;
 }
 
-.create-game-fan-label {
-  align-self: end;
-  padding: 0 0 8px 4px;
+.create-game-fan-heading {
+  grid-column: 2 / span var(--fan-columns);
+}
+
+.create-game-expansions-official {
+  grid-column: 1;
+  grid-row: 2 / -1;
+  display: flex;
+  flex-direction: column;
 }
 
 @media (max-width: 1023px) {
@@ -100,7 +107,7 @@
     flex-direction: column;
   }
 
-  .create-game-fan-label {
+  .create-game-fan-heading {
     padding-top: 10px;
   }
 }
@@ -341,6 +348,26 @@
 
 .create-game-beginner-option-label {
   margin-top: 15px;
+}
+
+// The bot difficulty: the player pad's own font, black on white so it reads on every player colour.
+.create-game-bot-difficulty.form-select {
+  height: auto;
+  margin-top: 4px;
+  padding: 4px 28px 4px 8px;
+  font-family: inherit;
+  font-size: 18px;
+  line-height: 24px;
+  color: #000;
+  background-color: #fff;
+  border: 1px solid #555;
+
+  option {
+    font-family: inherit;
+    font-size: 18px;
+    color: #000;
+    background-color: #fff;
+  }
 }
 
 @media only screen and (min-width: 1024px) {

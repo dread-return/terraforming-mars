@@ -196,6 +196,9 @@ import {MilkySkyway} from './MilkySkyway';
 import {FoundingFarmers} from './FoundingFarmers';
 import {MarsNomadsEpic} from './MarsNomadsEpic';
 import {OrwellObservatories} from './OrwellObservatories';
+import {Atlantis} from './Atlantis';
+import {Babylonia} from './Babylonia';
+import {BolsonConstruction} from './BolsonConstruction';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -411,5 +414,9 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.FOUNDING_FARMERS]: {Factory: FoundingFarmers},
     [CardName.MARS_NOMADS_EPIC]: {Factory: MarsNomadsEpic, compatibility: 'pathfinders'},
     [CardName.ORWELL_OBSERVATORIES]: {Factory: OrwellObservatories},
+    // Batch 9: cities and greeneries on oceans
+    [CardName.ATLANTIS]: {Factory: Atlantis},
+    [CardName.BABYLONIA]: {Factory: Babylonia, compatibility: 'pathfinders'},
+    [CardName.BOLSON_CONSTRUCTION]: {Factory: BolsonConstruction},
   },
 });

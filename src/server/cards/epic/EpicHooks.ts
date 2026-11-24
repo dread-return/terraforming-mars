@@ -1,3 +1,6 @@
+import {TileType} from '../../../common/TileType';
+import {Space} from '../../boards/Space';
+import {Tile} from '../../Tile';
 import {CardName} from '../../../common/cards/CardName';
 import {CardType} from '../../../common/cards/CardType';
 import {Tag} from '../../../common/cards/Tag';
@@ -538,6 +541,10 @@ export class EpicHooks {
 
   /** Coeurl Industries: while its action is being used, steel and titanium pay for standard projects. */
   public static standardProjectPayWith(player: IPlayer, project: IStandardProjectCard, base: StandardProjectCanPayWith): StandardProjectCanPayWith {
+    // Bolson Construction: steel pays for the city standard project.
+    if (project.name === CardName.CITY_STANDARD_PROJECT && player.tableau.has(CardName.BOLSON_CONSTRUCTION)) {
+      base = {...base, steel: true};
+    }
     if (project.name !== CardName.SELL_PATENTS_STANDARD_PROJECT) {
       // Microfac: microbes on it pay 3 M€ each for standard projects.
       const epic = EpicHooks.epicPayment(player, project);
@@ -639,6 +646,38 @@ export class EpicHooks {
       return Math.max(2, player.energyValue);
     }
     return undefined;
+  }
+
+  /** Atlantis and Bolson Construction: their cities may go on ocean tiles. */
+  public static citiesOnOceans(player: IPlayer): boolean {
+    return player.tableau?.has(CardName.ATLANTIS) === true || player.tableau?.has(CardName.BOLSON_CONSTRUCTION) === true;
+  }
+
+  /** Babylonia: its greeneries may go on ocean tiles. */
+  public static greeneriesOnOceans(player: IPlayer): boolean {
+    return player.tableau?.has(CardName.BABYLONIA) === true;
+  }
+
+  /** Plain, unclaimed ocean tiles that a city or greenery could go on top of. */
+  public static plainOceans(spaces: ReadonlyArray<Space>): Array<Space> {
+    return spaces.filter((space) => space.tile?.tileType === TileType.OCEAN && space.player === undefined && space.cube === undefined);
+  }
+
+  /**
+   * A city or greenery placed on an ocean tile becomes a city on an ocean (Atlantis, Bolson Construction) or a
+   * greenery on an ocean (Babylonia): it counts as both, and covers the ocean.
+   */
+  public static convertTile(player: IPlayer, space: Space, tile: Tile): Tile {
+    if (space.tile?.tileType !== TileType.OCEAN) {
+      return tile;
+    }
+    if (tile.tileType === TileType.CITY && EpicHooks.citiesOnOceans(player)) {
+      return {...tile, tileType: TileType.OCEAN_CITY, covers: space.tile};
+    }
+    if (tile.tileType === TileType.GREENERY && EpicHooks.greeneriesOnOceans(player)) {
+      return {...tile, tileType: TileType.OCEAN_GREENERY, covers: space.tile};
+    }
+    return tile;
   }
 
   /** Mega ThermoElectric and MeissnerVolt: energy does not turn into heat in the production phase. */

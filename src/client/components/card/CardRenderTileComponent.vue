@@ -246,6 +246,9 @@ const TILE_CLASSES: Record<TileType, Classes> = {
   [TileType.OBSERVATORY_CITY]: {
     tile: 'card-tile-epic-observatory-city',
   },
+  [TileType.OCEAN_GREENERY]: {
+    tile: 'card-tile-epic-ocean-greenery',
+  },
 };
 
 export default defineComponent({

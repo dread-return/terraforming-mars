@@ -2198,4 +2198,8 @@ export enum CardName {
   FOUNDING_FARMERS = 'Founding Farmers',
   MARS_NOMADS_EPIC = 'Mars Nomads (Epic)',
   ORWELL_OBSERVATORIES = 'Orwell Observatories',
+  // Epic Corporations, batch 9 (cities and greeneries on oceans)
+  ATLANTIS = 'Atlantis',
+  BABYLONIA = 'Babylonia',
+  BOLSON_CONSTRUCTION = 'Bolson Construction',
 }

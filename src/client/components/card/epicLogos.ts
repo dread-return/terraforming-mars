@@ -208,4 +208,8 @@ export const EPIC_LOGOS: Partial<Record<CardName, {slug: string, lines: Readonly
   [CardName.FOUNDING_FARMERS]: {slug: 'ep-founding-farmers', lines: ['FOUNDING FARMERS']},
   [CardName.MARS_NOMADS_EPIC]: {slug: 'ep-mars-nomads', lines: ['MARS', 'NOMADS']},
   [CardName.ORWELL_OBSERVATORIES]: {slug: 'ep-orwell', lines: ['ORWELL', 'Observatories']},
+  // Batch 9: cities and greeneries on oceans
+  [CardName.ATLANTIS]: {slug: 'ep-atlantis', lines: ['ATLANTIS']},
+  [CardName.BABYLONIA]: {slug: 'ep-babylonia', lines: ['Babylonia']},
+  [CardName.BOLSON_CONSTRUCTION]: {slug: 'ep-bolson', lines: ['BOLSON', 'CONSTRUCTION']},
 };

@@ -1491,6 +1491,9 @@ export class Game implements IGame, Logger {
   // addTile applies to the Mars board, but not the Moon board, see MoonExpansion.addTile for placing
   // a tile on The Moon.
   public addTile(player: IPlayer, space: Space, tile: Tile): void {
+    // Epic Corporations: a city or greenery on an ocean tile (Atlantis, Bolson Construction, Babylonia).
+    tile = EpicHooks.convertTile(player, space, tile);
+
     // Part 1, basic validation checks.
 
     // Land claim a player can claim land for themselves

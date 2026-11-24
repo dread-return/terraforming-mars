@@ -215,7 +215,11 @@ export class MarsBoard extends Board {
     // Sedimentary Rocks (Rob Antilles): a city may go on a Sediment tile, ignoring placement rules.
     if (spaces === undefined) {
       const sediments = this.spaces.filter((space) => space.tile?.tileType === TileType.SEDIMENT && space.cube === undefined);
-      return [...available, ...sediments];
+      // Epic Corporations (Atlantis, Bolson Construction): cities on ocean tiles, not next to another city.
+      const oceans = EpicHooks.citiesOnOceans(player) ?
+        EpicHooks.plainOceans(this.spaces).filter((space) => !this.getAdjacentSpaces(space).some((adj) => Board.isCitySpace(adj))) :
+        [];
+      return [...available, ...sediments, ...oceans];
     }
     return available;
   }
@@ -259,6 +263,20 @@ export class MarsBoard extends Board {
   }
 
   public getAvailableSpacesForGreenery(player: IPlayer, canAffordOptions?: CanAffordOptions): ReadonlyArray<Space> {
+    const land = this.getAvailableLandSpacesForGreenery(player, canAffordOptions);
+    // Epic Corporations (Babylonia): a greenery may go on an ocean tile, next to your tiles if you have any.
+    if (!EpicHooks.greeneriesOnOceans(player)) {
+      return land;
+    }
+    const oceans = EpicHooks.plainOceans(this.spaces);
+    const hasTiles = this.spaces.some((space) => space.player === player && MarsBoard.hasRealTile(space) && space.spaceType !== SpaceType.COLONY);
+    const usable = hasTiles ?
+      oceans.filter((space) => this.getAdjacentSpaces(space).some((adj) => adj.player === player && MarsBoard.hasRealTile(adj))) :
+      oceans;
+    return [...land, ...usable];
+  }
+
+  private getAvailableLandSpacesForGreenery(player: IPlayer, canAffordOptions?: CanAffordOptions): ReadonlyArray<Space> {
     let availableLandSpaces = this.getAvailableSpacesOnLand(player, canAffordOptions);
     // Gordon CEO can ignore placement restrictions for Cities+Greenery
     // Epic Corporations: New Grounds too.

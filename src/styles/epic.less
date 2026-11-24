@@ -931,6 +931,20 @@
     transform: rotate(-12deg);
     .et-line-1 { font-family: 'EpRighteous', sans-serif; font-size: 15px; color: #3a1015; }
   }
+  // Batch 9: cities and greeneries on oceans.
+  &.et-logo-ep-atlantis {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 700; font-size: 25px; color: #3e8fd6; letter-spacing: 6px;
+    text-shadow: 0 0 4px #bfe3ff;
+  }
+  &.et-logo-ep-babylonia {
+    font-family: 'EtPlayfair', serif; font-style: italic; font-weight: 700; font-size: 27px; color: #2f6b2a;
+    text-shadow: 1px 1px 0 #c9e9b5;
+  }
+  &.et-logo-ep-bolson {
+    font-family: 'EpBlackOps', sans-serif; font-size: 25px; color: #2fbfa8; line-height: 0.9;
+    -webkit-text-stroke: 1px #1a1a1a;
+    .et-line-1 { font-size: 15px; color: #e08a1c; -webkit-text-stroke: 0.5px #1a1a1a; }
+  }
   &.et-logo-ep-top-up {
     font-family: 'EpBebas', sans-serif; font-size: 28px; color: #1c4f8a; letter-spacing: 1px; line-height: 0.85;
     .et-line-1 { font-size: 17px; color: #8a6d1c; letter-spacing: 3px; }
@@ -1006,6 +1020,10 @@
   }
 }
 
+.card-container.card-atlantis .card-corporation-box {
+  zoom: 0.85;
+}
+
 .card-container.card-standard-business .card-corporation-box,
 .card-container.card-stellar-robotics .card-corporation-box {
   zoom: 0.9;
@@ -1032,3 +1050,11 @@
 .card-tile-epic-farm { background-image: url(./assets/epic/tiles/farm-icon.png); }
 .card-tile-epic-nomad-city { background-image: url(./assets/epic/tiles/nomad-city-icon.png); }
 .card-tile-epic-observatory-city { background-image: url(./assets/epic/tiles/observatory-city-icon.png); }
+.board-space-tile--ocean-greenery { background: url(./assets/epic/tiles/ocean-greenery.png); background-size: 46px 51px; width: 46px; }
+.card-tile-epic-ocean-greenery {
+  filter: none;
+  width: 46px;
+  height: 51px;
+  background-size: 46px 51px;
+  background-image: url(./assets/epic/tiles/ocean-greenery.png);
+}

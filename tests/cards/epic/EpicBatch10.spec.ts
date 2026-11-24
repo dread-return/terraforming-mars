@@ -56,6 +56,10 @@ describe('Epic Corporations batch 10 (conversions)', () => {
     game.addTile(player, landSpace(game), {tileType: TileType.CITY});
     expect(player.plants).eq(3);
     expect(player.megaCredits).is.gte(before + 1);
+    // Off Mars (Ganymede Colony): nothing.
+    const ganymede = game.board.spaces.find((s) => s.spaceType === SpaceType.COLONY)!;
+    game.addTile(player, ganymede, {tileType: TileType.CITY});
+    expect(player.plants).eq(3);
   });
 
   it('Evergreen Energy: greeneries raise energy production; plants as energy', () => {

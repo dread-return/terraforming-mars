@@ -1,3 +1,4 @@
+import {EpicHooks} from '../cards/epic/EpicHooks';
 import {Postludes} from '../postludes/Postludes';
 import {Phase} from '../../common/Phase';
 import {IPlayer} from '../IPlayer';
@@ -132,23 +133,25 @@ function giveAwards(player: IPlayer, builder: VictoryPointsBreakdownBuilder) {
   player.game.fundedAwards.forEach((fundedAward) => {
     const award = fundedAward.award;
     const scorer = new AwardScorer(player.game, award);
+    // Epic Corporations: Cosmos Casinos' free award scores double.
+    const multiplier = EpicHooks.awardMultiplier(player.game, award.name);
     const players: Array<IPlayer> = player.game.players.slice();
     players.sort((p1, p2) => scorer.get(p2) - scorer.get(p1));
 
     // There is one rank 1 player
     if (scorer.get(players[0]) > scorer.get(players[1])) {
-      maybeSetVP(player, players[0], fundedAward, 5, '1st', builder);
+      maybeSetVP(player, players[0], fundedAward, 5 * multiplier, '1st', builder);
       players.shift();
 
       if (players.length > 1) {
         // There is one rank 2 player
         if (scorer.get(players[0]) > scorer.get(players[1])) {
-          maybeSetVP(player, players[0], fundedAward, 2, '2nd', builder);
+          maybeSetVP(player, players[0], fundedAward, 2 * multiplier, '2nd', builder);
         } else {
           // There are at least two rank 2 players
           const score = scorer.get(players[0]);
           while (players.length > 0 && scorer.get(players[0]) === score) {
-            maybeSetVP(player, players[0], fundedAward, 2, '2nd', builder);
+            maybeSetVP(player, players[0], fundedAward, 2 * multiplier, '2nd', builder);
             players.shift();
           }
         }
@@ -157,7 +160,7 @@ function giveAwards(player: IPlayer, builder: VictoryPointsBreakdownBuilder) {
       // There are at least two rank 1 players
       const score = scorer.get(players[0]);
       while (players.length > 0 && scorer.get(players[0]) === score) {
-        maybeSetVP(player, players[0], fundedAward, 5, '1st', builder);
+        maybeSetVP(player, players[0], fundedAward, 5 * multiplier, '1st', builder);
         players.shift();
       }
     }

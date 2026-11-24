@@ -110,6 +110,8 @@ export class ChooseCards extends DeferredAction {
 export function keep(player: IPlayer, cards: ReadonlyArray<IProjectCard>, discards: ReadonlyArray<IProjectCard>, logType: LogType = LogType.DREW): void {
   player.cardsInHand.push(...cards);
   player.game.projectDeck.discard(...discards);
+  // Epic Corporations: Mars Archives may archive the discarded cards instead.
+  EpicHooks.onCardsDiscarded(player, discards);
   // Epic Corporations: Dev Wright.
   EpicHooks.onCardsKept(player, cards.length, logType === LogType.BOUGHT || logType === LogType.BOUGHT_VERBOSE);
 

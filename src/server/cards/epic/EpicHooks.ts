@@ -541,6 +541,10 @@ export class EpicHooks {
 
   /** Coeurl Industries: while its action is being used, steel and titanium pay for standard projects. */
   public static standardProjectPayWith(player: IPlayer, project: IStandardProjectCard, base: StandardProjectCanPayWith): StandardProjectCanPayWith {
+    // S2A Modular: titanium and energy pay for the city standard project.
+    if (project.name === CardName.CITY_STANDARD_PROJECT && player.tableau.has(CardName.S2A_MODULAR)) {
+      base = {...base, titanium: true, energy: true, energyValue: player.energyValue};
+    }
     // Bolson Construction: steel pays for the city standard project.
     if (project.name === CardName.CITY_STANDARD_PROJECT && player.tableau.has(CardName.BOLSON_CONSTRUCTION)) {
       base = {...base, steel: true};
@@ -740,6 +744,11 @@ export class EpicHooks {
 
   /** ROD Association: selling patents gives resources for their tags. */
   public static onPatentsSold(player: IPlayer, cards: ReadonlyArray<IProjectCard>): void {
+    // Scavenger sells patents for 2 M€ each (1 more than usual).
+    if (player.tableau.has(CardName.SCAVENGER) && cards.length > 0) {
+      player.stock.add(Resource.MEGACREDITS, cards.length, {log: true});
+    }
+    EpicHooks.onCardsDiscarded(player, cards);
     if (player.tableau.has(CardName.ROD_ASSOCIATION) && cards.length > 0) {
       EpicUtils.rodGain(player, cards);
     }
@@ -921,7 +930,28 @@ export class EpicHooks {
 
   /** New Grounds and Steel Ridge Constructions place cities ignoring the normal rules. */
   public static ignoresCityPlacement(player: IPlayer): boolean {
-    return player.tableau.has(CardName.NEW_GROUNDS) || player.tableau.has(CardName.STEEL_RIDGE_CONSTRUCTIONS);
+    return player.tableau.has(CardName.NEW_GROUNDS) || player.tableau.has(CardName.STEEL_RIDGE_CONSTRUCTIONS) ||
+      // S2A Modular and Cosmos Casinos: cities may go next to other cities.
+      player.tableau.has(CardName.S2A_MODULAR) || player.tableau.has(CardName.COSMOS_CASINOS);
+  }
+
+  /** Cosmos Casinos: the award it funded scores double. */
+  public static awardMultiplier(game: IGame, awardName: string): number {
+    for (const player of game.players) {
+      const casinos = player.tableau.get(CardName.COSMOS_CASINOS);
+      if (casinos !== undefined && dataOf<{award?: string}>(casinos).award === awardName) {
+        return 2;
+      }
+    }
+    return 1;
+  }
+
+  /** Mars Archives: offer to archive cards the player just discarded. */
+  public static onCardsDiscarded(player: IPlayer, cards: ReadonlyArray<IProjectCard>): void {
+    const archives = player.tableau?.get(CardName.MARS_ARCHIVES);
+    if (archives !== undefined && cards.length > 0) {
+      (archives as unknown as {offerArchive(p: IPlayer, c: ReadonlyArray<IProjectCard>): void}).offerArchive(player, cards);
+    }
   }
 
   /** New Grounds places greeneries ignoring the normal rules. */

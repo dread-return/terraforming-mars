@@ -203,6 +203,10 @@ import {Arboralists} from './Arboralists';
 import {EvergreenEnergy} from './EvergreenEnergy';
 import {InfinityEnergy} from './InfinityEnergy';
 import {MartianLumber} from './MartianLumber';
+import {S2AModular} from './S2AModular';
+import {CosmosCasinos} from './CosmosCasinos';
+import {Scavenger} from './Scavenger';
+import {MarsArchives} from './MarsArchives';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -427,5 +431,10 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.EVERGREEN_ENERGY]: {Factory: EvergreenEnergy},
     [CardName.INFINITY_ENERGY]: {Factory: InfinityEnergy},
     [CardName.MARTIAN_LUMBER]: {Factory: MartianLumber},
+    // Batch 11
+    [CardName.S2A_MODULAR]: {Factory: S2AModular},
+    [CardName.COSMOS_CASINOS]: {Factory: CosmosCasinos},
+    [CardName.SCAVENGER]: {Factory: Scavenger},
+    [CardName.MARS_ARCHIVES]: {Factory: MarsArchives},
   },
 });

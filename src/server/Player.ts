@@ -93,6 +93,7 @@ import {Eternity} from './cards/eternity/Eternity';
 import {Mercury} from './mercury/Mercury';
 import {mercuryCanUseSteel} from './mercury/MercuryCards';
 import {IActCard, isActCard} from './mercury/ActCard';
+import {Scavenger} from './cards/epic/Scavenger';
 import {EpicHooks} from './cards/epic/EpicHooks';
 import {BotDifficulty} from '../common/game/NewGameConfig';
 
@@ -784,6 +785,13 @@ export class Player implements IPlayer {
     }
 
     const cards = copyAndClear(this.draftedCards);
+
+    // Epic Corporations: Scavenger gets no new cards; it may buy discarded cards instead.
+    if (this.tableau.has(CardName.SCAVENGER)) {
+      this.game.projectDeck.discard(...cards);
+      this.setWaitingFor(Scavenger.research(this, () => this.game.playerIsFinishedWithResearchPhase(this)));
+      return;
+    }
 
     const chooseCardsToBuy = () => {
       // TODO(kberg): Using .execute to rely on directly calling setWaitingFor is not great.

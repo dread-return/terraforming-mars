@@ -79,4 +79,5 @@ export enum CardResource {
   ROBOT = 'Robot',
   ALLOY = 'Alloy',
   FARM = 'Farm',
+  ARCHIVED_CARD = 'Archived card',
 }

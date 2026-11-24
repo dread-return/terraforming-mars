@@ -2207,4 +2207,9 @@ export enum CardName {
   EVERGREEN_ENERGY = 'Evergreen Energy',
   INFINITY_ENERGY = 'Infinity Energy',
   MARTIAN_LUMBER = 'Martian Lumber',
+  // Epic Corporations, batch 11
+  S2A_MODULAR = 'S2A Modular',
+  COSMOS_CASINOS = 'Cosmos Casinos',
+  SCAVENGER = 'Scavenger',
+  MARS_ARCHIVES = 'Mars Archives',
 }

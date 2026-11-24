@@ -1,3 +1,4 @@
+import {SpaceType} from '../../../common/boards/SpaceType';
 import {CorporationCard} from '../corporation/CorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
@@ -32,11 +33,11 @@ export class Arboralists extends CorporationCard {
             });
             ce.vSpace(Size.TINY);
             ce.effect(undefined, (eb) => {
-              eb.emptyTile('normal', {size: Size.SMALL, all}).startEffect.plants(1);
+              eb.emptyTile('normal', {size: Size.SMALL, all}).asterix().startEffect.plants(1);
             });
             ce.vSpace(Size.TINY);
-            ce.effect('Use plants as M€ (not M€ as plants). Opponent tile on Mars: +1 plant. Your tile: +1 plant and 1 M€.', (eb) => {
-              eb.emptyTile('normal', {size: Size.SMALL}).startEffect.plants(1).megacredits(1);
+            ce.effect('Use plants as M€ (not M€ as plants). Any tile placed on Mars: +1 plant. Any tile you place on Mars: also +1 M€.', (eb) => {
+              eb.emptyTile('normal', {size: Size.SMALL}).asterix().startEffect.megacredits(1);
             });
           });
         }),
@@ -44,12 +45,14 @@ export class Arboralists extends CorporationCard {
     });
   }
 
-  public onTilePlaced(cardOwner: IPlayer, activePlayer: IPlayer, _space: Space, boardType: BoardType) {
+  /** Any tile placed on Mars: +1 plant. Any tile you place on Mars: also +1 M€. */
+  public onTilePlaced(cardOwner: IPlayer, activePlayer: IPlayer, space: Space, boardType: BoardType) {
+    if (boardType !== BoardType.MARS || space.spaceType === SpaceType.COLONY) {
+      return;
+    }
+    cardOwner.stock.add(Resource.PLANTS, 1, {log: true, from: {card: this}});
     if (cardOwner === activePlayer) {
-      cardOwner.stock.add(Resource.PLANTS, 1, {log: true, from: {card: this}});
       cardOwner.stock.add(Resource.MEGACREDITS, 1, {log: true, from: {card: this}});
-    } else if (boardType === BoardType.MARS) {
-      cardOwner.stock.add(Resource.PLANTS, 1, {log: true, from: {card: this}});
     }
   }
 }

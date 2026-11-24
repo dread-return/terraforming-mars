@@ -3,6 +3,10 @@
     <div v-if="isPrelude" class="prelude-label">prelude</div>
     <div v-if="isCorporation" class="corporation-label">corporation</div>
     <div v-if="isCeo" class="ceo-label">CEO</div>
+    <div v-if="actKind !== undefined" class="act-label" :class="'act-label--' + actKind" data-test="act-label">
+      <span class="act-label__act" v-i18n>Act</span>
+      <span class="act-label__kind" v-i18n>{{ actKind === 'rivalry' ? 'Rivalry' : 'Treaty' }}</span>
+    </div>
     <CardCorporationLogo v-if="isCorporation" :title="title" />
     <div v-else ref="title" class="card-title" :class="backgroundColorClass">{{ titleWithoutSuffix }}</div>
   </div>
@@ -99,6 +103,13 @@ export default defineComponent({
     },
     isPrelude(): boolean {
       return this.type === CardType.PRELUDE;
+    },
+    // Mercury vs Mars Act cards carry an "Act / Treaty" or "Act / Rivalry" tab, like the printed cards.
+    actKind(): 'treaty' | 'rivalry' | undefined {
+      if (this.type !== CardType.ACT) {
+        return undefined;
+      }
+      return getCard(this.title)?.act?.kind === 'rivalry' ? 'rivalry' : 'treaty';
     },
   },
 });

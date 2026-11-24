@@ -834,6 +834,7 @@ export class Mercury {
     return {
       track: state.track,
       market: {microbe: state.market.microbe, floater: state.market.floater, data: state.market.data, other: state.market.other.length},
+      marketOther: [...state.market.other],
       developments,
       actDeckSize: state.actDeck.drawPile.length,
       actDiscardSize: state.actDeck.discardPile.length,

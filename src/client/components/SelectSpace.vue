@@ -130,7 +130,7 @@ export default defineComponent({
     getSelectableSpaces(): Array<HTMLElement> {
       const spaces: Array<HTMLElement> = [];
 
-      const regions = ['main_board', 'moon_board', 'colony_spaces', 'moon_board_outer_spaces', 'venus_map_board'];
+      const regions = ['main_board', 'moon_board', 'colony_spaces', 'moon_board_outer_spaces', 'venus_map_board', 'mercury_board'];
       for (const region of regions) {
         const board = document.getElementById(region);
         if (board !== null) {

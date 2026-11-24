@@ -43,7 +43,7 @@
 
   <IndividualTracksBoard v-if="game.gameOptions.individualTracks" :players="players" />
 
-  <MercuryBoard v-if="game.mercury !== undefined" :model="game.mercury" />
+  <MercuryBoard v-if="game.mercury !== undefined" :model="game.mercury" :spaces="game.spaces" :players="players" />
 
   <div v-if="players.length > 1" class="player_home_block--milestones-and-awards">
     <a class="hotkey-target"></a>

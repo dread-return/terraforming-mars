@@ -71,6 +71,7 @@
 </template>
 
 <script lang="ts">
+import {MERCURY_SPACE_IDS} from '@/common/mercury/Mercury';
 import {defineComponent} from 'vue';
 import * as constants from '@/common/constants';
 import BoardSpace from '@/client/components/BoardSpace.vue';
@@ -114,8 +115,6 @@ const OFF_MARS_NAMES: Partial<Record<SpaceId, string>> = {
   [SpaceName.VENERA_BASE]: 'Venera Base',
   [SpaceName.SIDERALIS]: 'Sideralis',
   [SpaceName.MAIN_DOCKING_STATION]: 'Main Docking Station',
-  [SpaceName.NEW_POMPEII]: 'New Pompeii (Mercury)',
-  [SpaceName.SHADOW_FOREST]: 'Shadow Forest (Mercury)',
   [SpaceName.FLYING_GARDEN]: 'Flying Garden',
   [SpaceName.SPACE_SOLARIUM]: 'Space Solarium',
 };
@@ -135,9 +134,7 @@ const OFF_MARS_SLOTS: Partial<Record<SpaceId, {left: number, top: number}>> = {
   [SpaceName.VENERA_BASE]: {left: 826, top: 28},
   [SpaceName.MAXWELL_BASE]: {left: 1096, top: 128},
   [SpaceName.FLYING_GARDEN]: {left: 20, top: 530},
-  [SpaceName.NEW_POMPEII]: {left: 20, top: 646},
-  [SpaceName.SHADOW_FOREST]: {left: 110, top: 646},
-  [SpaceName.SPACE_SOLARIUM]: {left: 200, top: 646},
+  [SpaceName.SPACE_SOLARIUM]: {left: 20, top: 646},
   [SpaceName.CERES_SPACEPORT]: {left: 1096, top: 530},
   [SpaceName.DYSON_SCREENS]: {left: 1096, top: 646},
   [SpaceName.LUNAR_EMBASSY]: {left: 1006, top: 646},
@@ -244,8 +241,9 @@ export default defineComponent({
       return this.spaces.filter((s) => s.spaceType === SpaceType.COLONY && OFF_MARS_SLOTS[s.id] !== undefined);
     },
     // Any off-Mars space without a spot of its own goes in a row under the board.
+    // New Pompeii and Shadow Forest are drawn on the Mercury panel instead.
     otherOffMarsSpaces(): Array<SpaceModel> {
-      return this.spaces.filter((s) => s.spaceType === SpaceType.COLONY && OFF_MARS_SLOTS[s.id] === undefined);
+      return this.spaces.filter((s) => s.spaceType === SpaceType.COLONY && OFF_MARS_SLOTS[s.id] === undefined && !MERCURY_SPACE_IDS.includes(s.id));
     },
     maximums() {
       return getGlobalParameterMaximums(BoardName.GIGA);

@@ -1,5 +1,8 @@
 import {CardName} from '../cards/CardName';
+import {CardResource} from '../CardResource';
 import {Color} from '../Color';
+import {SpaceName} from '../boards/SpaceName';
+import {SpaceId} from '../Types';
 
 /**
  * Mercury vs Mars (fan expansion by Aphi): shared rules data.
@@ -67,7 +70,12 @@ export type MercuryModel = {
   track: number;
   /** Resources on Market Colonies, per column. */
   market: Record<MarketResource, number>;
+  /** The resources in the market's last ("other") column, in order. */
+  marketOther?: Array<CardResource>;
   developments: Array<ActDevelopmentModel>;
   actDeckSize: number;
   actDiscardSize: number;
 };
+
+/** The off-Mars spaces on the Mercury board (drawn on the Mercury panel, not around Mars). */
+export const MERCURY_SPACE_IDS: ReadonlyArray<SpaceId> = [SpaceName.NEW_POMPEII, SpaceName.SHADOW_FOREST];

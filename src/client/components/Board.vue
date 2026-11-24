@@ -31,8 +31,6 @@
       <BoardSpace v-if="hasSpace(SpaceName.VENERA_BASE)" :space="getSpace(SpaceName.VENERA_BASE)" text="Venera Base" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.SIDERALIS)" :space="getSpace(SpaceName.SIDERALIS)" text="Sideralis" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.MAIN_DOCKING_STATION)" :space="getSpace(SpaceName.MAIN_DOCKING_STATION)" text="Main Docking Station" :tileView="tileView" />
-      <BoardSpace v-if="hasSpace(SpaceName.NEW_POMPEII)" :space="getSpace(SpaceName.NEW_POMPEII)" text="New Pompeii (Mercury)" :tileView="tileView" />
-      <BoardSpace v-if="hasSpace(SpaceName.SHADOW_FOREST)" :space="getSpace(SpaceName.SHADOW_FOREST)" text="Shadow Forest (Mercury)" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.FLYING_GARDEN)" :space="getSpace(SpaceName.FLYING_GARDEN)" text="Flying Garden" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.SPACE_SOLARIUM)" :space="getSpace(SpaceName.SPACE_SOLARIUM)" text="Space Solarium" :tileView="tileView" />
     </div>

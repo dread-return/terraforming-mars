@@ -78,8 +78,10 @@ export function chooseMilestonesAndAwards(gameOptions: GameOptions): DrawnMilest
     return getRandomMilestonesAndAwards(gameOptions, GIGA_MILESTONES_AWARDS_DRAWN, GIGA_SYNERGY);
   }
 
-  // This fork shows 3 milestones and 3 awards (as many as can be claimed and funded), see threeMilestonesAndAwards.
-  const requiredQty = gameOptions.threeMilestonesAndAwards ? MILESTONES_AWARDS_SHOWN : (gameOptions.venusNextExtension ? 6 : 5);
+  const requiredQty = officialCount(gameOptions);
+
+  // With officialMilestoneAwardCount, the expansions' milestones and awards replace board ones instead of adding to them.
+  const board: DrawnMilestonesAndAwards = {milestones: [], awards: []};
 
   switch (gameOptions.randomMA) {
   case RandomMAOptionType.NONE:
@@ -96,7 +98,8 @@ export function chooseMilestonesAndAwards(gameOptions: GameOptions): DrawnMilest
     case BoardName.VASTITAS_BOREALIS:
     case BoardName.VASTITAS_BOREALIS_NOVA:
     case BoardName.AMAZONIS_PLANITIA:
-      push(milestoneManifest.boards[boardName], awardManifest.boards[gameOptions.boardName]);
+      board.milestones.push(...milestoneManifest.boards[boardName]);
+      board.awards.push(...awardManifest.boards[gameOptions.boardName]);
       break;
     default:
       return getRandomMilestonesAndAwards(gameOptions, requiredQty, LIMITED_SYNERGY);
@@ -121,11 +124,16 @@ export function chooseMilestonesAndAwards(gameOptions: GameOptions): DrawnMilest
         push(['Lunarchitect'], ['Full Moon']);
       }
     }
-    // Keep 3 of each, chosen at random from the board's own and the expansions' milestones and awards.
-    if (gameOptions.threeMilestonesAndAwards) {
+    if (gameOptions.officialMilestoneAwardCount) {
+      // Every expansion milestone and award, then board ones at random to make up the official count.
       drawnMilestonesAndAwards = {
-        milestones: pickSome(drawnMilestonesAndAwards.milestones, MILESTONES_AWARDS_SHOWN),
-        awards: pickSome(drawnMilestonesAndAwards.awards, MILESTONES_AWARDS_SHOWN),
+        milestones: [...pickSome(board.milestones, requiredQty - drawnMilestonesAndAwards.milestones.length), ...drawnMilestonesAndAwards.milestones],
+        awards: [...pickSome(board.awards, requiredQty - drawnMilestonesAndAwards.awards.length), ...drawnMilestonesAndAwards.awards],
+      };
+    } else {
+      drawnMilestonesAndAwards = {
+        milestones: [...board.milestones, ...drawnMilestonesAndAwards.milestones],
+        awards: [...board.awards, ...drawnMilestonesAndAwards.awards],
       };
     }
     break;
@@ -153,11 +161,16 @@ export function chooseMilestonesAndAwards(gameOptions: GameOptions): DrawnMilest
   return drawnMilestonesAndAwards;
 }
 
-/** How many milestones, and how many awards, a game shows. Exported for tests. */
-export const MILESTONES_AWARDS_SHOWN = 3;
+/** How many milestones, and how many awards, the official game shows: 5, or 6 with Venus Next. */
+export function officialCount(gameOptions: Pick<GameOptions, 'venusNextExtension'>): number {
+  return gameOptions.venusNextExtension ? 6 : 5;
+}
 
 /** `count` entries of `list` at random, in their original order. */
 function pickSome<T>(list: ReadonlyArray<T>, count: number): Array<T> {
+  if (count <= 0) {
+    return [];
+  }
   if (list.length <= count) {
     return [...list];
   }

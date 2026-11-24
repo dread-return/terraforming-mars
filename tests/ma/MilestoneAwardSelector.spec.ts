@@ -302,36 +302,49 @@ describe('GIGA fan milestones and awards', () => {
   });
 });
 
-describe('MilestoneAwardSelector, 3 milestones and 3 awards', () => {
-  const three = {...DEFAULT_GAME_OPTIONS, threeMilestonesAndAwards: true};
+describe('MilestoneAwardSelector, the official count', () => {
+  const official = {...DEFAULT_GAME_OPTIONS, officialMilestoneAwardCount: true};
 
-  it('keeps 3 of the board and expansion milestones and awards', () => {
-    for (let i = 0; i < 20; i++) {
-      const options: GameOptions = {...three, venusNextExtension: true, aresExtension: true, moonExpansion: true};
-      const all = chooseMilestonesAndAwards({...options, threeMilestonesAndAwards: false});
-      const drawn = chooseMilestonesAndAwards(options);
-      expect(drawn.milestones).has.length(3);
-      expect(drawn.awards).has.length(3);
-      // The moon pair is random, so only check the board and the other expansions.
-      const fixed = [...milestoneManifest.boards[BoardName.THARSIS], ...milestoneManifest.expansions['venus'], ...milestoneManifest.expansions['ares'],
-        'One Giant Step', 'Lunarchitect'];
-      for (const name of drawn.milestones) {
-        expect(fixed).includes(name);
-      }
-      expect(all.milestones.length).greaterThan(3);
-    }
-  });
-
-  it('draws 3 of each when randomized', () => {
-    for (const randomMA of [RandomMAOptionType.LIMITED, RandomMAOptionType.UNLIMITED]) {
-      const drawn = chooseMilestonesAndAwards({...three, randomMA, venusNextExtension: true});
-      expect(drawn.milestones).has.length(3);
-      expect(drawn.awards).has.length(3);
-    }
-  });
-
-  it('is off by default, so the board keeps its full set', () => {
-    const drawn = chooseMilestonesAndAwards(DEFAULT_GAME_OPTIONS);
+  it('keeps the board set as it is: 5 of each, 6 with Venus Next', () => {
+    const drawn = chooseMilestonesAndAwards(official);
     expect(drawn.milestones).deep.eq(milestoneManifest.boards[BoardName.THARSIS]);
+    expect(drawn.awards).deep.eq(awardManifest.boards[BoardName.THARSIS]);
+
+    const withVenus = chooseMilestonesAndAwards({...official, venusNextExtension: true});
+    expect(withVenus.milestones).deep.eq([...milestoneManifest.boards[BoardName.THARSIS], ...milestoneManifest.expansions['venus']]);
+    expect(withVenus.awards).has.length(6);
+  });
+
+  it('expansion milestones and awards replace board ones instead of adding to them', () => {
+    for (let i = 0; i < 20; i++) {
+      const options: GameOptions = {...official, venusNextExtension: true, aresExtension: true, moonExpansion: true, mercuryExpansion: true};
+      const all = chooseMilestonesAndAwards({...options, officialMilestoneAwardCount: false});
+      const drawn = chooseMilestonesAndAwards(options);
+      expect(all.milestones.length).greaterThan(6);
+      expect(drawn.milestones).has.length(6);
+      expect(drawn.awards).has.length(6);
+      // Every expansion one is kept: Venus, Ares, one of the Moon pairs and one Mercury milestone.
+      expect(drawn.milestones).to.include.members([...milestoneManifest.expansions['venus'], ...milestoneManifest.expansions['ares']]);
+      expect(drawn.milestones.filter((m) => m === 'One Giant Step' || m === 'Lunarchitect')).has.length(1);
+      expect(drawn.milestones.filter((m) => m === 'Opportunist' || m === 'Starman')).has.length(1);
+      // Venus 1 + Ares 2 + Moon 1 + Mercury 1, so 1 comes from the board.
+      expect(drawn.milestones.filter((m) => milestoneManifest.boards[BoardName.THARSIS].includes(m))).has.length(1);
+    }
+  });
+
+  it('draws 5 or 6 of each when randomized', () => {
+    for (const randomMA of [RandomMAOptionType.LIMITED, RandomMAOptionType.UNLIMITED]) {
+      expect(chooseMilestonesAndAwards({...official, randomMA}).milestones).has.length(5);
+      const drawn = chooseMilestonesAndAwards({...official, randomMA, venusNextExtension: true});
+      expect(drawn.milestones).has.length(6);
+      expect(drawn.awards).has.length(6);
+    }
+  });
+
+  it('is off by default, so expansions add to the board set as upstream', () => {
+    const drawn = chooseMilestonesAndAwards({...DEFAULT_GAME_OPTIONS, venusNextExtension: true, aresExtension: true});
+    // Tharsis 5 + Venus 1 + Ares 2.
+    expect(drawn.milestones).has.length(8);
   });
 });
+

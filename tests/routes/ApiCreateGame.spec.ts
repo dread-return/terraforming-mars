@@ -273,9 +273,9 @@ describe('ApiCreateGame', () => {
     expect(options.individualTracks).is.false;
   });
 
-  it('created games show 3 milestones and 3 awards', async () => {
+  it('created games show the official number of milestones and awards', async () => {
     const options = await createdGameOptions({});
-    expect(options.threeMilestonesAndAwards).is.true;
+    expect(options.officialMilestoneAwardCount).is.true;
   });
 
   async function createdEscapeVelocity(escapeVelocity: object) {

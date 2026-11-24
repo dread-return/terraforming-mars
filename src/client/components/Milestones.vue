@@ -12,7 +12,7 @@
         </span>
       </div>
       <span @click="toggleDescription" :title="$t('press to show or hide the description')" data-test="toggle-description">
-        <div v-show="showMilestoneDetails" class="ma-tiles">
+        <div v-show="showMilestoneDetails">
           <Milestone
             v-for="milestone in milestones"
             :key="milestone.name"

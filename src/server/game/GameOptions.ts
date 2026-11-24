@@ -39,11 +39,12 @@ export type GameOptions = {
   /** Individual global parameter tracks (Epic): each player's markers on the oxygen, temperature, oceans and cities tracks, with rewards along the way. */
   individualTracks: boolean;
   /**
-   * Show 3 milestones and 3 awards instead of the board's set plus the expansions' ones.
-   * Every game created from the create-game page has it (see ApiCreateGame); it is off by default so tests keep the
-   * board's full set.
+   * Show as many milestones and awards as the official game does: 5 of each, or 6 with Venus Next. The milestones
+   * and awards that this fork's expansions add (Ares, The Moon, Mercury vs Mars) take the place of board ones
+   * instead of adding to them. Every game created from the create-game page has it (see GameOptionsFromConfig);
+   * it is off by default so tests keep the board's set plus the expansions' ones, as upstream does.
    */
-  threeMilestonesAndAwards: boolean;
+  officialMilestoneAwardCount: boolean;
   solarPhaseOption: boolean;
   removeNegativeGlobalEventsOption: boolean;
   moonExpansion: boolean;
@@ -177,7 +178,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   gigaTurmoil: false,
   domesWilderness: false,
   individualTracks: false,
-  threeMilestonesAndAwards: false,
+  officialMilestoneAwardCount: false,
   preludeDraftVariant: false,
   ceosDraftVariant: false,
   preludeExtension: false,

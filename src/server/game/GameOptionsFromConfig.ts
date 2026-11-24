@@ -51,8 +51,8 @@ export function gameOptionsFromConfig(gameReq: NewGameConfig, boardName: BoardNa
     domesWilderness: gameReq.domesWilderness === true,
     // Postludes are gained from the individual tracks, so they turn the tracks on.
     individualTracks: gameReq.individualTracks === true || gameReq.expansions.postludes === true,
-    // This fork always shows 3 milestones and 3 awards.
-    threeMilestonesAndAwards: true,
+    // 5 milestones and 5 awards (6 with Venus Next), like the official game.
+    officialMilestoneAwardCount: true,
     prelude2Expansion: gameReq.expansions.prelude2,
     preludeDraftVariant: gameReq.preludeDraftVariant,
     preludeExtension: gameReq.expansions.prelude,

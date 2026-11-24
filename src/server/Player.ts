@@ -868,11 +868,16 @@ export class Player implements IPlayer {
     const milkyEnergy = EpicHooks.energyValueFor(this, card);
     const epic = EpicHooks.epicPayment(this, card);
     const martianLumber = card.tags.includes(Tag.BUILDING) && this.playedCards.has(CardName.MARTIAN_LUMBER_CORP);
+    const steel = this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card) || Eternity.canUseSteel(this, card) || mercuryCanUseSteel(this, card) || EpicHooks.canUseSteel(this, card);
+    const steelValue = EpicHooks.steelValueForCard(this, card);
+    // Epic Corporations (Martian Lumber): plants pay as if they were steel.
+    const lumberPlants = steel && this.tableau.has(CardName.MARTIAN_LUMBER) ? steelValue ?? this.getSteelValue() : undefined;
+    const plantValues = [martianLumber ? DEFAULT_PAYMENT_VALUES.plants : undefined, omniDronePlants, lumberPlants].filter((v) => v !== undefined);
     return {
       heat: this.canUseHeatAsMegaCredits,
       energy: this.canUseEnergyAsMegaCredits || milkyEnergy !== undefined,
-      steel: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card) || Eternity.canUseSteel(this, card) || mercuryCanUseSteel(this, card) || EpicHooks.canUseSteel(this, card),
-      plants: martianLumber || omniDronePlants !== undefined,
+      steel,
+      plants: plantValues.length > 0,
       titanium: this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.SPACE) || Nuclear.canUseTitanium(this, card) || Eternity.canUseTitanium(this, card) || EpicHooks.canUseTitanium(this, card),
       lunaTradeFederationTitanium: this.canUseTitaniumAsMegacredits,
       seeds: card.tags.includes(Tag.PLANT) || card.name === CardName.GREENERY_STANDARD_PROJECT,
@@ -887,9 +892,11 @@ export class Player implements IPlayer {
       shipyardOre: false,
       hephaestusAsteroids: card.tags.includes(Tag.MARS) || card.tags.includes(Tag.VENUS),
       // Epic Corporations: Vanguard's steel is worth more for Venus cards; Carbon Nanosystems' graphene is worth 5.
-      steelValue: EpicHooks.steelValueForCard(this, card),
+      steelValue,
       grapheneValue: EpicHooks.grapheneValue(this),
-      plantsValue: martianLumber ? undefined : omniDronePlants,
+      // The best of the plant values that apply. Epic plant payments always send theirs, so the client shows plants
+      // for cards without a building tag too.
+      plantsValue: omniDronePlants !== undefined || lumberPlants !== undefined ? Math.max(...plantValues) : undefined,
       energyValue: milkyEnergy,
       epicResources: epic !== undefined,
       epicValue: epic?.value,

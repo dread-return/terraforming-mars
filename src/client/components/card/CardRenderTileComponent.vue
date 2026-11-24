@@ -246,8 +246,9 @@ const TILE_CLASSES: Record<TileType, Classes> = {
   [TileType.OBSERVATORY_CITY]: {
     tile: 'card-tile-epic-observatory-city',
   },
+  // Babylonia's greenery on an ocean uses the Wetlands art.
   [TileType.OCEAN_GREENERY]: {
-    tile: 'card-tile-epic-ocean-greenery',
+    tile: 'card-tile-wetlands',
   },
 };
 

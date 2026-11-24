@@ -102,6 +102,11 @@ describe('Epic Corporations batch 9 (cities and greeneries on oceans)', () => {
     expect(game.board.getAvailableSpacesForGreenery(player)).contains(ocean);
     game.simpleAddTile(player, land, {tileType: TileType.CITY});
     expect(game.board.getAvailableSpacesForGreenery(player)).contains(ocean);
+    // Normal greenery rules: while spaces next to your tiles are free, an ocean away from them can't be used.
+    const farOcean = game.board.getAvailableSpacesForOcean(other).find((s) => !game.board.getAdjacentSpaces(s).includes(land))!;
+    game.addTile(other, farOcean, {tileType: TileType.OCEAN});
+    expect(game.board.getAvailableSpacesForGreenery(player)).not.contains(farOcean);
+    expect(game.board.getAvailableSpacesForGreenery(player).every((s) => game.board.getAdjacentSpaces(s).includes(land))).is.true;
 
     const oceans = game.board.getOceanSpaces().length;
     const before = player.megaCredits;

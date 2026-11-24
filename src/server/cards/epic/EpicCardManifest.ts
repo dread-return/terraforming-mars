@@ -199,6 +199,10 @@ import {OrwellObservatories} from './OrwellObservatories';
 import {Atlantis} from './Atlantis';
 import {Babylonia} from './Babylonia';
 import {BolsonConstruction} from './BolsonConstruction';
+import {Arboralists} from './Arboralists';
+import {EvergreenEnergy} from './EvergreenEnergy';
+import {InfinityEnergy} from './InfinityEnergy';
+import {MartianLumber} from './MartianLumber';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -418,5 +422,10 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.ATLANTIS]: {Factory: Atlantis},
     [CardName.BABYLONIA]: {Factory: Babylonia, compatibility: 'pathfinders'},
     [CardName.BOLSON_CONSTRUCTION]: {Factory: BolsonConstruction},
+    // Batch 10: conversions
+    [CardName.ARBORALISTS]: {Factory: Arboralists},
+    [CardName.EVERGREEN_ENERGY]: {Factory: EvergreenEnergy},
+    [CardName.INFINITY_ENERGY]: {Factory: InfinityEnergy},
+    [CardName.MARTIAN_LUMBER]: {Factory: MartianLumber},
   },
 });

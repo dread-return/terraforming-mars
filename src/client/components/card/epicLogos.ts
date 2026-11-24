@@ -212,4 +212,9 @@ export const EPIC_LOGOS: Partial<Record<CardName, {slug: string, lines: Readonly
   [CardName.ATLANTIS]: {slug: 'ep-atlantis', lines: ['ATLANTIS']},
   [CardName.BABYLONIA]: {slug: 'ep-babylonia', lines: ['Babylonia']},
   [CardName.BOLSON_CONSTRUCTION]: {slug: 'ep-bolson', lines: ['BOLSON', 'CONSTRUCTION']},
+  // Batch 10: conversions
+  [CardName.ARBORALISTS]: {slug: 'ep-arboralists', lines: ['ARBORALISTS']},
+  [CardName.EVERGREEN_ENERGY]: {slug: 'ep-evergreen', lines: ['Evergreen', 'Energy']},
+  [CardName.INFINITY_ENERGY]: {slug: 'ep-infinity', lines: ['INFINITY', 'ENERGY']},
+  [CardName.MARTIAN_LUMBER]: {slug: 'ep-martian-lumber', lines: ['MARTIAN', 'LUMBER']},
 };

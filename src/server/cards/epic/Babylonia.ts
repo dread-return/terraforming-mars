@@ -27,7 +27,7 @@ export class Babylonia extends CorporationCard {
           b.megacredits(44).plants(4, {digit});
           b.corpBox('effect', (ce) => {
             ce.vSpace(Size.MEDIUM);
-            ce.effect('When you place a greenery, you may put it on an ocean tile instead and gain 2 M€. It counts as both a greenery and an ocean.', (eb) => {
+            ce.effect('Your greeneries may go on ocean tiles (normal greenery rules apply): +2 M€. It counts as both a greenery and an ocean.', (eb) => {
               eb.greenery({size: Size.SMALL}).startEffect.tile(TileType.OCEAN_GREENERY, false, false).megacredits(2);
             });
           });

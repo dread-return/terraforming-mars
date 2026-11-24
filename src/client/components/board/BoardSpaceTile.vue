@@ -93,7 +93,8 @@ const tileTypeToCssClass: Record<TileType, string> = {
   [TileType.FARM]: 'farm',
   [TileType.NOMAD_CITY]: 'nomad-city',
   [TileType.OBSERVATORY_CITY]: 'observatory-city',
-  [TileType.OCEAN_GREENERY]: 'ocean-greenery',
+  // Babylonia's greenery on an ocean uses the Wetlands art (it counts as both, like Wetlands).
+  [TileType.OCEAN_GREENERY]: 'wetlands',
 };
 
 const tileTypeToCssClassAresOverride = new Map<TileType, string>([
@@ -165,7 +166,7 @@ const descriptions: Record<TileType, string> = {
   [TileType.FARM]: 'Farm (Founding Farmers): 1 VP at game end, plus 1 VP per adjacent city.',
   [TileType.NOMAD_CITY]: 'Nomad City (Mars Nomads): a city that can move.',
   [TileType.OBSERVATORY_CITY]: 'Observatory City (Orwell Observatories): a city orbiting Mars.',
-  [TileType.OCEAN_GREENERY]: 'Ocean Greenery (Babylonia): counts as both a greenery and an ocean.',
+  [TileType.OCEAN_GREENERY]: 'Babylonia greenery: counts as a greenery and an ocean (and toward 9 oceans).',
   [TileType.SEDIMENT]: 'Sediment: any player may place a city here, ignoring placement rules, and gain 3 M€. Adjacency bonus: 1 titanium.',
 };
 

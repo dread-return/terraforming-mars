@@ -2202,4 +2202,9 @@ export enum CardName {
   ATLANTIS = 'Atlantis',
   BABYLONIA = 'Babylonia',
   BOLSON_CONSTRUCTION = 'Bolson Construction',
+  // Epic Corporations, batch 10 (conversions)
+  ARBORALISTS = 'Arboralists',
+  EVERGREEN_ENERGY = 'Evergreen Energy',
+  INFINITY_ENERGY = 'Infinity Energy',
+  MARTIAN_LUMBER = 'Martian Lumber',
 }

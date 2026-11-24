@@ -263,17 +263,21 @@ export class MarsBoard extends Board {
   }
 
   public getAvailableSpacesForGreenery(player: IPlayer, canAffordOptions?: CanAffordOptions): ReadonlyArray<Space> {
-    const land = this.getAvailableLandSpacesForGreenery(player, canAffordOptions);
-    // Epic Corporations (Babylonia): a greenery may go on an ocean tile, next to your tiles if you have any.
     if (!EpicHooks.greeneriesOnOceans(player)) {
-      return land;
+      return this.getAvailableLandSpacesForGreenery(player, canAffordOptions);
     }
-    const oceans = EpicHooks.plainOceans(this.spaces);
-    const hasTiles = this.spaces.some((space) => space.player === player && MarsBoard.hasRealTile(space) && space.spaceType !== SpaceType.COLONY);
-    const usable = hasTiles ?
-      oceans.filter((space) => this.getAdjacentSpaces(space).some((adj) => adj.player === player && MarsBoard.hasRealTile(adj))) :
-      oceans;
-    return [...land, ...usable];
+    // Epic Corporations (Babylonia): a greenery may also go on a plain ocean tile. The normal rule still applies to
+    // land and oceans together: "If possible, greenery tiles must be placed next to another tile that you own. If you
+    // have no available area next to your tiles, or if you have no tile at all, you may place the greenery tile on
+    // any available area."
+    const oceans = this.filterSpacesAroundRedCity(EpicHooks.plainOceans(this.spaces));
+    if (player.tableau.has(CardName.GORDON) || EpicHooks.ignoresGreeneryPlacement(player)) {
+      return [...this.getAvailableSpacesOnLand(player, canAffordOptions), ...oceans];
+    }
+    const all = [...this.filterSpacesAroundRedCity(this.getAvailableSpacesOnLand(player, canAffordOptions)), ...oceans];
+    const nextToMine = all.filter((space) => this.getAdjacentSpaces(space).some((adj) =>
+      MarsBoard.hasRealTile(adj) && (adj.player === player || (Board.isOceanSpace(adj) && player.tableau.has(CardName.PLANET_WAVE)))));
+    return nextToMine.length > 0 ? nextToMine : all;
   }
 
   private getAvailableLandSpacesForGreenery(player: IPlayer, canAffordOptions?: CanAffordOptions): ReadonlyArray<Space> {

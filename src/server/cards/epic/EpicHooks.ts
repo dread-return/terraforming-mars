@@ -648,6 +648,16 @@ export class EpicHooks {
     return undefined;
   }
 
+  /** A free conversion: pick how many (1 to max), then convert. */
+  private static conversion(player: IPlayer, title: string, max: number, convert: (x: number) => void): SelectOption {
+    return new SelectOption(title, 'Convert').andThen(() =>
+      new SelectAmount('How many?', 'Convert', 1, max, true).andThen((x) => {
+        player.freeActionTaken = true;
+        convert(x);
+        return undefined;
+      }));
+  }
+
   /** Atlantis and Bolson Construction: their cities may go on ocean tiles. */
   public static citiesOnOceans(player: IPlayer): boolean {
     return player.tableau?.has(CardName.ATLANTIS) === true || player.tableau?.has(CardName.BOLSON_CONSTRUCTION) === true;
@@ -774,6 +784,35 @@ export class EpicHooks {
           player.stock.add(Resource.MEGACREDITS, 2 * x, {log: true});
           return undefined;
         })));
+    }
+    // Arboralists: plants as M€ (not the other way round).
+    if (player.tableau.has(CardName.ARBORALISTS) && player.plants > 0) {
+      options.push(EpicHooks.conversion(player, 'Arboralists: use plants as M€', player.plants, (x) => {
+        player.stock.deduct(Resource.PLANTS, x, {log: true});
+        player.stock.add(Resource.MEGACREDITS, x, {log: true});
+      }));
+    }
+    // Evergreen Energy: plants as energy (not the other way round).
+    if (player.tableau.has(CardName.EVERGREEN_ENERGY) && player.plants > 0) {
+      options.push(EpicHooks.conversion(player, 'Evergreen Energy: use plants as energy', player.plants, (x) => {
+        player.stock.deduct(Resource.PLANTS, x, {log: true});
+        player.stock.add(Resource.ENERGY, x, {log: true});
+      }));
+    }
+    // Infinity Energy: heat as energy, and energy as heat.
+    if (player.tableau.has(CardName.INFINITY_ENERGY)) {
+      if (player.heat > 0) {
+        options.push(EpicHooks.conversion(player, 'Infinity Energy: use heat as energy', player.heat, (x) => {
+          player.stock.deduct(Resource.HEAT, x, {log: true});
+          player.stock.add(Resource.ENERGY, x, {log: true});
+        }));
+      }
+      if (player.energy > 0) {
+        options.push(EpicHooks.conversion(player, 'Infinity Energy: use energy as heat', player.energy, (x) => {
+          player.stock.deduct(Resource.ENERGY, x, {log: true});
+          player.stock.add(Resource.HEAT, x, {log: true});
+        }));
+      }
     }
     // Le Martian: plants as 2 M€ and animals from your cards as 3 M€.
     if (player.tableau.has(CardName.LE_MARTIAN)) {

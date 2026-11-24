@@ -200,9 +200,11 @@ describe('Fan-party cards: Rob Antilles', () => {
   it('Electoral Campaign: everyone +1 TR, you 7 M€', () => {
     const [game, player, player2] = gigaGame([PartyName.CENTRISTS]);
     setRulingParty(game, PartyName.CENTRISTS);
+    // Setup can already give someone +1 TR (chairman), so measure the change.
+    const before = [player.terraformRating, player2.terraformRating];
     play(player, new ElectoralCampaign());
-    expect(player.terraformRating).eq(21);
-    expect(player2.terraformRating).eq(21);
+    expect(player.terraformRating).eq(before[0] + 1);
+    expect(player2.terraformRating).eq(before[1] + 1);
     expect(player.megaCredits).eq(7);
   });
 
@@ -379,9 +381,11 @@ describe('Fan-party cards: Solaris', () => {
     const milestone = game.milestones[0];
     const options = cast(new AwardCelebration().play(player), OrOptions);
     expect(options.options).has.length(game.milestones.length);
+    // Setup can already give someone +1 TR (chairman), so measure the change.
+    const before = [player.terraformRating, player2.terraformRating];
     AwardCelebration.celebrate(player, milestone);
-    expect(player.terraformRating).eq(milestone.canClaim(player) ? 22 : 20);
-    expect(player2.terraformRating).eq(milestone.canClaim(player2) ? 21 : 20);
+    expect(player.terraformRating).eq(before[0] + (milestone.canClaim(player) ? 2 : 0));
+    expect(player2.terraformRating).eq(before[1] + (milestone.canClaim(player2) ? 1 : 0));
   });
 
   it('Bribery: M€ production from an opponent', () => {

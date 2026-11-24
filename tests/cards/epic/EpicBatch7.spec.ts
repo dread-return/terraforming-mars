@@ -159,15 +159,17 @@ describe('Epic Corporations batch 7 (new ways to pay)', () => {
   it('OmniDrone Labs: any science tag adds an animal; plants and animals pay 2 M€ for science cards', () => {
     const corp = new OmniDroneLabs();
     const [, player, other] = withCorp(corp);
-    corp.onCardPlayedByAnyPlayer(player, fakeCard({tags: [Tag.SCIENCE]}));
+    // Its own science tag counts (including this).
     expect(corp.resourceCount).eq(1);
+    corp.onCardPlayedByAnyPlayer(player, fakeCard({tags: [Tag.SCIENCE]}));
+    expect(corp.resourceCount).eq(2);
     expect(other).is.not.undefined;
 
     const science = fakeCard({tags: [Tag.SCIENCE], cost: 8});
     const options = player.paymentOptionsForCard(science);
     expect(options.plants).is.true;
     expect(options.plantsValue).eq(2);
-    expect(player.payingAmount(Payment.of({plants: 3, epicResources: 1}), options)).eq(8);
+    expect(player.payingAmount(Payment.of({plants: 2, epicResources: 2}), options)).eq(8);
     expect(player.paymentOptionsForCard(fakeCard({tags: [Tag.EARTH]})).plants).is.false;
   });
 

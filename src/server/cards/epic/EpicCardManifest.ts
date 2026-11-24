@@ -193,6 +193,9 @@ import {Oceanus} from './Oceanus';
 import {SagaBioengineering} from './SagaBioengineering';
 import {Microfac} from './Microfac';
 import {MilkySkyway} from './MilkySkyway';
+import {FoundingFarmers} from './FoundingFarmers';
+import {MarsNomadsEpic} from './MarsNomadsEpic';
+import {OrwellObservatories} from './OrwellObservatories';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -404,5 +407,9 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.SAGA_BIOENGINEERING]: {Factory: SagaBioengineering},
     [CardName.MICROFAC]: {Factory: Microfac},
     [CardName.MILKY_SKYWAY]: {Factory: MilkySkyway},
+    // Batch 8: custom tiles
+    [CardName.FOUNDING_FARMERS]: {Factory: FoundingFarmers},
+    [CardName.MARS_NOMADS_EPIC]: {Factory: MarsNomadsEpic, compatibility: 'pathfinders'},
+    [CardName.ORWELL_OBSERVATORIES]: {Factory: OrwellObservatories},
   },
 });

@@ -33,6 +33,8 @@
       <BoardSpace v-if="hasSpace(SpaceName.MAIN_DOCKING_STATION)" :space="getSpace(SpaceName.MAIN_DOCKING_STATION)" text="Main Docking Station" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.FLYING_GARDEN)" :space="getSpace(SpaceName.FLYING_GARDEN)" text="Flying Garden" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.SPACE_SOLARIUM)" :space="getSpace(SpaceName.SPACE_SOLARIUM)" text="Space Solarium" :tileView="tileView" />
+      <!-- Epic Corporations: Orwell Observatories' observatory cities, added during the game. -->
+      <BoardSpace v-for="space in observatorySpaces" :key="space.id" :space="space" text="Observatory City" :tileView="tileView" />
     </div>
 
     <div class="global-numbers" :class="{'global-numbers--large': isLargeBoard, 'global-numbers--venus2': venusPhase2Track}">
@@ -367,6 +369,7 @@
 </template>
 
 <script lang="ts">
+import {TileType} from '@/common/TileType';
 import {defineComponent} from 'vue';
 import * as constants from '@/common/constants';
 import {getGlobalParameterMaximums} from '@/common/boards/GlobalParameterMaximums';
@@ -519,6 +522,9 @@ export default defineComponent({
     },
   },
   computed: {
+    observatorySpaces(): ReadonlyArray<SpaceModel> {
+      return this.spaces.filter((space) => space.tileType === TileType.OBSERVATORY_CITY);
+    },
     // The per-map maximum values of the global parameters (the larger maps raise them).
     globalParameterMaximums() {
       return getGlobalParameterMaximums(this.boardName, this.venusPhase2Track);

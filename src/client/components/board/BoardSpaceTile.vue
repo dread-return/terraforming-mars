@@ -90,6 +90,9 @@ const tileTypeToCssClass: Record<TileType, string> = {
   [TileType.DOME]: 'dome',
   [TileType.WILDERNESS]: 'wilderness',
   [TileType.BOREHOLES]: 'boreholes',
+  [TileType.FARM]: 'farm',
+  [TileType.NOMAD_CITY]: 'nomad-city',
+  [TileType.OBSERVATORY_CITY]: 'observatory-city',
 };
 
 const tileTypeToCssClassAresOverride = new Map<TileType, string>([
@@ -158,6 +161,9 @@ const descriptions: Record<TileType, string> = {
   [TileType.DOME]: 'Dome: counts as two cities for cards and effects, and as one city when scoring.',
   [TileType.WILDERNESS]: 'Wilderness: counts as two greeneries for cards and effects, and as one greenery when scoring.',
   [TileType.BOREHOLES]: 'Boreholes: placing a tile next to it gives 1 asset.',
+  [TileType.FARM]: 'Farm (Founding Farmers): 1 VP at game end, plus 1 VP per adjacent city.',
+  [TileType.NOMAD_CITY]: 'Nomad City (Mars Nomads): a city that can move.',
+  [TileType.OBSERVATORY_CITY]: 'Observatory City (Orwell Observatories): a city orbiting Mars.',
   [TileType.SEDIMENT]: 'Sediment: any player may place a city here, ignoring placement rules, and gain 3 M€. Adjacency bonus: 1 titanium.',
 };
 

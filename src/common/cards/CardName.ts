@@ -2194,4 +2194,8 @@ export enum CardName {
   SAGA_BIOENGINEERING = 'Saga Bioengineering',
   MICROFAC = 'Microfac',
   MILKY_SKYWAY = 'Milky Skyway',
+  // Epic Corporations, batch 8 (custom tiles)
+  FOUNDING_FARMERS = 'Founding Farmers',
+  MARS_NOMADS_EPIC = 'Mars Nomads (Epic)',
+  ORWELL_OBSERVATORIES = 'Orwell Observatories',
 }

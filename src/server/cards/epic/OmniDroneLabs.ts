@@ -31,7 +31,7 @@ export class OmniDroneLabs extends CorporationCard {
             ce.effect('Science cards: pay with plants or animals here, 2 M€ each.', (eb) => {
               eb.tag(Tag.SCIENCE).startEffect.plants(1).slash().resource(CardResource.ANIMAL).equals().megacredits(2);
             });
-            ce.effect('Any science tag played: add an animal here.', (eb) => {
+            ce.effect('Any science tag played (incl. this): add an animal here.', (eb) => {
               eb.tag(Tag.SCIENCE, {all}).startEffect.resource(CardResource.ANIMAL);
             });
           });
@@ -41,10 +41,6 @@ export class OmniDroneLabs extends CorporationCard {
   }
 
   public onCardPlayedByAnyPlayer(owner: IPlayer, card: ICard) {
-    // Its own science tag doesn't count (the card doesn't say "including this").
-    if (card.name === this.name) {
-      return;
-    }
     const count = card.tags.filter((tag) => tag === Tag.SCIENCE).length;
     if (count > 0) {
       owner.addResourceTo(this, {qty: count, log: true});

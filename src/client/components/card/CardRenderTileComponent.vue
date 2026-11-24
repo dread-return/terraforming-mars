@@ -237,6 +237,15 @@ const TILE_CLASSES: Record<TileType, Classes> = {
   [TileType.BOREHOLES]: {
     tile: 'card-tile-boreholes',
   },
+  [TileType.FARM]: {
+    tile: 'card-tile-epic-farm',
+  },
+  [TileType.NOMAD_CITY]: {
+    tile: 'card-tile-epic-nomad-city',
+  },
+  [TileType.OBSERVATORY_CITY]: {
+    tile: 'card-tile-epic-observatory-city',
+  },
 };
 
 export default defineComponent({

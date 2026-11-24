@@ -32,6 +32,10 @@ export class CityStandardProject extends StandardProjectCard {
   }
 
   protected override bespokeCanAct(player: IPlayer): boolean {
+    // Epic Corporations: Orwell Observatories can't use the city standard project.
+    if (player.tableau.has(CardName.ORWELL_OBSERVATORIES)) {
+      return false;
+    }
     // This is pricey because it forces calling canPlayOptions twice.
     if (player.game.board.getAvailableSpacesForCity(player, this.canPlayOptions(player)).length === 0) {
       return false;

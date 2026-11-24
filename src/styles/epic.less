@@ -916,6 +916,21 @@
     background: linear-gradient(90deg, #b3121f, #e0262f 80%, transparent); padding: 3px 18px 3px 6px;
     clip-path: polygon(0 0, 88% 0, 100% 50%, 88% 100%, 0 100%);
   }
+  // Batch 8: custom tiles.
+  &.et-logo-ep-founding-farmers {
+    font-family: 'EpMarker', cursive; font-size: 16px; color: #1e7a1e; font-style: italic;
+    -webkit-text-stroke: 0.8px #0b2e0b; letter-spacing: 0.5px;
+  }
+  &.et-logo-ep-mars-nomads {
+    font-family: 'EpBlackOps', sans-serif; font-size: 25px; color: #e0452b; line-height: 0.9; letter-spacing: 1px;
+    background: #1d2b48; padding: 3px 8px; border-radius: 4px;
+    .et-line-1 { color: #f3efe6; font-size: 19px; }
+  }
+  &.et-logo-ep-orwell {
+    font-family: 'EtArchivoBlack', sans-serif; font-style: italic; font-size: 22px; color: #8c1d2a; line-height: 0.9;
+    transform: rotate(-12deg);
+    .et-line-1 { font-family: 'EpRighteous', sans-serif; font-size: 15px; color: #3a1015; }
+  }
   &.et-logo-ep-top-up {
     font-family: 'EpBebas', sans-serif; font-size: 28px; color: #1c4f8a; letter-spacing: 1px; line-height: 0.85;
     .et-line-1 { font-size: 17px; color: #8a6d1c; letter-spacing: 3px; }
@@ -982,6 +997,15 @@
   zoom: 0.85;
 }
 
+.card-container.card-orwell-observatories {
+  .card-row:not(:has(.card-corporation-box, .card-effect-box)) {
+    zoom: 0.8;
+  }
+  .card-corporation-box {
+    zoom: 0.8;
+  }
+}
+
 .card-container.card-standard-business .card-corporation-box,
 .card-container.card-stellar-robotics .card-corporation-box {
   zoom: 0.9;
@@ -994,3 +1018,17 @@
 .resource_icon--epic-floater { background-image: url("assets/resources/floater.png"); }
 .resource_icon--epic-animal { background-image: url("assets/resources/animal.png"); }
 .resource_icon--epic-microbe { background-image: url("assets/resources/microbe.png"); }
+
+// Batch 8: custom tiles (art from the Epic tile sheet).
+.board-space-tile--farm { background: url(./assets/epic/tiles/farm.png); background-size: 44px 51px; }
+.board-space-tile--nomad-city { background: url(./assets/epic/tiles/nomad-city.png); background-size: 44px 51px; }
+.board-space-tile--observatory-city { background: url(./assets/epic/tiles/observatory-city.png); background-size: 44px 51px; }
+.card-tile-epic-farm, .card-tile-epic-nomad-city, .card-tile-epic-observatory-city {
+  filter: none;
+  width: 44px;
+  height: 51px;
+  background-size: 44px 51px;
+}
+.card-tile-epic-farm { background-image: url(./assets/epic/tiles/farm-icon.png); }
+.card-tile-epic-nomad-city { background-image: url(./assets/epic/tiles/nomad-city-icon.png); }
+.card-tile-epic-observatory-city { background-image: url(./assets/epic/tiles/observatory-city-icon.png); }

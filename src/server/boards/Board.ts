@@ -65,6 +65,19 @@ export abstract class Board {
   }
 
   /* Returns the space given a Space ID. */
+  /**
+   * Adds an off-board space during the game (Epic Corporations: Orwell Observatories' observatory cities).
+   * It has no neighbours. The game saves every space, so it comes back when the game is loaded.
+   */
+  public addOffBoardSpace(space: Space): void {
+    if (this.map.has(space.id)) {
+      throw new Error(`Space ${space.id} already exists`);
+    }
+    (this.spaces as Array<Space>).push(space);
+    this.map.set(space.id, space);
+    this.adjacentSpaces.set(space.id, []);
+  }
+
   public getSpaceOrThrow(id: SpaceId): Space {
     const space = this.map.get(id);
     if (space === undefined) {

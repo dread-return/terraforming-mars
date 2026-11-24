@@ -204,4 +204,8 @@ export const EPIC_LOGOS: Partial<Record<CardName, {slug: string, lines: Readonly
   [CardName.SAGA_BIOENGINEERING]: {slug: 'ep-saga', lines: ['SAGA', 'BIOENGINEERING']},
   [CardName.MICROFAC]: {slug: 'ep-microfac', lines: ['microfac']},
   [CardName.MILKY_SKYWAY]: {slug: 'ep-milky', lines: ['MILKY SKYWAY']},
+  // Batch 8: custom tiles
+  [CardName.FOUNDING_FARMERS]: {slug: 'ep-founding-farmers', lines: ['FOUNDING FARMERS']},
+  [CardName.MARS_NOMADS_EPIC]: {slug: 'ep-mars-nomads', lines: ['MARS', 'NOMADS']},
+  [CardName.ORWELL_OBSERVATORIES]: {slug: 'ep-orwell', lines: ['ORWELL', 'Observatories']},
 };

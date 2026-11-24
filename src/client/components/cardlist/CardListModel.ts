@@ -220,6 +220,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       [CardResource.WILD_RESOURCE]: true,
       [CardResource.ROBOT]: true,
       [CardResource.ALLOY]: true,
+      [CardResource.FARM]: true,
     },
     searchIndex: SearchIndex.create(),
     namesOnly: true,

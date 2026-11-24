@@ -47,5 +47,6 @@ export const cardResourceCSS = {
   [CardResource.WILD_RESOURCE]: 'card-resource-wild-resource',
   [CardResource.ROBOT]: 'card-resource-robot',
   [CardResource.ALLOY]: 'card-resource-alloy',
+  [CardResource.FARM]: 'card-resource-farm',
   [CardResource.PROBIOTIC]: 'card-resource-probiotic',
 } satisfies Record<CardResource, string>;

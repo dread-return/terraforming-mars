@@ -207,6 +207,9 @@ import {S2AModular} from './S2AModular';
 import {CosmosCasinos} from './CosmosCasinos';
 import {Scavenger} from './Scavenger';
 import {MarsArchives} from './MarsArchives';
+import {KongInc} from './KongInc';
+import {Prototek} from './Prototek';
+import {CloudComputing} from './CloudComputing';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -436,5 +439,9 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.COSMOS_CASINOS]: {Factory: CosmosCasinos},
     [CardName.SCAVENGER]: {Factory: Scavenger},
     [CardName.MARS_ARCHIVES]: {Factory: MarsArchives},
+    // Batch 12: action rules
+    [CardName.KONG_INC]: {Factory: KongInc},
+    [CardName.PROTOTEK]: {Factory: Prototek},
+    [CardName.CLOUD_COMPUTING]: {Factory: CloudComputing},
   },
 });

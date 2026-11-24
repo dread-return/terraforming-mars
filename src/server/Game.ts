@@ -108,6 +108,7 @@ import {IdesOfMars} from './cards/idesofmars/IdesOfMars';
 import {Nuclear} from './cards/nuclear/Nuclear';
 import {IndividualTracks} from './individualTracks/IndividualTracks';
 import {Eternity} from './cards/eternity/Eternity';
+import {Scavenger} from './cards/epic/Scavenger';
 import {EpicHooks} from './cards/epic/EpicHooks';
 
 // Can be overridden by tests
@@ -1189,13 +1190,25 @@ export class Game implements IGame, Logger {
       this.researchedPlayers.add(player.id);
       if (this.researchedPlayers.size === this.players.length) {
         this.researchedPlayers.clear();
-        // Epic Corporations: ProfiCoin is paid for the cards bought this research phase.
-        EpicHooks.onResearchPhaseEnd(this);
-        this.phase = Phase.ACTION;
-        this.passedPlayers.clear();
-        this.potentiallyChangeFirstPlayer();
+        const startActions = () => {
+          // Epic Corporations: ProfiCoin is paid for the cards bought this research phase.
+          EpicHooks.onResearchPhaseEnd(this);
+          this.phase = Phase.ACTION;
+          this.passedPlayers.clear();
+          this.potentiallyChangeFirstPlayer();
 
-        this.startActionsForPlayer(this.first);
+          // Epic Corporations: Cloud Computing may pay to act before the first player.
+          if (!EpicHooks.offerCloudPreTurn(this, () => this.startActionsForPlayer(this.first))) {
+            this.startActionsForPlayer(this.first);
+          }
+        };
+        // Epic Corporations: Scavenger buys from the discard pile now that everyone has discarded.
+        const scavenger = this.players.find((p) => p.tableau.has(CardName.SCAVENGER));
+        if (scavenger !== undefined) {
+          scavenger.setWaitingFor(Scavenger.research(scavenger, startActions));
+        } else {
+          startActions();
+        }
       }
     });
   }
@@ -1230,6 +1243,12 @@ export class Game implements IGame, Logger {
         // Epic Corporations: Syndicat des Travailleurs Martiens picks a resource first (may ask its owner).
         EpicHooks.beforeProductionPhase(this);
         this.drainQueue(() => this.gotoProductionPhase());
+        return;
+      }
+
+      // Epic Corporations: after Cloud Computing's extra action, the generation starts with the first player.
+      if (EpicHooks.endCloudPreTurn(this)) {
+        this.startActionsForPlayer(this.first);
         return;
       }
 

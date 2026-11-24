@@ -93,7 +93,6 @@ import {Eternity} from './cards/eternity/Eternity';
 import {Mercury} from './mercury/Mercury';
 import {mercuryCanUseSteel} from './mercury/MercuryCards';
 import {IActCard, isActCard} from './mercury/ActCard';
-import {Scavenger} from './cards/epic/Scavenger';
 import {EpicHooks} from './cards/epic/EpicHooks';
 import {BotDifficulty} from '../common/game/NewGameConfig';
 
@@ -786,10 +785,11 @@ export class Player implements IPlayer {
 
     const cards = copyAndClear(this.draftedCards);
 
-    // Epic Corporations: Scavenger gets no new cards; it may buy discarded cards instead.
+    // Epic Corporations: Scavenger gets no new cards. Its drafted cards are discarded, and it buys from the discard
+    // pile once everyone else has finished buying (Game.playerIsFinishedWithResearchPhase).
     if (this.tableau.has(CardName.SCAVENGER)) {
       this.game.projectDeck.discard(...cards);
-      this.setWaitingFor(Scavenger.research(this, () => this.game.playerIsFinishedWithResearchPhase(this)));
+      this.game.playerIsFinishedWithResearchPhase(this);
       return;
     }
 
@@ -1802,6 +1802,8 @@ export class Player implements IPlayer {
       }
 
       this.setWaitingFor(this.getActions(), () => game.drainQueue(() => {
+        // Epic Corporations: Kong.Inc pays 1 plant per action (not blue-card actions).
+        EpicHooks.afterAction(this);
         this.incrementActionsTaken();
         this.takeAction();
       }));
@@ -1836,7 +1838,8 @@ export class Player implements IPlayer {
 
     // Convert Plants
     const convertPlants = new ConvertPlants();
-    if (convertPlants.canAct(this)) {
+    // Epic Corporations: Kong.Inc also pays 1 plant for this action.
+    if (convertPlants.canAct(this) && this.plants >= this.plantsNeededForGreenery + EpicHooks.extraPlantsForGreenery(this)) {
       action.options.push(convertPlants.action(this));
     }
 
@@ -1976,6 +1979,8 @@ export class Player implements IPlayer {
       action.options.push(new UndoActionOption());
     }
 
+    // Epic Corporations: Kong.Inc with no plants can only take blue-card actions.
+    EpicHooks.filterActions(this, action);
     return action;
   }
 

@@ -2212,4 +2212,8 @@ export enum CardName {
   COSMOS_CASINOS = 'Cosmos Casinos',
   SCAVENGER = 'Scavenger',
   MARS_ARCHIVES = 'Mars Archives',
+  // Epic Corporations, batch 12 (action rules)
+  KONG_INC = 'Kong.Inc',
+  PROTOTEK = 'Prototek',
+  CLOUD_COMPUTING = 'Cloud Computing',
 }

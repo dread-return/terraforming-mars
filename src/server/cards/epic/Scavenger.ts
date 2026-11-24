@@ -32,7 +32,7 @@ export class Scavenger extends CorporationCard {
               eb.text('research', {size: Size.SMALL}).startEffect.cards(1, {cancelled: true}).nbsp.megacredits(1).slash().cards(1).asterix();
             });
             ce.vSpace(Size.TINY);
-            ce.effect('Research: no new cards, but buy any *discarded cards for 1 M€ each. Sell patents for 2 M€ each.', (eb) => {
+            ce.effect('Research: no new cards; once all have bought, buy any *discarded cards for 1 M€ each. Sell patents: 2 M€ each.', (eb) => {
               eb.text('sell', {size: Size.SMALL}).cards(1).startEffect.megacredits(2);
             });
           });

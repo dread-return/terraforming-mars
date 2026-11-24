@@ -217,6 +217,11 @@ class StandardDraft extends Draft {
 
   override draw(player: IPlayer) {
     const cardsToDraw = this.cardsToDraw(player);
+    // Epic Corporations: Cloud Computing uses the cards it looked at last time, and draws next time's.
+    const cloud = player.tableau.get(CardName.CLOUD_COMPUTING);
+    if (cloud !== undefined) {
+      return (cloud as unknown as {researchDraw(p: IPlayer, n: number): Array<IProjectCard>}).researchDraw(player, cardsToDraw);
+    }
     return this.game.projectDeck.drawN(this.game, cardsToDraw, 'bottom');
   }
 

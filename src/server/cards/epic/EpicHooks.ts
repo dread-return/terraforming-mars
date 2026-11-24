@@ -108,11 +108,90 @@ export class EpicHooks {
     if (card.type === CardType.ACTIVE && player.tableau.has(CardName.MARS_ACTIVE_RESOURCES)) {
       player.stock.add(Resource.MEGACREDITS, 1, {log: true});
     }
+    // Kong.Inc: actions on blue cards don't cost a plant.
+    const kong = player.tableau.get(CardName.KONG_INC);
+    if (kong !== undefined && card.type === CardType.ACTIVE) {
+      dataOf<{blueAction?: boolean}>(kong).blueAction = true;
+    }
     // Technonauts: robots pay for this action (until the player's next action starts).
     const technonauts = player.tableau.get(CardName.TECHNONAUTS);
     if (technonauts !== undefined && card.name !== CardName.TECHNONAUTS) {
       dataOf<{inAction?: boolean}>(technonauts).inAction = true;
     }
+  }
+
+  /** Kong.Inc: with no plants, only blue-card actions (and its own action), passing and free actions are offered. */
+  public static filterActions(player: IPlayer, action: OrOptions): void {
+    if (!player.tableau.has(CardName.KONG_INC) || player.plants > 0) {
+      return;
+    }
+    const allowed = ['Perform an action from a played card', 'Pass for this generation', 'End Turn', 'Free conversions (Epic corporations)'];
+    action.options = action.options.filter((option) => allowed.includes(String(option.title)) || option.constructor.name === 'UndoActionOption');
+  }
+
+  /** Kong.Inc: converting plants into a greenery needs 1 more plant (the action's plant). */
+  public static extraPlantsForGreenery(player: IPlayer): number {
+    return player.tableau.has(CardName.KONG_INC) ? 1 : 0;
+  }
+
+  /** Called when an action from the action menu has finished, before it's counted. */
+  public static afterAction(player: IPlayer): void {
+    const kong = player.tableau.get(CardName.KONG_INC);
+    if (kong === undefined) {
+      return;
+    }
+    const data = dataOf<{blueAction?: boolean}>(kong);
+    const blue = data.blueAction === true;
+    data.blueAction = false;
+    // Free actions, passing and ending the turn aren't actions.
+    if (blue || player.freeActionTaken || player.game.hasPassedThisActionPhase(player) || player.actionsTakenThisRound >= player.availableActionsThisRound) {
+      return;
+    }
+    if (player.plants > 0) {
+      player.stock.deduct(Resource.PLANTS, 1, {log: true});
+    }
+  }
+
+  /** Cloud Computing: at the start of the action phase, it may pay 3 M€ to act first. Returns true if it asked. */
+  public static offerCloudPreTurn(game: IGame, startNormally: () => void): boolean {
+    if (game.generation === 1) {
+      return false;
+    }
+    const player = game.players.find((p) => p.tableau.has(CardName.CLOUD_COMPUTING));
+    const cloud = player?.tableau.get(CardName.CLOUD_COMPUTING);
+    if (player === undefined || cloud === undefined || player.megaCredits < 3) {
+      return false;
+    }
+    player.setWaitingFor(new OrOptions(
+      new SelectOption('Pay 3 M€ to take an action before the first player', 'Pay').andThen(() => {
+        player.stock.deduct(Resource.MEGACREDITS, 3, {log: true});
+        game.log('${0} takes an action before the first player (Cloud Computing)', (b) => b.player(player));
+        dataOf<{preTurn?: boolean}>(cloud).preTurn = true;
+        player.actionsTakenThisRound = 0;
+        player.availableActionsThisRound = 1;
+        game.activePlayer = player;
+        player.takeAction();
+        return undefined;
+      }),
+      new SelectOption('Don\'t').andThen(() => {
+        startNormally();
+        return undefined;
+      }),
+    ).setTitle('Cloud Computing'));
+    return true;
+  }
+
+  /** Cloud Computing: its extra action is over, so the generation starts with the first player. */
+  public static endCloudPreTurn(game: IGame): boolean {
+    for (const player of game.players) {
+      const cloud = player.tableau.get(CardName.CLOUD_COMPUTING);
+      if (cloud !== undefined && dataOf<{preTurn?: boolean}>(cloud).preTurn === true) {
+        // The turn-end code in Player.takeAction has already reset its actions per turn.
+        dataOf<{preTurn?: boolean}>(cloud).preTurn = false;
+        return true;
+      }
+    }
+    return false;
   }
 
   /** Called as a player's next action starts: card-action effects are over. */
@@ -791,6 +870,16 @@ export class EpicHooks {
           player.freeActionTaken = true;
           player.removeResourceFrom(elm, x, {log: true});
           player.stock.add(Resource.MEGACREDITS, 2 * x, {log: true});
+          return undefined;
+        })));
+    }
+    // Cloud Computing: look at next generation's research cards.
+    const cloud = player.tableau.get(CardName.CLOUD_COMPUTING);
+    if (cloud !== undefined && dataOf<{next?: Array<CardName>}>(cloud).next?.length) {
+      const next = (cloud as unknown as {nextCards(): Array<IProjectCard>}).nextCards();
+      options.push(new SelectOption('Cloud Computing: look at next generation\'s research cards', 'Look').andThen(() =>
+        new SelectCard('Next generation\'s research cards (kept aside)', 'OK', next, {min: 0, max: 0}).andThen(() => {
+          player.freeActionTaken = true;
           return undefined;
         })));
     }

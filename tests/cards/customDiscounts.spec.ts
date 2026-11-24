@@ -63,6 +63,8 @@ const NOT_DISPLAYED: ReadonlyArray<CardName> = [
   CardName.AETHER_VIAL,
   CardName.HARD_HAT_CONSTRUCTION,
   CardName.DISCOUNT_CONGLOMERATE,
+  // Only cards that lower energy production.
+  CardName.COLD_FUSION,
 ];
 
 describe('customDiscounts', () => {

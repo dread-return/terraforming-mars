@@ -29,6 +29,8 @@ export type SpaceModel = {
   nomads?: true; // Absent or true
   jellyfish?: true; // Eternity's Jellyfish Farms marks its ocean with an animal tag. Absent or true
   coOwner?: Color;
+  /** Epic Corporations: number of Beyond Holidays 5 M€ tokens on this space. Absent when none. */
+  holiday?: number;
 
   undergroundResource?: UndergroundResourceToken;
   excavator?: Color;

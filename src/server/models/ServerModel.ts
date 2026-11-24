@@ -94,7 +94,7 @@ export class Server {
       contamination: game.gameOptions.nuclearExpansion ? game.contamination : undefined,
       mercury: Mercury.model(game),
       phase: game.phase,
-      spaces: this.getSpaces(game.board, game.gagarinBase, game.stJosephCathedrals, game.nomadSpace, this.jellyfishSpaces(game)),
+      spaces: this.getSpaces(game.board, game.gagarinBase, game.stJosephCathedrals, game.nomadSpace, this.jellyfishSpaces(game), this.holidaySpaces(game)),
       spectatorId: game.spectatorId,
       step: game.lastSaveId,
       temperature: game.getTemperature(),
@@ -390,12 +390,23 @@ export class Server {
     return result;
   }
 
+  /** Epic Corporations: the spaces holding Beyond Holidays' 5 M€ tokens. */
+  private static holidaySpaces(game: IGame): Array<SpaceId> {
+    const result: Array<SpaceId> = [];
+    for (const player of game.players) {
+      const tokens = (player.tableau.get(CardName.BEYOND_HOLIDAYS)?.data as {tokens?: Array<SpaceId>} | undefined)?.tokens;
+      result.push(...(tokens ?? []));
+    }
+    return result;
+  }
+
   private static getSpaces(
     board: Board,
     gagarin: ReadonlyArray<SpaceId> = [],
     cathedrals: ReadonlyArray<SpaceId> = [],
     nomads: SpaceId | undefined = undefined,
-    jellyfish: ReadonlyArray<SpaceId> = []): Array<SpaceModel> {
+    jellyfish: ReadonlyArray<SpaceId> = [],
+    holidays: ReadonlyArray<SpaceId> = []): Array<SpaceModel> {
     const noctisCitySpaceId = board.noctisCitySpaceId;
 
     return board.spaces.map((space) => {
@@ -450,6 +461,10 @@ export class Server {
       }
       if (jellyfish.includes(space.id)) {
         model.jellyfish = true;
+      }
+      const holiday = holidays.filter((id) => id === space.id).length;
+      if (holiday > 0) {
+        model.holiday = holiday;
       }
       if (space.undergroundResources !== undefined) {
         model.undergroundResource = space.undergroundResources;

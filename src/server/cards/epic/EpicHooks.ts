@@ -28,6 +28,7 @@ import {SelectCard} from '../../inputs/SelectCard';
 import {PlaceCityTile} from '../../deferredActions/PlaceCityTile';
 import {PlayerInput} from '../../PlayerInput';
 import {EpicUtils} from './EpicUtils';
+import {sum} from '../../../common/utils/utils';
 import {ICorporationCard} from '../corporation/ICorporationCard';
 
 /** True Mars Foundation: the tag sets a player can mark (one per action). */
@@ -276,7 +277,48 @@ export class EpicHooks {
    * Cheap Chispa: every decrease of the owner's energy production is 1 step smaller.
    * Returns the adjusted amount.
    */
+  /** Eletrop: sets its energy production to the total energy production of its opponents. */
+  public static syncEletrop(game: IGame): void {
+    const eletrop = game.players.find((p) => p.tableau.has(CardName.ELETROP));
+    if (eletrop === undefined) {
+      return;
+    }
+    eletrop.production.energy = sum(eletrop.opponents.map((p) => p.production.energy));
+  }
+
+  /** Eletrop: each step of energy production it would lose costs 2 energy instead. */
+  public static eletropCanLoseEnergyProduction(player: IPlayer, steps: number): boolean {
+    return player.energy >= 2 * steps;
+  }
+
+  /** Cold Fusion: runs `fn` with the player's energy production counted as 0 (milestones and awards). */
+  public static withoutColdFusionEnergy<T>(player: IPlayer, fn: () => T): T {
+    if (player.tableau?.has(CardName.COLD_FUSION) !== true) {
+      return fn();
+    }
+    const saved = player.production.energy;
+    player.production.energy = 0;
+    try {
+      return fn();
+    } finally {
+      player.production.energy = saved;
+    }
+  }
+
   public static adjustProductionChange(player: IPlayer, resource: Resource, amount: number): number {
+    // Eletrop: its energy production can't change. Raises are ignored; each step it would lose costs 2 energy
+    // (as much as it has, when an opponent lowers it).
+    if (resource === Resource.ENERGY && amount !== 0 && player.tableau.has(CardName.ELETROP)) {
+      if (amount > 0) {
+        player.game.log('${0} can\'t raise energy production (Eletrop)', (b) => b.player(player));
+      } else {
+        const cost = Math.min(player.energy, -2 * amount);
+        if (cost > 0) {
+          player.stock.deduct(Resource.ENERGY, cost, {log: true});
+        }
+      }
+      return 0;
+    }
     if (resource === Resource.ENERGY && amount < 0 && player.tableau.has(CardName.CHEAP_CHISPA)) {
       return amount + 1;
     }
@@ -291,6 +333,10 @@ export class EpicHooks {
     const game = player.game;
     if (game === undefined) {
       return;
+    }
+    // Eletrop follows its opponents' energy production.
+    if (resource === Resource.ENERGY) {
+      EpicHooks.syncEletrop(game);
     }
     const fromOtherPlayer = isFromPlayer(from) && from.player.id !== player.id;
 
@@ -911,6 +957,13 @@ export class EpicHooks {
           player.stock.add(Resource.HEAT, x, {log: true});
         }));
       }
+    }
+    // Cold Fusion: sell energy for 1 M€ each.
+    if (player.tableau.has(CardName.COLD_FUSION) && player.energy > 0) {
+      options.push(EpicHooks.conversion(player, 'Cold Fusion: sell energy for 1 M€ each', player.energy, (x) => {
+        player.stock.deduct(Resource.ENERGY, x, {log: true});
+        player.stock.add(Resource.MEGACREDITS, x, {log: true});
+      }));
     }
     // Le Martian: plants as 2 M€ and animals from your cards as 3 M€.
     if (player.tableau.has(CardName.LE_MARTIAN)) {

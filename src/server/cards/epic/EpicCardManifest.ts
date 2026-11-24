@@ -210,6 +210,11 @@ import {MarsArchives} from './MarsArchives';
 import {KongInc} from './KongInc';
 import {Prototek} from './Prototek';
 import {CloudComputing} from './CloudComputing';
+import {RedDragonSyndicate} from './RedDragonSyndicate';
+import {BeyondHolidays} from './BeyondHolidays';
+import {BloomingVales} from './BloomingVales';
+import {Eletrop} from './Eletrop';
+import {ColdFusion} from './ColdFusion';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -443,5 +448,10 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.KONG_INC]: {Factory: KongInc},
     [CardName.PROTOTEK]: {Factory: Prototek},
     [CardName.CLOUD_COMPUTING]: {Factory: CloudComputing},
+    [CardName.RED_DRAGON_SYNDICATE]: {Factory: RedDragonSyndicate},
+    [CardName.BEYOND_HOLIDAYS]: {Factory: BeyondHolidays},
+    [CardName.BLOOMING_VALES]: {Factory: BloomingVales},
+    [CardName.ELETROP]: {Factory: Eletrop},
+    [CardName.COLD_FUSION]: {Factory: ColdFusion},
   },
 });

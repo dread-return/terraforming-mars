@@ -25,6 +25,7 @@
         <div class="board-cube--nomad"></div>
       </template>
       <div v-if="space.jellyfish === true" class="board-marker--jellyfish" :title="$t('Jellyfish Farms')"></div>
+      <div v-if="space.holiday !== undefined" class="board-marker--holiday" :title="$t('Beyond Holidays')">{{ 5 * space.holiday }}</div>
       <BoardSpaceCube v-if="space.cube !== undefined" :cube="space.cube" />
       <UndergroundToken v-if="claimedToken !== undefined" :token="claimedToken" location="board" />
       <div v-if="space.excavator !== undefined" class="underground-excavator" :class="'underground-excavator--' + space.excavator"></div>

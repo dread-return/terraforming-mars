@@ -30,6 +30,10 @@ export function energyStorageCapacity(player: IPlayer): number {
   if (player.tableau.has(CardName.THARSIS_PUMPING_HUB)) {
     capacity = Math.max(capacity, 4);
   }
+  // Epic Corporations: Cold Fusion keeps up to half its energy (rounded down).
+  if (player.tableau.has(CardName.COLD_FUSION)) {
+    capacity = Math.max(capacity, Math.floor(player.energy / 2));
+  }
   return capacity;
 }
 

@@ -28,6 +28,10 @@ export class Production extends BaseStock {
   }
 
   public override canAdjust(units: Units): boolean {
+    // Epic Corporations: Eletrop pays 2 energy per energy production step it would lose.
+    if (units.energy < 0 && this.player.tableau.has(CardName.ELETROP)) {
+      return super.canAdjust({...units, energy: 0}) && EpicHooks.eletropCanLoseEnergyProduction(this.player, -units.energy);
+    }
     // Epic Corporations: Cheap Chispa decreases energy production 1 step less.
     if (units.energy < 0 && this.player.tableau.has(CardName.CHEAP_CHISPA)) {
       units = {...units, energy: units.energy + 1};

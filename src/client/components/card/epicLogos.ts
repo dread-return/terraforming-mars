@@ -226,4 +226,9 @@ export const EPIC_LOGOS: Partial<Record<CardName, {slug: string, lines: Readonly
   [CardName.KONG_INC]: {slug: 'ep-kong', lines: ['KONG.INC']},
   [CardName.PROTOTEK]: {slug: 'ep-prototek', lines: ['PROTOTEK']},
   [CardName.CLOUD_COMPUTING]: {slug: 'ep-cloud', lines: ['CLOUD', 'COMPUTING']},
+  [CardName.RED_DRAGON_SYNDICATE]: {slug: 'ep-red-dragon', lines: ['RED DRAGON', 'SYNDICATE']},
+  [CardName.BEYOND_HOLIDAYS]: {slug: 'ep-beyond-holidays', lines: ['BEYOND', 'HOLIDAYS']},
+  [CardName.BLOOMING_VALES]: {slug: 'ep-blooming-vales', lines: ['Blooming Vales']},
+  [CardName.ELETROP]: {slug: 'ep-eletrop', lines: ['ÆLETROP']},
+  [CardName.COLD_FUSION]: {slug: 'ep-cold-fusion', lines: ['COLD', 'FUSION']},
 };

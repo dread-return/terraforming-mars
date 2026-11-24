@@ -132,6 +132,9 @@ describe('Fan-party cards: Rob Antilles', () => {
   it('Mobile Biological Dome: places its dome, and leaves a greenery behind every 3 seeds', () => {
     const [game, player] = gigaGame([PartyName.SPOME]);
     const card = new MobileBiologicalDome();
+    // The starting ruling party is random; make sure it isn't Spome yet.
+    const other = Turmoil.getTurmoil(game).parties.find((p) => p.name !== PartyName.SPOME)!;
+    setRulingParty(game, other.name);
     expect(card.canPlay(player)).is.false;
     setRulingParty(game, PartyName.SPOME);
     expect(card.canPlay(player)).is.true;

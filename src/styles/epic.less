@@ -602,7 +602,7 @@
     .et-line-1 { font-size: 11px; letter-spacing: 3px; }
   }
   &.et-logo-ep-evo {
-    font-family: 'EpAudiowide', sans-serif; font-size: 26px; color: #6ab42a; line-height: 0.9;
+    font-family: 'EpAudiowide', sans-serif; font-size: 23px; color: #6ab42a; line-height: 0.9;
     text-shadow: 1px 1px 0 #1f4a0a;
     .et-line-1 { font-size: 11px; color: #3a7a1a; letter-spacing: 1px; }
   }
@@ -692,7 +692,7 @@
     text-shadow: 1px 1px 0 #ccc;
   }
   &.et-logo-ep-cryo {
-    font-family: 'EpAudiowide', sans-serif; font-size: 32px; color: #1f5ad0; letter-spacing: 4px;
+    font-family: 'EpAudiowide', sans-serif; font-size: 23px; color: #1f5ad0; letter-spacing: 4px;
     text-shadow: 1px 1px 0 #fff, 2px 2px 3px #8fb7ee;
   }
   &.et-logo-ep-lorean {
@@ -995,6 +995,28 @@
     font-family: 'EpRajdhani', sans-serif; font-weight: 600; font-size: 24px; color: #2b96e0; line-height: 0.9;
     .et-line-1 { color: #4a5563; }
   }
+  &.et-logo-ep-red-dragon {
+    font-family: 'EpRusso', sans-serif; font-size: 23px; color: #1d1d1d; line-height: 0.95; letter-spacing: 1px;
+    border-left: 6px solid #d0161b; padding-left: 6px;
+    .et-line-1 { font-size: 17px; letter-spacing: 3px; color: #d0161b; }
+  }
+  &.et-logo-ep-beyond-holidays {
+    font-family: 'EpRighteous', sans-serif; font-size: 18px; color: #6e1a1a; line-height: 1; letter-spacing: 2px;
+    background: radial-gradient(circle, #e88a34 60%, #d06a1c 100%); border-radius: 50%;
+    padding: 12px 10px; box-shadow: -4px 0 0 #f2c230, 4px 0 0 #f2c230;
+  }
+  &.et-logo-ep-blooming-vales {
+    font-family: 'EpPacifico', cursive; font-size: 26px; color: #2f7d32;
+    text-shadow: 1px 1px 0 #cbe8b5, 2px 2px 2px rgba(0, 0, 0, 0.25);
+  }
+  &.et-logo-ep-eletrop {
+    font-family: 'EpAudiowide', sans-serif; font-size: 32px; color: #c2268f; letter-spacing: 1px;
+    font-style: italic; text-shadow: 2px 2px 0 #5a0f45;
+  }
+  &.et-logo-ep-cold-fusion {
+    font-family: 'EpComfortaa', sans-serif; font-weight: 700; font-size: 26px; color: #2c63b5; line-height: 0.95; letter-spacing: 1px;
+    .et-line-1 { color: #6b3a99; }
+  }
   &.et-logo-ep-top-up {
     font-family: 'EpBebas', sans-serif; font-size: 28px; color: #1c4f8a; letter-spacing: 1px; line-height: 0.85;
     .et-line-1 { font-size: 17px; color: #8a6d1c; letter-spacing: 3px; }
@@ -1081,6 +1103,14 @@
   zoom: 0.85;
 }
 
+.card-container.card-blooming-vales .card-corporation-box {
+  zoom: 0.82;
+}
+
+.card-container.card-cold-fusion .card-corporation-box {
+  zoom: 0.7;
+}
+
 .card-container.card-standard-business .card-corporation-box,
 .card-container.card-stellar-robotics .card-corporation-box {
   zoom: 0.9;
@@ -1107,3 +1137,19 @@
 .card-tile-epic-farm { background-image: url(./assets/epic/tiles/farm-icon.png); }
 .card-tile-epic-nomad-city { background-image: url(./assets/epic/tiles/nomad-city-icon.png); }
 .card-tile-epic-observatory-city { background-image: url(./assets/epic/tiles/observatory-city-icon.png); }
+
+// Beyond Holidays: 5 M€ tokens on board spaces.
+.board-marker--holiday {
+  position: absolute;
+  margin: 2px 0 0 13px;
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+  color: #000;
+  background: url(./assets/resources/megacredit.png) center / 22px 22px no-repeat;
+  z-index: 3;
+  filter: drop-shadow(0 0 2px black);
+}

@@ -2216,4 +2216,9 @@ export enum CardName {
   KONG_INC = 'Kong.Inc',
   PROTOTEK = 'Prototek',
   CLOUD_COMPUTING = 'Cloud Computing',
+  RED_DRAGON_SYNDICATE = 'Red Dragon Syndicate',
+  BEYOND_HOLIDAYS = 'Beyond Holidays',
+  BLOOMING_VALES = 'Blooming Vales',
+  ELETROP = 'Eletrop',
+  COLD_FUSION = 'Cold Fusion',
 }

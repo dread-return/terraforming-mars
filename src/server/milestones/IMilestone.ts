@@ -1,3 +1,4 @@
+import {EpicHooks} from '../cards/epic/EpicHooks';
 import {MilestoneName} from '../../common/ma/MilestoneName';
 import {BoardName} from '../../common/boards/BoardName';
 import {IPlayer} from '../IPlayer';
@@ -35,6 +36,8 @@ export abstract class BaseMilestone implements IMilestone {
   public abstract getScore(player: IPlayer): number;
   public canClaim(player: IPlayer): boolean {
     // Eternity: Jovicorp claims milestones with one unit less.
-    return this.getScore(player) + Eternity.milestoneBonus(player) >= this.threshold;
+    // Epic Corporations: Cold Fusion's energy production doesn't count.
+    const score = EpicHooks.withoutColdFusionEnergy(player, () => this.getScore(player));
+    return score + Eternity.milestoneBonus(player) >= this.threshold;
   }
 }

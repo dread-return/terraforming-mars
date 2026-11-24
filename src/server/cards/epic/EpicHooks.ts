@@ -1036,7 +1036,22 @@ export class EpicHooks {
   }
 
   /** Mars Archives: offer to archive cards the player just discarded. */
+  /** Records cards discarded during the research phase, so Scavenger is offered only those. */
+  public static recordScavengerDiscards(player: IPlayer, cards: ReadonlyArray<IProjectCard>): void {
+    const scavenger = player.game.players.find((p) => p.tableau.has(CardName.SCAVENGER));
+    const corp = scavenger?.tableau.get(CardName.SCAVENGER);
+    if (corp === undefined || cards.length === 0) {
+      return;
+    }
+    const data = corp.data as {discards?: Array<CardName>};
+    data.discards = [...(data.discards ?? []), ...cards.map((c) => c.name)];
+  }
+
   public static onCardsDiscarded(player: IPlayer, cards: ReadonlyArray<IProjectCard>): void {
+    // Scavenger may buy the cards discarded during the research phase.
+    if (player.game.phase === Phase.RESEARCH) {
+      EpicHooks.recordScavengerDiscards(player, cards);
+    }
     const archives = player.tableau?.get(CardName.MARS_ARCHIVES);
     if (archives !== undefined && cards.length > 0) {
       (archives as unknown as {offerArchive(p: IPlayer, c: ReadonlyArray<IProjectCard>): void}).offerArchive(player, cards);

@@ -788,7 +788,13 @@ export class Player implements IPlayer {
     // Epic Corporations: Scavenger gets no new cards. Its drafted cards are discarded, and it buys from the discard
     // pile once everyone else has finished buying (Game.playerIsFinishedWithResearchPhase).
     if (this.tableau.has(CardName.SCAVENGER)) {
+      // Start a fresh record of this research phase's discards, beginning with its own drafted cards.
+      const corp = this.tableau.get(CardName.SCAVENGER);
+      if (corp !== undefined) {
+        corp.data = {discards: []};
+      }
       this.game.projectDeck.discard(...cards);
+      EpicHooks.recordScavengerDiscards(this, cards);
       this.game.playerIsFinishedWithResearchPhase(this);
       return;
     }

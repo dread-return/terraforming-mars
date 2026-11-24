@@ -41,6 +41,9 @@ export class Scavenger extends CorporationCard {
     });
   }
 
+  /** Names of the project cards discarded during the current research phase. */
+  public data: {discards?: Array<CardName>} = {};
+
   public override initialAction(player: IPlayer) {
     const game = player.game;
     const preludes = () => {
@@ -94,9 +97,17 @@ export class Scavenger extends CorporationCard {
     }
   }
 
-  /** The research step: no new cards; buy any discarded cards for 1 M€ each (free in generation 1). */
+  /**
+   * The research step: no new cards; buy any of the cards discarded this research phase for 1 M€ each
+   * (free in generation 1).
+   */
   public static research(player: IPlayer, done: () => void): PlayerInput {
-    const pile = [...player.game.projectDeck.discardPile];
+    const corp = player.tableau.get(CardName.SCAVENGER) as Scavenger | undefined;
+    const names = corp?.data.discards;
+    const pile = player.game.projectDeck.discardPile.filter((card) => names === undefined || names.includes(card.name));
+    if (corp !== undefined) {
+      corp.data.discards = undefined;
+    }
     const price = player.game.generation === 1 ? 0 : 1;
     const max = price === 0 ? pile.length : Math.min(pile.length, Math.floor(player.megaCredits / price));
     if (max === 0) {

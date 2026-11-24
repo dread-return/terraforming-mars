@@ -112,11 +112,14 @@ describe('Epic Corporations batch 11', () => {
     game.generation = 2;
     player.megaCredits = 20;
     other.megaCredits = 20;
+    // Cards discarded before this research phase aren't offered.
+    const old = fakeCard({name: 'old' as CardName});
     game.projectDeck.discardPile.length = 0;
+    game.projectDeck.discardPile.push(old);
     game.gotoResearchPhase();
     // Scavenger waits; its 4 cards are already discarded.
     expect(player.getWaitingFor()).is.undefined;
-    expect(game.projectDeck.discardPile).has.length(4);
+    expect(game.projectDeck.discardPile).has.length(5);
     expect(game.phase).eq(Phase.RESEARCH);
 
     // The other player keeps 1 card and discards 3.
@@ -125,11 +128,26 @@ describe('Epic Corporations batch 11', () => {
     runAllActions(game);
     const buy = cast(player.popWaitingFor(), SelectCard);
     expect(buy.cards).has.length(7);
+    expect(buy.cards).not.contains(old);
     expect(game.phase).eq(Phase.RESEARCH);
     buy.cb([buy.cards[0], buy.cards[1]]);
     expect(player.cardsInHand).has.length(2);
     expect(player.megaCredits).eq(18);
     expect(game.phase).eq(Phase.ACTION);
+  });
+
+  it('Scavenger: sees only its own 4 when everyone else buys all their cards', () => {
+    const corp = new Scavenger();
+    const [game, player, other] = withCorp(corp);
+    game.generation = 2;
+    player.megaCredits = 20;
+    other.megaCredits = 20;
+    game.gotoResearchPhase();
+    const research = cast(other.popWaitingFor(), SelectCard);
+    research.cb(research.cards);
+    runAllActions(game);
+    const buy = cast(player.popWaitingFor(), SelectCard);
+    expect(buy.cards).has.length(4);
   });
 
   it('Scavenger: first action takes discarded cards for free', () => {

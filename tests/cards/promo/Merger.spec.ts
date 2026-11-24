@@ -52,7 +52,7 @@ describe('Merger', () => {
 
   beforeEach(() => {
     merger = new Merger();
-    [game, player, player2] = testGame(2, {preludeExtension: true, turmoilExtension: true});
+    [game, player, player2] = testGame(2, {preludeExtension: true, turmoilExtension: true, startingCorporations: 4}); // these tests stack 4 corporations on the deck
 
     // Preset corporation deck for testing
     game.corporationDeck.drawPile = [new ArcadianCommunities(), new SaturnSystems(), new TerralabsResearch(), new Polyphemos()];
@@ -452,9 +452,21 @@ describe('Merger', () => {
     runAllActions(game);
 
     const selectCorp = cast(player.popWaitingFor(), SelectCard<ICorporationCard>);
-    expect(selectCorp.cards).has.length(4);
+    // As many as each player was dealt at the start (the default is 2).
+    expect(selectCorp.cards).has.length(2);
     for (const card of selectCorp.cards) {
       expect(customCorporationsList).contains(card.name);
+    }
+  });
+
+  it('draws as many corporations as the starting corporations option', () => {
+    for (const startingCorporations of [2, 3, 4]) {
+      const [game, player] = testGame(2, {preludeExtension: true, startingCorporations});
+      player.megaCredits = 100;
+      merger.play(player);
+      runAllActions(game);
+      const selectCorp = cast(player.popWaitingFor(), SelectCard<ICorporationCard>);
+      expect(selectCorp.cards).has.length(startingCorporations);
     }
   });
 });

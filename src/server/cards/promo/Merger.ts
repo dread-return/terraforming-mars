@@ -22,7 +22,7 @@ export class Merger extends PreludeCard {
           b.corporation().asterix().nbsp.megacredits(-42, {size: Size.SMALL});
           b.br.br;
         }),
-        description: 'Draw 4 corporation cards. Play one of them and discard the other 3. Then pay 42 M€.',
+        description: 'Draw as many corporation cards as each player was dealt at the start of the game. Play one of them and discard the rest. Then pay 42 M€.',
       },
     });
   }
@@ -60,8 +60,10 @@ export class Merger extends PreludeCard {
 
   private static dealCorporations(player: IPlayer, corporationDeck: CorporationDeck) {
     const game = player.game;
-    const cards = corporationDeck.drawN(game, 4);
-    if (cards.length !== 4) {
+    // Reveal as many corporations as each player chose from at game start (the create-game "starting corporations" option).
+    const count = game.gameOptions.startingCorporations;
+    const cards = corporationDeck.drawN(game, count);
+    if (cards.length !== count) {
       // Error will only occur if the deck is empty. That won't happen, but here we'll just do our best.
       game.log('Not enough corporations while resolving ${0}', (b) => b.cardName(CardName.MERGER));
     }

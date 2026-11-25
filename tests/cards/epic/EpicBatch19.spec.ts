@@ -131,6 +131,14 @@ describe('Epic Corporations batch 19', () => {
     expect(corp.getCardDiscount(player, new Pets())).eq(4);
     expect(corp.getVictoryPoints()).eq(-2);
 
+    // Only Mars tiles add communes: not off-Mars city areas, the Moon or the Venus map.
+    const communes = corp.resourceCount;
+    const phobos = game.board.getSpaceOrThrow(SpaceName.PHOBOS_SPACE_HAVEN);
+    game.addCity(player, phobos);
+    corp.onTilePlaced(player, player, game.board.getAvailableSpacesOnLand(player)[0], 'moon');
+    corp.onTilePlaced(player, player, game.board.getAvailableSpacesOnLand(player)[0], 'venus');
+    expect(corp.resourceCount).eq(communes);
+
     // The card in play shows the gulag count and the lasting discount (1 per commune here, 4 per commune in the gulag).
     player.addResourceTo(corp, 2);
     const model = cardsToModel(player, [corp])[0];

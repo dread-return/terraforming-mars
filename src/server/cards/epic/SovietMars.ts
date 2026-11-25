@@ -14,6 +14,8 @@ import {SpaceBonus} from '../../../common/boards/SpaceBonus';
 
 import {CardRenderItem} from '../render/CardRenderItem';
 import {CardRenderItemType} from '../../../common/cards/render/CardRenderItemType';
+import {BoardType} from '../../boards/BoardType';
+import {SpaceType} from '../../../common/boards/SpaceType';
 export class SovietMars extends ActiveCorporationCard {
   constructor() {
     super({
@@ -31,7 +33,7 @@ export class SovietMars extends ActiveCorporationCard {
         renderData: CardRenderer.builder((b) => {
           b.megacredits(20).tile(TileType.MINING_RIGHTS, true).asterix().production((pb) => pb.steel(1).slash().titanium(1)).br;
           b.plainText('Placement: your Mars tiles go next to yours when possible, after the normal rules (cities still can\'t touch cities). Tiles with a set area (like volcanic) go there.').br;
-          b.effect('Each tile you own adds a commune here. Every card you play costs 1 M€ less per commune here (lasting).', (eb) => {
+          b.effect('Each Mars tile you own adds a commune here. Every card you play costs 1 M€ less per commune here (lasting).', (eb) => {
             eb.emptyTile('normal', {size: Size.SMALL}).asterix().startEffect.resource(CardResource.COMMUNE).colon().megacredits(-1);
           }).br;
           b.action('Lose 2 TR: move a commune to the gulag. Every card costs 4 M€ less per gulag commune (lasting, min 3 M€); each is -2 VP.', (eb) => {
@@ -67,7 +69,11 @@ export class SovietMars extends ActiveCorporationCard {
     });
   }
 
-  public onTilePlaced(cardOwner: IPlayer, activePlayer: IPlayer, space: Space) {
+  public onTilePlaced(cardOwner: IPlayer, activePlayer: IPlayer, space: Space, boardType: BoardType) {
+    // Only tiles on Mars itself (not the Moon, the Venus map or off-Mars city areas), where its placement rule applies.
+    if (boardType !== BoardType.MARS || space.spaceType === SpaceType.COLONY) {
+      return;
+    }
     if (cardOwner === activePlayer && space.player === cardOwner) {
       cardOwner.addResourceTo(this, {qty: 1, log: true});
     }

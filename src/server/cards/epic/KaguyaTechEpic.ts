@@ -32,7 +32,7 @@ export class KaguyaTechEpic extends ActiveCorporationCard {
           b.megacredits(40).production((pb) => pb.energy(1).plants(1));
           b.br;
           b.action(undefined, (eb) => {
-            eb.cards(1, {secondaryTag: Tag.CITY, cancelled: true}).slash().tag(Tag.SCIENCE).startAction
+            eb.cards(1, {secondaryTag: Tag.CITY, cancelled: true}).slash().cards(1, {secondaryTag: Tag.SCIENCE, cancelled: true}).startAction
               .greenery({withO2: false}).text('→').city();
           }).br;
           b.text('and', {size: Size.MEDIUM, uppercase: true}).production((pb) => pb.megacredits(2)).cards(1).br;

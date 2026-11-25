@@ -6,6 +6,7 @@
         <span v-for="milestone in milestones.filter((m) => m.playerName)" :key="milestone.name" class="milestone-award-inline paid" :title="milestone.playerName">
           <span v-i18n>{{ milestone.name }}</span>
           <span class="ma-player-cube"><i :class="'board-cube board-cube--'+milestone.color"></i></span>
+          <span v-for="other in milestone.sharedWith ?? []" :key="other.color" class="ma-player-cube"><i :class="'board-cube board-cube--'+other.color"></i></span>
         </span>
         <span v-for="(spotPrice, index) in availableMilestoneSpots" :key="index" class="milestone-award-inline unpaid">
           <div class="milestone-award-price">{{ spotPrice }}</div>

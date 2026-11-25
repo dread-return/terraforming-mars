@@ -20,12 +20,12 @@ export class UNVenusInitiative extends CorporationCard {
           b.megacredits(40);
           b.corpBox('effect', (ce) => {
             ce.vSpace(Size.MEDIUM);
-            ce.effect('In each production phase, put 5 M€ here (as Venus funds).', (eb) => {
+            ce.effect('Each production phase, put 5 M€ here as Venus funds.', (eb) => {
               eb.text('production', {size: Size.SMALL, uppercase: true}).startEffect.text('5', {size: Size.LARGE}).resource(CardResource.VENUS_FUND);
             });
             ce.vSpace(Size.TINY);
-            ce.effect('Venus funds pay 1 M€ each, only for standard projects and project cards that raise Venus.', (eb) => {
-              eb.text('SP', {size: Size.MEDIUM, uppercase: true}).venus(1, {size: Size.SMALL}).slash().cards(1).venus(1, {size: Size.SMALL}).startEffect.resource(CardResource.VENUS_FUND).asterix();
+            ce.effect('Venus funds pay 1 M€ each, only for standard projects and cards that raise Venus.', (eb) => {
+              eb.venus(1, {size: Size.SMALL}).slash().cards(1).venus(1, {size: Size.SMALL}).startEffect.resource(CardResource.VENUS_FUND).asterix();
             });
           });
         }),

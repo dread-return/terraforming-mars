@@ -3,7 +3,6 @@ import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardType} from '../../../common/cards/CardType';
 import {CardRenderer} from '../render/CardRenderer';
-import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {Resource} from '../../../common/Resource';
@@ -28,16 +27,13 @@ export class GeneralProducts extends ActiveCorporationCard {
         cardNumber: 'EP-GNP',
         description: 'You start with 46 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(46);
-          b.corpBox('action', (ce) => {
-            ce.vSpace(Size.LARGE);
-            ce.action('Add a fighter here.', (eb) => {
-              eb.empty().startAction.resource(CardResource.FIGHTER);
-            });
-            ce.vSpace(Size.TINY);
-            ce.action('Or move a fighter to your space or Jovian card without one: +1 M€ production.', (eb) => {
-              eb.or().resource(CardResource.FIGHTER).startAction.cards(1, {secondaryTag: Tag.SPACE}).slash().tag(Tag.JOVIAN).production((pb) => pb.megacredits(1));
-            });
+          b.megacredits(46).br;
+          b.action('Add a fighter here.', (eb) => {
+            eb.empty().startAction.resource(CardResource.FIGHTER);
+          }).br;
+          b.or().br;
+          b.action('Move a fighter to your space or Jovian card without one: +1 M€ production.', (eb) => {
+            eb.resource(CardResource.FIGHTER).startAction.cards(1, {secondaryTag: Tag.SPACE}).slash().cards(1, {secondaryTag: Tag.JOVIAN}).production((pb) => pb.megacredits(1));
           });
         }),
         victoryPoints: {...VP.resource(CardResource.FIGHTER, 1, 1), asterisk: true},

@@ -170,7 +170,9 @@ export class Server {
         (m) => m.milestone.name === milestone.name,
       );
       let scores: Array<MilestoneScore> = [];
-      if (claimed === undefined && (claimedMilestones.length < getMilestoneAwardLimits(game.gameOptions.boardName).maxMilestones || game.players.some(IndividualTracks.hasExtraClaim))) {
+      // Epic Corporations: Achievement Unlocked can still claim, so scores stay visible while it's in the game.
+      const achievement = game.players.some((p) => p.tableau.has(CardName.ACHIEVEMENT_UNLOCKED));
+      if ((claimed === undefined || achievement) && (!game.allMilestonesClaimed() || achievement || game.players.some(IndividualTracks.hasExtraClaim))) {
         scores = game.players.map((player) => ({
           color: player.color,
           score: milestone.getScore(player),
@@ -178,9 +180,13 @@ export class Server {
         }));
       }
 
+      const shared = claimedMilestones
+        .filter((m) => m.milestone.name === milestone.name && m !== claimed)
+        .map((m) => ({name: m.player.name, color: m.player.color}));
       milestoneModels.push({
         playerName: claimed?.player.name,
         color: claimed?.player.color,
+        ...(shared.length > 0 ? {sharedWith: shared} : {}),
         name: milestone.name,
         scores,
       });

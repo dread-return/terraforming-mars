@@ -795,7 +795,8 @@ export class Game implements IGame, Logger {
       return true;
     }
 
-    return this.claimedMilestones.length >= getMilestoneAwardLimits(this.gameOptions.boardName).maxMilestones;
+    // Epic Corporations: Achievement Unlocked's claims of an already-claimed milestone don't use up a slot.
+    return new Set(this.claimedMilestones.map((c) => c.milestone.name)).size >= getMilestoneAwardLimits(this.gameOptions.boardName).maxMilestones;
   }
 
   private playerHasPickedCorporationCard(player: IPlayer, corporationCard: ICorporationCard): void {

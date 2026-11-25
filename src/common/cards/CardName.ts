@@ -2232,4 +2232,7 @@ export enum CardName {
   DYNAMIC_BUSINESS_SERVICES = 'Dynamic Business Services',
   EXOTICA = 'Exotica',
   TRON = 'TRON',
+  ACHIEVEMENT_UNLOCKED = 'Achievement Unlocked',
+  UN_VENUS_INITIATIVE = 'UN Venus Initiative',
+  GENERAL_PRODUCTS = 'General Products',
 }

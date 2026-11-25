@@ -242,4 +242,7 @@ export const EPIC_LOGOS: Partial<Record<CardName, {slug: string, lines: Readonly
   [CardName.DYNAMIC_BUSINESS_SERVICES]: {slug: 'ep-dbs', lines: ['Dynamic Business', 'Services']},
   [CardName.EXOTICA]: {slug: 'ep-exotica', lines: ['Exotica']},
   [CardName.TRON]: {slug: 'ep-tron', lines: ['TRON']},
+  [CardName.ACHIEVEMENT_UNLOCKED]: {slug: 'ep-achievement', lines: ['Achievement', 'Unlocked']},
+  [CardName.UN_VENUS_INITIATIVE]: {slug: 'ep-unvi', lines: ['UNITED NATIONS', 'VENUS INITIATIVE']},
+  [CardName.GENERAL_PRODUCTS]: {slug: 'ep-general-products', lines: ['GP', 'GENERAL PRODUCTS']},
 };

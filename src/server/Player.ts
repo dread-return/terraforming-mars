@@ -1300,26 +1300,38 @@ export class Player implements IPlayer {
     return cb();
   }
 
+  /** Epic Corporations: Achievement Unlocked can always claim milestones it hasn't claimed itself. */
+  private canClaimAnyMilestone(): boolean {
+    return this.tableau.has(CardName.ACHIEVEMENT_UNLOCKED);
+  }
+
+  private milestoneTaken(milestone: IMilestone): boolean {
+    if (this.canClaimAnyMilestone()) {
+      return this.game.claimedMilestones.some((c) => c.milestone.name === milestone.name && c.player?.id === this.id);
+    }
+    return this.game.milestoneClaimed(milestone);
+  }
+
   public claimableMilestones(): Array<IMilestone> {
-    if (this.game.allMilestonesClaimed() && !IndividualTracks.hasExtraClaim(this)) {
+    if (this.game.allMilestonesClaimed() && !IndividualTracks.hasExtraClaim(this) && !this.canClaimAnyMilestone()) {
       return [];
     }
     const cost = this.milestoneCost();
     if (cost === 0 || this.canAfford(cost)) {
       return this.game.milestones
-        .filter((milestone) => !this.game.milestoneClaimed(milestone) && milestone.canClaim(this));
+        .filter((milestone) => !this.milestoneTaken(milestone) && milestone.canClaim(this));
     }
     return [];
   }
 
   private claimMilestone(milestone: IMilestone) {
-    if (this.game.milestoneClaimed(milestone)) {
+    if (this.milestoneTaken(milestone)) {
       throw new Error(milestone.name + ' is already claimed');
     }
 
     const recordClaim = () => {
       this.game.log('${0} claimed ${1} milestone', (b) => b.player(this).milestone(milestone));
-      if (this.game.allMilestonesClaimed()) {
+      if (this.game.allMilestonesClaimed() && !this.canClaimAnyMilestone()) {
         IndividualTracks.spendExtraClaim(this);
       }
       this.game.claimedMilestones.push({

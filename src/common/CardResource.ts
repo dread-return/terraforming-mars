@@ -83,4 +83,5 @@ export enum CardResource {
   FRAME = 'Frame',
   GOODS = 'Goods',
   ADMINISTRATION = 'Administration',
+  VENUS_FUND = 'Venus fund',
 }

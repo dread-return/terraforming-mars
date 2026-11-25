@@ -1,3 +1,4 @@
+import {getMilestoneAwardLimits} from '../../common/ma/MilestoneAwardLimits';
 import {EpicHooks} from '../cards/epic/EpicHooks';
 import {Postludes} from '../postludes/Postludes';
 import {Phase} from '../../common/Phase';
@@ -49,11 +50,14 @@ export function calculateVictoryPoints(player: IPlayer) {
   giveAwards(player, builder);
 
   // Victory points from milestones
-  for (const milestone of player.game.claimedMilestones) {
+  const milestoneLimit = getMilestoneAwardLimits(player.game.gameOptions.boardName).maxMilestones;
+  player.game.claimedMilestones.forEach((milestone, index) => {
     if (milestone.player !== undefined && milestone.player.id === player.id) {
-      builder.setVictoryPoints('milestones', 5, 'Claimed ${0} milestone', [milestone.milestone.name]);
+      // Epic Corporations: Achievement Unlocked's extra and shared claims are worth 2 VP.
+      const vp = EpicHooks.milestoneVictoryPoints(player, index, milestoneLimit);
+      builder.setVictoryPoints('milestones', vp, 'Claimed ${0} milestone', [milestone.milestone.name]);
     }
-  }
+  });
 
   // Victory points from board
   player.game.board.spaces.forEach((space) => {

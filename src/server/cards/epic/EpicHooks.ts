@@ -80,6 +80,7 @@ function permutations<T>(items: ReadonlyArray<T>): Array<Array<T>> {
 const EPIC_PAYMENT_CORPS: ReadonlyArray<CardName> = [
   CardName.PEGASUS_GROUP, CardName.OMNIDRONE_LABS, CardName.STELLAR_ROBOTICS, CardName.TECHNONAUTS,
   CardName.XANTHUM, CardName.OCEANUS, CardName.SAGA_BIOENGINEERING, CardName.MICROFAC, CardName.TRON,
+  CardName.UN_VENUS_INITIATIVE,
 ];
 
 export class EpicHooks {
@@ -383,6 +384,34 @@ export class EpicHooks {
     }
     const after = player.stock.asUnits();
     EpicHooks.moarExtra(player, ALL_RESOURCES.filter((resource) => after[resource] > before[resource]));
+  }
+
+  /** UN Venus Initiative: whether a card or standard project raises Venus (so Venus funds can pay for it). */
+  public static raisesVenus(card: ICard): boolean {
+    if (card.name === CardName.AIR_SCRAPPING_STANDARD_PROJECT || card.name === CardName.AIR_SCRAPPING_STANDARD_PROJECT_VARIANT) {
+      return true;
+    }
+    const venus = card.behavior?.global?.venus;
+    if (typeof venus === 'number' && venus > 0) {
+      return true;
+    }
+    const tr = card.tr;
+    return tr !== undefined && typeof tr.venus === 'number' && tr.venus > 0;
+  }
+
+  /**
+   * Achievement Unlocked: VP for one of its milestone claims. The first 3 claims of the game are worth 5 VP;
+   * claims beyond those, or of a milestone someone else claimed first, are worth 2 VP.
+   */
+  public static milestoneVictoryPoints(player: IPlayer, index: number, limit: number): number {
+    if (!player.tableau.has(CardName.ACHIEVEMENT_UNLOCKED)) {
+      return 5;
+    }
+    const claims = player.game.claimedMilestones;
+    const claim = claims[index];
+    const shared = claims.slice(0, index).some((c) => c.milestone.name === claim.milestone.name);
+    const uniqueBefore = new Set(claims.slice(0, index).map((c) => c.milestone.name)).size;
+    return !shared && uniqueBefore < limit ? 5 : 2;
   }
 
   /** Eletrop: sets its energy production to the total energy production of its opponents. */
@@ -880,6 +909,8 @@ export class EpicHooks {
       return card.type === CardType.STANDARD_PROJECT ? 3 : undefined;
     case CardName.TRON:
       return 2;
+    case CardName.UN_VENUS_INITIATIVE:
+      return EpicHooks.raisesVenus(card) ? 1 : undefined;
     default:
       return undefined;
     }
@@ -1461,6 +1492,11 @@ export class EpicHooks {
 
   /** Called right after a player received this generation's production. */
   public static afterProduction(player: IPlayer): void {
+    // UN Venus Initiative: 5 M€ of Venus funds each production phase.
+    const unvi = player.tableau.get(CardName.UN_VENUS_INITIATIVE);
+    if (unvi !== undefined) {
+      player.addResourceTo(unvi, {qty: 5, log: true});
+    }
     for (const p of player.game.players) {
       if (p.id === player.id) {
         continue;

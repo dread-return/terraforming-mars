@@ -160,6 +160,7 @@ const CARD_TAGS: ReadonlyArray<IconEntry> = [
   {iconClass: 'card-resource-frame', label: 'Frame', official: false, expansions: ['corpera']},
   {iconClass: 'card-resource-goods', label: 'Goods', official: false, expansions: ['corpera']},
   {iconClass: 'card-resource-administration', label: 'Administration', official: false, expansions: ['corpera']},
+  {iconClass: 'card-resource-venus-fund', label: 'Venus fund', official: false, expansions: ['corpera']},
 ];
 
 const STANDARD_RESOURCES: ReadonlyArray<IconEntry> = [

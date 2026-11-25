@@ -193,7 +193,12 @@ export class MarsBoard extends Board {
   }
 
   public getAvailableSpacesForCity(player: IPlayer, canAffordOptions?: CanAffordOptions, spaces?: ReadonlyArray<Space>): ReadonlyArray<Space> {
-    const spacesOnLand = spaces ?? this.getAvailableSpacesOnLand(player, canAffordOptions);
+    // Epic Corporations: Soviet Mars's "next to your tiles if possible" applies after the city rules.
+    return EpicHooks.sovietAdjacency(player, this, this.citySpaces(player, canAffordOptions, spaces));
+  }
+
+  private citySpaces(player: IPlayer, canAffordOptions?: CanAffordOptions, spaces?: ReadonlyArray<Space>): ReadonlyArray<Space> {
+    const spacesOnLand = spaces ?? super.getAvailableSpacesOnLand(player, canAffordOptions);
     // Gordon CEO can ignore placement restrictions for Cities+Greenery
     // Epic Corporations: New Grounds and Steel Ridge Constructions too.
     if (player.tableau.has(CardName.GORDON) || EpicHooks.ignoresCityPlacement(player)) {
@@ -246,11 +251,11 @@ export class MarsBoard extends Board {
   }
 
   public getSpacesAwayFromCities(player: IPlayer, canAffordOptions?: CanAffordOptions): ReadonlyArray<Space> {
-    const spacesOnLand = this.getAvailableSpacesOnLand(player, canAffordOptions);
+    const spacesOnLand = super.getAvailableSpacesOnLand(player, canAffordOptions);
 
-    return spacesOnLand.filter(
+    return EpicHooks.sovietAdjacency(player, this, spacesOnLand.filter(
       (space) => this.getAdjacentSpaces(space).some((adjacentSpace) => Board.isCitySpace(adjacentSpace)) === false,
-    );
+    ));
   }
 
   public filterSpacesAroundRedCity(spaces: ReadonlyArray<Space>): ReadonlyArray<Space> {
@@ -263,6 +268,11 @@ export class MarsBoard extends Board {
   }
 
   public getAvailableSpacesForGreenery(player: IPlayer, canAffordOptions?: CanAffordOptions): ReadonlyArray<Space> {
+    // Epic Corporations: Soviet Mars's "next to your tiles if possible" applies after the greenery rules.
+    return EpicHooks.sovietAdjacency(player, this, this.greenerySpaces(player, canAffordOptions));
+  }
+
+  private greenerySpaces(player: IPlayer, canAffordOptions?: CanAffordOptions): ReadonlyArray<Space> {
     if (!EpicHooks.greeneriesOnOceans(player)) {
       return this.getAvailableLandSpacesForGreenery(player, canAffordOptions);
     }
@@ -272,16 +282,16 @@ export class MarsBoard extends Board {
     // any available area."
     const oceans = this.filterSpacesAroundRedCity(EpicHooks.plainOceans(this.spaces));
     if (player.tableau.has(CardName.GORDON) || EpicHooks.ignoresGreeneryPlacement(player)) {
-      return [...this.getAvailableSpacesOnLand(player, canAffordOptions), ...oceans];
+      return [...super.getAvailableSpacesOnLand(player, canAffordOptions), ...oceans];
     }
-    const all = [...this.filterSpacesAroundRedCity(this.getAvailableSpacesOnLand(player, canAffordOptions)), ...oceans];
+    const all = [...this.filterSpacesAroundRedCity(super.getAvailableSpacesOnLand(player, canAffordOptions)), ...oceans];
     const nextToMine = all.filter((space) => this.getAdjacentSpaces(space).some((adj) =>
       MarsBoard.hasRealTile(adj) && (adj.player === player || (Board.isOceanSpace(adj) && player.tableau.has(CardName.PLANET_WAVE)))));
     return nextToMine.length > 0 ? nextToMine : all;
   }
 
   private getAvailableLandSpacesForGreenery(player: IPlayer, canAffordOptions?: CanAffordOptions): ReadonlyArray<Space> {
-    let availableLandSpaces = this.getAvailableSpacesOnLand(player, canAffordOptions);
+    let availableLandSpaces = super.getAvailableSpacesOnLand(player, canAffordOptions);
     // Gordon CEO can ignore placement restrictions for Cities+Greenery
     // Epic Corporations: New Grounds too.
     if (player.tableau.has(CardName.GORDON) || EpicHooks.ignoresGreeneryPlacement(player)) {
@@ -314,7 +324,7 @@ export class MarsBoard extends Board {
   }
 
   public override getAvailableSpacesOnLand(player: IPlayer, canAffordOptions?: CanAffordOptions, subjectToHazardAdjacency: boolean = true): ReadonlyArray<Space> {
-    // Epic Corporations: Soviet Mars places its tiles next to its own when it can.
+    // Epic Corporations: Soviet Mars places its tiles next to its own when it can (free-choice land placements).
     return EpicHooks.sovietAdjacency(player, this, super.getAvailableSpacesOnLand(player, canAffordOptions, subjectToHazardAdjacency));
   }
 
@@ -370,12 +380,13 @@ export class MarsBoard extends Board {
   }
 
   public getAvailableIsolatedSpaces(player: IPlayer, canAffordOptions?: CanAffordOptions): ReadonlyArray<Space> {
-    return this.getAvailableSpacesOnLand(player, canAffordOptions)
+    return super.getAvailableSpacesOnLand(player, canAffordOptions)
       .filter((space: Space) => this.getAdjacentSpaces(space).every((adjacent) => adjacent.tile === undefined));
   }
 
   public getAvailableVolcanicSpaces(player: IPlayer, canAffordOptions?: CanAffordOptions): ReadonlyArray<Space> {
-    const spaces = this.getAvailableSpacesOnLand(player, canAffordOptions);
+    // Fixed kinds of area (volcanic, isolated) aren't subject to Soviet Mars's adjacency rule.
+    const spaces = super.getAvailableSpacesOnLand(player, canAffordOptions);
     if (this.volcanicSpaceIds.length > 0) {
       return spaces.filter((space) => space.volcanic === true);
     }

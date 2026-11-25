@@ -27,13 +27,14 @@ export class SovietMars extends ActiveCorporationCard {
 
       metadata: {
         cardNumber: 'EP-SOV',
-        description: 'You start with 20 M€. First action: a mining tile on a steel or titanium area, and +1 of that production.',
+        description: 'Start: 20 M€. First action: a mining tile on a steel or titanium area, +1 of that production.',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(20).tile(TileType.MINING_RIGHTS, true).asterix().production((pb) => pb.steel(1).slash().titanium(1)).br;
-          b.effect('Each tile you own adds a commune here. Every card you play costs 1 M€ less per commune here (lasting). Your Mars tiles go next to yours if possible.', (eb) => {
+          b.plainText('Placement: your Mars tiles go next to yours when possible, after the normal rules (cities still can\'t touch cities). Tiles with a set area (like volcanic) go there.').br;
+          b.effect('Each tile you own adds a commune here. Every card you play costs 1 M€ less per commune here (lasting).', (eb) => {
             eb.emptyTile('normal', {size: Size.SMALL}).asterix().startEffect.resource(CardResource.COMMUNE).colon().megacredits(-1);
           }).br;
-          b.action('Lose 2 TR: move a commune to the gulag. Every card costs 4 M€ less per commune there (lasting, but never below 3 M€), and each is -2 VP.', (eb) => {
+          b.action('Lose 2 TR: move a commune to the gulag. Every card costs 4 M€ less per gulag commune (lasting, min 3 M€); each is -2 VP.', (eb) => {
             eb.text('-2', {size: Size.MEDIUM}).tr(1, {size: Size.SMALL}).startAction.resource(CardResource.COMMUNE).arrow().gulag().colon().megacredits(-4);
           });
         }),

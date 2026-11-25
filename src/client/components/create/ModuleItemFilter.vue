@@ -14,20 +14,23 @@
     </template>
     <div>
       <div class="corporations-filter">
-        <template v-for="group in groups">
-          <div class="corporations-filter-group" v-if="showGroup(group.key)" :key="group.key">
+        <template v-for="group in groups" :key="group.key">
+          <!-- Long groups wrap into extra columns of up to COLUMN_SIZE items each. -->
+          <div class="corporations-filter-group" v-for="(column, index) in columns(group.key)" :key="group.key + '-' + index"
+            :class="{'corporations-filter-group--continued': index > 0}">
             <div class="corporations-filter-toolbox-cont">
               <div>
                 <span v-i18n>{{ group.label }}</span>&nbsp;
                 <div :class="icon(group.key)"></div>
+                <span v-if="index > 0" class="corporations-filter-continued" v-i18n>(continued)</span>
               </div>
-              <div class="corporations-filter-toolbox">
+              <div class="corporations-filter-toolbox" v-if="index === 0">
                 <a href="#" v-i18n @click.prevent="selectAll(group.key)">All</a> |
                 <a href="#" v-i18n @click.prevent="selectNone(group.key)">None</a> |
                 <a href="#" v-i18n @click.prevent="invertSelection(group.key)">Invert</a>
               </div>
             </div>
-            <div v-for="item in itemsByGroup[group.key]" :key="item" v-show="include(item)">
+            <div v-for="item in column" :key="item">
               <label class="form-checkbox">
                 <input type="checkbox" v-model="localSelected" :value="item">
                 <i class="form-icon"></i>
@@ -128,10 +131,19 @@ function icon(module: string | undefined): string | undefined {
   return `create-game-expansion-icon expansion-icon-${suffix}`;
 }
 
-function showGroup(key: string) {
-  const items = props.itemsByGroup[key];
-  return (items ?? []).length > 0;
+/** How many items a column holds before the group wraps into another column. */
+const COLUMN_SIZE = 20;
+
+/** The group's items that match the filter, split into columns of up to COLUMN_SIZE. */
+function columns(key: string): Array<Array<T>> {
+  const items = (props.itemsByGroup[key] ?? []).filter((item) => include(item));
+  const result: Array<Array<T>> = [];
+  for (let i = 0; i < items.length; i += COLUMN_SIZE) {
+    result.push(items.slice(i, i + COLUMN_SIZE));
+  }
+  return result;
 }
+
 
 watch(localSelected, (value) => {
   emit('update:selected', [...value]);

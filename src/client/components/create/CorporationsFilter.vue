@@ -78,8 +78,13 @@ export default defineComponent({
     },
   },
   methods: {
-    compatibility(name: CardName): Array<GameModule> {
-      return getCard(name)?.compatibility ?? [];
+    compatibility(name: CardName): Array<string> {
+      const modules: Array<string> = [...(getCard(name)?.compatibility ?? [])];
+      // Epic Corporations that need the Domes and Wilderness option (an option, not a module).
+      if (name === CardName.CUPOLA || name === CardName.PRIMAL) {
+        modules.push('domeswilderness');
+      }
+      return modules;
     },
   },
 });

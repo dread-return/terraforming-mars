@@ -1409,7 +1409,9 @@
   overflow-y: auto;
 }
 .card-container.card-arc .card-content-wrapper .card-row:has(.card-effect-box) { zoom: 0.8; }
-.card-container.card-soviet-mars .card-content-wrapper .card-row:has(.card-effect-box) { zoom: 0.74; }
+.card-container.card-soviet-mars .card-content-wrapper .card-row:has(.card-effect-box) { zoom: 0.68; }
+.card-container.card-soviet-mars .card-content-wrapper .card-row:has(.card-production-box) { zoom: 0.85; }
+.card-container.card-soviet-mars .card-content-wrapper .card-row:not(:has(.card-effect-box)):not(:has(.card-production-box)) { zoom: 0.8; }
 
 // Soviet Mars: the gulag icon on cards, and its counter next to the commune count.
 .card-epic-marker--gulag { background-image: url(./assets/epic/markers/gulag.png); }

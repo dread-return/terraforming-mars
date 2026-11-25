@@ -138,6 +138,24 @@ describe('Epic Corporations batch 19', () => {
     expect(model.discount).deep.eq([{amount: 2 + 4}]);
   });
 
+  it('Soviet Mars: city rules apply first; with no legal city spot next to its tiles, any legal spot is allowed', () => {
+    const corp = new SovietMars();
+    const [game, player] = withCorp(corp);
+    const board = game.board;
+    const city = openSpace(game);
+    game.addCity(player, city);
+    // Every space next to its only tile is next to its city, so a new city can't go there.
+    const cities = board.getAvailableSpacesForCity(player);
+    expect(cities.length).gt(0);
+    expect(cities.some((s) => board.getAdjacentSpaces(s).includes(city))).is.false;
+    // Greeneries still go next to its tiles.
+    const greeneries = board.getAvailableSpacesForGreenery(player);
+    expect(greeneries.every((s) => board.getAdjacentSpaces(s).includes(city))).is.true;
+    // Fixed kinds of area aren't restricted.
+    const volcanic = board.getAvailableVolcanicSpaces(player);
+    expect(volcanic.length).eq(board.volcanicSpaceIds.filter((id) => board.getSpaceOrThrow(id).tile === undefined).length);
+  });
+
   it('Tyrell Corporation: hosts a space/building card with 2 resources, doubles them, and plays it at a discount', () => {
     const corp = new TyrellCorporation();
     const [game, player] = withCorp(corp);

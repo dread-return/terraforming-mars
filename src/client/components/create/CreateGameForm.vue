@@ -284,7 +284,7 @@
             </label>
 
             <label for="startingCorpNum-checkbox">
-              <input type="number" class="create-game-corporations-count" value="2" min="1" :max="6" v-model="startingCorporations" id="startingCorpNum-checkbox">
+              <input type="number" class="create-game-corporations-count" value="2" min="1" :max="8" v-model="startingCorporations" id="startingCorpNum-checkbox">
               <span v-i18n>Starting Corporations</span>
             </label>
 

@@ -377,6 +377,9 @@ export default defineComponent({
       if (this.item.type === CardRenderItemType.RAIL) {
         result = '<div class="card-epic-marker card-epic-marker--rail"></div>';
       }
+      if (this.item.type === CardRenderItemType.GULAG) {
+        result = '<div class="card-epic-marker card-epic-marker--gulag"></div>';
+      }
       if (this.item.type === CardRenderItemType.RULING_PARTY) {
         result = '<div class="card-party-icon"></div>';
       }

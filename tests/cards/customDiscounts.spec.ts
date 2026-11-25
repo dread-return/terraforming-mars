@@ -14,6 +14,8 @@ const DISPLAYED: ReadonlyArray<CardName> = [
   // Shown on their tags. See src/server/models/ModelUtils.ts
   CardName.MARS_DIRECT,
   CardName.CRESCENT_RESEARCH_ASSOCIATION,
+  // Epic Corporations: shown as an all-cards discount. See src/server/models/ModelUtils.ts
+  CardName.SOVIET_MARS,
 ];
 
 // Cards with a custom getCardDiscount that the player overview intentionally does not show.
@@ -65,8 +67,6 @@ const NOT_DISPLAYED: ReadonlyArray<CardName> = [
   CardName.DISCOUNT_CONGLOMERATE,
   // Only cards that lower energy production.
   CardName.COLD_FUSION,
-  // Every card, with a floor (shown on the card instead).
-  CardName.SOVIET_MARS,
   // Only the cards hosted on it, like Self-Replicating Robots.
   CardName.TYRELL_CORPORATION,
 ];

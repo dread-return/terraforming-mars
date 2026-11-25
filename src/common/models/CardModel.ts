@@ -17,6 +17,7 @@ export interface CardModel {
     reserveUnits?: Readonly<Units>; // Written for The Moon, but useful in other contexts.
     bonusResource?: Array<Resource>; // Used with the Mining cards and Robotic Workforce
     cloneTag?: Tag; // Used with Pathfinders
+    gulag?: number; // Epic Corporations: communes in Soviet Mars's gulag
     standardProjectCanPayWith?: StandardProjectCanPayWith; // Set for standard projects; undefined for regular project cards
     /** Steel/titanium allowed (or steel worth more) for this card beyond its tags, e.g. from an Epic corporation. */
     paymentOverrides?: {

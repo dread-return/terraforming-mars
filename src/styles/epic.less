@@ -1207,19 +1207,17 @@
   zoom: 0.85;
 }
 
-.card-container.card-neith-enterprise .card-corporation-box,
 .card-container.card-red-rail-network .card-corporation-box,
 .card-container.card-cupola .card-corporation-box {
   zoom: 0.8;
 }
 
-.card-container.card-primal .card-corporation-box,
-.card-container.card-arc .card-corporation-box {
+.card-container.card-primal .card-corporation-box {
   zoom: 0.72;
 }
 
-.card-container.card-soviet-mars .card-corporation-box {
-  zoom: 0.66;
+.card-container.card-neith-enterprise .card-corporation-box {
+  zoom: 0.76;
 }
 
 .card-container.card-exotica .card-corporation-box,
@@ -1403,4 +1401,32 @@
   background: url(./assets/resources/animal.png) center / 15px 15px no-repeat;
   box-shadow: 0 0 0 1px #000;
   z-index: 3;
+}
+
+// ARC and Soviet Mars: boxless rows.
+.card-container.card-arc .card-content-wrapper,
+.card-container.card-soviet-mars .card-content-wrapper {
+  overflow-y: auto;
+}
+.card-container.card-arc .card-content-wrapper .card-row:has(.card-effect-box) { zoom: 0.8; }
+.card-container.card-soviet-mars .card-content-wrapper .card-row:has(.card-effect-box) { zoom: 0.74; }
+
+// Soviet Mars: the gulag icon on cards, and its counter next to the commune count.
+.card-epic-marker--gulag { background-image: url(./assets/epic/markers/gulag.png); }
+.card-gulag-counter {
+  position: absolute;
+  bottom: 8px;
+  left: 92px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.85);
+  font-weight: bold;
+  font-size: 16px;
+  color: #222;
+  z-index: 2;
+  .card-gulag-counter-number { color: #222; display: inline-block; min-width: 9px; }
+  .card-epic-marker--gulag { width: 22px; height: 22px; background-size: 22px 22px; }
 }

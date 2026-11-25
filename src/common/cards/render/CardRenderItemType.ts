@@ -58,6 +58,7 @@ export const CardRenderItemType = {
   COFFEE: 'coffee',
   STARBUCKS_STORE: 'starbucks-store',
   RAIL: 'rail',
+  GULAG: 'gulag',
   RULING_PARTY: 'ruling-party',
   POLICY: 'policy',
   CATHEDRAL: 'cathedral',

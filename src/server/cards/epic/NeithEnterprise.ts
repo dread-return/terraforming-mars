@@ -29,11 +29,11 @@ export class NeithEnterprise extends ActiveCorporationCard {
         renderData: CardRenderer.builder((b) => {
           b.megacredits(43).city().asterix();
           b.corpBox('effect-action', (ce) => {
-            ce.vSpace(Size.MEDIUM);
+            ce.vSpace(Size.LARGE);
             ce.effect('Any city placed off Mars: +1 M€ production.', (eb) => {
               eb.city({size: Size.SMALL, all}).asterix().startEffect.production((pb) => pb.megacredits(1));
             });
-            ce.action('Pay 5 M€: look at X cards (X = empty city areas off Mars), keep 1.', (eb) => {
+            ce.action('Pay 5 M€: look at X cards, keep 1. X = empty named city areas off Mars.', (eb) => {
               eb.megacredits(5).startAction.text('X').cards(1).asterix();
             });
           });

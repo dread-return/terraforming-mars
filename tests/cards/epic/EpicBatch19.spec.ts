@@ -25,6 +25,7 @@ import {Pets} from '../../../src/server/cards/base/Pets';
 import {SpaceStation} from '../../../src/server/cards/base/SpaceStation';
 import {Algae} from '../../../src/server/cards/base/Algae';
 import {GanymedeColony} from '../../../src/server/cards/base/GanymedeColony';
+import {cardsToModel} from '../../../src/server/models/ModelUtils';
 
 function withCorp(corp: ICorporationCard, options = {}): [IGame, TestPlayer, TestPlayer] {
   const [game, player, other] = testGame(2, options);
@@ -129,6 +130,12 @@ describe('Epic Corporations batch 19', () => {
     expect(corp.getCardDiscount(player, algae)).eq(4);
     expect(corp.getCardDiscount(player, new Pets())).eq(4);
     expect(corp.getVictoryPoints()).eq(-2);
+
+    // The card in play shows the gulag count and the lasting discount (1 per commune here, 4 per commune in the gulag).
+    player.addResourceTo(corp, 2);
+    const model = cardsToModel(player, [corp])[0];
+    expect(model.gulag).eq(1);
+    expect(model.discount).deep.eq([{amount: 2 + 4}]);
   });
 
   it('Tyrell Corporation: hosts a space/building card with 2 resources, doubles them, and plays it at a discount', () => {

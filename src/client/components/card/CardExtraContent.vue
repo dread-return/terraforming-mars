@@ -3,6 +3,10 @@
     <div v-if="lifeFound()" class="little-green-men"></div>
     <div v-if="isMiningTileOnSteel()" class="mined-metal mined-steel"></div>
     <div v-if="isMiningTileOnTitanium()" class="mined-metal mined-titanium"></div>
+    <div v-if="card.gulag !== undefined" class="card-gulag-counter" :title="$t('Communes in the gulag')">
+      <span class="card-gulag-counter-number">{{ card.gulag }}</span>
+      <span class="card-epic-marker card-epic-marker--gulag"></span>
+    </div>
   </div>
 </template>
 

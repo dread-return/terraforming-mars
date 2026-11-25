@@ -385,6 +385,11 @@ abstract class Builder<T> {
     return this._appendToRow(new CardRenderItem(CardRenderItemType.RAIL));
   }
 
+  /** Soviet Mars's gulag (Epic Corporations). */
+  public gulag() {
+    return this._appendToRow(new CardRenderItem(CardRenderItemType.GULAG));
+  }
+
   public rulingParty() {
     return this._appendToRow(new CardRenderItem(CardRenderItemType.RULING_PARTY));
   }

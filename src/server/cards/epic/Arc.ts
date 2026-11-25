@@ -34,15 +34,15 @@ export class Arc extends ActiveCorporationCard {
         cardNumber: 'EP-ARC',
         description: 'You start with 32 M€ and 2 animals here.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(32).resource(CardResource.ANIMAL, {amount: 2, digit});
-          b.corpBox('effect-action', (ce) => {
-            ce.vSpace(Size.MEDIUM);
-            ce.action('Move 1 of your animals onto a greenery or ocean (one per tile), or add 2 animals here.', (eb) => {
-              eb.resource(CardResource.ANIMAL).startAction.emptyTile('normal', {size: Size.SMALL}).asterix().slash().resource(CardResource.ANIMAL, {amount: 2, digit});
-            });
-            ce.effect('Spend animals here any time: each is 1 M€ per greenery with an animal, or 1 plant per 2 oceans with one.', (eb) => {
-              eb.resource(CardResource.ANIMAL).startEffect.megacredits(1).slash().greenery({size: Size.SMALL, withO2: false}).asterix().text('or', {size: Size.SMALL}).plants(1).slash().text('2').oceans(1, {size: Size.SMALL}).asterix();
-            });
+          b.megacredits(32).resource(CardResource.ANIMAL, {amount: 2, digit}).br;
+          b.action('Move 1 of your animals onto a greenery or ocean (one per tile), or add 2 animals here.', (eb) => {
+            eb.resource(CardResource.ANIMAL).startAction.emptyTile('normal', {size: Size.SMALL}).asterix().slash().resource(CardResource.ANIMAL, {amount: 2, digit});
+          }).br;
+          b.effect('Spend animals here any time: each is worth 1 M€ per greenery with an animal...', (eb) => {
+            eb.resource(CardResource.ANIMAL).startEffect.megacredits(1).slash().greenery({size: Size.SMALL, withO2: false}).asterix();
+          }).br;
+          b.effect('...or 1 plant per 2 oceans with an animal.', (eb) => {
+            eb.resource(CardResource.ANIMAL).startEffect.plants(1).slash().text('2', {size: Size.MEDIUM}).oceans(1, {size: Size.SMALL}).asterix();
           });
         }),
       },

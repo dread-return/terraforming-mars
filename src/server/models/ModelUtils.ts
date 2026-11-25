@@ -38,6 +38,12 @@ export function cardsToModel(
     if (card.name === CardName.MARS_DIRECT) {
       discount = [{tag: Tag.MARS, amount: player.tags.count(Tag.MARS)}];
     }
+    // Epic Corporations: Soviet Mars's lasting discount on every card (1 per commune, 4 per commune in the gulag).
+    let gulag: number | undefined;
+    if (card.name === CardName.SOVIET_MARS) {
+      gulag = (card.data as {gulag?: number} | undefined)?.gulag ?? 0;
+      discount = [{amount: card.resourceCount + 4 * gulag}];
+    }
 
     let calculatedCost = card.cost;
     if (options.showCalculatedCost) {
@@ -54,6 +60,7 @@ export function cardsToModel(
       calculatedCost,
       bonusResource: isIProjectCard(card) ? card.bonusResource : undefined,
       discount: discount,
+      ...(gulag !== undefined ? {gulag} : {}),
       cloneTag: isICloneTagCard(card) ? card.cloneTag : undefined,
     };
     if (isIStandardProjectCard(card)) {

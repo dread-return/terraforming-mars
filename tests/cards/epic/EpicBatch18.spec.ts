@@ -70,7 +70,7 @@ describe('Epic Corporations batch 18', () => {
 
   it('Red Rail Network: building cards add rail markers; a railway between 2 cities pays M€ production', () => {
     const corp = new RedRailNetwork();
-    const [game, player] = withCorp(corp);
+    const [game, player, other] = withCorp(corp);
     expect(player.steel).eq(10);
     const board = game.board;
     // Two cities with two free spaces between them: a - r1 - r2 - b, with b not next to a or r1.
@@ -102,10 +102,14 @@ describe('Epic Corporations batch 18', () => {
     corp.action(player);
     runAllActions(game);
     expect(player.production.megacredits).eq(before + 2);
-    expect(r1.player?.id).eq(GameSetup.neutralPlayerFor(game.id).id);
+    // With one opponent, the railway goes to them.
+    expect(r1.player).eq(other);
+    expect(r2.player).eq(other);
+    expect(corp.data.given).has.length(2);
     expect(corp.canAct(player)).is.false;
 
-    // The neutral railway survives a reload.
+    // Neutral ownership (solo) survives a reload.
+    r1.player = GameSetup.neutralPlayerFor(game.id);
     const reloaded = GameSetup.deserializeBoard(game.players as Array<TestPlayer>, game.gameOptions, game.serialize());
     expect(reloaded.getSpaceOrThrow(r1.id).player?.id).eq(GameSetup.neutralPlayerFor(game.id).id);
   });

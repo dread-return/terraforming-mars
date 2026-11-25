@@ -367,6 +367,16 @@ export default defineComponent({
       if (this.item.type === CardRenderItemType.OTHER_PLAYER) {
         result = '<div class="card-other-player-icon"></div>';
       }
+      // Epic Corporations: Starbucks and Red Rail Network markers.
+      if (this.item.type === CardRenderItemType.COFFEE) {
+        result = '<div class="card-epic-marker card-epic-marker--coffee"></div>';
+      }
+      if (this.item.type === CardRenderItemType.STARBUCKS_STORE) {
+        result = '<div class="card-epic-marker card-epic-marker--store"></div>';
+      }
+      if (this.item.type === CardRenderItemType.RAIL) {
+        result = '<div class="card-epic-marker card-epic-marker--rail"></div>';
+      }
       if (this.item.type === CardRenderItemType.RULING_PARTY) {
         result = '<div class="card-party-icon"></div>';
       }

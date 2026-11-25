@@ -1,3 +1,4 @@
+import {Size} from '../../../common/cards/render/Size';
 import {DomesWilderness} from '../../domesWilderness/DomesWilderness';
 import {UpgradeTile} from '../../deferredActions/UpgradeTile';
 import {ActiveCorporationCard} from '../corporation/CorporationCard';
@@ -31,6 +32,7 @@ export class Cupola extends ActiveCorporationCard {
         renderData: CardRenderer.builder((b) => {
           b.megacredits(52).titanium(2, {digit});
           b.corpBox('effect-action', (ce) => {
+            ce.vSpace(Size.LARGE);
             ce.effect('When any player places a dome, raise your M€ production 2 steps.', (eb) => {
               eb.tile(TileType.DOME, false).asterix().startEffect.production((pb) => pb.megacredits(2));
             });

@@ -33,15 +33,12 @@ export class Starbucks extends ActiveCorporationCard {
         cardNumber: 'EP-SBX',
         description: 'You start with 40 M€. 1 VP per city with at least 1 Starbucks.',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(40);
-          b.corpBox('effect-action', (ce) => {
-            ce.vSpace(Size.MEDIUM);
-            ce.effect('Any greenery placed: you may pay its owner 3 M€ (free if yours) to put coffee on it.', (eb) => {
-              eb.greenery({size: Size.SMALL, withO2: false, any: true}).slash().megacredits(3).asterix().startEffect.text('coffee', {size: Size.SMALL, uppercase: true});
-            });
-            ce.action('5 M€ (+1 per Starbucks there): open a Starbucks in a city next to coffee, one per adjacent coffee. +2 M€ production.', (eb) => {
-              eb.megacredits(5, {text: '5+'}).startAction.city({size: Size.SMALL, all}).text('store', {size: Size.SMALL, uppercase: true}).production((pb) => pb.megacredits(2));
-            });
+          b.megacredits(40).br;
+          b.effect('When any greenery is placed, you may pay its owner 3 M€ (free if it\'s yours) to put coffee on it.', (eb) => {
+            eb.greenery({size: Size.SMALL, withO2: false, any: true}).startEffect.megacredits(3).asterix().coffee();
+          }).br;
+          b.action('Pay 5 M€, +1 per Starbucks already there, to open a Starbucks in a city next to coffee. Each city can have up to one per adjacent coffee. Raise your M€ production 2 steps.', (eb) => {
+            eb.megacredits(5, {text: '5+'}).startAction.coffee().city({size: Size.SMALL, all}).store().production((pb) => pb.megacredits(2));
           });
         }),
         victoryPoints: {...VP.cities(1, 1, true, true)},

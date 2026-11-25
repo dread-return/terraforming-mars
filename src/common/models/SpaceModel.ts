@@ -34,6 +34,8 @@ export type SpaceModel = {
   /** Epic Corporations: Starbucks's coffee on a greenery, and its stores in a city. Absent when none. */
   coffee?: boolean;
   starbucks?: number;
+  /** Epic Corporations: a Red Rail Network rail marker, in its owner's color. Absent when none. */
+  rail?: Color;
 
   undergroundResource?: UndergroundResourceToken;
   excavator?: Color;

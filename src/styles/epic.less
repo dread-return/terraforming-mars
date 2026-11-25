@@ -1187,11 +1187,13 @@
   zoom: 0.85;
 }
 
-.card-container.card-starbucks .card-corporation-box,
 .card-container.card-red-rail-network .card-corporation-box,
-.card-container.card-cupola .card-corporation-box,
-.card-container.card-primal .card-corporation-box {
+.card-container.card-cupola .card-corporation-box {
   zoom: 0.8;
+}
+
+.card-container.card-primal .card-corporation-box {
+  zoom: 0.72;
 }
 
 .card-container.card-exotica .card-corporation-box,
@@ -1292,43 +1294,74 @@
 .card-tile-epic-tholus-metropolis { background-image: url(./assets/epic/tiles/tholus-metropolis.png); }
 .card-tile-epic-tholus-megalopolis { background-image: url(./assets/epic/tiles/tholus-megalopolis.png); }
 
-// Starbucks: coffee beans on greeneries, store counts on cities.
+// Starbucks: a coffee bean on greeneries, up to 6 small storefronts on a city (3 x 2).
 .board-marker--coffee {
   position: absolute;
-  top: 6px;
-  right: 8px;
-  width: 11px;
-  height: 14px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at 35% 30%, #a0663a, #4a2810 70%);
-  border: 1px solid #2a1404;
-  transform: rotate(25deg);
-  z-index: 3;
-  &::after {
-    content: '';
-    position: absolute;
-    left: 4px;
-    top: 1px;
-    width: 2px;
-    height: 10px;
-    border-radius: 2px;
-    background: #2a1404;
-    transform: rotate(-12deg);
-  }
-}
-.board-marker--starbucks {
-  position: absolute;
   top: 4px;
-  right: 5px;
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
-  border-radius: 50%;
-  background: #00704a;
-  border: 2px solid #fff;
-  color: #fff;
-  font-size: 10px;
-  font-weight: bold;
-  text-align: center;
+  right: 6px;
+  width: 14px;
+  height: 14px;
+  background: url(./assets/epic/markers/coffee.png) center / 14px 14px no-repeat;
   z-index: 3;
+}
+.board-marker--store {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: url(./assets/epic/markers/store.png) center / 12px 12px no-repeat;
+  filter: drop-shadow(0 0 1px #000);
+  z-index: 3;
+}
+.board-marker--store-1 { top: 10px; left: 5px; }
+.board-marker--store-2 { top: 10px; left: 17px; }
+.board-marker--store-3 { top: 10px; left: 29px; }
+.board-marker--store-4 { top: 24px; left: 5px; }
+.board-marker--store-5 { top: 24px; left: 17px; }
+.board-marker--store-6 { top: 24px; left: 29px; }
+
+// Red Rail Network: rail markers in their owner's color.
+.board-marker--rail {
+  position: absolute;
+  top: 9px;
+  left: 9px;
+  width: 26px;
+  height: 26px;
+  -webkit-mask: url(./assets/epic/markers/rail.png) center / 26px 26px no-repeat;
+  mask: url(./assets/epic/markers/rail.png) center / 26px 26px no-repeat;
+  background-color: #999;
+  filter: drop-shadow(0 0 1px #000);
+  z-index: 3;
+}
+.board-marker--rail-red { background-color: #d8302f; }
+.board-marker--rail-green { background-color: #2fa043; }
+.board-marker--rail-yellow { background-color: #f2c41a; }
+.board-marker--rail-blue { background-color: #2c6fd6; }
+.board-marker--rail-black { background-color: #2a2a2a; }
+.board-marker--rail-purple { background-color: #8b45b5; }
+.board-marker--rail-orange { background-color: #f08a1d; }
+.board-marker--rail-pink { background-color: #ef6fa6; }
+.board-marker--rail-turquoise { background-color: #20b8b0; }
+.board-marker--rail-clear { background-color: #e8e8e8; }
+.board-marker--rail-neutral, .board-marker--rail-bronze { background-color: #9a9a9a; }
+
+// Epic Corporations: marker icons on cards (Starbucks, Red Rail Network).
+.card-epic-marker {
+  display: inline-block;
+  vertical-align: middle;
+  width: 26px;
+  height: 26px;
+  background-size: 26px 26px;
+  background-repeat: no-repeat;
+}
+.card-epic-marker--coffee { background-image: url(./assets/epic/markers/coffee.png); }
+.card-epic-marker--store { background-image: url(./assets/epic/markers/store.png); }
+.card-epic-marker--rail {
+  -webkit-mask: url(./assets/epic/markers/rail.png) center / 26px 26px no-repeat;
+  mask: url(./assets/epic/markers/rail.png) center / 26px 26px no-repeat;
+  background-color: #b5311f;
+}
+
+.card-container.card-starbucks .card-content-wrapper {
+  overflow-y: auto;
+  .card-row:has(.card-effect-box) { zoom: 0.75; }
 }

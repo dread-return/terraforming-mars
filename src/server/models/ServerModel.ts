@@ -94,7 +94,7 @@ export class Server {
       contamination: game.gameOptions.nuclearExpansion ? game.contamination : undefined,
       mercury: Mercury.model(game),
       phase: game.phase,
-      spaces: this.getSpaces(game.board, game.gagarinBase, game.stJosephCathedrals, game.nomadSpace, this.jellyfishSpaces(game), this.holidaySpaces(game), this.starbucksSpaces(game)),
+      spaces: this.getSpaces(game.board, game.gagarinBase, game.stJosephCathedrals, game.nomadSpace, this.jellyfishSpaces(game), this.holidaySpaces(game), this.starbucksSpaces(game), this.railSpaces(game)),
       spectatorId: game.spectatorId,
       step: game.lastSaveId,
       temperature: game.getTemperature(),
@@ -417,6 +417,16 @@ export class Server {
     return {coffee: [], stores: {}};
   }
 
+  /** Epic Corporations: Red Rail Network's rail markers (its own and the ones it gave away). */
+  private static railSpaces(game: IGame): Array<SpaceId> {
+    const result: Array<SpaceId> = [];
+    for (const player of game.players) {
+      const data = player.tableau.get(CardName.RED_RAIL_NETWORK)?.data as {rails?: Array<SpaceId>, given?: Array<SpaceId>} | undefined;
+      result.push(...(data?.rails ?? []), ...(data?.given ?? []));
+    }
+    return result;
+  }
+
   private static getSpaces(
     board: Board,
     gagarin: ReadonlyArray<SpaceId> = [],
@@ -424,7 +434,8 @@ export class Server {
     nomads: SpaceId | undefined = undefined,
     jellyfish: ReadonlyArray<SpaceId> = [],
     holidays: ReadonlyArray<SpaceId> = [],
-    starbucks: {coffee: ReadonlyArray<SpaceId>, stores: Partial<Record<SpaceId, number>>} = {coffee: [], stores: {}}): Array<SpaceModel> {
+    starbucks: {coffee: ReadonlyArray<SpaceId>, stores: Partial<Record<SpaceId, number>>} = {coffee: [], stores: {}},
+    rails: ReadonlyArray<SpaceId> = []): Array<SpaceModel> {
     const noctisCitySpaceId = board.noctisCitySpaceId;
 
     return board.spaces.map((space) => {
@@ -490,6 +501,9 @@ export class Server {
       const stores = starbucks.stores[space.id] ?? 0;
       if (stores > 0) {
         model.starbucks = stores;
+      }
+      if (rails.includes(space.id) && space.tile === undefined && space.player !== undefined) {
+        model.rail = space.player.color;
       }
       if (space.undergroundResources !== undefined) {
         model.undergroundResource = space.undergroundResources;

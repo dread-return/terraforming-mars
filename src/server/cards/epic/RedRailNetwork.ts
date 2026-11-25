@@ -38,10 +38,10 @@ export class RedRailNetwork extends ActiveCorporationCard {
           b.corpBox('effect-action', (ce) => {
             ce.vSpace(Size.MEDIUM);
             ce.effect('After you play another building card, mark a free land area as rail, next to your tiles or rails if possible. Only you may build there.', (eb) => {
-              eb.tag(Tag.BUILDING).startEffect.emptyTile('normal', {size: Size.SMALL}).text('rail', {size: Size.SMALL, uppercase: true});
+              eb.tag(Tag.BUILDING).startEffect.rail();
             });
-            ce.action('Your rails joining 2 cities become neutral: +1 M€ production per rail.', (eb) => {
-              eb.text('-X', {size: Size.MEDIUM}).text('rail', {size: Size.SMALL, uppercase: true}).asterix().startAction.production((pb) => pb.megacredits(0, {text: 'x'}));
+            ce.action('Your rails joining 2 cities become another player\'s markers (only they may build there): +1 M€ production per rail.', (eb) => {
+              eb.text('-X', {size: Size.MEDIUM}).rail().asterix().startAction.otherPlayer().rail().production((pb) => pb.megacredits(0, {text: 'x'}));
             });
           });
         }),
@@ -49,8 +49,8 @@ export class RedRailNetwork extends ActiveCorporationCard {
     });
   }
 
-  /** The spaces holding this card's rail markers. */
-  public data: {rails?: Array<SpaceId>} = {};
+  /** The spaces holding this card's rail markers, and the rails it has given to other players. */
+  public data: {rails?: Array<SpaceId>, given?: Array<SpaceId>} = {};
 
   private rails(player: IPlayer): Array<Space> {
     const board = player.game.board;
@@ -125,16 +125,29 @@ export class RedRailNetwork extends ActiveCorporationCard {
   }
 
   public override bespokeAction(player: IPlayer) {
-    const complete = (railway: {from: Space, to: Space, path: Array<Space>}) => {
-      const neutral = GameSetup.neutralPlayerFor(player.game.id);
+    const give = (railway: {from: Space, to: Space, path: Array<Space>}, to: IPlayer) => {
       for (const space of railway.path) {
-        space.player = neutral;
+        space.player = to;
       }
       const ids = railway.path.map((s) => s.id);
       this.data.rails = (this.data.rails ?? []).filter((id) => !ids.includes(id));
+      this.data.given = [...(this.data.given ?? []), ...ids];
       player.production.add(Resource.MEGACREDITS, railway.path.length, {log: true});
-      player.game.log('${0} completed a railway between ${1} and ${2}', (b) => b.player(player).space(railway.from).space(railway.to));
+      player.game.log('${0} completed a railway between ${1} and ${2} and gave it to ${3}',
+        (b) => b.player(player).space(railway.from).space(railway.to).player(to));
       return undefined;
+    };
+    // The rails become another player's markers: only they may build there.
+    const complete = (railway: {from: Space, to: Space, path: Array<Space>}) => {
+      const opponents = player.opponents;
+      if (opponents.length === 0) {
+        return give(railway, GameSetup.neutralPlayerFor(player.game.id));
+      }
+      if (opponents.length === 1) {
+        return give(railway, opponents[0]);
+      }
+      return new OrOptions(...opponents.map((p) => new SelectOption(message('Give the railway to ${0}', (b) => b.player(p)), 'Give')
+        .andThen(() => give(railway, p)))).setTitle('Red Rail Network: who gets the railway?');
     };
     const railways = this.railways(player);
     if (railways.length === 1) {

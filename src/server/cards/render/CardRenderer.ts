@@ -370,6 +370,21 @@ abstract class Builder<T> {
     return this._appendToRow(new CardRenderItem(CardRenderItemType.OTHER_PLAYER));
   }
 
+  /** Starbucks's coffee bean (Epic Corporations). */
+  public coffee() {
+    return this._appendToRow(new CardRenderItem(CardRenderItemType.COFFEE));
+  }
+
+  /** A Starbucks storefront (Epic Corporations). */
+  public store() {
+    return this._appendToRow(new CardRenderItem(CardRenderItemType.STARBUCKS_STORE));
+  }
+
+  /** Red Rail Network's rail marker (Epic Corporations). */
+  public rail() {
+    return this._appendToRow(new CardRenderItem(CardRenderItemType.RAIL));
+  }
+
   public rulingParty() {
     return this._appendToRow(new CardRenderItem(CardRenderItemType.RULING_PARTY));
   }

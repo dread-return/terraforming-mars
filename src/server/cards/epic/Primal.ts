@@ -24,6 +24,7 @@ export class Primal extends CorporationCard {
         renderData: CardRenderer.builder((b) => {
           b.megacredits(45);
           b.corpBox('effect', (ce) => {
+            ce.vSpace(Size.LARGE);
             ce.effect('You may place wildernesses on other players\' greeneries. They keep the tile.', (eb) => {
               eb.tile(TileType.WILDERNESS, false).startEffect.greenery({size: Size.SMALL, withO2: false, any: true}).asterix();
             });

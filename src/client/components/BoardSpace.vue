@@ -12,7 +12,8 @@
       <div class="board-space-coords">{{ space.a9 ?? 'n/a' }}</div>
     </template>
     <template v-if="tileView === 'show'">
-      <div :class="playerColorCss" v-if="space.color !== undefined"></div>
+      <div :class="playerColorCss" v-if="space.color !== undefined && space.rail === undefined"></div>
+      <div v-if="space.rail !== undefined" class="board-marker--rail" :class="'board-marker--rail-' + space.rail" :title="$t('Rail (Red Rail Network)')"></div>
       <div :class="coOwnerColorCss" v-if="space.coOwner !== undefined"></div>
       <template v-if="space.gagarin !== undefined">
         <div v-if="space.gagarin === 0" class="gagarin"></div>
@@ -26,7 +27,9 @@
       </template>
       <div v-if="space.jellyfish === true" class="board-marker--jellyfish" :title="$t('Jellyfish Farms')"></div>
       <div v-if="space.coffee === true" class="board-marker--coffee" :title="$t('Coffee (Starbucks)')"></div>
-      <div v-if="space.starbucks !== undefined" class="board-marker--starbucks" :title="$t('Starbucks')">{{ space.starbucks }}</div>
+      <template v-if="space.starbucks !== undefined">
+        <div v-for="n in space.starbucks" :key="'store-' + n" class="board-marker--store" :class="'board-marker--store-' + n" :title="$t('Starbucks')"></div>
+      </template>
       <div v-if="space.holiday !== undefined" class="board-marker--holiday" :title="$t('Beyond Holidays')">{{ 5 * space.holiday }}</div>
       <BoardSpaceCube v-if="space.cube !== undefined" :cube="space.cube" />
       <UndergroundToken v-if="claimedToken !== undefined" :token="claimedToken" location="board" />

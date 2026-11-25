@@ -296,7 +296,8 @@ export class Tags {
         for (const tag of card.tags) {
           if (tag === Tag.WILD) {
             wildTagCount++;
-          } else {
+          } else if (tag !== Tag.CLONE) {
+            // An undeclared clone tag isn't a tag type yet.
             uniqueTags.add(tag);
           }
         }

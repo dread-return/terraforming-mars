@@ -651,7 +651,8 @@ export class Player implements IPlayer {
     let result = this.tableau.filter((card) => card.resourceType !== undefined);
 
     if (resource !== undefined) {
-      result = result.filter((card) => card.resourceType === resource || card.resourceType === CardResource.WARE);
+      // Exotica's goods take any resource, like Martian Express's wares.
+      result = result.filter((card) => card.resourceType === resource || card.resourceType === CardResource.WARE || card.resourceType === CardResource.GOODS);
     }
 
     return result;

@@ -2228,4 +2228,8 @@ export enum CardName {
   MOAR = 'Moar',
   GENERAL_ALLIANCE = 'General Alliance',
   IMAKITA_INDUSTRIAL = 'Imakita Industrial',
+  POLYMORPHICS = 'Polymorphics',
+  DYNAMIC_BUSINESS_SERVICES = 'Dynamic Business Services',
+  EXOTICA = 'Exotica',
+  TRON = 'TRON',
 }

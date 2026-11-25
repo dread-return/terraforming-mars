@@ -238,4 +238,8 @@ export const EPIC_LOGOS: Partial<Record<CardName, {slug: string, lines: Readonly
   [CardName.MOAR]: {slug: 'ep-moar', lines: ['MOAR']},
   [CardName.GENERAL_ALLIANCE]: {slug: 'ep-general-alliance', lines: ['GENERAL', 'ALLIANCE']},
   [CardName.IMAKITA_INDUSTRIAL]: {slug: 'ep-imakita', lines: ['今北産業', 'IMAKITA INDUSTRIAL CO.,LTD']},
+  [CardName.POLYMORPHICS]: {slug: 'ep-polymorphics', lines: ['POLYMORPHICS']},
+  [CardName.DYNAMIC_BUSINESS_SERVICES]: {slug: 'ep-dbs', lines: ['Dynamic Business', 'Services']},
+  [CardName.EXOTICA]: {slug: 'ep-exotica', lines: ['Exotica']},
+  [CardName.TRON]: {slug: 'ep-tron', lines: ['TRON']},
 };

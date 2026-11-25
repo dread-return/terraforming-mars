@@ -23,7 +23,7 @@ export class Moar extends CorporationCard {
           b.megacredits(45);
           b.corpBox('effect', (ce) => {
             ce.vSpace(Size.MEDIUM);
-            ce.effect('When you gain resources from placing a tile on Mars, playing a project card, a global event or a colony, gain 1 more of one of them.', (eb) => {
+            ce.effect('When you gain standard resources from placing a tile on Mars, playing a project card, a global event or a colony, gain 1 more standard resource of one of those kinds.', (eb) => {
               eb.emptyTile('normal', {size: Size.SMALL}).cards(1).globalEvent().colonies(1).startEffect.plus().wild(1);
             });
           });

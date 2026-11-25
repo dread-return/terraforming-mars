@@ -223,6 +223,8 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       [CardResource.FARM]: true,
       [CardResource.ARCHIVED_CARD]: true,
       [CardResource.FRAME]: true,
+      [CardResource.GOODS]: true,
+      [CardResource.ADMINISTRATION]: true,
     },
     searchIndex: SearchIndex.create(),
     namesOnly: true,

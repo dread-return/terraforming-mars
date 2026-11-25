@@ -222,6 +222,10 @@ import {Amazonis} from './Amazonis';
 import {Moar} from './Moar';
 import {GeneralAlliance} from './GeneralAlliance';
 import {ImakitaIndustrial} from './ImakitaIndustrial';
+import {Polymorphics} from './Polymorphics';
+import {DynamicBusinessServices} from './DynamicBusinessServices';
+import {Exotica} from './Exotica';
+import {Tron} from './Tron';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -467,5 +471,9 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.MOAR]: {Factory: Moar},
     [CardName.GENERAL_ALLIANCE]: {Factory: GeneralAlliance, compatibility: 'prelude'},
     [CardName.IMAKITA_INDUSTRIAL]: {Factory: ImakitaIndustrial, compatibility: 'prelude'},
+    [CardName.POLYMORPHICS]: {Factory: Polymorphics},
+    [CardName.DYNAMIC_BUSINESS_SERVICES]: {Factory: DynamicBusinessServices},
+    [CardName.EXOTICA]: {Factory: Exotica},
+    [CardName.TRON]: {Factory: Tron},
   },
 });

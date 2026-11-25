@@ -79,7 +79,7 @@ function permutations<T>(items: ReadonlyArray<T>): Array<Array<T>> {
 /** Epic corporations whose own resources can pay for some cards (see EpicHooks.epicPayment). */
 const EPIC_PAYMENT_CORPS: ReadonlyArray<CardName> = [
   CardName.PEGASUS_GROUP, CardName.OMNIDRONE_LABS, CardName.STELLAR_ROBOTICS, CardName.TECHNONAUTS,
-  CardName.XANTHUM, CardName.OCEANUS, CardName.SAGA_BIOENGINEERING, CardName.MICROFAC,
+  CardName.XANTHUM, CardName.OCEANUS, CardName.SAGA_BIOENGINEERING, CardName.MICROFAC, CardName.TRON,
 ];
 
 export class EpicHooks {
@@ -140,6 +140,40 @@ export class EpicHooks {
     action.options = action.options.filter((option) => allowed.includes(String(option.title)) || option.constructor.name === 'UndoActionOption');
   }
 
+  /**
+   * TRON: once its owner has passed, each action another player takes adds an administration resource to TRON,
+   * unless that player pays TRON 1 M€ instead.
+   */
+  private static tronAfterAction(player: IPlayer): void {
+    const game = player.game;
+    // Free actions, passing and ending the turn aren't actions.
+    if (player.freeActionTaken || game.hasPassedThisActionPhase(player) || player.actionsTakenThisRound >= player.availableActionsThisRound) {
+      return;
+    }
+    for (const owner of player.opponents) {
+      const tron = owner.tableau.get(CardName.TRON);
+      if (tron === undefined || !game.hasPassedThisActionPhase(owner)) {
+        continue;
+      }
+      const admin = () => {
+        owner.addResourceTo(tron, {qty: 1, log: true});
+        return undefined;
+      };
+      if (player.megaCredits < 1) {
+        admin();
+        continue;
+      }
+      player.defer(new OrOptions(
+        new SelectOption(message('Add an administration resource to ${0}\'s TRON', (b) => b.player(owner)), 'Add').andThen(admin),
+        new SelectOption(message('Pay ${0} 1 M€', (b) => b.player(owner)), 'Pay').andThen(() => {
+          player.stock.deduct(Resource.MEGACREDITS, 1, {log: true});
+          owner.stock.add(Resource.MEGACREDITS, 1, {log: true, from: {card: CardName.TRON}});
+          return undefined;
+        }),
+      ).setTitle('TRON has passed: for this action'));
+    }
+  }
+
   /** Kong.Inc: converting plants into a greenery needs 1 more plant (the action's plant). */
   public static extraPlantsForGreenery(player: IPlayer): number {
     return player.tableau.has(CardName.KONG_INC) ? 1 : 0;
@@ -147,6 +181,7 @@ export class EpicHooks {
 
   /** Called when an action from the action menu has finished, before it's counted. */
   public static afterAction(player: IPlayer): void {
+    EpicHooks.tronAfterAction(player);
     const kong = player.tableau.get(CardName.KONG_INC);
     if (kong === undefined) {
       return;
@@ -251,6 +286,11 @@ export class EpicHooks {
 
   /** Called when cards go into a player's hand, either bought or drawn (Dev Wright). */
   public static onCardsKept(player: IPlayer, count: number, bought: boolean): void {
+    // Dynamic Business Services (Earth effect): 1 M€ per card drawn.
+    const dbs = player.tableau?.get(CardName.DYNAMIC_BUSINESS_SERVICES);
+    if (count > 0 && !bought && dbs !== undefined && (dbs as unknown as {active(p: IPlayer): Tag | undefined}).active(player) === Tag.EARTH) {
+      player.stock.add(Resource.MEGACREDITS, count, {log: true, from: {card: CardName.DYNAMIC_BUSINESS_SERVICES}});
+    }
     if (count > 0 && player.tableau.has(CardName.DEV_WRIGHT)) {
       player.stock.add(Resource.MEGACREDITS, (bought ? 1 : 2) * count, {log: true});
     }
@@ -838,6 +878,8 @@ export class EpicHooks {
       return has(Tag.ANIMAL) ? 3 : undefined;
     case CardName.MICROFAC:
       return card.type === CardType.STANDARD_PROJECT ? 3 : undefined;
+    case CardName.TRON:
+      return 2;
     default:
       return undefined;
     }
@@ -1073,6 +1115,19 @@ export class EpicHooks {
       options.push(new SelectOption('Amazonis: buy basic resources for 3 M€ each', 'Buy').andThen(() =>
         max === 1 ? buy(1) : new SelectAmount('How many resources?', 'Buy', 1, max, true).andThen(buy)));
     }
+    // TRON: administration resources stand in for missing plants when converting plants into a greenery.
+    const tron = player.tableau.get(CardName.TRON);
+    if (tron !== undefined && tron.resourceCount > 0) {
+      const needed = player.plantsNeededForGreenery + EpicHooks.extraPlantsForGreenery(player) - player.plants;
+      if (needed > 0 && needed <= tron.resourceCount) {
+        options.push(new SelectOption(`TRON: use ${needed} administration resources as plants for a greenery`, 'Use').andThen(() => {
+          player.freeActionTaken = true;
+          player.removeResourceFrom(tron, needed, {log: true});
+          player.stock.add(Resource.PLANTS, needed, {log: true});
+          return undefined;
+        }));
+      }
+    }
     // Cold Fusion: sell energy for 1 M€ each.
     if (player.tableau.has(CardName.COLD_FUSION) && player.energy > 0) {
       options.push(EpicHooks.conversion(player, 'Cold Fusion: sell energy for 1 M€ each', player.energy, (x) => {
@@ -1144,19 +1199,20 @@ export class EpicHooks {
         options.push(exchange('3 science → 1 animal', 3, (n) => player.game.defer(new AddResourcesToCard(player, CardResource.ANIMAL, {count: n}))));
       }
     }
-    // Wild resources (Discount Conglomerate, Flexi-Change, ...): use as any standard resource.
+    // Wild resources (Discount Conglomerate, Flexi-Change, ...) and Exotica's goods: use as any standard resource.
     for (const card of player.tableau) {
-      if (card.resourceType !== CardResource.WILD_RESOURCE || card.resourceCount === 0) {
+      if ((card.resourceType !== CardResource.WILD_RESOURCE && card.resourceType !== CardResource.GOODS) || card.resourceCount === 0) {
         continue;
       }
+      const noun = card.resourceType === CardResource.GOODS ? 'goods' : 'wild resources';
       const take = (n: number) => new SelectResources(message('Gain ${0} standard resources', (b) => b.number(n)), n).andThen((units) => {
         player.freeActionTaken = true;
         player.removeResourceFrom(card, n, {log: true});
         player.stock.adjust(units, {log: true});
         return undefined;
       });
-      options.push(new SelectOption(`${card.name}: use wild resources as standard resources`, 'Convert').andThen(() =>
-        card.resourceCount === 1 ? take(1) : new SelectAmount('How many wild resources?', 'Convert', 1, card.resourceCount, true).andThen(take)));
+      options.push(new SelectOption(`${card.name}: use ${noun} as standard resources`, 'Convert').andThen(() =>
+        card.resourceCount === 1 ? take(1) : new SelectAmount(`How many ${noun}?`, 'Convert', 1, card.resourceCount, true).andThen(take)));
     }
     if (options.length === 0) {
       return undefined;
@@ -1426,6 +1482,11 @@ export class EpicHooks {
   /** Called at the start of each generation. */
   public static onGenerationStart(game: IGame): void {
     for (const p of game.players) {
+      // Dynamic Business Services: last generation's effect ends.
+      const dbs = p.tableau.get(CardName.DYNAMIC_BUSINESS_SERVICES);
+      if (dbs !== undefined) {
+        (dbs as unknown as {resetForNewGeneration(p: IPlayer): void}).resetForNewGeneration(p);
+      }
       // Aether Vial: after production, add or discard up to 5 M€ on the card.
       const vial = p.tableau.get(CardName.AETHER_VIAL);
       if (vial !== undefined) {

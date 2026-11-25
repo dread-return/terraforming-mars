@@ -1049,6 +1049,25 @@
     font-family: 'Yu Gothic', 'Hiragino Sans', 'Noto Sans CJK JP', 'MS Gothic', sans-serif; font-weight: 700; font-size: 24px; color: #111; line-height: 1.05;
     .et-line-1 { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 0.5px; border: 1.5px solid #111; padding: 1px 3px; display: inline-block; }
   }
+  &.et-logo-ep-polymorphics {
+    font-family: 'EpBlackOps', sans-serif; font-size: 20px; letter-spacing: 1px;
+    background: repeating-linear-gradient(180deg, #2e3238 0 2px, #8a929c 2px 4px);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    -webkit-text-stroke: 0.6px #1c1f24;
+  }
+  &.et-logo-ep-dbs {
+    font-family: 'Courier New', monospace; font-weight: 700; font-size: 14px; color: #1d3c8f; line-height: 1.1;
+    padding: 5px 8px; border: 2px solid #1d3c8f; border-radius: 14px;
+    box-shadow: -10px 0 0 -6px #1d3c8f, 10px 0 0 -6px #1d3c8f;
+  }
+  &.et-logo-ep-exotica {
+    font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: 34px; color: #4a9ec4;
+    border-top: 3px solid #4a9ec4; border-bottom: 3px solid #4a9ec4; padding: 0 6px; line-height: 1.1;
+  }
+  &.et-logo-ep-tron {
+    font-family: 'EpOrbitron', sans-serif; font-weight: 900; font-size: 34px; letter-spacing: 4px; color: #0b1626;
+    text-shadow: 0 0 3px #3fe0ff, 0 0 8px #3fe0ff;
+  }
   &.et-logo-ep-top-up {
     font-family: 'EpBebas', sans-serif; font-size: 28px; color: #1c4f8a; letter-spacing: 1px; line-height: 0.85;
     .et-line-1 { font-size: 17px; color: #8a6d1c; letter-spacing: 3px; }
@@ -1135,6 +1154,11 @@
   zoom: 0.85;
 }
 
+.card-container.card-exotica .card-corporation-box,
+.card-container.card-tron .card-corporation-box {
+  zoom: 0.88;
+}
+
 .card-container.card-archi-tech .card-corporation-box {
   zoom: 0.8;
 }
@@ -1153,6 +1177,11 @@
 .card-container.card-kaguya-tech-\(epic\) .card-content-wrapper {
   overflow-y: auto;
   .card-row { zoom: 0.8; }
+}
+
+.card-container.card-dynamic-business-services .card-content-wrapper {
+  overflow-y: auto;
+  .card-row:has(.card-effect-box) { zoom: 0.72; }
 }
 
 .card-container.card-cold-fusion .card-content-wrapper {

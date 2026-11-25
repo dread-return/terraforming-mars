@@ -218,6 +218,10 @@ import {ColdFusion} from './ColdFusion';
 import {ArchiTech} from './ArchiTech';
 import {KaguyaTechEpic} from './KaguyaTechEpic';
 import {Tholus} from './Tholus';
+import {Amazonis} from './Amazonis';
+import {Moar} from './Moar';
+import {GeneralAlliance} from './GeneralAlliance';
+import {ImakitaIndustrial} from './ImakitaIndustrial';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -459,5 +463,9 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.ARCHI_TECH]: {Factory: ArchiTech},
     [CardName.KAGUYA_TECH_EPIC]: {Factory: KaguyaTechEpic},
     [CardName.THOLUS]: {Factory: Tholus},
+    [CardName.AMAZONIS]: {Factory: Amazonis},
+    [CardName.MOAR]: {Factory: Moar},
+    [CardName.GENERAL_ALLIANCE]: {Factory: GeneralAlliance, compatibility: 'prelude'},
+    [CardName.IMAKITA_INDUSTRIAL]: {Factory: ImakitaIndustrial, compatibility: 'prelude'},
   },
 });

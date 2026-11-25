@@ -1,3 +1,7 @@
+import {SelectPaymentDeferred} from '../../deferredActions/SelectPaymentDeferred';
+import {InputError} from '../../inputs/InputError';
+import {Units} from '../../../common/Units';
+import {ALL_RESOURCES} from '../../../common/Resource';
 import {TileType} from '../../../common/TileType';
 import {Space} from '../../boards/Space';
 import {SpaceId} from '../../../common/Types';
@@ -124,6 +128,11 @@ export class EpicHooks {
 
   /** Kong.Inc: with no plants, only blue-card actions (and its own action), passing and free actions are offered. */
   public static filterActions(player: IPlayer, action: OrOptions): void {
+    // Imakita Industrial: no actions until generation 3, only passing.
+    if (player.tableau.has(CardName.IMAKITA_INDUSTRIAL) && player.game.generation < 3) {
+      action.options = action.options.filter((option) => String(option.title) === 'Pass for this generation' || option.constructor.name === 'UndoActionOption');
+      return;
+    }
     if (!player.tableau.has(CardName.KONG_INC) || player.plants > 0) {
       return;
     }
@@ -300,6 +309,40 @@ export class EpicHooks {
       }
     }
     return player;
+  }
+
+  /** Moar: gain 1 more of one of the resources just gained. */
+  public static moarExtra(player: IPlayer, resources: ReadonlyArray<Resource>): void {
+    if (!player.tableau.has(CardName.MOAR)) {
+      return;
+    }
+    const unique = [...new Set(resources)];
+    if (unique.length === 0) {
+      return;
+    }
+    const gain = (resource: Resource) => player.stock.add(resource, 1, {log: true, from: {card: CardName.MOAR}});
+    if (unique.length === 1) {
+      gain(unique[0]);
+      return;
+    }
+    player.defer(new OrOptions(...unique.map((resource) => new SelectOption(`Gain 1 ${resource}`).andThen(() => {
+      gain(resource);
+      return undefined;
+    }))).setTitle('Moar: gain 1 more of'));
+  }
+
+  /** Moar: the stock before something that may give it resources (undefined for anyone else). */
+  public static moarBefore(player: IPlayer): Units | undefined {
+    return player.tableau?.has(CardName.MOAR) === true ? player.stock.asUnits() : undefined;
+  }
+
+  /** Moar: after something that may have given it resources, gain 1 more of one of them. */
+  public static moarAfter(player: IPlayer, before: Units | undefined): void {
+    if (before === undefined) {
+      return;
+    }
+    const after = player.stock.asUnits();
+    EpicHooks.moarExtra(player, ALL_RESOURCES.filter((resource) => after[resource] > before[resource]));
   }
 
   /** Eletrop: sets its energy production to the total energy production of its opponents. */
@@ -958,6 +1001,16 @@ export class EpicHooks {
           return undefined;
         })));
     }
+    // General Alliance: look at the preludes waiting on the card.
+    const alliance = player.tableau.get(CardName.GENERAL_ALLIANCE);
+    if (alliance !== undefined && dataOf<{preludes?: Array<CardName>}>(alliance).preludes?.length) {
+      const preludes = (alliance as unknown as {preludes(): Array<IProjectCard>}).preludes();
+      options.push(new SelectOption('General Alliance: look at your preludes', 'Look').andThen(() =>
+        new SelectCard('Preludes on General Alliance', 'OK', preludes, {min: 0, max: 0}).andThen(() => {
+          player.freeActionTaken = true;
+          return undefined;
+        })));
+    }
     // Cloud Computing: look at next generation's research cards.
     const cloud = player.tableau.get(CardName.CLOUD_COMPUTING);
     if (cloud !== undefined && dataOf<{next?: Array<CardName>}>(cloud).next?.length) {
@@ -996,6 +1049,29 @@ export class EpicHooks {
           player.stock.add(Resource.HEAT, x, {log: true});
         }));
       }
+    }
+    // Amazonis: any player may buy basic resources for 3 M€ each; Amazonis gets 2 M€ per resource an opponent buys.
+    const amazonis = player.game.players.find((p) => p.tableau.has(CardName.AMAZONIS));
+    if (amazonis !== undefined && player.canAfford(3)) {
+      let max = 1;
+      while (player.canAfford(3 * (max + 1))) {
+        max++;
+      }
+      const buy = (n: number) => new SelectResources(message('Buy ${0} basic resources (3 M€ each, not M€)', (b) => b.number(n)), n, 'Buy').andThen((units) => {
+        if (units.megacredits > 0) {
+          throw new InputError('Choose basic resources other than M€');
+        }
+        player.freeActionTaken = true;
+        player.game.defer(new SelectPaymentDeferred(player, 3 * n, {title: 'Amazonis: pay for the resources'}).andThen(() => {
+          player.stock.adjust(units, {log: true});
+          if (amazonis !== player) {
+            amazonis.stock.add(Resource.MEGACREDITS, 2 * n, {log: true, from: {card: CardName.AMAZONIS}});
+          }
+        }));
+        return undefined;
+      });
+      options.push(new SelectOption('Amazonis: buy basic resources for 3 M€ each', 'Buy').andThen(() =>
+        max === 1 ? buy(1) : new SelectAmount('How many resources?', 'Buy', 1, max, true).andThen(buy)));
     }
     // Cold Fusion: sell energy for 1 M€ each.
     if (player.tableau.has(CardName.COLD_FUSION) && player.energy > 0) {
@@ -1162,7 +1238,21 @@ export class EpicHooks {
 
   /** First Wave: the first 4 cards kept during setup are free. */
   public static freeSetupCards(corp: ICorporationCard): number {
+    // Imakita Industrial: all 10 starting cards are free.
+    if (corp.name === CardName.IMAKITA_INDUSTRIAL) {
+      return 10;
+    }
     return corp.name === CardName.FIRST_WAVE ? 4 : 0;
+  }
+
+  /** Called at the start of each player's research phase. */
+  public static onResearchPhaseStart(player: IPlayer): void {
+    if (player.tableau.has(CardName.GENERAL_ALLIANCE)) {
+      const alliance = player.tableau.get(CardName.GENERAL_ALLIANCE) as unknown as {data: {preludes?: Array<CardName>}};
+      const drawn = player.game.preludeDeck.drawN(player.game, 2);
+      alliance.data.preludes = [...(alliance.data.preludes ?? []), ...drawn.map((card) => card.name)];
+      player.game.log('${0} drew ${1} prelude(s) (General Alliance)', (b) => b.player(player).number(drawn.length));
+    }
   }
 
   /** Called when a player passes. */

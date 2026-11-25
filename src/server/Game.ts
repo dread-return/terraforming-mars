@@ -1611,6 +1611,13 @@ export class Game implements IGame, Logger {
   }
 
   public grantPlacementBonuses(player: IPlayer, space: Space, coveringExistingTile: boolean = false) {
+    // Epic Corporations: Moar gains 1 more of the resources a tile on Mars gives it.
+    const moar = space.spaceType === SpaceType.COLONY ? undefined : EpicHooks.moarBefore(player);
+    this.grantPlacementBonusesInner(player, space, coveringExistingTile);
+    EpicHooks.moarAfter(player, moar);
+  }
+
+  private grantPlacementBonusesInner(player: IPlayer, space: Space, coveringExistingTile: boolean) {
     if (!coveringExistingTile) {
       // Epic Corporations: Archi-Tech takes the bonus of areas next to its marked areas.
       const recipient = space.spaceType === SpaceType.COLONY ? player : EpicHooks.placementBonusRecipient(player, space);

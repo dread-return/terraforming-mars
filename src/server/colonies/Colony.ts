@@ -216,9 +216,21 @@ export abstract class Colony implements IColony {
   }
 
   private giveBonus(player: IPlayer, bonusType: ColonyBenefit, quantity: number, resource: Resource | undefined, isGiveColonyBonus: boolean = false): undefined | PlayerInput {
+    // Epic Corporations: Moar gains 1 more of the resources a colony gives it.
+    const moar = EpicHooks.moarBefore(player);
     const action: undefined | DeferredAction<any> = this.computeBonus(player, bonusType, quantity, resource);
     if (action === undefined) {
+      EpicHooks.moarAfter(player, moar);
       return undefined;
+    }
+    if (moar !== undefined) {
+      const execute = action.execute.bind(action);
+      action.execute = () => {
+        const before = EpicHooks.moarBefore(player);
+        const result = execute();
+        EpicHooks.moarAfter(player, before);
+        return result;
+      };
     }
     if (isGiveColonyBonus) {
       /*

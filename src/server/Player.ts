@@ -768,6 +768,8 @@ export class Player implements IPlayer {
   }
 
   public runResearchPhase(): void {
+    // Epic Corporations: General Alliance also draws 2 preludes.
+    EpicHooks.onResearchPhaseStart(this);
     if (!this.game.gameOptions.draftVariant || this.game.isSoloMode()) {
       this.draftedCards = newStandardDraft(this.game).draw(this);
     }

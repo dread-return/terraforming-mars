@@ -2224,4 +2224,8 @@ export enum CardName {
   ARCHI_TECH = 'Archi-Tech',
   KAGUYA_TECH_EPIC = 'Kaguya Tech (Epic)',
   THOLUS = 'Tholus',
+  AMAZONIS = 'Amazonis',
+  MOAR = 'Moar',
+  GENERAL_ALLIANCE = 'General Alliance',
+  IMAKITA_INDUSTRIAL = 'Imakita Industrial',
 }

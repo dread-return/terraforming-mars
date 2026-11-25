@@ -208,7 +208,9 @@ export default defineComponent({
 
       let starting = corporation.startingMegaCredits ?? 0;
       const cardCost = corporation.cardCost === undefined ? constants.CARD_COST : corporation.cardCost;
-      starting -= this.selectedCards.length * cardCost;
+      // Epic Corporations: First Wave's first 4 and Imakita Industrial's 10 starting cards are free.
+      const free = corpName === CardName.FIRST_WAVE ? 4 : corpName === CardName.IMAKITA_INDUSTRIAL ? 10 : 0;
+      starting -= Math.max(0, this.selectedCards.length - free) * cardCost;
 
       if (corpName === CardName.SAGITTA_FRONTIER_SERVICES) {
         // Effect for playing itself.

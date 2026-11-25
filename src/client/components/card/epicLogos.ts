@@ -234,4 +234,8 @@ export const EPIC_LOGOS: Partial<Record<CardName, {slug: string, lines: Readonly
   [CardName.ARCHI_TECH]: {slug: 'ep-archi-tech', lines: ['ARCHI', '-TECH']},
   [CardName.KAGUYA_TECH_EPIC]: {slug: 'ep-kaguya', lines: ['KAGUYA', 'TECH']},
   [CardName.THOLUS]: {slug: 'ep-tholus', lines: ['THOLUS', 'ARCHITECTURE FRAMES']},
+  [CardName.AMAZONIS]: {slug: 'ep-amazonis', lines: ['amazonis']},
+  [CardName.MOAR]: {slug: 'ep-moar', lines: ['MOAR']},
+  [CardName.GENERAL_ALLIANCE]: {slug: 'ep-general-alliance', lines: ['GENERAL', 'ALLIANCE']},
+  [CardName.IMAKITA_INDUSTRIAL]: {slug: 'ep-imakita', lines: ['今北産業', 'IMAKITA INDUSTRIAL CO.,LTD']},
 };

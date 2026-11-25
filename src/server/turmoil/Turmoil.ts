@@ -1,3 +1,4 @@
+import {EpicHooks} from '../cards/epic/EpicHooks';
 import {FanPartyCards} from './giga/FanPartyCards';
 import {GIGA_PARTIES, GIGA_PARTIES_IN_PLAY, OFFICIAL_PARTIES, PartyName} from '../../common/turmoil/PartyName';
 import {IParty} from './parties/IParty';
@@ -378,7 +379,10 @@ export class Turmoil {
     if (this.currentGlobalEvent !== undefined) {
       const currentGlobalEvent: IGlobalEvent = this.currentGlobalEvent;
       game.log('Resolving global event ${0}', (b) => b.globalEvent(currentGlobalEvent));
+      // Epic Corporations: Moar gains 1 more of the resources a global event gives it.
+      const moar = game.players.map((p) => [p, EpicHooks.moarBefore(p)] as const);
       currentGlobalEvent.resolve(game);
+      moar.forEach(([p, before]) => EpicHooks.moarAfter(p, before));
     }
 
     game.deferredActions.runAll(() => {

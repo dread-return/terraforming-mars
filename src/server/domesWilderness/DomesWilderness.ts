@@ -1,3 +1,4 @@
+import {CardName} from '../../common/cards/CardName';
 import {IGame} from '../IGame';
 import {LogHelper} from '../LogHelper';
 import {IPlayer} from '../IPlayer';
@@ -57,6 +58,12 @@ export class DomesWilderness {
 
   /** The greeneries of `player` that do not have a wilderness yet. */
   public static upgradeableGreeneries(player: IPlayer): Array<Space> {
+    // Epic Corporations: Primal may also place wildernesses on other players' greeneries (they keep the tile).
+    if (player.tableau.has(CardName.PRIMAL)) {
+      return player.game.board.spaces.filter((space) =>
+        space.tile !== undefined && Board.isGreenerySpace(space) && space.tile.upgrade === undefined && space.player !== undefined &&
+        space.spaceType !== SpaceType.COLONY);
+    }
     return player.game.board.getGreeneries(player)
       .filter((space) => space.tile?.upgrade === undefined && space.player === player);
   }

@@ -94,7 +94,7 @@ export class Server {
       contamination: game.gameOptions.nuclearExpansion ? game.contamination : undefined,
       mercury: Mercury.model(game),
       phase: game.phase,
-      spaces: this.getSpaces(game.board, game.gagarinBase, game.stJosephCathedrals, game.nomadSpace, this.jellyfishSpaces(game), this.holidaySpaces(game)),
+      spaces: this.getSpaces(game.board, game.gagarinBase, game.stJosephCathedrals, game.nomadSpace, this.jellyfishSpaces(game), this.holidaySpaces(game), this.starbucksSpaces(game)),
       spectatorId: game.spectatorId,
       step: game.lastSaveId,
       temperature: game.getTemperature(),
@@ -406,13 +406,25 @@ export class Server {
     return result;
   }
 
+  /** Epic Corporations: Starbucks's coffee greeneries and stores. */
+  private static starbucksSpaces(game: IGame): {coffee: Array<SpaceId>, stores: Partial<Record<SpaceId, number>>} {
+    for (const player of game.players) {
+      const data = player.tableau.get(CardName.STARBUCKS)?.data as {coffee?: Array<SpaceId>, stores?: Partial<Record<SpaceId, number>>} | undefined;
+      if (data !== undefined) {
+        return {coffee: data.coffee ?? [], stores: data.stores ?? {}};
+      }
+    }
+    return {coffee: [], stores: {}};
+  }
+
   private static getSpaces(
     board: Board,
     gagarin: ReadonlyArray<SpaceId> = [],
     cathedrals: ReadonlyArray<SpaceId> = [],
     nomads: SpaceId | undefined = undefined,
     jellyfish: ReadonlyArray<SpaceId> = [],
-    holidays: ReadonlyArray<SpaceId> = []): Array<SpaceModel> {
+    holidays: ReadonlyArray<SpaceId> = [],
+    starbucks: {coffee: ReadonlyArray<SpaceId>, stores: Partial<Record<SpaceId, number>>} = {coffee: [], stores: {}}): Array<SpaceModel> {
     const noctisCitySpaceId = board.noctisCitySpaceId;
 
     return board.spaces.map((space) => {
@@ -471,6 +483,13 @@ export class Server {
       const holiday = holidays.filter((id) => id === space.id).length;
       if (holiday > 0) {
         model.holiday = holiday;
+      }
+      if (starbucks.coffee.includes(space.id) && space.tile !== undefined) {
+        model.coffee = true;
+      }
+      const stores = starbucks.stores[space.id] ?? 0;
+      if (stores > 0) {
+        model.starbucks = stores;
       }
       if (space.undergroundResources !== undefined) {
         model.undergroundResource = space.undergroundResources;

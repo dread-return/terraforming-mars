@@ -229,6 +229,10 @@ import {Tron} from './Tron';
 import {AchievementUnlocked} from './AchievementUnlocked';
 import {UNVenusInitiative} from './UNVenusInitiative';
 import {GeneralProducts} from './GeneralProducts';
+import {Starbucks} from './Starbucks';
+import {RedRailNetwork} from './RedRailNetwork';
+import {Cupola} from './Cupola';
+import {Primal} from './Primal';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -481,5 +485,9 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.ACHIEVEMENT_UNLOCKED]: {Factory: AchievementUnlocked},
     [CardName.UN_VENUS_INITIATIVE]: {Factory: UNVenusInitiative, compatibility: 'venus'},
     [CardName.GENERAL_PRODUCTS]: {Factory: GeneralProducts},
+    [CardName.STARBUCKS]: {Factory: Starbucks},
+    [CardName.RED_RAIL_NETWORK]: {Factory: RedRailNetwork},
+    [CardName.CUPOLA]: {Factory: Cupola, domesWilderness: true},
+    [CardName.PRIMAL]: {Factory: Primal, domesWilderness: true},
   },
 });

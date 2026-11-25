@@ -61,7 +61,8 @@ export class GameSetup {
   }
 
   public static deserializeBoard(players: Array<IPlayer>, gameOptions: GameOptions, d: SerializedGame) {
-    const playersForBoard = players.length !== 1 ? players : [players[0], GameSetup.neutralPlayerFor(d.id)];
+    // The neutral player can own spaces in any game (solo setup, Castle Queen Mary, Red Rail Network's finished railways).
+    const playersForBoard = [...players, GameSetup.neutralPlayerFor(d.id)];
     migrateColonySpaceIds(d.board);
     migrateEdges(d.board, gameOptions.boardName);
     const deserialized = Board.deserialize(d.board, playersForBoard).spaces;

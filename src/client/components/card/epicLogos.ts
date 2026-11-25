@@ -245,4 +245,8 @@ export const EPIC_LOGOS: Partial<Record<CardName, {slug: string, lines: Readonly
   [CardName.ACHIEVEMENT_UNLOCKED]: {slug: 'ep-achievement', lines: ['Achievement', 'Unlocked']},
   [CardName.UN_VENUS_INITIATIVE]: {slug: 'ep-unvi', lines: ['UNITED NATIONS', 'VENUS INITIATIVE']},
   [CardName.GENERAL_PRODUCTS]: {slug: 'ep-general-products', lines: ['GP', 'GENERAL PRODUCTS']},
+  [CardName.STARBUCKS]: {slug: 'ep-starbucks', lines: ['STARBUCKS']},
+  [CardName.RED_RAIL_NETWORK]: {slug: 'ep-red-rail', lines: ['Red Rail', 'Network']},
+  [CardName.CUPOLA]: {slug: 'ep-cupola', lines: ['CUPOLA']},
+  [CardName.PRIMAL]: {slug: 'ep-primal', lines: ['PRIMAL']},
 };

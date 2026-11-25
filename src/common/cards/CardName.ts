@@ -2235,4 +2235,8 @@ export enum CardName {
   ACHIEVEMENT_UNLOCKED = 'Achievement Unlocked',
   UN_VENUS_INITIATIVE = 'UN Venus Initiative',
   GENERAL_PRODUCTS = 'General Products',
+  STARBUCKS = 'Starbucks',
+  RED_RAIL_NETWORK = 'Red Rail Network',
+  CUPOLA = 'Cupola',
+  PRIMAL = 'Primal',
 }

@@ -18,10 +18,15 @@ export type CardFactorySpec<T> = {
   negative?: boolean;
   // True for cards that need one of the six GIGA fan parties: they are only in games with Giga Turmoil.
   gigaTurmoil?: boolean;
+  // True for cards that need the Domes and Wilderness option (Epic Corporations: Cupola, Primal).
+  domesWilderness?: boolean;
 }
 
 export function isCompatibleWith(cf: CardFactorySpec<any>, gameOptions: GameOptions): boolean {
   if (cf.gigaTurmoil === true && gameOptions.gigaTurmoil !== true) {
+    return false;
+  }
+  if (cf.domesWilderness === true && gameOptions.domesWilderness !== true) {
     return false;
   }
   if (cf.compatibility === undefined) {

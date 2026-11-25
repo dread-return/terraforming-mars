@@ -1086,6 +1086,21 @@
     .et-line-0 { border: 3px solid #111; border-radius: 50%; padding: 2px 10px; display: inline-block; }
     .et-line-1 { font-family: 'EpBebas', sans-serif; font-size: 12px; letter-spacing: 2px; }
   }
+  &.et-logo-ep-starbucks {
+    font-family: 'EpBebas', sans-serif; font-size: 25px; letter-spacing: 2px; color: #2b2b2b;
+    .et-line-0::before { content: ''; display: inline-block; width: 18px; height: 18px; margin-right: 6px; vertical-align: -1px;
+      border-radius: 50%; border: 4px solid #00704a; background: #fff; }
+  }
+  &.et-logo-ep-red-rail {
+    font-family: Arial, sans-serif; font-weight: 700; font-size: 15px; line-height: 1.05; color: #222; text-align: left;
+    background: linear-gradient(110deg, #c0392b 0 30%, #f6dfa4 30%); padding: 4px 8px 4px 40px; border: 1px solid #8a6d3b;
+  }
+  &.et-logo-ep-cupola {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 23px; letter-spacing: 4px; color: #1d3f8f;
+  }
+  &.et-logo-ep-primal {
+    font-family: 'EpMarker', cursive; font-size: 29px; letter-spacing: 6px; color: #1d4d3a;
+  }
   &.et-logo-ep-top-up {
     font-family: 'EpBebas', sans-serif; font-size: 28px; color: #1c4f8a; letter-spacing: 1px; line-height: 0.85;
     .et-line-1 { font-size: 17px; color: #8a6d1c; letter-spacing: 3px; }
@@ -1170,6 +1185,13 @@
 .card-container.card-martian-lumber .card-corporation-box,
 .card-container.card-atlantis .card-corporation-box {
   zoom: 0.85;
+}
+
+.card-container.card-starbucks .card-corporation-box,
+.card-container.card-red-rail-network .card-corporation-box,
+.card-container.card-cupola .card-corporation-box,
+.card-container.card-primal .card-corporation-box {
+  zoom: 0.8;
 }
 
 .card-container.card-exotica .card-corporation-box,
@@ -1269,3 +1291,44 @@
 }
 .card-tile-epic-tholus-metropolis { background-image: url(./assets/epic/tiles/tholus-metropolis.png); }
 .card-tile-epic-tholus-megalopolis { background-image: url(./assets/epic/tiles/tholus-megalopolis.png); }
+
+// Starbucks: coffee beans on greeneries, store counts on cities.
+.board-marker--coffee {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 11px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 35% 30%, #a0663a, #4a2810 70%);
+  border: 1px solid #2a1404;
+  transform: rotate(25deg);
+  z-index: 3;
+  &::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 2px;
+    height: 10px;
+    border-radius: 2px;
+    background: #2a1404;
+    transform: rotate(-12deg);
+  }
+}
+.board-marker--starbucks {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  border-radius: 50%;
+  background: #00704a;
+  border: 2px solid #fff;
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+  z-index: 3;
+}

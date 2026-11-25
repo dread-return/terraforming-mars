@@ -31,6 +31,9 @@ export type SpaceModel = {
   coOwner?: Color;
   /** Epic Corporations: number of Beyond Holidays 5 M€ tokens on this space. Absent when none. */
   holiday?: number;
+  /** Epic Corporations: Starbucks's coffee on a greenery, and its stores in a city. Absent when none. */
+  coffee?: boolean;
+  starbucks?: number;
 
   undergroundResource?: UndergroundResourceToken;
   excavator?: Color;

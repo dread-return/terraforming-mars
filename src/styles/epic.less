@@ -1017,6 +1017,20 @@
     font-family: 'EpComfortaa', sans-serif; font-weight: 700; font-size: 26px; color: #2c63b5; line-height: 0.95; letter-spacing: 1px;
     .et-line-1 { color: #6b3a99; }
   }
+  &.et-logo-ep-archi-tech {
+    font-family: 'EpBebas', sans-serif; font-size: 25px; line-height: 0.9; letter-spacing: 1px;
+    color: #f2f2f2; -webkit-text-stroke: 1px #555;
+    .et-line-0::first-letter { color: #e8771e; -webkit-text-stroke: 0; font-size: 32px; }
+    .et-line-1 { color: #222; -webkit-text-stroke: 0; background: #fff; border: 2px solid #222; display: inline-block; padding: 0 4px; }
+  }
+  &.et-logo-ep-kaguya {
+    font-family: 'EpBebas', sans-serif; font-size: 27px; line-height: 0.9; color: #111;
+    border-left: 7px double #5a9a2e; padding-left: 6px;
+  }
+  &.et-logo-ep-tholus {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 30px; line-height: 1; color: #6b4e3d; letter-spacing: 1px;
+    .et-line-1 { font-size: 9px; color: #8c1b2b; letter-spacing: 1px; }
+  }
   &.et-logo-ep-top-up {
     font-family: 'EpBebas', sans-serif; font-size: 28px; color: #1c4f8a; letter-spacing: 1px; line-height: 0.85;
     .et-line-1 { font-size: 17px; color: #8a6d1c; letter-spacing: 3px; }
@@ -1103,6 +1117,18 @@
   zoom: 0.85;
 }
 
+.card-container.card-archi-tech .card-corporation-box {
+  zoom: 0.8;
+}
+
+.card-container.card-tholus .card-corporation-box {
+  zoom: 0.72;
+}
+
+.card-container.card-kaguya-tech-\(epic\) .card-corporation-box {
+  zoom: 0.85;
+}
+
 .card-container.card-blooming-vales .card-corporation-box {
   zoom: 0.82;
 }
@@ -1156,4 +1182,27 @@
   background: url(./assets/resources/megacredit.png) center / 22px 22px no-repeat;
   z-index: 3;
   filter: drop-shadow(0 0 2px black);
+}
+
+// Tholus: metropolis / megalopolis badge on upgraded cities.
+.board-marker--tholus {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 3px;
+  border-radius: 3px;
+  font-family: 'EpCinzel', serif;
+  font-weight: bold;
+  font-size: 9px;
+  line-height: 12px;
+  color: #fff;
+  background: #8c1b2b;
+  border: 1px solid #f0d9a8;
+  box-shadow: 0 2px 0 #5a0f1b;
+  z-index: 3;
+}
+.board-marker--tholus-3 {
+  background: #4a1e10;
+  box-shadow: 0 2px 0 #8c1b2b, 0 4px 0 #5a0f1b;
 }

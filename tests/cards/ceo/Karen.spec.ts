@@ -2,6 +2,7 @@ import {expect} from 'chai';
 import {IPreludeCard} from '../../../src/server/cards/prelude/IPreludeCard';
 import {Karen} from '../../../src/server/cards/ceos/Karen';
 import {GalileanMining} from '../../../src/server/cards/prelude/GalileanMining';
+import {Donation} from '../../../src/server/cards/prelude/Donation';
 import {IGame} from '../../../src/server/IGame';
 import {SelectCard} from '../../../src/server/inputs/SelectCard';
 import {forceGenerationEnd, runAllActions} from '../../TestingUtils';
@@ -28,6 +29,8 @@ describe('Karen', () => {
   });
 
   it('Takes action', () => {
+    // The deck order is random; put a prelude that's always playable on top.
+    game.preludeDeck.drawPile.push(new Donation());
     const selectCard = cast(card.action(player), SelectCard<IPreludeCard>);
     expect(selectCard.cards).has.length(1);
 
@@ -39,6 +42,10 @@ describe('Karen', () => {
     for (let i = 0; i < 3; i++) {
       runAllActions(game);
       forceGenerationEnd(game);
+    }
+    // The deck order is random; put preludes that are always playable on top.
+    for (let i = 0; i < 4; i++) {
+      game.preludeDeck.drawPile.push(new Donation());
     }
 
     const selectCard = cast(card.action(player), SelectCard<IPreludeCard>);

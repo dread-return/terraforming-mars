@@ -1,5 +1,6 @@
 import {TileType} from '../../../common/TileType';
 import {Space} from '../../boards/Space';
+import {SpaceId} from '../../../common/Types';
 import {Tile} from '../../Tile';
 import {CardName} from '../../../common/cards/CardName';
 import {CardType} from '../../../common/cards/CardType';
@@ -197,6 +198,11 @@ export class EpicHooks {
 
   /** Called as a player's next action starts: card-action effects are over. */
   public static onTakeAction(player: IPlayer): void {
+    // Archi-Tech: the refund only applies to what's paid during this action.
+    const archiTech = player.tableau?.get(CardName.ARCHI_TECH);
+    if (archiTech !== undefined) {
+      dataOf<{lastCost?: number}>(archiTech).lastCost = 0;
+    }
     const technonauts = player.tableau?.get(CardName.TECHNONAUTS);
     if (technonauts !== undefined) {
       dataOf<{inAction?: boolean}>(technonauts).inAction = false;
@@ -277,6 +283,25 @@ export class EpicHooks {
    * Cheap Chispa: every decrease of the owner's energy production is 1 step smaller.
    * Returns the adjusted amount.
    */
+  /**
+   * Archi-Tech: when an opponent places a tile next to one of its marked areas, Archi-Tech gets the
+   * area's placement bonus instead. Returns who gets the bonus.
+   */
+  public static placementBonusRecipient(player: IPlayer, space: Space): IPlayer {
+    const game = player.game;
+    for (const other of player.opponents) {
+      const card = other.tableau.get(CardName.ARCHI_TECH);
+      const marks = card === undefined ? undefined : dataOf<{marks?: Array<SpaceId>}>(card).marks;
+      if (marks !== undefined && game.board.getAdjacentSpaces(space).some((s) => marks.includes(s.id))) {
+        if (space.bonus.length > 0) {
+          game.log('${0} takes the placement bonus of ${1} (Archi-Tech)', (b) => b.player(other).space(space));
+        }
+        return other;
+      }
+    }
+    return player;
+  }
+
   /** Eletrop: sets its energy production to the total energy production of its opponents. */
   public static syncEletrop(game: IGame): void {
     const eletrop = game.players.find((p) => p.tableau.has(CardName.ELETROP));
@@ -333,6 +358,20 @@ export class EpicHooks {
     const game = player.game;
     if (game === undefined) {
       return;
+    }
+    // Tholus: special steel follows steel production changes.
+    if (resource === Resource.STEEL) {
+      const tholus = player.tableau.get(CardName.THOLUS);
+      if (tholus !== undefined) {
+        if (delta > 0) {
+          player.addResourceTo(tholus, {qty: delta, log: true});
+        } else {
+          const qty = Math.min(-delta, tholus.resourceCount);
+          if (qty > 0) {
+            player.removeResourceFrom(tholus, qty);
+          }
+        }
+      }
     }
     // Eletrop follows its opponents' energy production.
     if (resource === Resource.ENERGY) {

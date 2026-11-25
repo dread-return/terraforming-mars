@@ -2221,4 +2221,7 @@ export enum CardName {
   BLOOMING_VALES = 'Blooming Vales',
   ELETROP = 'Eletrop',
   COLD_FUSION = 'Cold Fusion',
+  ARCHI_TECH = 'Archi-Tech',
+  KAGUYA_TECH_EPIC = 'Kaguya Tech (Epic)',
+  THOLUS = 'Tholus',
 }

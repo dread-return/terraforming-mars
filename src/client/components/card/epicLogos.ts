@@ -231,4 +231,7 @@ export const EPIC_LOGOS: Partial<Record<CardName, {slug: string, lines: Readonly
   [CardName.BLOOMING_VALES]: {slug: 'ep-blooming-vales', lines: ['Blooming Vales']},
   [CardName.ELETROP]: {slug: 'ep-eletrop', lines: ['ÆLETROP']},
   [CardName.COLD_FUSION]: {slug: 'ep-cold-fusion', lines: ['COLD', 'FUSION']},
+  [CardName.ARCHI_TECH]: {slug: 'ep-archi-tech', lines: ['ARCHI', '-TECH']},
+  [CardName.KAGUYA_TECH_EPIC]: {slug: 'ep-kaguya', lines: ['KAGUYA', 'TECH']},
+  [CardName.THOLUS]: {slug: 'ep-tholus', lines: ['THOLUS', 'ARCHITECTURE FRAMES']},
 };

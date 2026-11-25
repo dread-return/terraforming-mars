@@ -1612,11 +1612,13 @@ export class Game implements IGame, Logger {
 
   public grantPlacementBonuses(player: IPlayer, space: Space, coveringExistingTile: boolean = false) {
     if (!coveringExistingTile) {
-      this.grantSpaceBonusesAsPlacement(player, space);
+      // Epic Corporations: Archi-Tech takes the bonus of areas next to its marked areas.
+      const recipient = space.spaceType === SpaceType.COLONY ? player : EpicHooks.placementBonusRecipient(player, space);
+      this.grantSpaceBonusesAsPlacement(recipient, space);
       // Postludes: Amusement Park doubles the bonus of the spaces around it.
       if (Postludes.doublesPlacementBonus(player, space)) {
-        this.log('${0} gained the placement bonus twice next to ${1}', (b) => b.player(player).cardName(CardName.AMUSEMENT_PARK));
-        this.grantSpaceBonusesAsPlacement(player, space);
+        this.log('${0} gained the placement bonus twice next to ${1}', (b) => b.player(recipient).cardName(CardName.AMUSEMENT_PARK));
+        this.grantSpaceBonusesAsPlacement(recipient, space);
       }
     }
 

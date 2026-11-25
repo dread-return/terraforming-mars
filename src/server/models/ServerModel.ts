@@ -94,7 +94,7 @@ export class Server {
       contamination: game.gameOptions.nuclearExpansion ? game.contamination : undefined,
       mercury: Mercury.model(game),
       phase: game.phase,
-      spaces: this.getSpaces(game.board, game.gagarinBase, game.stJosephCathedrals, game.nomadSpace, this.jellyfishSpaces(game), this.holidaySpaces(game)),
+      spaces: this.getSpaces(game.board, game.gagarinBase, game.stJosephCathedrals, game.nomadSpace, this.jellyfishSpaces(game), this.holidaySpaces(game), this.tholusSpaces(game)),
       spectatorId: game.spectatorId,
       step: game.lastSaveId,
       temperature: game.getTemperature(),
@@ -400,13 +400,25 @@ export class Server {
     return result;
   }
 
+  /** Epic Corporations: Tholus's metropolises (2) and megalopolises (3). */
+  private static tholusSpaces(game: IGame): Map<SpaceId, 2 | 3> {
+    const result = new Map<SpaceId, 2 | 3>();
+    for (const player of game.players) {
+      const data = player.tableau.get(CardName.THOLUS)?.data as {metro?: Array<SpaceId>, mega?: Array<SpaceId>} | undefined;
+      (data?.metro ?? []).forEach((id) => result.set(id, 2));
+      (data?.mega ?? []).forEach((id) => result.set(id, 3));
+    }
+    return result;
+  }
+
   private static getSpaces(
     board: Board,
     gagarin: ReadonlyArray<SpaceId> = [],
     cathedrals: ReadonlyArray<SpaceId> = [],
     nomads: SpaceId | undefined = undefined,
     jellyfish: ReadonlyArray<SpaceId> = [],
-    holidays: ReadonlyArray<SpaceId> = []): Array<SpaceModel> {
+    holidays: ReadonlyArray<SpaceId> = [],
+    tholus: ReadonlyMap<SpaceId, 2 | 3> = new Map()): Array<SpaceModel> {
     const noctisCitySpaceId = board.noctisCitySpaceId;
 
     return board.spaces.map((space) => {
@@ -465,6 +477,10 @@ export class Server {
       const holiday = holidays.filter((id) => id === space.id).length;
       if (holiday > 0) {
         model.holiday = holiday;
+      }
+      const upgrade = tholus.get(space.id);
+      if (upgrade !== undefined) {
+        model.tholus = upgrade;
       }
       if (space.undergroundResources !== undefined) {
         model.undergroundResource = space.undergroundResources;

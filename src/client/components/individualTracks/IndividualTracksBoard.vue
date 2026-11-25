@@ -322,10 +322,6 @@ export default defineComponent({
   border-left: 2px solid rgba(0, 0, 0, 0.53);
 }
 
-.individual-track__cell--start {
-  width: 30px;
-  min-width: 30px;
-}
 
 .individual-track__reward {
   height: @reward-height;
@@ -381,7 +377,9 @@ export default defineComponent({
 }
 
 .individual-track__markers {
-  height: @markers-height;
+  min-height: @markers-height;
+  box-sizing: border-box;
+  padding-bottom: 3px;
   padding-top: 3px;
   display: flex;
   flex-wrap: wrap;

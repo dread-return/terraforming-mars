@@ -341,7 +341,14 @@ export class Player implements IPlayer {
     if (organicWasteRecycling instanceof OrganicWasteRecycling) {
       result.push(...organicWasteRecycling.targetCards);
     }
+    result.push(...this.tyrellTargetCards());
     return result;
+  }
+
+  /** Epic Corporations: cards hosted on Tyrell Corporation, like Self-Replicating Robots. */
+  private tyrellTargetCards(): Array<IProjectCard> {
+    const tyrell = this.tableau.get(CardName.TYRELL_CORPORATION) as unknown as {targetCards?: Array<IProjectCard>} | undefined;
+    return tyrell?.targetCards ?? [];
   }
 
   public getSteelValue(): number {
@@ -1074,6 +1081,9 @@ export class Player implements IPlayer {
         selectedCard.resourceCount = 0;
       }
     }
+    if (inplaceRemove(this.tyrellTargetCards(), selectedCard)) {
+      selectedCard.resourceCount = 0;
+    }
 
     ColoniesHandler.maybeActivateColonies(this.game, selectedCard);
 
@@ -1485,6 +1495,7 @@ export class Player implements IPlayer {
     if (organicWasteRecycling instanceof OrganicWasteRecycling) {
       candidateCards.push(...organicWasteRecycling.targetCards);
     }
+    candidateCards.push(...this.tyrellTargetCards());
 
     const playableCards: Array<IProjectCard> = [];
     for (const card of candidateCards) {

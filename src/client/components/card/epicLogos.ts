@@ -249,4 +249,8 @@ export const EPIC_LOGOS: Partial<Record<CardName, {slug: string, lines: Readonly
   [CardName.RED_RAIL_NETWORK]: {slug: 'ep-red-rail', lines: ['Red Rail', 'Network']},
   [CardName.CUPOLA]: {slug: 'ep-cupola', lines: ['CUPOLA']},
   [CardName.PRIMAL]: {slug: 'ep-primal', lines: ['PRIMAL']},
+  [CardName.ARC]: {slug: 'ep-arc', lines: ['ARC']},
+  [CardName.NEITH_ENTERPRISE]: {slug: 'ep-neith', lines: ['NEITH', 'ENTERPRISE']},
+  [CardName.SOVIET_MARS]: {slug: 'ep-soviet', lines: ['SOVIET', 'MARS']},
+  [CardName.TYRELL_CORPORATION]: {slug: 'ep-tyrell', lines: ['TYRELL', 'CORPORATION']},
 };

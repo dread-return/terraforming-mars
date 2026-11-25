@@ -65,6 +65,10 @@ const NOT_DISPLAYED: ReadonlyArray<CardName> = [
   CardName.DISCOUNT_CONGLOMERATE,
   // Only cards that lower energy production.
   CardName.COLD_FUSION,
+  // Every card, with a floor (shown on the card instead).
+  CardName.SOVIET_MARS,
+  // Only the cards hosted on it, like Self-Replicating Robots.
+  CardName.TYRELL_CORPORATION,
 ];
 
 describe('customDiscounts', () => {

@@ -2239,4 +2239,8 @@ export enum CardName {
   RED_RAIL_NETWORK = 'Red Rail Network',
   CUPOLA = 'Cupola',
   PRIMAL = 'Primal',
+  ARC = 'ARC',
+  NEITH_ENTERPRISE = 'Neith Enterprise',
+  SOVIET_MARS = 'Soviet Mars',
+  TYRELL_CORPORATION = 'Tyrell Corporation',
 }

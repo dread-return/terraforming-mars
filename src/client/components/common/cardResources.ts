@@ -53,5 +53,6 @@ export const cardResourceCSS = {
   [CardResource.GOODS]: 'card-resource-goods',
   [CardResource.ADMINISTRATION]: 'card-resource-administration',
   [CardResource.VENUS_FUND]: 'card-resource-venus-fund',
+  [CardResource.COMMUNE]: 'card-resource-commune',
   [CardResource.PROBIOTIC]: 'card-resource-probiotic',
 } satisfies Record<CardResource, string>;

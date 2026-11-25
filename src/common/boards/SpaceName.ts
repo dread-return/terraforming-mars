@@ -34,4 +34,6 @@ export const SpaceName = {
 
   // Space Solarium (Nuclear prelude): an off-world greenery next to a reserved off-world city space.
   SPACE_SOLARIUM: 'c84',
+  // Epic Corporations: Neith Enterprise's headquarters, added when the corporation is played.
+  NEITH_HQ: 'c88',
 } as const;

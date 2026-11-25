@@ -1101,6 +1101,26 @@
   &.et-logo-ep-primal {
     font-family: 'EpMarker', cursive; font-size: 29px; letter-spacing: 6px; color: #1d4d3a;
   }
+  &.et-logo-ep-arc {
+    font-family: 'EpRighteous', sans-serif; font-size: 32px; color: #fff; letter-spacing: 3px; line-height: 1;
+    background: radial-gradient(ellipse, #1d2a5a 55%, #0d1433); border-radius: 50%; padding: 8px 28px 10px;
+    border-bottom: 3px solid #cfd6ea;
+  }
+  &.et-logo-ep-neith {
+    font-family: 'EpBlackOps', sans-serif; font-size: 30px; line-height: 0.95; color: #1c1c1c; letter-spacing: 3px;
+    .et-line-1 { font-family: 'EpRajdhani', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 4px; color: #444; }
+  }
+  &.et-logo-ep-soviet {
+    font-family: 'EpRusso', sans-serif; line-height: 0.9; color: #f2c200;
+    .et-line-0 { font-size: 14px; letter-spacing: 6px; color: #c01818; }
+    .et-line-1 { font-size: 30px; letter-spacing: 3px; text-shadow: 2px 2px 0 #8a0c0c; }
+    .et-line-1::before { content: '★ '; font-size: 20px; color: #c01818; text-shadow: none; }
+  }
+  &.et-logo-ep-tyrell {
+    font-family: 'EpAudiowide', sans-serif; font-style: italic; line-height: 0.95;
+    .et-line-0 { font-size: 30px; color: #1fb9e0; -webkit-text-stroke: 1px #0b2a3a; letter-spacing: 2px; }
+    .et-line-1 { font-size: 14px; color: #111; letter-spacing: 2px; }
+  }
   &.et-logo-ep-top-up {
     font-family: 'EpBebas', sans-serif; font-size: 28px; color: #1c4f8a; letter-spacing: 1px; line-height: 0.85;
     .et-line-1 { font-size: 17px; color: #8a6d1c; letter-spacing: 3px; }
@@ -1187,13 +1207,19 @@
   zoom: 0.85;
 }
 
+.card-container.card-neith-enterprise .card-corporation-box,
 .card-container.card-red-rail-network .card-corporation-box,
 .card-container.card-cupola .card-corporation-box {
   zoom: 0.8;
 }
 
-.card-container.card-primal .card-corporation-box {
+.card-container.card-primal .card-corporation-box,
+.card-container.card-arc .card-corporation-box {
   zoom: 0.72;
+}
+
+.card-container.card-soviet-mars .card-corporation-box {
+  zoom: 0.66;
 }
 
 .card-container.card-exotica .card-corporation-box,
@@ -1364,4 +1390,17 @@
 .card-container.card-starbucks .card-content-wrapper {
   overflow-y: auto;
   .card-row:has(.card-effect-box) { zoom: 0.75; }
+}
+
+// ARC: an animal on a greenery or ocean.
+.board-marker--arc {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+  background: url(./assets/resources/animal.png) center / 15px 15px no-repeat;
+  box-shadow: 0 0 0 1px #000;
+  z-index: 3;
 }

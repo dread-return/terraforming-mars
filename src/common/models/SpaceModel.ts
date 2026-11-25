@@ -36,6 +36,8 @@ export type SpaceModel = {
   starbucks?: number;
   /** Epic Corporations: a Red Rail Network rail marker, in its owner's color. Absent when none. */
   rail?: Color;
+  /** Epic Corporations: an ARC animal on this greenery or ocean. Absent when none. */
+  arcAnimal?: true;
 
   undergroundResource?: UndergroundResourceToken;
   excavator?: Color;

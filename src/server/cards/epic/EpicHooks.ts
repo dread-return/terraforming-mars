@@ -1,3 +1,4 @@
+import {Board} from '../../boards/Board';
 import {SelectPaymentDeferred} from '../../deferredActions/SelectPaymentDeferred';
 import {InputError} from '../../inputs/InputError';
 import {Units} from '../../../common/Units';
@@ -412,6 +413,15 @@ export class EpicHooks {
     const shared = claims.slice(0, index).some((c) => c.milestone.name === claim.milestone.name);
     const uniqueBefore = new Set(claims.slice(0, index).map((c) => c.milestone.name)).size;
     return !shared && uniqueBefore < limit ? 5 : 2;
+  }
+
+  /** Soviet Mars: its tiles on Mars must go next to its own tiles, if possible. */
+  public static sovietAdjacency(player: IPlayer, board: Board, spaces: ReadonlyArray<Space>): ReadonlyArray<Space> {
+    if (player.tableau?.has(CardName.SOVIET_MARS) !== true) {
+      return spaces;
+    }
+    const next = spaces.filter((space) => board.getAdjacentSpaces(space).some((a) => a.tile !== undefined && a.player === player));
+    return next.length > 0 ? next : spaces;
   }
 
   /** Eletrop: sets its energy production to the total energy production of its opponents. */
@@ -1156,6 +1166,24 @@ export class EpicHooks {
           player.removeResourceFrom(tron, needed, {log: true});
           player.stock.add(Resource.PLANTS, needed, {log: true});
           return undefined;
+        }));
+      }
+    }
+    // ARC: spend animals here as 1 M€ per populated greenery, or 1 plant per 2 populated oceans.
+    const arc = player.tableau.get(CardName.ARC);
+    if (arc !== undefined && arc.resourceCount > 0) {
+      const {greeneries, oceans} = (arc as unknown as {populated(p: IPlayer): {greeneries: number, oceans: number}}).populated(player);
+      if (greeneries > 0) {
+        options.push(EpicHooks.conversion(player, `ARC: spend animals for ${greeneries} M€ each`, arc.resourceCount, (x) => {
+          player.removeResourceFrom(arc, x, {log: true});
+          player.stock.add(Resource.MEGACREDITS, x * greeneries, {log: true});
+        }));
+      }
+      if (oceans >= 2) {
+        const plants = Math.floor(oceans / 2);
+        options.push(EpicHooks.conversion(player, `ARC: spend animals for ${plants} plant(s) each`, arc.resourceCount, (x) => {
+          player.removeResourceFrom(arc, x, {log: true});
+          player.stock.add(Resource.PLANTS, x * plants, {log: true});
         }));
       }
     }

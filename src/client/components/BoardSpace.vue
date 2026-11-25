@@ -30,6 +30,7 @@
       <template v-if="space.starbucks !== undefined">
         <div v-for="n in space.starbucks" :key="'store-' + n" class="board-marker--store" :class="'board-marker--store-' + n" :title="$t('Starbucks')"></div>
       </template>
+      <div v-if="space.arcAnimal === true" class="board-marker--arc" :title="$t('Animal (ARC)')"></div>
       <div v-if="space.holiday !== undefined" class="board-marker--holiday" :title="$t('Beyond Holidays')">{{ 5 * space.holiday }}</div>
       <BoardSpaceCube v-if="space.cube !== undefined" :cube="space.cube" />
       <UndergroundToken v-if="claimedToken !== undefined" :token="claimedToken" location="board" />

@@ -313,9 +313,15 @@ export class MarsBoard extends Board {
     return availableLandSpaces;
   }
 
+  public override getAvailableSpacesOnLand(player: IPlayer, canAffordOptions?: CanAffordOptions, subjectToHazardAdjacency: boolean = true): ReadonlyArray<Space> {
+    // Epic Corporations: Soviet Mars places its tiles next to its own when it can.
+    return EpicHooks.sovietAdjacency(player, this, super.getAvailableSpacesOnLand(player, canAffordOptions, subjectToHazardAdjacency));
+  }
+
   public getAvailableSpacesForOcean(player: IPlayer): ReadonlyArray<Space> {
-    return this.getSpaces(SpaceType.OCEAN)
+    const spaces = this.getSpaces(SpaceType.OCEAN)
       .filter((space) => space.tile === undefined && (space.player === undefined || space.player === player));
+    return EpicHooks.sovietAdjacency(player, this, spaces);
   }
 
   /**

@@ -233,6 +233,10 @@ import {Starbucks} from './Starbucks';
 import {RedRailNetwork} from './RedRailNetwork';
 import {Cupola} from './Cupola';
 import {Primal} from './Primal';
+import {Arc} from './Arc';
+import {NeithEnterprise} from './NeithEnterprise';
+import {SovietMars} from './SovietMars';
+import {TyrellCorporation} from './TyrellCorporation';
 
 /**
  * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
@@ -489,5 +493,9 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.RED_RAIL_NETWORK]: {Factory: RedRailNetwork},
     [CardName.CUPOLA]: {Factory: Cupola, domesWilderness: true},
     [CardName.PRIMAL]: {Factory: Primal, domesWilderness: true},
+    [CardName.ARC]: {Factory: Arc},
+    [CardName.NEITH_ENTERPRISE]: {Factory: NeithEnterprise},
+    [CardName.SOVIET_MARS]: {Factory: SovietMars},
+    [CardName.TYRELL_CORPORATION]: {Factory: TyrellCorporation},
   },
 });

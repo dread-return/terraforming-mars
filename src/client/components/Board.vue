@@ -33,6 +33,8 @@
       <BoardSpace v-if="hasSpace(SpaceName.MAIN_DOCKING_STATION)" :space="getSpace(SpaceName.MAIN_DOCKING_STATION)" text="Main Docking Station" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.FLYING_GARDEN)" :space="getSpace(SpaceName.FLYING_GARDEN)" text="Flying Garden" :tileView="tileView" />
       <BoardSpace v-if="hasSpace(SpaceName.SPACE_SOLARIUM)" :space="getSpace(SpaceName.SPACE_SOLARIUM)" text="Space Solarium" :tileView="tileView" />
+      <!-- Epic Corporations: Neith Enterprise's headquarters, added when the corporation is played. -->
+      <BoardSpace v-if="hasSpace(SpaceName.NEITH_HQ)" :space="getSpace(SpaceName.NEITH_HQ)" text="Neith HQ" :tileView="tileView" />
       <!-- Epic Corporations: Orwell Observatories' observatory cities, added during the game. -->
       <BoardSpace v-for="space in observatorySpaces" :key="space.id" :space="space" text="Observatory City" :tileView="tileView" />
     </div>

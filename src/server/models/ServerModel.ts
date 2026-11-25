@@ -94,7 +94,7 @@ export class Server {
       contamination: game.gameOptions.nuclearExpansion ? game.contamination : undefined,
       mercury: Mercury.model(game),
       phase: game.phase,
-      spaces: this.getSpaces(game.board, game.gagarinBase, game.stJosephCathedrals, game.nomadSpace, this.jellyfishSpaces(game), this.holidaySpaces(game), this.starbucksSpaces(game), this.railSpaces(game)),
+      spaces: this.getSpaces(game.board, game.gagarinBase, game.stJosephCathedrals, game.nomadSpace, this.jellyfishSpaces(game), this.holidaySpaces(game), this.starbucksSpaces(game), this.railSpaces(game), this.arcSpaces(game)),
       spectatorId: game.spectatorId,
       step: game.lastSaveId,
       temperature: game.getTemperature(),
@@ -427,6 +427,17 @@ export class Server {
     return result;
   }
 
+  /** Epic Corporations: greeneries and oceans with an ARC animal. */
+  private static arcSpaces(game: IGame): Array<SpaceId> {
+    for (const player of game.players) {
+      const data = player.tableau.get(CardName.ARC)?.data as {tiles?: Array<SpaceId>} | undefined;
+      if (data !== undefined) {
+        return data.tiles ?? [];
+      }
+    }
+    return [];
+  }
+
   private static getSpaces(
     board: Board,
     gagarin: ReadonlyArray<SpaceId> = [],
@@ -435,7 +446,8 @@ export class Server {
     jellyfish: ReadonlyArray<SpaceId> = [],
     holidays: ReadonlyArray<SpaceId> = [],
     starbucks: {coffee: ReadonlyArray<SpaceId>, stores: Partial<Record<SpaceId, number>>} = {coffee: [], stores: {}},
-    rails: ReadonlyArray<SpaceId> = []): Array<SpaceModel> {
+    rails: ReadonlyArray<SpaceId> = [],
+    arc: ReadonlyArray<SpaceId> = []): Array<SpaceModel> {
     const noctisCitySpaceId = board.noctisCitySpaceId;
 
     return board.spaces.map((space) => {
@@ -504,6 +516,9 @@ export class Server {
       }
       if (rails.includes(space.id) && space.tile === undefined && space.player !== undefined) {
         model.rail = space.player.color;
+      }
+      if (arc.includes(space.id) && space.tile !== undefined) {
+        model.arcAnimal = true;
       }
       if (space.undergroundResources !== undefined) {
         model.undergroundResource = space.undergroundResources;

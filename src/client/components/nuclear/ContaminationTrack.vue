@@ -2,9 +2,9 @@
 <template>
   <div class="contamination-track" data-test="contamination-track">
     <div class="contamination-track-header">
-      <div class="contamination-track-icon"></div>
-      <div>
-        <div class="contamination-track-title" v-i18n>Contamination</div>
+      <div class="contamination-track-title" v-i18n>Contamination</div>
+      <div class="contamination-track-summary">
+        <div class="contamination-track-icon"></div>
         <div class="contamination-track-level">{{ level }} / {{ max }}</div>
       </div>
     </div>

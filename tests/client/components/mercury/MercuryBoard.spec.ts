@@ -2,6 +2,7 @@ import {mount} from '@vue/test-utils';
 import {expect} from 'chai';
 import {globalConfig} from '../getLocalVue';
 import MercuryBoard from '@/client/components/mercury/MercuryBoard.vue';
+import MercuryActs from '@/client/components/mercury/MercuryActs.vue';
 import {MercuryModel} from '@/common/mercury/Mercury';
 import {CardName} from '@/common/cards/CardName';
 import {CardResource} from '@/common/CardResource';
@@ -82,8 +83,8 @@ describe('MercuryBoard', () => {
     expect(wrapper.find('[data-test="act-deck-size"]').text()).eq('37');
   });
 
-  it('lays out the Acts in development as cards with their tracks filled in', () => {
-    const wrapper = mount(MercuryBoard, {...globalConfig, props: {
+  it('MercuryActs lays out the Acts in development as cards with their tracks filled in', () => {
+    const wrapper = mount(MercuryActs, {...globalConfig, props: {
       model: model({
         developments: [
           {card: CardName.FUNDRAISING_EVENTS, kind: 'treaty', initiator: 'blue', partner: 'red', steps: [6, 6], progress: [2, 0]},
@@ -103,8 +104,8 @@ describe('MercuryBoard', () => {
     expect(acts[1].findAll('.act-track__line--partner [data-test="act-step-filled"]')).to.have.length(3);
   });
 
-  it('says when no Act is in development', () => {
-    const wrapper = mount(MercuryBoard, {...globalConfig, props: {model: model()}});
+  it('MercuryActs says when no Act is in development', () => {
+    const wrapper = mount(MercuryActs, {...globalConfig, props: {model: model()}});
     expect(wrapper.find('.mercury-acts__empty').exists()).is.true;
   });
 });

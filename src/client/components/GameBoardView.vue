@@ -1,54 +1,69 @@
 <!-- Common widgets between player and spectator views -->
 <template>
-  <a name="board" class="player_home_anchor hotkey-target"></a>
-  <Board
-    :spaces="game.spaces"
-    :expansions="game.gameOptions.expansions"
-    :venusScaleLevel="game.venusScaleLevel"
-    :boardName="game.gameOptions.boardName"
-    :oceans_count="game.oceans"
-    :oxygen_level="game.oxygenLevel"
-    :temperature="game.temperature"
-    :altVenusBoard="game.gameOptions.altVenusBoard"
-    :venusPhase2Track="game.gameOptions.expansions.venusphase2 && game.gameOptions.expansions.venus"
-    :aresData="game.aresData"
-    :tileView="tileView"
-    @toggleTileView="$emit('toggleTileView')"
-    id="shortkey-board"
-  />
+  <!--
+    Top to bottom: milestones and awards, the Delta Project, Mars (with the contamination track at its side)
+    and the other planets next to it (Venus, the Moon, Mercury and its Acts), Turmoil, the planetary tracks
+    and the individual global parameter tracks. Colonies come after this component, in the home views.
+  -->
+  <div class="game-board-view">
+    <div v-if="players.length > 1" class="player_home_block--milestones-and-awards">
+      <a class="hotkey-target"></a>
+      <Milestones :milestones="game.milestones" :boardName="game.gameOptions.boardName" />
+      <Awards :awards="game.awards" :boardName="game.gameOptions.boardName" />
+    </div>
 
-  <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" :alt="game.gameOptions.altContaminationTrack" />
+    <DeltaProjectBoard v-if="game.gameOptions.expansions.deltaProject" :players="players" />
 
-  <template v-if="game.turmoil">
-    <a class="hotkey-target"></a>
-    <Turmoil :turmoil="game.turmoil" />
-  </template>
+    <div class="boards-row">
+      <div class="boards-row__mars">
+        <a name="board" class="player_home_anchor hotkey-target"></a>
+        <Board
+          :spaces="game.spaces"
+          :expansions="game.gameOptions.expansions"
+          :venusScaleLevel="game.venusScaleLevel"
+          :boardName="game.gameOptions.boardName"
+          :oceans_count="game.oceans"
+          :oxygen_level="game.oxygenLevel"
+          :temperature="game.temperature"
+          :altVenusBoard="game.gameOptions.altVenusBoard"
+          :venusPhase2Track="game.gameOptions.expansions.venusphase2 && game.gameOptions.expansions.venus"
+          :aresData="game.aresData"
+          :tileView="tileView"
+          @toggleTileView="$emit('toggleTileView')"
+          id="shortkey-board"
+        />
+        <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" :alt="game.gameOptions.altContaminationTrack" />
+      </div>
 
-  <template v-if="game.moon">
-    <a class="hotkey-target"></a>
-    <MoonBoard :model="game.moon" :tileView="tileView" id="shortkey-moonBoard" />
-  </template>
+      <div v-if="hasPlanets" class="boards-row__planets" data-test="planets">
+        <template v-if="game.venusMap">
+          <a class="hotkey-target"></a>
+          <VenusMapBoard :model="game.venusMap" :tileView="tileView" id="shortkey-venusMapBoard" />
+        </template>
+        <template v-if="game.moon">
+          <a class="hotkey-target"></a>
+          <MoonBoard :model="game.moon" :tileView="tileView" id="shortkey-moonBoard" />
+        </template>
+        <template v-if="game.mercury !== undefined">
+          <MercuryBoard :model="game.mercury" :spaces="game.spaces" />
+          <MercuryActs :model="game.mercury" :players="players" />
+        </template>
+      </div>
+    </div>
 
-  <template v-if="game.venusMap">
-    <a class="hotkey-target"></a>
-    <VenusMapBoard :model="game.venusMap" :tileView="tileView" id="shortkey-venusMapBoard" />
-  </template>
+    <template v-if="game.turmoil">
+      <a class="hotkey-target"></a>
+      <div class="game-board-view__turmoil">
+        <Turmoil :turmoil="game.turmoil" />
+      </div>
+    </template>
 
-  <template v-if="game.gameOptions.expansions.pathfinders">
-    <a class="hotkey-target"></a>
-    <PlanetaryTracks :tracks="game.pathfinders" :gameOptions="game.gameOptions" />
-  </template>
+    <template v-if="game.gameOptions.expansions.pathfinders">
+      <a class="hotkey-target"></a>
+      <PlanetaryTracks :tracks="game.pathfinders" :gameOptions="game.gameOptions" />
+    </template>
 
-  <DeltaProjectBoard v-if="game.gameOptions.expansions.deltaProject" :players="players" />
-
-  <IndividualTracksBoard v-if="game.gameOptions.individualTracks" :players="players" />
-
-  <MercuryBoard v-if="game.mercury !== undefined" :model="game.mercury" :spaces="game.spaces" :players="players" />
-
-  <div v-if="players.length > 1" class="player_home_block--milestones-and-awards">
-    <a class="hotkey-target"></a>
-    <Milestones :milestones="game.milestones" :boardName="game.gameOptions.boardName" />
-    <Awards :awards="game.awards" :boardName="game.gameOptions.boardName" />
+    <IndividualTracksBoard v-if="game.gameOptions.individualTracks" :players="players" />
   </div>
 </template>
 
@@ -62,6 +77,7 @@ import Board from '@/client/components/Board.vue';
 import DeltaProjectBoard from '@/client/components/delta/DeltaProjectBoard.vue';
 import IndividualTracksBoard from '@/client/components/individualTracks/IndividualTracksBoard.vue';
 import MercuryBoard from '@/client/components/mercury/MercuryBoard.vue';
+import MercuryActs from '@/client/components/mercury/MercuryActs.vue';
 import ContaminationTrack from '@/client/components/nuclear/ContaminationTrack.vue';
 import Milestones from '@/client/components/Milestones.vue';
 import Awards from '@/client/components/Awards.vue';
@@ -89,12 +105,18 @@ export default defineComponent({
     },
   },
   emits: ['toggleTileView'],
+  computed: {
+    hasPlanets(): boolean {
+      return this.game.venusMap !== undefined || this.game.moon !== undefined || this.game.mercury !== undefined;
+    },
+  },
   components: {
     Board,
     ContaminationTrack,
     DeltaProjectBoard,
     IndividualTracksBoard,
     MercuryBoard,
+    MercuryActs,
     Milestones,
     Awards,
     Turmoil,

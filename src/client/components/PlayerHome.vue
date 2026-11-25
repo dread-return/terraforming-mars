@@ -39,6 +39,21 @@
         />
       </div>
 
+      <div v-if="game.colonies.length > 0" class="player_home_block" ref="colonies" id="shortkey-colonies">
+        <a name="colonies" class="player_home_anchor hotkey-target"></a>
+        <DynamicTitle title="Colonies" :color="thisPlayer.color" />
+        <div class="colonies-fleets-cont">
+          <div class="colonies-player-fleets" v-for="colonyPlayer in playerView.players" :key="colonyPlayer.color">
+            <div :class="'colonies-fleet colonies-fleet-'+ colonyPlayer.color" v-for="idx in getFleetsCountRange(colonyPlayer)" :key="idx"></div>
+          </div>
+        </div>
+        <div class="player_home_colony_cont">
+          <div class="player_home_colony" v-for="colony in game.colonies" :key="colony.name">
+            <Colony :colony="colony" :active="colony.isActive" :market="game.mercury?.market" />
+          </div>
+        </div>
+      </div>
+
       <a class="hotkey-target"></a>
       <PlayersOverview class="player_home_block player_home_block--players nofloat" :playerView="playerView" id="shortkey-playersoverview" />
 
@@ -136,7 +151,7 @@
       <PlayerSetupView :playerView="playerView" :tileView="tileView" @toggleTileView="cycleTileView()" />
     </template>
 
-    <div v-if="game.colonies.length > 0" class="player_home_block" ref="colonies" id="shortkey-colonies">
+    <div v-if="game.colonies.length > 0 && thisPlayer.tableau.length === 0" class="player_home_block" ref="colonies" id="shortkey-colonies">
       <a name="colonies" class="player_home_anchor hotkey-target"></a>
       <DynamicTitle title="Colonies" :color="thisPlayer.color" />
       <div class="colonies-fleets-cont">

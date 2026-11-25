@@ -875,3 +875,52 @@ each(@players, {
     width: calc(100% - 450px);
   }
 }
+
+// The game board area (GameBoardView.vue, and the board accordion of PlayerSetupView.vue): Mars with the
+// contamination track at its side, and the other planets grouped next to it, wrapping below Mars when the
+// window is too narrow for them.
+.boards-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  column-gap: 30px;
+}
+
+.boards-row__mars {
+  display: flex;
+  align-items: flex-start;
+  flex: 0 0 auto;
+}
+
+.boards-row__planets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 10px 30px;
+  flex: 1 1 500px;
+  max-width: 1300px;
+  padding-top: 20px;
+
+  > .venus-map-board {
+    margin: 0;
+  }
+
+  // The Moon's captions sit above the map.
+  > .moon-board {
+    margin: 60px 0 0 0;
+  }
+
+  > .mercury-board {
+    margin: 0;
+  }
+
+  > .mercury-acts {
+    flex-basis: 100%;
+    margin-top: 0;
+  }
+}
+
+.game-board-view__turmoil {
+  margin-top: 30px;
+}

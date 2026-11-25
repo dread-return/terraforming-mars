@@ -237,3 +237,27 @@ body {
   height: 500px;
   margin-bottom: 30px;
 }
+
+// The results page sits on the same starry background as the game itself.
+#game-end {
+  min-height: 100vh;
+  padding: 0 20px 20px;
+  box-sizing: border-box;
+  background: linear-gradient(transparent, #000), url(./assets/stars.jpg);
+  background-attachment: fixed;
+}
+
+// See the same rule for the game page in player_home.less.
+@media (hover: none) and (pointer: coarse) {
+  #game-end {
+    background: none;
+
+    &::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(transparent, #000), url(./assets/stars.jpg);
+    }
+  }
+}

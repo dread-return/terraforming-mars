@@ -189,25 +189,33 @@
             :yAxisLabel="'% completed'"
           />
           <h2 v-i18n>Final situation on the board</h2>
-          <Board
-            :spaces="game.spaces"
-            :expansions="game.gameOptions.expansions"
-            :venusScaleLevel="game.venusScaleLevel"
-            :altVenusBoard="game.gameOptions.altVenusBoard"
-            :venusPhase2Track="game.gameOptions.expansions.venusphase2 && game.gameOptions.expansions.venus"
-            :boardName="game.gameOptions.boardName"
-            :oceans_count="game.oceans"
-            :oxygen_level="game.oxygenLevel"
-            :temperature="game.temperature"
-            :tileView="tileView"
-            @toggleTileView="cycleTileView()" />
-          <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" :alt="game.gameOptions.altContaminationTrack" />
-          <MoonBoard v-if="game.moon !== undefined" :model="game.moon" :tileView="tileView" />
-          <VenusMapBoard v-if="game.venusMap !== undefined" :model="game.venusMap" :tileView="tileView" />
+          <DeltaProjectBoard v-if="game.gameOptions.expansions.deltaProject" :players="participant.players" />
+          <div class="boards-row">
+            <div class="boards-row__mars">
+              <Board
+                :spaces="game.spaces"
+                :expansions="game.gameOptions.expansions"
+                :venusScaleLevel="game.venusScaleLevel"
+                :altVenusBoard="game.gameOptions.altVenusBoard"
+                :venusPhase2Track="game.gameOptions.expansions.venusphase2 && game.gameOptions.expansions.venus"
+                :boardName="game.gameOptions.boardName"
+                :oceans_count="game.oceans"
+                :oxygen_level="game.oxygenLevel"
+                :temperature="game.temperature"
+                :tileView="tileView"
+                @toggleTileView="cycleTileView()" />
+              <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" :alt="game.gameOptions.altContaminationTrack" />
+            </div>
+            <div v-if="game.venusMap !== undefined || game.moon !== undefined || game.mercury !== undefined" class="boards-row__planets">
+              <VenusMapBoard v-if="game.venusMap !== undefined" :model="game.venusMap" :tileView="tileView" />
+              <MoonBoard v-if="game.moon !== undefined" :model="game.moon" :tileView="tileView" />
+              <MercuryBoard v-if="game.mercury !== undefined" :model="game.mercury" :spaces="game.spaces" />
+            </div>
+          </div>
           <div v-if="game.gameOptions.expansions.pathfinders">
             <PlanetaryTracks :tracks="game.pathfinders" :gameOptions="game.gameOptions" />
           </div>
-          <DeltaProjectBoard v-if="game.gameOptions.expansions.deltaProject" :players="participant.players" />
+          <IndividualTracksBoard v-if="game.gameOptions.individualTracks" :players="participant.players" />
         </div>
         <div class="game_end_block--log game-end-column">
           <LogPanel :viewModel="participant" />
@@ -229,6 +237,8 @@ import {paths} from '@/common/app/paths';
 import {GameModel} from '@/common/models/GameModel';
 import {PublicPlayerModel, ViewModel} from '@/common/models/PlayerModel';
 import Board from '@/client/components/Board.vue';
+import MercuryBoard from '@/client/components/mercury/MercuryBoard.vue';
+import IndividualTracksBoard from '@/client/components/individualTracks/IndividualTracksBoard.vue';
 import ContaminationTrack from '@/client/components/nuclear/ContaminationTrack.vue';
 import MoonBoard from '@/client/components/moon/MoonBoard.vue';
 import VenusMapBoard from '@/client/components/venus2/VenusMapBoard.vue';
@@ -371,6 +381,8 @@ export default defineComponent({
   components: {
     HomeLink,
     Board,
+    MercuryBoard,
+    IndividualTracksBoard,
     ContaminationTrack,
     LogPanel,
     AppButton,

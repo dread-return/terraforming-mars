@@ -76,27 +76,34 @@
         </div>
       </summary>
       <div class="accordion-body">
-        <Board
-          :spaces="game.spaces"
-          :expansions="game.gameOptions.expansions"
-          :venusScaleLevel="game.venusScaleLevel"
-          :boardName="game.gameOptions.boardName"
-          :aresData="game.aresData"
-          :altVenusBoard="game.gameOptions.altVenusBoard"
-          :venusPhase2Track="game.gameOptions.expansions.venusphase2 && game.gameOptions.expansions.venus"
-          :tileView="tileView"
-          @toggleTileView="$emit('toggleTileView')" />
-        <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" :alt="game.gameOptions.altContaminationTrack" />
+        <DeltaProjectBoard v-if="game.gameOptions.expansions.deltaProject" :players="playerView.players" />
+        <div class="boards-row">
+          <div class="boards-row__mars">
+            <Board
+              :spaces="game.spaces"
+              :expansions="game.gameOptions.expansions"
+              :venusScaleLevel="game.venusScaleLevel"
+              :boardName="game.gameOptions.boardName"
+              :aresData="game.aresData"
+              :altVenusBoard="game.gameOptions.altVenusBoard"
+              :venusPhase2Track="game.gameOptions.expansions.venusphase2 && game.gameOptions.expansions.venus"
+              :tileView="tileView"
+              @toggleTileView="$emit('toggleTileView')" />
+            <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" :alt="game.gameOptions.altContaminationTrack" />
+          </div>
+          <div v-if="game.venusMap !== undefined || game.moon !== undefined || game.mercury !== undefined" class="boards-row__planets">
+            <VenusMapBoard v-if="game.venusMap !== undefined" :model="game.venusMap" :tileView="tileView" />
+            <a name="moonBoard" class="player_home_anchor"></a>
+            <MoonBoard v-if="game.moon !== undefined" :model="game.moon" :tileView="tileView" />
+            <MercuryBoard v-if="game.mercury !== undefined" :model="game.mercury" :spaces="game.spaces" />
+          </div>
+        </div>
 
-        <Turmoil v-if="game.turmoil" :turmoil="game.turmoil" />
+        <div v-if="game.turmoil" class="game-board-view__turmoil">
+          <Turmoil :turmoil="game.turmoil" />
+        </div>
 
         <PlanetaryTracks v-if="game.gameOptions.expansions.pathfinders" :tracks="game.pathfinders" :gameOptions="game.gameOptions" />
-
-        <a name="moonBoard" class="player_home_anchor"></a>
-        <MoonBoard v-if="game.moon !== undefined" :model="game.moon" :tileView="tileView" />
-        <VenusMapBoard v-if="game.venusMap !== undefined" :model="game.venusMap" :tileView="tileView" />
-        <DeltaProjectBoard v-if="game.gameOptions.expansions.deltaProject" :players="playerView.players" />
-        <MercuryBoard v-if="game.mercury !== undefined" :model="game.mercury" :spaces="game.spaces" :players="playerView.players" />
       </div>
     </details>
   </div>

@@ -2,7 +2,7 @@
   Mercury vs Mars: the Mercury board, at the size of the Moon and Venus maps. Mercury (NASA MESSENGER
   enhanced-colour map) carries Market Colonies' stock and the New Pompeii and Shadow Forest areas; the
   Mercury track curves around its right side, and Market Colonies' rules and the Act deck sit to its left.
-  The Acts in development are laid out under it as cards with their asset tracks filled in.
+  The Acts in development are drawn by MercuryActs.vue.
 -->
 <template>
   <div class="mercury-board" data-test="mercury-board">
@@ -83,48 +83,25 @@
       </div>
     </div>
 
-    <!-- Acts in development -->
-    <div class="mercury-acts">
-      <div class="mercury-acts__title" v-i18n>Acts in development</div>
-      <div v-if="model.developments.length === 0" class="mercury-acts__empty" v-i18n>No Act is in development.</div>
-      <div class="mercury-acts__list">
-        <div v-for="dev in model.developments" :key="dev.card" class="mercury-acts__act" :class="'mercury-acts__act--' + dev.kind" data-test="mercury-act">
-          <div class="mercury-acts__players">
-            <span class="mercury-acts__player" :class="'player_bg_color_' + dev.initiator">{{ playerName(dev.initiator) }}</span>
-            <span class="mercury-acts__versus" v-i18n>{{ dev.kind === 'treaty' ? 'with' : 'vs' }}</span>
-            <span class="mercury-acts__player" :class="'player_bg_color_' + dev.partner">{{ playerName(dev.partner) }}</span>
-          </div>
-          <div class="mercury-acts__progress">
-            <span v-for="side in (dev.kind === 'treaty' ? [0] : [0, 1])" :key="side" data-test="act-progress">{{ dev.progress[side] }} / {{ dev.steps[side] }}</span>
-          </div>
-          <Card :card="{name: dev.card}" :actDevelopment="dev" />
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import {computed} from 'vue';
-import {Color} from '@/common/Color';
 import {CardResource} from '@/common/CardResource';
 import {MARKET_COLUMN_CAP, MARKET_RESOURCES, MERCURY_TRACK, MERCURY_TRACK_MAX, MarketResource, MercuryModel, MercuryTrackReward} from '@/common/mercury/Mercury';
 import {SpaceName} from '@/common/boards/SpaceName';
 import {SpaceId} from '@/common/Types';
 import {SpaceModel} from '@/common/models/SpaceModel';
-import {PublicPlayerModel} from '@/common/models/PlayerModel';
 import {range} from '@/common/utils/utils';
 import {cardResourceCSS} from '@/client/components/common/cardResources';
 import BoardSpace from '@/client/components/BoardSpace.vue';
-import Card from '@/client/components/card/Card.vue';
 
 const props = withDefaults(defineProps<{
   model: MercuryModel,
   spaces?: ReadonlyArray<SpaceModel>,
-  players?: ReadonlyArray<PublicPlayerModel>,
 }>(), {
   spaces: () => [],
-  players: () => [],
 });
 
 const MAP_WIDTH = 660;
@@ -213,8 +190,4 @@ const shownAreas = computed(() => areas.flatMap((area) => {
   const space = props.spaces.find((s) => s.id === area.id);
   return space === undefined ? [] : [{...area, space}];
 }));
-
-function playerName(color: Color): string {
-  return props.players.find((p) => p.color === color)?.name ?? color;
-}
 </script>

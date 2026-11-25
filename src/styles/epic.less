@@ -1107,8 +1107,12 @@
   zoom: 0.82;
 }
 
-.card-container.card-cold-fusion .card-corporation-box {
-  zoom: 0.7;
+.card-container.card-cold-fusion .card-content-wrapper {
+  // Four short effects without the box; scroll if a long translation doesn't fit.
+  overflow-y: auto;
+  .card-row:has(.card-effect-box) { zoom: 0.64; }
+  .card-row:has(.card-production-box):not(:has(.card-effect-box)) { zoom: 0.75; }
+  .card-description { zoom: 0.85; }
 }
 
 .card-container.card-standard-business .card-corporation-box,

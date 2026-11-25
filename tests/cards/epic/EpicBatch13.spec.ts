@@ -11,6 +11,8 @@ import {SpaceType} from '../../../src/common/boards/SpaceType';
 import {ICorporationCard} from '../../../src/server/cards/corporation/ICorporationCard';
 import {OrOptions} from '../../../src/server/inputs/OrOptions';
 import {SelectSpace} from '../../../src/server/inputs/SelectSpace';
+import {SelectPayment} from '../../../src/server/inputs/SelectPayment';
+import {Payment} from '../../../src/common/inputs/Payment';
 import {Space} from '../../../src/server/boards/Space';
 import {RedDragonSyndicate} from '../../../src/server/cards/epic/RedDragonSyndicate';
 import {BeyondHolidays} from '../../../src/server/cards/epic/BeyondHolidays';
@@ -83,6 +85,28 @@ describe('Epic Corporations batch 13', () => {
     corp.onStandardProjectByAnyPlayer(player, other, new AsteroidStandardProject());
     runAllActions(game);
     expect(other.popWaitingFor()).is.undefined;
+  });
+
+  it('Red Dragon Syndicate: heat counts toward the 13 M€ with Helion', () => {
+    const corp = new RedDragonSyndicate();
+    const [game, player, other] = withCorp(corp);
+    player.megaCredits = 5;
+    player.heat = 10;
+    player.canUseHeatAsMegaCredits = true;
+    corp.onCardPlayedByAnyPlayer(player, new Asteroid(), other);
+    runAllActions(game);
+    const pick = cast(other.popWaitingFor(), SelectSpace);
+    const space = pick.spaces[0];
+    pick.cb(space);
+    runAllActions(game);
+    cast(player.popWaitingFor(), OrOptions).options[0].cb();
+    runAllActions(game);
+    const payment = cast(player.popWaitingFor(), SelectPayment);
+    payment.process({type: 'payment', payment: Payment.of({megacredits: 5, heat: 8})}, player);
+    runAllActions(game);
+    expect(space.tile?.tileType).eq(TileType.CITY);
+    expect(player.megaCredits).eq(0);
+    expect(player.heat).eq(2);
   });
 
   it('Beyond Holidays: its tiles drop two 5 M€ tokens that anyone can claim', () => {

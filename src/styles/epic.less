@@ -1121,16 +1121,20 @@
   zoom: 0.8;
 }
 
-.card-container.card-tholus .card-corporation-box {
-  zoom: 0.72;
-}
-
-.card-container.card-kaguya-tech-\(epic\) .card-corporation-box {
-  zoom: 0.85;
-}
-
 .card-container.card-blooming-vales .card-corporation-box {
   zoom: 0.82;
+}
+
+.card-container.card-tholus .card-content-wrapper {
+  overflow-y: auto;
+  .card-row:has(.card-effect-box) { zoom: 0.66; }
+  .card-row:has(.card-production-box):not(:has(.card-effect-box)) { zoom: 0.7; }
+  .card-row:has(.card-description):not(:has(.card-effect-box)) { zoom: 0.75; }
+}
+
+.card-container.card-kaguya-tech-\(epic\) .card-content-wrapper {
+  overflow-y: auto;
+  .card-row { zoom: 0.8; }
 }
 
 .card-container.card-cold-fusion .card-content-wrapper {
@@ -1184,25 +1188,14 @@
   filter: drop-shadow(0 0 2px black);
 }
 
-// Tholus: metropolis / megalopolis badge on upgraded cities.
-.board-marker--tholus {
-  position: absolute;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0 3px;
-  border-radius: 3px;
-  font-family: 'EpCinzel', serif;
-  font-weight: bold;
-  font-size: 9px;
-  line-height: 12px;
-  color: #fff;
-  background: #8c1b2b;
-  border: 1px solid #f0d9a8;
-  box-shadow: 0 2px 0 #5a0f1b;
-  z-index: 3;
+// Tholus: metropolis (polished chrome) and megalopolis (gold) city tiles.
+.board-space-tile--tholus-metropolis { background: url(./assets/epic/tiles/tholus-metropolis.png); background-size: 45px 51px; }
+.board-space-tile--tholus-megalopolis { background: url(./assets/epic/tiles/tholus-megalopolis.png); background-size: 45px 51px; }
+.card-tile-epic-tholus-metropolis, .card-tile-epic-tholus-megalopolis {
+  filter: none;
+  width: 40px;
+  height: 45px;
+  background-size: 40px 45px;
 }
-.board-marker--tholus-3 {
-  background: #4a1e10;
-  box-shadow: 0 2px 0 #8c1b2b, 0 4px 0 #5a0f1b;
-}
+.card-tile-epic-tholus-metropolis { background-image: url(./assets/epic/tiles/tholus-metropolis.png); }
+.card-tile-epic-tholus-megalopolis { background-image: url(./assets/epic/tiles/tholus-megalopolis.png); }

@@ -30,14 +30,13 @@ export class KaguyaTechEpic extends ActiveCorporationCard {
         description: 'You start with 40 M€, 1 energy production and 1 plant production.',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(40).production((pb) => pb.energy(1).plants(1));
-          b.corpBox('action', (ce) => {
-            ce.vSpace(Size.SMALL);
-            ce.action('Discard a city or science card from hand to turn your greenery into a city (not a tile placement; ignore placement rules). Gain 2 M€ production and draw a card.', (eb) => {
-              eb.cards(1, {secondaryTag: Tag.CITY, cancelled: true}).slash().tag(Tag.SCIENCE).startAction
-                .greenery({size: Size.SMALL, withO2: false}).city({size: Size.SMALL})
-                .production((pb) => pb.megacredits(2)).asterix();
-            });
-          });
+          b.br;
+          b.action(undefined, (eb) => {
+            eb.cards(1, {secondaryTag: Tag.CITY, cancelled: true}).slash().tag(Tag.SCIENCE).startAction
+              .greenery({withO2: false}).text('→').city();
+          }).br;
+          b.text('and', {size: Size.MEDIUM, uppercase: true}).production((pb) => pb.megacredits(2)).cards(1).br;
+          b.plainText('(Action: discard a card with a city or science tag from your hand, then turn one of your greeneries into a city, ignoring placement rules (not a tile placement). Gain 2 M€ production and draw a card.)');
         }),
       },
     });

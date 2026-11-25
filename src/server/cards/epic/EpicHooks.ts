@@ -359,7 +359,7 @@ export class EpicHooks {
     if (game === undefined) {
       return;
     }
-    // Tholus: special steel follows steel production changes.
+    // Tholus: frames follow steel production changes.
     if (resource === Resource.STEEL) {
       const tholus = player.tableau.get(CardName.THOLUS);
       if (tholus !== undefined) {

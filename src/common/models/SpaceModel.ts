@@ -31,8 +31,6 @@ export type SpaceModel = {
   coOwner?: Color;
   /** Epic Corporations: number of Beyond Holidays 5 M€ tokens on this space. Absent when none. */
   holiday?: number;
-  /** Epic Corporations: Tholus city upgrades. 2 = metropolis, 3 = megalopolis. Absent otherwise. */
-  tholus?: 2 | 3;
 
   undergroundResource?: UndergroundResourceToken;
   excavator?: Color;

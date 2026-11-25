@@ -25,7 +25,6 @@
         <div class="board-cube--nomad"></div>
       </template>
       <div v-if="space.jellyfish === true" class="board-marker--jellyfish" :title="$t('Jellyfish Farms')"></div>
-      <div v-if="space.tholus !== undefined" :class="'board-marker--tholus board-marker--tholus-' + space.tholus" :title="$t(space.tholus === 3 ? 'Megalopolis' : 'Metropolis')">{{ space.tholus === 3 ? 'MEGA' : 'METRO' }}</div>
       <div v-if="space.holiday !== undefined" class="board-marker--holiday" :title="$t('Beyond Holidays')">{{ 5 * space.holiday }}</div>
       <BoardSpaceCube v-if="space.cube !== undefined" :cube="space.cube" />
       <UndergroundToken v-if="claimedToken !== undefined" :token="claimedToken" location="board" />

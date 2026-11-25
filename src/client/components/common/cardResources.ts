@@ -49,6 +49,6 @@ export const cardResourceCSS = {
   [CardResource.ALLOY]: 'card-resource-alloy',
   [CardResource.FARM]: 'card-resource-farm',
   [CardResource.ARCHIVED_CARD]: 'card-resource-archived-card',
-  [CardResource.SPECIAL_STEEL]: 'card-resource-special-steel',
+  [CardResource.FRAME]: 'card-resource-frame',
   [CardResource.PROBIOTIC]: 'card-resource-probiotic',
 } satisfies Record<CardResource, string>;

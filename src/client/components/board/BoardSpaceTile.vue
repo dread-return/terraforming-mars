@@ -95,6 +95,8 @@ const tileTypeToCssClass: Record<TileType, string> = {
   [TileType.OBSERVATORY_CITY]: 'observatory-city',
   // Babylonia's greenery on an ocean uses the Wetlands art (it counts as both, like Wetlands).
   [TileType.OCEAN_GREENERY]: 'wetlands',
+  [TileType.THOLUS_METROPOLIS]: 'tholus-metropolis',
+  [TileType.THOLUS_MEGALOPOLIS]: 'tholus-megalopolis',
 };
 
 const tileTypeToCssClassAresOverride = new Map<TileType, string>([
@@ -167,6 +169,8 @@ const descriptions: Record<TileType, string> = {
   [TileType.NOMAD_CITY]: 'Nomad City (Mars Nomads): a city that can move.',
   [TileType.OBSERVATORY_CITY]: 'Observatory City (Orwell Observatories): a city orbiting Mars.',
   [TileType.OCEAN_GREENERY]: 'Babylonia greenery: counts as a greenery and an ocean (and toward 9 oceans).',
+  [TileType.THOLUS_METROPOLIS]: 'Metropolis (Tholus): a city worth 2 VP per adjacent greenery.',
+  [TileType.THOLUS_MEGALOPOLIS]: 'Megalopolis (Tholus): a city worth 3 VP per adjacent greenery.',
   [TileType.SEDIMENT]: 'Sediment: any player may place a city here, ignoring placement rules, and gain 3 M€. Adjacency bonus: 1 titanium.',
 };
 

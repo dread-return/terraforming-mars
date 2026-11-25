@@ -222,7 +222,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       [CardResource.ALLOY]: true,
       [CardResource.FARM]: true,
       [CardResource.ARCHIVED_CARD]: true,
-      [CardResource.SPECIAL_STEEL]: true,
+      [CardResource.FRAME]: true,
     },
     searchIndex: SearchIndex.create(),
     namesOnly: true,

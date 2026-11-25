@@ -114,7 +114,7 @@ describe('Epic Corporations batch 14', () => {
     expect(game.getOxygenLevel()).eq(oxygen);
   });
 
-  it('Tholus: special steel follows steel production; metropolis and megalopolis score extra', () => {
+  it('Tholus: frames follow steel production; metropolis and megalopolis score extra', () => {
     const corp = new Tholus();
     const [game, player] = withCorp(corp);
     expect(player.production.steel).eq(1);
@@ -139,6 +139,8 @@ describe('Epic Corporations batch 14', () => {
     runAllActions(game);
     expect(player.megaCredits).eq(30);
     expect(corp.resourceCount).eq(4);
+    expect(city.tile?.tileType).eq(TileType.THOLUS_METROPOLIS);
+    expect(game.board.getCities(player)).contains(city);
     expect(corp.getVictoryPoints(player)).eq(2);
 
     // The only city is now a metropolis, so only the megalopolis upgrade is offered.
@@ -146,6 +148,8 @@ describe('Epic Corporations batch 14', () => {
     runAllActions(game);
     expect(player.megaCredits).eq(15);
     expect(corp.resourceCount).eq(1);
+    expect(city.tile?.tileType).eq(TileType.THOLUS_MEGALOPOLIS);
+    expect(game.board.getCities(player)).contains(city);
     expect(corp.getVictoryPoints(player)).eq(4);
   });
 });

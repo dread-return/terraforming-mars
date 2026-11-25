@@ -116,6 +116,8 @@ export enum TileType {
     NOMAD_CITY, // 75 Mars Nomads
     OBSERVATORY_CITY, // 76 Orwell Observatories (off Mars)
     OCEAN_GREENERY, // 77 Babylonia: a greenery on an ocean (counts as both)
+    THOLUS_METROPOLIS, // 78 Tholus: an upgraded city
+    THOLUS_MEGALOPOLIS, // 79 Tholus: an upgraded metropolis
   }
 
 export const tileTypeToString: Record<TileType, string> = {
@@ -198,13 +200,15 @@ export const tileTypeToString: Record<TileType, string> = {
   [TileType.NOMAD_CITY]: 'Nomad City',
   [TileType.OBSERVATORY_CITY]: 'Observatory City',
   [TileType.OCEAN_GREENERY]: 'Ocean Greenery',
+  [TileType.THOLUS_METROPOLIS]: 'Metropolis (Tholus)',
+  [TileType.THOLUS_MEGALOPOLIS]: 'Megalopolis (Tholus)',
 } as const;
 
 export const HAZARD_TILES = new Set([TileType.DUST_STORM_MILD, TileType.DUST_STORM_SEVERE, TileType.EROSION_MILD, TileType.EROSION_SEVERE]);
 export const OCEAN_UPGRADE_TILES = new Set([TileType.OCEAN_CITY, TileType.OCEAN_FARM, TileType.OCEAN_SANCTUARY, TileType.NEW_HOLLAND, TileType.HARBOR, TileType.OCEAN_GREENERY]);
 export const CITY_TILES = new Set([TileType.CITY, TileType.CAPITAL, TileType.OCEAN_CITY, TileType.RED_CITY, TileType.NEW_HOLLAND,
   TileType.SUBURBS, TileType.METROPOLIS, TileType.PARADISE_CITY, TileType.INVAK_CITY, TileType.ESOTERIC_COMMUNITY,
-  TileType.NOMAD_CITY, TileType.OBSERVATORY_CITY]);
+  TileType.NOMAD_CITY, TileType.OBSERVATORY_CITY, TileType.THOLUS_METROPOLIS, TileType.THOLUS_MEGALOPOLIS]);
 export const OCEAN_TILES = new Set([TileType.OCEAN, TileType.OCEAN_CITY, TileType.OCEAN_FARM, TileType.OCEAN_SANCTUARY, TileType.WETLANDS, TileType.NEW_HOLLAND, TileType.HARBOR, TileType.OCEAN_GREENERY]);
 export const BASE_OCEAN_TILES = new Set([TileType.OCEAN, TileType.WETLANDS]);
 // Suburbs (Rob Antilles) and Invak City (Ides of Mars) count as both a city and a greenery.

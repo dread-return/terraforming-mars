@@ -246,6 +246,12 @@ const TILE_CLASSES: Record<TileType, Classes> = {
   [TileType.OBSERVATORY_CITY]: {
     tile: 'card-tile-epic-observatory-city',
   },
+  [TileType.THOLUS_METROPOLIS]: {
+    tile: 'card-tile-epic-tholus-metropolis',
+  },
+  [TileType.THOLUS_MEGALOPOLIS]: {
+    tile: 'card-tile-epic-tholus-megalopolis',
+  },
   // Babylonia's greenery on an ocean uses the Wetlands art.
   [TileType.OCEAN_GREENERY]: {
     tile: 'card-tile-wetlands',

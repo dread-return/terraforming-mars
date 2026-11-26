@@ -1,45 +1,49 @@
 <template>
   <div class="sidebar_cont sidebar" :class="sideBarClass">
-    <div class="tm" :title="$t('Generation Marker')">
-      <div class="gen-text" v-i18n>GEN</div>
-      <div class="gen-marker">{{ genMarker }}</div>
-    </div>
-    <div v-if="gameOptions.expansions.turmoil" :title="$t('Ruling Party')">
-      <div class="party-name party-name-indicator" :class="rulingPartyClass"> <span v-i18n>{{ rulingParty }}</span></div>
-    </div>
-    <div class="global_params">
-      <GlobalParameterValue :param="globalParameter.TEMPERATURE" :value="temperature" :boardName="gameOptions.boardName" />
-      <GlobalParameterValue :param="globalParameter.OXYGEN" :value="oxygen" :boardName="gameOptions.boardName" />
-      <GlobalParameterValue :param="globalParameter.OCEANS" :value="oceans" :boardName="gameOptions.boardName" />
-      <GlobalParameterValue v-if="gameOptions.expansions.venus" :param="globalParameter.VENUS" :value="venus" :boardName="gameOptions.boardName" :venusPhase2Track="gameOptions.expansions.venusphase2" />
-      <MoonGlobalParameterValue v-if="moonData" :moonData="moonData" />
-      <div v-if="contamination !== undefined" :title="contaminationTitle" data-test="contamination">
-        <div class="contamination-tile"></div>
-        <div class="global_params_value">{{ contamination }}</div>
+    <!-- Everything above the language/info/help/settings buttons, which are pinned to the bottom of the window.
+         On a short window this part is shrunk just enough not to run into them (see fitTop). -->
+    <div ref="top" class="sidebar_top">
+      <div class="tm" :title="$t('Generation Marker')">
+        <div class="gen-text" v-i18n>GEN</div>
+        <div class="gen-marker">{{ genMarker }}</div>
       </div>
-    </div>
-    <div class="sidebar_item preferences_player" :title="$t('Player Color Cube')">
-      <div class="preferences_player_inner" :class="[`player_bg_color_${playerColor}`, {active: isAnimated}]"></div>
-    </div>
+      <div v-if="gameOptions.expansions.turmoil" :title="$t('Ruling Party')">
+        <div class="party-name party-name-indicator" :class="rulingPartyClass"> <span v-i18n>{{ rulingParty }}</span></div>
+      </div>
+      <div class="global_params">
+        <GlobalParameterValue :param="globalParameter.TEMPERATURE" :value="temperature" :boardName="gameOptions.boardName" />
+        <GlobalParameterValue :param="globalParameter.OXYGEN" :value="oxygen" :boardName="gameOptions.boardName" />
+        <GlobalParameterValue :param="globalParameter.OCEANS" :value="oceans" :boardName="gameOptions.boardName" />
+        <GlobalParameterValue v-if="gameOptions.expansions.venus" :param="globalParameter.VENUS" :value="venus" :boardName="gameOptions.boardName" :venusPhase2Track="gameOptions.expansions.venusphase2" />
+        <MoonGlobalParameterValue v-if="moonData" :moonData="moonData" />
+        <div v-if="contamination !== undefined" :title="contaminationTitle" data-test="contamination">
+          <div class="contamination-tile"></div>
+          <div class="global_params_value">{{ contamination }}</div>
+        </div>
+      </div>
+      <div class="sidebar_item preferences_player" :title="$t('Player Color Cube')">
+        <div class="preferences_player_inner" :class="[`player_bg_color_${playerColor}`, {active: isAnimated}]"></div>
+      </div>
 
-    <JumpMenu />
-    <a href="#actions" :title="$t('Jump to actions')">
-      <div class="sidebar_item sidebar_item_shortcut">
-        <i class="sidebar_icon sidebar_icon--actions"></i>
-      </div>
-    </a>
-    <a href="#cards" :title="$t('Jump to cards')">
-      <div class="sidebar_item goto-cards sidebar_item_shortcut-long">
-        <i class="sidebar_icon sidebar_icon--cards">
-          <div class="deck-size">🂠{{ deckSize }}<br>🗑{{ discardPileSize }}</div>
-        </i>
-      </div>
-    </a>
-    <a v-if="coloniesCount > 0" href="#colonies" :title="$t('Jump to colonies')">
-      <div class="sidebar_item sidebar_item_shortcut">
-        <i class="sidebar_icon sidebar_icon--colonies"></i>
-      </div>
-    </a>
+      <JumpMenu />
+      <a href="#actions" :title="$t('Jump to actions')">
+        <div class="sidebar_item sidebar_item_shortcut">
+          <i class="sidebar_icon sidebar_icon--actions"></i>
+        </div>
+      </a>
+      <a href="#cards" :title="$t('Jump to cards')">
+        <div class="sidebar_item goto-cards sidebar_item_shortcut-long">
+          <i class="sidebar_icon sidebar_icon--cards">
+            <div class="deck-size">🂠{{ deckSize }}<br>🗑{{ discardPileSize }}</div>
+          </i>
+        </div>
+      </a>
+      <a v-if="coloniesCount > 0" href="#colonies" :title="$t('Jump to colonies')">
+        <div class="sidebar_item sidebar_item_shortcut">
+          <i class="sidebar_icon sidebar_icon--colonies"></i>
+        </div>
+      </a>
+    </div>
 
     <LanguageIcon />
 
@@ -79,6 +83,8 @@ import {MoonModel} from '@/common/models/MoonModel';
 import PreferencesIcon from '@/client/components/PreferencesIcon.vue';
 import LanguageIcon from '@/client/components/LanguageIcon.vue';
 import JumpMenu from '@/client/components/JumpMenu.vue';
+
+const MIN_TOP_ZOOM = 0.6;
 
 export default defineComponent({
   name: 'Sidebar',
@@ -158,6 +164,17 @@ export default defineComponent({
     LanguageIcon,
     JumpMenu,
   },
+  mounted() {
+    window.addEventListener('resize', this.fitTop);
+    this.fitTop();
+    document.fonts?.ready.then(() => this.fitTop());
+  },
+  updated() {
+    this.fitTop();
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.fitTop);
+  },
   data() {
     return {
       'ui': {
@@ -165,6 +182,26 @@ export default defineComponent({
       },
       'globalParameter': GlobalParameter,
     };
+  },
+  methods: {
+    /**
+     * With many expansions the global parameters, ruling party and shortcuts can be taller than a short window
+     * leaves above the pinned buttons. Shrinks that part (down to 60%) so nothing overlaps.
+     */
+    fitTop(): void {
+      const top = this.$refs.top as HTMLElement | undefined;
+      const pinned = (this.$el as HTMLElement | undefined)?.querySelector?.('.sidebar_item--language');
+      if (top === undefined || pinned === null || pinned === undefined) {
+        return;
+      }
+      top.style.removeProperty('zoom');
+      const natural = top.getBoundingClientRect();
+      const room = pinned.getBoundingClientRect().top - natural.top - 6;
+      if (natural.height <= 0 || natural.height <= room) {
+        return;
+      }
+      top.style.setProperty('zoom', String(Math.max(MIN_TOP_ZOOM, room / natural.height)));
+    },
   },
   computed: {
     contaminationTitle(): string {

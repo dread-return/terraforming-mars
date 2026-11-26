@@ -20,8 +20,12 @@
       </div>
     </div>
 
-    <div v-else class="turmoil-board">
+    <div v-else class="turmoil-board" :class="{'turmoil-board--compact': compact}">
       <div class="turmoil-header">
+        <a class="turmoil-view-toggle" href="#" @click.prevent="toggleCompact()" data-test="turmoil-view-toggle">
+          <span v-if="compact" v-i18n>Full view</span>
+          <span v-else v-i18n>Compact view</span>
+        </a>
         <div class="turmoil-lobby">
           <div class="lobby-spot" v-for="n in 5" :key="n">
             <div v-if="turmoil.lobby.length >= n" :class="'player-token '+turmoil.lobby[n-1]"></div>
@@ -61,35 +65,59 @@
         </div>
       </div>
 
-      <div class="grid-leaders">
-        <div v-for="party in turmoil.parties" :key="party.name" :class="['leader-spot', 'leader-spot--'+partyNameToCss(party.name), {'player-token-new-leader': (party.name === turmoil.dominant)}]">
-          <div class="delegate-spot">
-            <div v-if="party.partyLeader" :class="['player-token', party.partyLeader]"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-parties">
-        <div v-for="party in turmoil.parties" :key="party.name" :class="'board-party board-party--'+partyNameToCss(party.name)">
-          <div class="grid-delegates">
-            <div class="delegate-spot" v-for="n in 6" :key="n">
-              <div v-if="party.delegates.length >= n" :class="'player-token '+party.delegates[n-1].color">{{ party.delegates[n-1].number }}</div>
-            </div>
-          </div>
+      <!-- Compact view: one small panel per party with its bonus, leader and delegates, instead of the party boards. -->
+      <div v-if="compact" class="turmoil-compact-parties" data-test="turmoil-compact-parties">
+        <div
+          v-for="party in turmoil.parties"
+          :key="party.name"
+          class="turmoil-compact-party"
+          :class="{'turmoil-compact-party--dominant': party.name === turmoil.dominant}"
+          :title="party.name === turmoil.dominant ? $t('Dominant party') : undefined"
+        >
           <div :class="'party-name party-name--'+partyNameToCss(party.name)" v-i18n>{{ party.name }}</div>
-          <div class="party-bonus">
+          <div class="party-bonus turmoil-compact-bonus">
             <TurmoilAgenda type="party-bonus" :id="getBonus(party.name)" />
           </div>
+          <div class="turmoil-compact-delegates">
+            <div class="turmoil-compact-leader" :title="$t('Party leader')">
+              <div v-if="party.partyLeader" :class="['player-token', party.partyLeader]"></div>
+            </div>
+            <div v-for="(delegate, i) in party.delegates" :key="i" :class="'player-token '+delegate.color">{{ delegate.number }}</div>
+          </div>
         </div>
       </div>
 
-      <div class="turmoil-party-transition-arrow-grid">
-        <div class="turmoil-party-transition-arrow"></div>
-        <div class="turmoil-party-transition-arrow"></div>
-        <div class="turmoil-party-transition-arrow"></div>
-        <div class="turmoil-party-transition-arrow"></div>
-        <div class="turmoil-party-transition-arrow"></div>
-      </div>
+      <template v-else>
+        <div class="grid-leaders">
+          <div v-for="party in turmoil.parties" :key="party.name" :class="['leader-spot', 'leader-spot--'+partyNameToCss(party.name), {'player-token-new-leader': (party.name === turmoil.dominant)}]">
+            <div class="delegate-spot">
+              <div v-if="party.partyLeader" :class="['player-token', party.partyLeader]"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-parties">
+          <div v-for="party in turmoil.parties" :key="party.name" :class="'board-party board-party--'+partyNameToCss(party.name)">
+            <div class="grid-delegates">
+              <div class="delegate-spot" v-for="n in 6" :key="n">
+                <div v-if="party.delegates.length >= n" :class="'player-token '+party.delegates[n-1].color">{{ party.delegates[n-1].number }}</div>
+              </div>
+            </div>
+            <div :class="'party-name party-name--'+partyNameToCss(party.name)" v-i18n>{{ party.name }}</div>
+            <div class="party-bonus">
+              <TurmoilAgenda type="party-bonus" :id="getBonus(party.name)" />
+            </div>
+          </div>
+        </div>
+
+        <div class="turmoil-party-transition-arrow-grid">
+          <div class="turmoil-party-transition-arrow"></div>
+          <div class="turmoil-party-transition-arrow"></div>
+          <div class="turmoil-party-transition-arrow"></div>
+          <div class="turmoil-party-transition-arrow"></div>
+          <div class="turmoil-party-transition-arrow"></div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -103,6 +131,7 @@ import {PARTY_AGENDA_KEYS, TurmoilModel} from '@/common/models/TurmoilModel';
 import TurmoilAgenda from '@/client/components/turmoil/TurmoilAgenda.vue';
 import GlobalEvent from '@/client/components/turmoil/GlobalEvent.vue';
 import {Agenda, BonusId, PolicyId} from '@/common/turmoil/Types';
+import {getPreferences, PreferencesManager} from '@/client/utils/PreferencesManager';
 
 export default defineComponent({
   name: 'Turmoil',
@@ -116,6 +145,10 @@ export default defineComponent({
     /** The party board has room for 6 parties; a Giga Turmoil game has 12 until the party draft. */
     awaitingPartyDraft(): boolean {
       return this.turmoil.parties.length > 6;
+    },
+    /** The player's choice, kept in their browser like the other preferences. */
+    compact(): boolean {
+      return getPreferences().compact_turmoil;
     },
   },
   methods: {
@@ -142,6 +175,9 @@ export default defineComponent({
     },
     getPolicy(partyName: PartyName): PolicyId {
       return this.getAgenda(partyName).policyId;
+    },
+    toggleCompact() {
+      PreferencesManager.INSTANCE.set('compact_turmoil', !this.compact);
     },
     toggleMe() {
       const currentState: boolean = this.isVisible();

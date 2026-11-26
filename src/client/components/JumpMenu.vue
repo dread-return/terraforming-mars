@@ -10,20 +10,23 @@
         <i class="sidebar_icon sidebar_icon--board" :class="{'sidebar_item--is-active': open}"></i>
       </div>
     </a>
-    <div v-if="open" ref="panel" class="preferences_panel jump-menu__panel" :style="panelStyle" data-test="jump-menu-panel">
-      <div class="jump-menu__title" v-i18n>Jump to</div>
-      <a
-        v-for="target in available"
-        :key="target.id"
-        href="#"
-        class="jump-menu__item"
-        :data-target="target.id"
-        @click.prevent="jump(target.id)"
-      >
-        <i class="jump-menu__icon" :class="'jump-menu__icon--' + target.icon"></i>
-        <span v-i18n>{{ target.label }}</span>
-      </a>
-    </div>
+    <!-- In <body>, so a zoomed-out sidebar (on a short window) doesn't shrink or move it. -->
+    <Teleport to="body">
+      <div v-if="open" ref="panel" class="preferences_panel jump-menu__panel" :style="panelStyle" data-test="jump-menu-panel">
+        <div class="jump-menu__title" v-i18n>Jump to</div>
+        <a
+          v-for="target in available"
+          :key="target.id"
+          href="#"
+          class="jump-menu__item"
+          :data-target="target.id"
+          @click.prevent="jump(target.id)"
+        >
+          <i class="jump-menu__icon" :class="'jump-menu__icon--' + target.icon"></i>
+          <span v-i18n>{{ target.label }}</span>
+        </a>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -78,11 +81,12 @@ function onGlobeClick(event: MouseEvent) {
 // Next to the globe, moved up as far as needed to stay on screen.
 function placePanel() {
   const globe = root.value?.getBoundingClientRect();
-  panelStyle.value = {top: `${globe?.top ?? 0}px`};
+  const right = globe === undefined ? 60 : globe.right + 4;
+  panelStyle.value = {top: `${globe?.top ?? 0}px`, left: `${right}px`};
   nextTick(() => {
     const height = panel.value?.offsetHeight ?? 0;
     const top = Math.max(8, Math.min(globe?.top ?? 0, window.innerHeight - height - 8));
-    panelStyle.value = {top: `${top}px`};
+    panelStyle.value = {top: `${top}px`, left: `${right}px`};
   });
 }
 
@@ -97,7 +101,7 @@ function jump(id: string) {
 }
 
 function closeOnOutsideClick(event: MouseEvent) {
-  if (open.value && event.target instanceof Node && root.value?.contains(event.target) === false) {
+  if (open.value && event.target instanceof Node && root.value?.contains(event.target) === false && panel.value?.contains(event.target) !== true) {
     open.value = false;
   }
 }

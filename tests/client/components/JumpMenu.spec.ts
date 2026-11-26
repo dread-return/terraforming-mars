@@ -21,7 +21,7 @@ describe('JumpMenu', () => {
     added.push(addTarget('shortkey-board'));
     const wrapper = mount(JumpMenu, {...globalConfig, attachTo: document.body});
     await wrapper.find('a').trigger('click');
-    expect(wrapper.find('[data-test="jump-menu-panel"]').exists()).is.false;
+    expect(document.querySelector('[data-test="jump-menu-panel"]')).is.null;
     wrapper.unmount();
   });
 
@@ -31,7 +31,7 @@ describe('JumpMenu', () => {
     }
     const wrapper = mount(JumpMenu, {...globalConfig, attachTo: document.body});
     await wrapper.find('a').trigger('click');
-    const items = wrapper.findAll('.jump-menu__item').map((e) => e.attributes('data-target'));
+    const items = Array.from(document.querySelectorAll('.jump-menu__item')).map((e) => e.getAttribute('data-target'));
     expect(items).deep.eq(['shortkey-board', 'shortkey-moonBoard', 'shortkey-turmoil', 'shortkey-colonies']);
     wrapper.unmount();
   });

@@ -861,3 +861,92 @@ input[type="radio"]:checked + .party-container::after {
     }
   }
 }
+
+// "Compact view" / "Full view", at the left of the board's lower edge (the Policies link is at the right).
+.turmoil-view-toggle {
+  position: absolute;
+  z-index: 2;
+  margin: 141px 0 0 40px;
+  font-family: Ubuntu, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: @grey_850;
+
+  &:link,
+  &:visited {
+    color: @grey_850;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Compact view: the board keeps its top (events, lobby, ruling party, chairman, reserve) and the party boards
+// become one row of small panels.
+.turmoil-board--compact {
+  min-height: 0;
+  // Only the top of the board art; the party panels sit on their own dark strip.
+  background-size: auto;
+  background-repeat: no-repeat;
+  background-color: transparent;
+}
+
+.turmoil-compact-parties {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  padding: 8px;
+  border-radius: 0 0 10px 10px;
+  background: #1b1b1b;
+}
+
+.turmoil-compact-party {
+  padding: 4px 4px 6px;
+  border-radius: 6px;
+  background: #2c2c2c;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+
+  .party-name {
+    width: auto;
+    margin: 0 0 4px;
+    font-size: 14px;
+    height: 26px;
+    line-height: 27px;
+  }
+
+  &.turmoil-compact-party--dominant {
+    box-shadow: 0 0 0 2px #ffcc64, 0 0 8px rgba(255, 204, 100, 0.7);
+  }
+}
+
+.turmoil-compact-bonus {
+  zoom: 0.85;
+  min-height: 34px;
+}
+
+.turmoil-compact-delegates {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1px;
+  min-height: 30px;
+  margin-top: 4px;
+
+  .player-token {
+    zoom: 0.5;
+  }
+}
+
+// The leader's spot, ringed in gold; empty while the party has no leader.
+.turmoil-compact-leader {
+  width: 25px;
+  height: 29px;
+  margin-right: 4px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(255, 204, 100, 0.8);
+}

@@ -10,7 +10,7 @@
         <i class="sidebar_icon sidebar_icon--board" :class="{'sidebar_item--is-active': open}"></i>
       </div>
     </a>
-    <div v-if="open" class="preferences_panel jump-menu__panel" data-test="jump-menu-panel">
+    <div v-if="open" ref="panel" class="preferences_panel jump-menu__panel" :style="panelStyle" data-test="jump-menu-panel">
       <div class="jump-menu__title" v-i18n>Jump to</div>
       <a
         v-for="target in available"
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import {onBeforeUnmount, onMounted, ref} from 'vue';
+import {nextTick, onBeforeUnmount, onMounted, ref} from 'vue';
 
 type JumpTarget = {id: string, label: string, icon: string};
 
@@ -51,7 +51,9 @@ const JUMP_TARGETS: ReadonlyArray<JumpTarget> = [
 const SCROLL_MARGIN = 70;
 
 const root = ref<HTMLElement>();
+const panel = ref<HTMLElement>();
 const open = ref(false);
+const panelStyle = ref<Record<string, string>>({});
 const available = ref<Array<JumpTarget>>([]);
 
 function onPage(): Array<JumpTarget> {
@@ -68,6 +70,20 @@ function onGlobeClick(event: MouseEvent) {
   event.preventDefault();
   available.value = targets;
   open.value = !open.value;
+  if (open.value) {
+    placePanel();
+  }
+}
+
+// Next to the globe, moved up as far as needed to stay on screen.
+function placePanel() {
+  const globe = root.value?.getBoundingClientRect();
+  panelStyle.value = {top: `${globe?.top ?? 0}px`};
+  nextTick(() => {
+    const height = panel.value?.offsetHeight ?? 0;
+    const top = Math.max(8, Math.min(globe?.top ?? 0, window.innerHeight - height - 8));
+    panelStyle.value = {top: `${top}px`};
+  });
 }
 
 function jump(id: string) {
@@ -96,9 +112,9 @@ onBeforeUnmount(() => document.removeEventListener('click', closeOnOutsideClick)
 }
 
 .jump-menu__panel {
-  top: 0;
+  position: fixed;
   bottom: auto;
-  left: 53px;
+  left: 60px;
   z-index: 120;
   padding: 10px 14px 10px 12px;
   border-radius: 0 6px 6px 0;
@@ -150,5 +166,5 @@ onBeforeUnmount(() => document.removeEventListener('click', closeOnOutsideClick)
 .jump-menu__icon--turmoil { background-image: url(/assets/expansion_icons/expansion_icon_turmoil.png); }
 .jump-menu__icon--pathfinders { background-image: url(/assets/expansion_icons/expansion_icon_pathfinders.png); }
 .jump-menu__icon--individual { background-image: url(/assets/global-parameters/oxygen.png); }
-.jump-menu__icon--colonies { background-image: url(/assets/expansion_icons/expansion_icon_colonies.png); }
+.jump-menu__icon--colonies { background-image: url(/assets/sidebar/preferences_colony.png); background-size: 22px; }
 </style>

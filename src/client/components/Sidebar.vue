@@ -22,11 +22,7 @@
       <div class="preferences_player_inner" :class="[`player_bg_color_${playerColor}`, {active: isAnimated}]"></div>
     </div>
 
-    <a href="#board" :title="$t('Jump to board')">
-      <div class="sidebar_item sidebar_item_shortcut">
-        <i class="sidebar_icon sidebar_icon--board"></i>
-      </div>
-    </a>
+    <JumpMenu />
     <a href="#actions" :title="$t('Jump to actions')">
       <div class="sidebar_item sidebar_item_shortcut">
         <i class="sidebar_icon sidebar_icon--actions"></i>
@@ -82,6 +78,7 @@ import {GlobalParameter} from '@/common/GlobalParameter';
 import {MoonModel} from '@/common/models/MoonModel';
 import PreferencesIcon from '@/client/components/PreferencesIcon.vue';
 import LanguageIcon from '@/client/components/LanguageIcon.vue';
+import JumpMenu from '@/client/components/JumpMenu.vue';
 
 export default defineComponent({
   name: 'Sidebar',
@@ -159,6 +156,7 @@ export default defineComponent({
     MoonGlobalParameterValue,
     PreferencesIcon,
     LanguageIcon,
+    JumpMenu,
   },
   data() {
     return {

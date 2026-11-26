@@ -1,6 +1,7 @@
 <template>
   <!-- Is board-cont necessary? -->
   <div class="board-cont moon-board" id="moon_board">
+    <div class="planet-label moon-board__label" v-i18n>The Moon</div>
     <svg id="moon_board_legend" height="550" width="630" class="board-legend">
       <g id="mare_imbrium" transform="translate(250, 40)">
         <text class="board-caption">

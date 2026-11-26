@@ -6,6 +6,7 @@
 -->
 <template>
   <div class="mercury-board" data-test="mercury-board">
+    <div class="planet-label mercury-board__label" v-i18n>Mercury</div>
     <div id="mercury_board" class="mercury-board__map">
       <!-- Market Colonies: rules on the left, stock on the planet -->
       <div class="mercury-market__info" data-test="mercury-market">

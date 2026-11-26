@@ -198,6 +198,7 @@
                 :venusScaleLevel="game.venusScaleLevel"
                 :altVenusBoard="game.gameOptions.altVenusBoard"
                 :venusPhase2Track="game.gameOptions.expansions.venusphase2 && game.gameOptions.expansions.venus"
+                :hideVenusTrack="game.venusMap !== undefined"
                 :boardName="game.gameOptions.boardName"
                 :oceans_count="game.oceans"
                 :oxygen_level="game.oxygenLevel"
@@ -207,7 +208,7 @@
               <ContaminationTrack v-if="game.contamination !== undefined" :level="game.contamination" :alt="game.gameOptions.altContaminationTrack" />
             </div>
             <div v-if="game.venusMap !== undefined || game.moon !== undefined || game.mercury !== undefined" class="boards-row__planets">
-              <VenusMapBoard v-if="game.venusMap !== undefined" :model="game.venusMap" :tileView="tileView" />
+              <VenusMapBoard v-if="game.venusMap !== undefined" :model="game.venusMap" :tileView="tileView" :venusScaleLevel="game.venusScaleLevel" :boardName="game.gameOptions.boardName" :venusPhase2Track="game.gameOptions.expansions.venusphase2 && game.gameOptions.expansions.venus" :altVenusBoard="game.gameOptions.altVenusBoard" />
               <MoonBoard v-if="game.moon !== undefined" :model="game.moon" :tileView="tileView" />
               <MercuryBoard v-if="game.mercury !== undefined" :model="game.mercury" :spaces="game.spaces" />
             </div>

@@ -798,7 +798,8 @@ input[type="radio"]:checked + .party-container::after {
 
 // Giga Turmoil bonuses and policies are shown as text until they get icons.
 // Giga Turmoil agendas use their icons from the Epic rulebook (assets/parties/giga/agendas).
-// A bonus is the strip printed under the party name; a policy is the round token.
+// A bonus is the strip printed under the party name. A policy is the rulebook's round token with its disc cut away
+// (assets/parties/giga/policies), so it sits on the board like the official parties' policies.
 .giga-agenda-bonus {
   display: inline-block;
   height: 30px;
@@ -808,10 +809,13 @@ input[type="radio"]:checked + .party-container::after {
 }
 
 .giga-agenda-policy {
+  // Shown at the cut-outs' own size (cropped from the 120 px tokens), the scale the icons had on the tokens.
   display: inline-block;
-  width: 76px;
-  height: 76px;
+  width: auto;
+  height: auto;
+  zoom: 1.2;
   vertical-align: middle;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
 }
 
 // Giga Turmoil before the party draft (Turmoil.vue): the 12 parties in two rows, without the board.

@@ -6,13 +6,13 @@
     and the individual global parameter tracks. Colonies come after this component, in the home views.
   -->
   <div class="game-board-view">
-    <div v-if="players.length > 1" class="player_home_block--milestones-and-awards">
+    <div v-if="players.length > 1" class="player_home_block--milestones-and-awards" id="shortkey-milestones-awards">
       <a class="hotkey-target"></a>
       <Milestones :milestones="game.milestones" :boardName="game.gameOptions.boardName" />
       <Awards :awards="game.awards" :boardName="game.gameOptions.boardName" />
     </div>
 
-    <DeltaProjectBoard v-if="game.gameOptions.expansions.deltaProject" :players="players" />
+    <DeltaProjectBoard v-if="game.gameOptions.expansions.deltaProject" :players="players" id="shortkey-deltaProject" />
 
     <div class="boards-row">
       <div class="boards-row__mars">
@@ -27,6 +27,7 @@
           :temperature="game.temperature"
           :altVenusBoard="game.gameOptions.altVenusBoard"
           :venusPhase2Track="game.gameOptions.expansions.venusphase2 && game.gameOptions.expansions.venus"
+          :hideVenusTrack="game.venusMap !== undefined"
           :aresData="game.aresData"
           :tileView="tileView"
           @toggleTileView="$emit('toggleTileView')"
@@ -38,32 +39,35 @@
       <div v-if="hasPlanets" class="boards-row__planets" data-test="planets">
         <template v-if="game.venusMap">
           <a class="hotkey-target"></a>
-          <VenusMapBoard :model="game.venusMap" :tileView="tileView" id="shortkey-venusMapBoard" />
+          <VenusMapBoard :model="game.venusMap" :tileView="tileView" :venusScaleLevel="game.venusScaleLevel" :boardName="game.gameOptions.boardName" :venusPhase2Track="game.gameOptions.expansions.venusphase2 && game.gameOptions.expansions.venus" :altVenusBoard="game.gameOptions.altVenusBoard" id="shortkey-venusMapBoard" />
         </template>
         <template v-if="game.moon">
           <a class="hotkey-target"></a>
           <MoonBoard :model="game.moon" :tileView="tileView" id="shortkey-moonBoard" />
         </template>
         <template v-if="game.mercury !== undefined">
-          <MercuryBoard :model="game.mercury" :spaces="game.spaces" />
-          <MercuryActs :model="game.mercury" :players="players" />
+          <MercuryBoard :model="game.mercury" :spaces="game.spaces" id="shortkey-mercury" />
+          <MercuryActs :model="game.mercury" :players="players" id="shortkey-acts" />
         </template>
       </div>
     </div>
 
-    <template v-if="game.turmoil">
-      <a class="hotkey-target"></a>
-      <div class="game-board-view__turmoil">
-        <Turmoil :turmoil="game.turmoil" />
-      </div>
-    </template>
+    <!-- Turmoil and the planetary tracks: side by side when the window is wide enough, else one under the other. -->
+    <div class="boards-row boards-row--lower">
+      <template v-if="game.turmoil">
+        <a class="hotkey-target"></a>
+        <div class="game-board-view__turmoil" id="shortkey-turmoil">
+          <Turmoil :turmoil="game.turmoil" />
+        </div>
+      </template>
 
-    <template v-if="game.gameOptions.expansions.pathfinders">
-      <a class="hotkey-target"></a>
-      <PlanetaryTracks :tracks="game.pathfinders" :gameOptions="game.gameOptions" />
-    </template>
+      <template v-if="game.gameOptions.expansions.pathfinders">
+        <a class="hotkey-target"></a>
+        <PlanetaryTracks :tracks="game.pathfinders" :gameOptions="game.gameOptions" id="shortkey-planetaryTracks" />
+      </template>
+    </div>
 
-    <IndividualTracksBoard v-if="game.gameOptions.individualTracks" :players="players" />
+    <IndividualTracksBoard v-if="game.gameOptions.individualTracks" :players="players" id="shortkey-individualTracks" />
   </div>
 </template>
 

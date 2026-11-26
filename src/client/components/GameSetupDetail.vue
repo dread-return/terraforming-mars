@@ -26,6 +26,8 @@
         <a v-if="gameOptions.expansions.eternity" :href="rulebookUrls.eternity" class="tooltip" data-tooltip="Eternity rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-eternity"></div></a>
         <a v-if="gameOptions.expansions.industries" :href="rulebookUrls.industries" class="tooltip" data-tooltip="Industries rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-industries"></div></a>
         <a v-if="gameOptions.expansions.postludes" :href="rulebookUrls.postludes" class="tooltip" data-tooltip="Postludes rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-postludes"></div></a>
+        <a v-if="gameOptions.expansions.highorbit" :href="rulebookUrls.highorbit" class="tooltip" data-tooltip="High Orbit rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-highorbit"></div></a>
+        <a v-if="gameOptions.expansions.mercury" :href="rulebookUrls.mercury" class="tooltip" data-tooltip="Mercury vs Mars rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-mercury"></div></a>
       </li>
 
       <li><div class="setup-item" v-i18n>Board:</div>
@@ -37,6 +39,12 @@
       <li><div class="setup-item" v-i18n>WGT:</div>
         <div v-if="gameOptions.solarPhaseOption" class="game-config generic" v-i18n>On</div>
         <div v-else class="game-config generic" v-i18n>Off</div>
+      </li>
+      <li v-if="gameOptions.expansions.turmoil && (gameOptions.gigaTurmoil || isPoliticalAgendasOn)">
+        <div class="setup-item" v-i18n>Turmoil:</div>
+        <div v-if="gameOptions.gigaTurmoil" class="game-config generic" v-i18n>Giga Turmoil</div>
+        <div v-if="gameOptions.politicalAgendasExtension === 'Chairman'" class="game-config generic" v-i18n>Agendas: Chairman</div>
+        <div v-else-if="gameOptions.politicalAgendasExtension === 'Random'" class="game-config generic" v-i18n>Agendas: Random</div>
       </li>
       <li v-if="gameOptions.domesWilderness" v-i18n>Domes and Wilderness</li>
       <li v-if="gameOptions.coloniesTradeFleetProject" v-i18n>Trade Fleet Standard Project</li>

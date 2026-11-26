@@ -4,6 +4,7 @@ import {IPlayer} from '@/server/IPlayer';
 import {PlaceOceanTile} from '@/server/deferredActions/PlaceOceanTile';
 import {BuildColony} from '@/server/deferredActions/BuildColony';
 import {Phase} from '@/common/Phase';
+import {AMAZONIS_PLANITIA_VENUS_THRESHOLDS, GIGA_VENUS_THRESHOLDS, STANDARD_VENUS_THRESHOLDS, VENUS_PHASE_2_VENUS_THRESHOLDS} from '@/common/venusNext/VenusTrack';
 
 /**
  * A bonus printed on a global-parameter track, granted to the player who raises the parameter
@@ -52,10 +53,7 @@ const STANDARD: GlobalParameterTracks = {
   oxygen: [
     {value: constants.OXYGEN_LEVEL_FOR_TEMPERATURE_BONUS, bonus: 'temperature'},
   ],
-  venus: [
-    {value: constants.VENUS_LEVEL_FOR_CARD_BONUS, bonus: 'drawcard'},
-    {value: constants.VENUS_LEVEL_FOR_TR_BONUS, bonus: 'tr'},
-  ],
+  venus: STANDARD_VENUS_THRESHOLDS,
 };
 
 const AMAZONIS_PLANITIA: GlobalParameterTracks = {
@@ -69,11 +67,7 @@ const AMAZONIS_PLANITIA: GlobalParameterTracks = {
     {value: constants.OXYGEN_LEVEL_FOR_AMAZONIS_CARD_BONUS, bonus: 'drawcard'},
     {value: constants.OXYGEN_LEVEL_FOR_AMAZONIS_TEMPERATURE_BONUS, bonus: 'temperature'},
   ],
-  venus: [
-    {value: constants.VENUS_LEVEL_FOR_CARD_BONUS, bonus: 'drawcard'},
-    {value: constants.VENUS_LEVEL_FOR_AMAZONIS_COLONY_BONUS, bonus: 'colony'},
-    {value: constants.VENUS_LEVEL_FOR_AMAZONIS_TR_BONUS, bonus: 'tr'},
-  ],
+  venus: AMAZONIS_PLANITIA_VENUS_THRESHOLDS,
 };
 
 /**
@@ -82,22 +76,11 @@ const AMAZONIS_PLANITIA: GlobalParameterTracks = {
  */
 const GIGA: GlobalParameterTracks = {
   ...STANDARD,
-  venus: [
-    {value: constants.VENUS_LEVEL_FOR_CARD_BONUS, bonus: 'drawcard'},
-    {value: constants.VENUS_LEVEL_FOR_TR_BONUS, bonus: 'tr'},
-    {value: constants.VENUS_LEVEL_FOR_GIGA_COLONY_BONUS, bonus: 'colony'},
-  ],
+  venus: GIGA_VENUS_THRESHOLDS,
 };
 
-/**
- * Venus Phase 2's 24-step Venus track (to 48%): cards at 8% and 22%, TR at 34%. The standard and wild
- * resources on its last steps are granted by Game.increaseVenusScaleLevel, like the Alt. Venus board.
- */
-const VENUS_PHASE_2_VENUS: ReadonlyArray<GlobalParameterThreshold> = [
-  {value: constants.VENUS_LEVEL_FOR_CARD_BONUS, bonus: 'drawcard'},
-  {value: constants.VENUS_PHASE_2_LEVEL_FOR_SECOND_CARD_BONUS, bonus: 'drawcard'},
-  {value: constants.VENUS_PHASE_2_LEVEL_FOR_TR_BONUS, bonus: 'tr'},
-];
+/** Venus Phase 2's 24-step Venus track (to 48%); see VENUS_PHASE_2_VENUS_THRESHOLDS. */
+const VENUS_PHASE_2_VENUS: ReadonlyArray<GlobalParameterThreshold> = VENUS_PHASE_2_VENUS_THRESHOLDS;
 
 /**
  * Returns the track bonuses for the map `boardName`. When `venusPhase2Track` is true, the Venus

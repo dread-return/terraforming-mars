@@ -256,9 +256,13 @@ export default defineComponent({
     isBonus(): boolean {
       return this.id[1] === 'b';
     },
-    /** e.g. Mp03 is assets/parties/giga/agendas/mars_first-p3.png and Ob01 is spome-b1.png. */
+    /**
+     * e.g. Ob01 is assets/parties/giga/agendas/spome-b1.png. Policies come from assets/parties/giga/policies, the
+     * rulebook's round tokens cut out of their discs, so they sit on the board like the official parties' policies.
+     */
     gigaIconSrc(): string {
-      return `assets/parties/giga/agendas/${this.partySlug}-${this.id[1]}${Number(this.id.slice(2))}.png`;
+      const folder = this.isBonus ? 'agendas' : 'policies';
+      return `assets/parties/giga/${folder}/${this.partySlug}-${this.id[1]}${Number(this.id.slice(2))}.png`;
     },
     gigaIconClass(): string {
       return this.isBonus ? 'giga-agenda-bonus' : 'giga-agenda-policy';

@@ -1,5 +1,5 @@
 <template>
-  <div class="milestones_cont">
+  <div class="milestones_cont" :class="{'ma-cont--many': milestones.length > 6}">
     <div class="milestones">
       <div class="ma-title">
         <a class="ma-clickable" href="#" @click.prevent="toggleList()" v-i18n>Milestones</a>

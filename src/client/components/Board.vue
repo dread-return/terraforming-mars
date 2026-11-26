@@ -7,6 +7,7 @@
     :oxygen_level="oxygen_level"
     :temperature="temperature"
     :expansions="expansions"
+    :hideVenusTrack="hideVenusTrack"
     :tileView="tileView"
     @toggleTileView="$emit('toggleTileView')"
   />
@@ -39,7 +40,7 @@
       <BoardSpace v-for="space in observatorySpaces" :key="space.id" :space="space" text="Observatory City" :tileView="tileView" />
     </div>
 
-    <div class="global-numbers" :class="{'global-numbers--large': isLargeBoard, 'global-numbers--venus2': venusPhase2Track}">
+    <div class="global-numbers" :class="{'global-numbers--large': isLargeBoard, 'global-numbers--venus2': drawVenusPhase2Track}">
       <div class="global-numbers-temperature">
         <div :class="getScaleCSS(lvl)" v-for="(lvl, idx) in getValuesForParameter('temperature')" :key="idx">{{ lvl.strValue }}</div>
       </div>
@@ -48,7 +49,7 @@
         <div :class="getScaleCSS(lvl)" v-for="(lvl, idx) in getValuesForParameter('oxygen')" :key="idx">{{ lvl.strValue }}</div>
       </div>
 
-      <div class="global-numbers-venus" v-if="expansions.venus">
+      <div class="global-numbers-venus" v-if="showVenusTrack">
         <div :class="getScaleCSS(lvl)" v-for="(lvl, idx) in getValuesForParameter('venus')" :key="idx">{{ lvl.strValue }}</div>
       </div>
 
@@ -80,7 +81,7 @@
         </div>
       </div>
 
-      <div v-if="altVenusBoard && !venusPhase2Track" class="global-alt-venus">
+      <div v-if="altVenusBoard && !venusPhase2Track && showVenusTrack" class="global-alt-venus">
         <div class="std-wild-resource p18"></div>
         <div class="std-wild-resource p20"></div>
         <div class="std-wild-resource p22"></div>
@@ -413,6 +414,11 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    // True when the Venus scale is drawn around the Venus map instead (Venus Phase 2's map is in the game).
+    hideVenusTrack: {
+      type: Boolean,
+      default: false,
+    },
     boardName: {
       type: String as () => BoardName,
       required: true,
@@ -552,12 +558,24 @@ export default defineComponent({
         .filter((s) => s.spaceType !== SpaceType.COLONY)
         .toSorted((space1, space2) => parseInt(space1.id) - parseInt(space2.id));
     },
+    showVenusTrack(): boolean {
+      return this.expansions.venus === true && !this.hideVenusTrack;
+    },
+    drawVenusPhase2Track(): boolean {
+      return this.venusPhase2Track && this.showVenusTrack;
+    },
     gameBoardClassName(): string {
-      let css = this.expansions.venus ? 'board-cont board-with-venus' : 'board-cont board-without-venus';
+      let css = 'board-cont';
+      if (this.expansions.venus && this.hideVenusTrack) {
+        // The Venus scale is drawn around the Venus map; this image leaves the track out altogether.
+        css += ' board-cont--no-venus-track';
+      } else {
+        css += this.showVenusTrack ? ' board-with-venus' : ' board-without-venus';
+      }
       if (this.isLargeBoard) {
         css += ' board-cont--large';
       }
-      if (this.venusPhase2Track) {
+      if (this.drawVenusPhase2Track) {
         css += ' board-cont--venus2';
       }
       return css;

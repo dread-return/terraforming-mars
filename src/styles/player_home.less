@@ -906,13 +906,18 @@ each(@players, {
     margin: 0;
   }
 
+  // Room for the Venus scale arched over the map.
+  > .venus-map-board--with-track {
+    margin: 50px 0 0 0;
+  }
+
   // The Moon's captions sit above the map.
   > .moon-board {
     margin: 60px 0 0 0;
   }
 
   > .mercury-board {
-    margin: 0;
+    margin: 30px 0 0 0;
   }
 
   > .mercury-acts {
@@ -923,4 +928,77 @@ each(@players, {
 
 .game-board-view__turmoil {
   margin-top: 30px;
+}
+
+// The name over each planet's map (Venus, the Moon, Mercury), in the style of the section titles.
+.planet-label {
+  position: absolute;
+  z-index: 4;
+  font-family: Prototype, sans-serif;
+  font-size: 18px;
+  font-weight: normal;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #f3d9a4;
+  text-shadow: 0 0 3px #000, 0 0 2px #000;
+  pointer-events: none;
+}
+
+.moon-board__label {
+  left: 0;
+  top: -62px;
+  color: #dcdcdc;
+}
+
+.mercury-board {
+  position: relative;
+}
+
+.mercury-board__label {
+  left: 0;
+  top: -26px;
+  color: #e6cfae;
+}
+
+.moon-board {
+  position: relative;
+}
+
+// More than six milestones or awards (the GIGA board has ten of each): smaller medals and price pills, so a
+// row of ten fits on a laptop screen. Boards with the usual five or six are unchanged.
+.ma-cont--many {
+  .ma-block {
+    zoom: 0.82;
+  }
+
+  .milestone-award-inline {
+    width: auto;
+    padding: 1px 30px 1px 10px;
+    margin: 0 3px 2px;
+    font-size: 14px;
+
+    &.unpaid {
+      width: 70px;
+      padding-right: 10px;
+    }
+  }
+
+  .milestone-award-price {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.boards-row--lower {
+  column-gap: 20px;
+  align-items: flex-start;
+
+  > .game-board-view__turmoil {
+    flex: 0 0 auto;
+  }
+
+  > .pathfinders_cont {
+    margin-top: 40px;
+  }
 }

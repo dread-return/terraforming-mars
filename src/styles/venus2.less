@@ -7,13 +7,13 @@
   background: url(./assets/venus2/board.png) no-repeat;
 
   .venus-map-title {
-    position: absolute;
-    left: 6px;
-    top: 4px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #f3d9a4;
-    text-shadow: 1px 1px 2px #000;
+    left: 0;
+    top: 0;
+  }
+
+  // With the Venus scale arched over the map, the label goes above the arc's top-left corner.
+  &.venus-map-board--with-track .venus-map-title {
+    top: -44px;
   }
 
   .venus-map-legend {

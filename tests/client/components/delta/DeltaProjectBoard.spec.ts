@@ -28,9 +28,9 @@ describe('DeltaProjectBoard', () => {
       ...globalConfig,
       props: {players: []},
     });
-    // Tag row: 1 start cell + 11 step cells, all sharing the step class.
-    expect(wrapper.findAll('td.delta-project-board__step')).to.have.length(12);
-    expect(wrapper.findAll('td.delta-project-board__step--start')).to.have.length(1);
+    // 1 start cell + 11 step cells, all sharing the step class.
+    expect(wrapper.findAll('.delta-project-board__step')).to.have.length(12);
+    expect(wrapper.findAll('.delta-project-board__step--start')).to.have.length(1);
   });
 
   it('places a player cube at their track position', () => {

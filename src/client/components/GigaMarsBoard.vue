@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <div class="board board--giga" :class="{'board--giga-venus': expansions.venus}" id="main_board">
+    <div class="board board--giga" :class="{'board--giga-venus': showVenus}" id="main_board">
       <div class="global-numbers giga-dial">
         <div v-for="track in dialTracks" :key="track.name" :class="'giga-dial-' + track.name" :data-test="'giga-track-' + track.name">
           <div v-for="cell in track.cells" :key="cell.value" :class="cell.css" :style="cell.style">{{ cell.label }}</div>
@@ -21,7 +21,7 @@
           <div class="giga-dial-bonus" :class="'giga-dial-bonus--' + bonus.icon" :style="bonus.iconStyle" :title="$t(bonus.title)"></div>
         </template>
 
-        <template v-if="expansions.venus">
+        <template v-if="showVenus">
           <div class="giga-dial-cap giga-dial-cap--venus" :style="venusCaps.start"></div>
           <div class="giga-dial-cap giga-dial-cap--percent" :style="venusCaps.end">%</div>
         </template>
@@ -140,6 +140,10 @@ const OFF_MARS_SLOTS: Partial<Record<SpaceId, {left: number, top: number}>> = {
   [SpaceName.LUNAR_EMBASSY]: {left: 1006, top: 646},
 };
 
+// Sideralis sits under Luna Metropolis, balancing the corners, unless Maxwell Base is on this board (Venus Next
+// without Venus Phase 2's map); then it keeps the spot next to Stanford Torus.
+const SIDERALIS_UNDER_LUNA_METROPOLIS = {left: 1096, top: 128};
+
 type DialBonus = {
   track: DialTrackName,
   value: number,
@@ -207,6 +211,11 @@ export default defineComponent({
       type: Object as () => Record<Expansion, boolean>,
       required: true,
     },
+    // True when the Venus scale is drawn around the Venus map instead.
+    hideVenusTrack: {
+      type: Boolean,
+      default: false,
+    },
     tileView: {
       type: String as () => TileView,
       default: 'show',
@@ -223,8 +232,14 @@ export default defineComponent({
     isPolar(space: SpaceModel): boolean {
       return GIGA_POLAR_SPACES.includes(space.id);
     },
+    offMarsSlot(id: SpaceId): {left: number, top: number} | undefined {
+      if (id === SpaceName.SIDERALIS && !this.spaces.some((s) => s.id === SpaceName.MAXWELL_BASE)) {
+        return SIDERALIS_UNDER_LUNA_METROPOLIS;
+      }
+      return OFF_MARS_SLOTS[id];
+    },
     offMarsStyle(space: SpaceModel): Record<string, string> {
-      const slot = OFF_MARS_SLOTS[space.id];
+      const slot = this.offMarsSlot(space.id);
       return slot === undefined ? {} : {margin: `${slot.top}px 0 0 ${slot.left}px`};
     },
     spaceName(space: SpaceModel): string {
@@ -232,6 +247,9 @@ export default defineComponent({
     },
   },
   computed: {
+    showVenus(): boolean {
+      return this.expansions.venus === true && !this.hideVenusTrack;
+    },
     marsSpaces(): Array<SpaceModel> {
       return this.spaces
         .filter((s) => s.spaceType !== SpaceType.COLONY)
@@ -254,7 +272,7 @@ export default defineComponent({
         temperature: this.temperature,
         venus: this.venusScaleLevel,
       };
-      const names: Array<DialTrackName> = this.expansions.venus ? ['oxygen', 'venus', 'temperature'] : ['oxygen', 'temperature'];
+      const names: Array<DialTrackName> = this.showVenus ? ['oxygen', 'venus', 'temperature'] : ['oxygen', 'temperature'];
       return names.map((name) => ({
         name,
         cells: dialCells(name).map((cell) => {
@@ -271,7 +289,7 @@ export default defineComponent({
     },
     dialBonuses() {
       return BONUSES
-        .filter((bonus) => bonus.track !== 'venus' || this.expansions.venus)
+        .filter((bonus) => bonus.track !== 'venus' || this.showVenus)
         .map((bonus) => {
           const cell = dialCell(bonus.track, bonus.value);
           const s = (cell.start + cell.end) / 2;

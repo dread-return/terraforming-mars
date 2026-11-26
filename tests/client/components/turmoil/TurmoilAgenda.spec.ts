@@ -33,7 +33,7 @@ describe('TurmoilAgenda', () => {
       },
     });
     const img = wrapper.find('img');
-    expect(img.attributes('src')).eq('assets/parties/giga/agendas/empower-p1.png');
+    expect(img.attributes('src')).eq('assets/parties/giga/policies/empower-p1.png');
     expect(img.classes()).includes('giga-agenda-policy');
     expect(img.attributes('alt')).is.not.empty;
   });

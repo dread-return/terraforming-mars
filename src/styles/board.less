@@ -734,3 +734,13 @@ each(@token_types, {
 .underground-excavator--clear {
   background-color: @player_clear;
 }
+
+// Venus Phase 2's map draws the Venus scale around itself (VenusScaleArc.vue), so the Mars board leaves its own
+// Venus track out (not dimmed, as on board-without-venus).
+.board-cont--no-venus-track {
+  background: url(./assets/board/mars-without-venus-track.png) no-repeat;
+}
+
+.board-cont--large.board-cont--no-venus-track {
+  background-image: url(./assets/board/mars-large-without-venus-track.png);
+}

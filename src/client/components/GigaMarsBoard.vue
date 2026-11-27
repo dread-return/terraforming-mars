@@ -82,6 +82,7 @@ import {TileView} from '@/client/components/board/TileView';
 import {BoardName} from '@/common/boards/BoardName';
 import {Expansion} from '@/common/cards/GameModule';
 import {SpaceName} from '@/common/boards/SpaceName';
+import {offMarsSlots} from '@/client/components/board/gigaOffMars';
 import {getGlobalParameterMaximums} from '@/common/boards/GlobalParameterMaximums';
 import {GIGA_POLAR_SPACES, GIGA_SPACES} from '@/common/boards/gigaMap';
 import {DIAL_TRACK_EXTENTS, DIAL_TRACK_WIDTH, DialTrackName, GIGA_MARS_LEFT, GIGA_MARS_TOP, dialCell, dialCells, dialPoint} from '@/client/components/board/gigaDial';
@@ -122,28 +123,6 @@ const OFF_MARS_NAMES: Partial<Record<SpaceId, string>> = {
 // Where the off-Mars spaces sit, in the corners around the planet, grouped like on the round maps:
 // Ganymede, Phobos and the other early ones top left, the Venus cities top right near the Venus
 // track, Pathfinders bottom right, Mercury and the off-world greeneries bottom left.
-const OFF_MARS_SLOTS: Partial<Record<SpaceId, {left: number, top: number}>> = {
-  [SpaceName.GANYMEDE_COLONY]: {left: 20, top: 28},
-  [SpaceName.PHOBOS_SPACE_HAVEN]: {left: 110, top: 28},
-  [SpaceName.STANFORD_TORUS]: {left: 200, top: 28},
-  [SpaceName.SIDERALIS]: {left: 290, top: 28},
-  [SpaceName.MAIN_DOCKING_STATION]: {left: 20, top: 128},
-  [SpaceName.LUNA_METROPOLIS]: {left: 1096, top: 28},
-  [SpaceName.DAWN_CITY]: {left: 1006, top: 28},
-  [SpaceName.STRATOPOLIS]: {left: 916, top: 28},
-  [SpaceName.VENERA_BASE]: {left: 826, top: 28},
-  [SpaceName.MAXWELL_BASE]: {left: 1096, top: 128},
-  [SpaceName.FLYING_GARDEN]: {left: 20, top: 530},
-  [SpaceName.SPACE_SOLARIUM]: {left: 20, top: 646},
-  [SpaceName.CERES_SPACEPORT]: {left: 1096, top: 530},
-  [SpaceName.DYSON_SCREENS]: {left: 1096, top: 646},
-  [SpaceName.LUNAR_EMBASSY]: {left: 1006, top: 646},
-};
-
-// Sideralis sits under Luna Metropolis, balancing the corners, unless Maxwell Base is on this board (Venus Next
-// without Venus Phase 2's map); then it keeps the spot next to Stanford Torus.
-const SIDERALIS_UNDER_LUNA_METROPOLIS = {left: 1096, top: 128};
-
 type DialBonus = {
   track: DialTrackName,
   value: number,
@@ -233,10 +212,7 @@ export default defineComponent({
       return GIGA_POLAR_SPACES.includes(space.id);
     },
     offMarsSlot(id: SpaceId): {left: number, top: number} | undefined {
-      if (id === SpaceName.SIDERALIS && !this.spaces.some((s) => s.id === SpaceName.MAXWELL_BASE)) {
-        return SIDERALIS_UNDER_LUNA_METROPOLIS;
-      }
-      return OFF_MARS_SLOTS[id];
+      return this.offMarsSlotMap.get(id);
     },
     offMarsStyle(space: SpaceModel): Record<string, string> {
       const slot = this.offMarsSlot(space.id);
@@ -247,6 +223,9 @@ export default defineComponent({
     },
   },
   computed: {
+    offMarsSlotMap(): Map<SpaceId, {left: number, top: number}> {
+      return offMarsSlots(this.spaces.filter((s) => s.spaceType === SpaceType.COLONY).map((s) => s.id));
+    },
     showVenus(): boolean {
       return this.expansions.venus === true && !this.hideVenusTrack;
     },
@@ -256,12 +235,12 @@ export default defineComponent({
         .toSorted((a, b) => parseInt(a.id) - parseInt(b.id));
     },
     placedOffMarsSpaces(): Array<SpaceModel> {
-      return this.spaces.filter((s) => s.spaceType === SpaceType.COLONY && OFF_MARS_SLOTS[s.id] !== undefined);
+      return this.spaces.filter((s) => s.spaceType === SpaceType.COLONY && this.offMarsSlotMap.has(s.id));
     },
     // Any off-Mars space without a spot of its own goes in a row under the board.
     // New Pompeii and Shadow Forest are drawn on the Mercury panel instead.
     otherOffMarsSpaces(): Array<SpaceModel> {
-      return this.spaces.filter((s) => s.spaceType === SpaceType.COLONY && OFF_MARS_SLOTS[s.id] === undefined && !MERCURY_SPACE_IDS.includes(s.id));
+      return this.spaces.filter((s) => s.spaceType === SpaceType.COLONY && !this.offMarsSlotMap.has(s.id) && !MERCURY_SPACE_IDS.includes(s.id));
     },
     maximums() {
       return getGlobalParameterMaximums(BoardName.GIGA);

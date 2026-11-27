@@ -3,6 +3,7 @@ import {testGame} from '../TestGame';
 import {TestPlayer} from '../TestPlayer';
 import {IGame} from '../../src/server/IGame';
 import {runAllActions, addOcean, addCity, setRulingParty} from '../TestingUtils';
+import {cast} from '../../src/common/utils/utils';
 import {CardName} from '../../src/common/cards/CardName';
 import {CardType} from '../../src/common/cards/CardType';
 import {CardResource} from '../../src/common/CardResource';
@@ -23,6 +24,10 @@ import {SelectCard} from '../../src/server/inputs/SelectCard';
 import {SelectPlayer} from '../../src/server/inputs/SelectPlayer';
 import {SelectAmount} from '../../src/server/inputs/SelectAmount';
 import {SelectSpace} from '../../src/server/inputs/SelectSpace';
+import {SharedCity} from '../../src/server/cards/mercury/SharedCity';
+import {HELD_OUT_ACTS} from '../../src/common/mercury/MercuryCards';
+import {SpaceType} from '../../src/common/boards/SpaceType';
+import {Game} from '../../src/server/Game';
 import {TechnologyAcquisition} from '../../src/server/cards/mercury/TechnologyAcquisition';
 import {CloudGenerator} from '../../src/server/cards/postludes/CloudGenerator';
 import {SelectColony} from '../../src/server/inputs/SelectColony';
@@ -237,6 +242,50 @@ describe('Mercury vs Mars cards', () => {
     player.playCard(new (MERCURY_CARD_MANIFEST.preludeCards[CardName.MERCURIAL_BASE]!.Factory)());
     settle(game);
     expect(player.playedCards.has(CardName.ZERO_GRAVITY_RACING) || game.mercury!.developments.some((d) => d.progress[0] === 4)).is.true;
+  });
+});
+
+describe('Shared City', () => {
+  it('is in the Act deck', () => {
+    expect(HELD_OUT_ACTS.has(CardName.SHARED_CITY)).is.false;
+  });
+
+  it('places a city both players own, which each scores only for greeneries that are not their own', () => {
+    const [game, player, player2, player3] = testGame(3, {mercuryExpansion: true});
+    const card = new SharedCity();
+    card.resolveTreaty(player, player2);
+    runAllActions(game);
+    const select = cast(player.popWaitingFor(), SelectSpace);
+    const space = select.spaces.find((s) => game.board.getAdjacentSpaces(s).filter((a) => a.spaceType === SpaceType.LAND && a.tile === undefined).length >= 3)!;
+    select.cb(space);
+    runAllActions(game);
+    expect(space.player).eq(player);
+    expect(space.coOwner).eq(player2);
+    expect(space.tile?.card).eq(CardName.SHARED_CITY);
+    expect(game.board.getCities(player2)).to.include(space);
+
+    const free = game.board.getAdjacentSpaces(space).filter((a) => a.spaceType === SpaceType.LAND && a.tile === undefined);
+    game.simpleAddTile(player, free[0], {tileType: TileType.GREENERY});
+    game.simpleAddTile(player2, free[1], {tileType: TileType.GREENERY});
+    game.simpleAddTile(player3, free[2], {tileType: TileType.GREENERY});
+    // Each owner: 2 greeneries next to it aren't theirs.
+    expect(player.getVictoryPoints().city).eq(2);
+    expect(player2.getVictoryPoints().city).eq(2);
+    expect(player3.getVictoryPoints().city).eq(0);
+  });
+
+  it('survives a save and reload', () => {
+    const [game, player, player2] = testGame(2, {mercuryExpansion: true});
+    new SharedCity().resolveTreaty(player, player2);
+    runAllActions(game);
+    const select = cast(player.popWaitingFor(), SelectSpace);
+    const space = select.spaces[0];
+    select.cb(space);
+    runAllActions(game);
+    const restored = Game.deserialize(JSON.parse(JSON.stringify(game.serialize())));
+    const again = restored.board.getSpaceOrThrow(space.id);
+    expect(again.tile?.card).eq(CardName.SHARED_CITY);
+    expect(again.coOwner?.id).eq(player2.id);
   });
 });
 

@@ -27,10 +27,11 @@ describe('GigaMarsBoard', () => {
     // Space 1 is the first hex of the top row; space 175 the last hex of the bottom row.
     expect(marsSpaces[0].attributes('style')).contains('margin: 124px 0px 0px 300px');
     expect(wrapper.findAllComponents(BoardSpace)).has.length(177);
-    // Off-Mars spaces sit around the planet; Ganymede is top left.
+    // Off-Mars spaces orbit the planet; with only Phobos and Ganymede, they take the first two spots top left.
     const offMars = wrapper.findAllComponents(BoardSpace).filter((w) => w.attributes('data-test') === 'off-mars-space');
     expect(offMars).has.length(2);
-    expect(offMars[0].attributes('style')).contains('margin: 28px 0px 0px 20px');
+    expect(offMars[0].attributes('style')).contains('margin: 67px 0px 0px 129px');
+    expect(offMars[1].attributes('style')).contains('margin: 33px 0px 0px 199px');
     expect(wrapper.find('#colony_spaces').exists()).is.false;
   });
 

@@ -11,7 +11,7 @@ import * as constants from '@/common/constants';
 
 /** The whole board: the planet, its tracks and their bonuses. */
 export const GIGA_BOARD_WIDTH = 1164;
-export const GIGA_BOARD_HEIGHT = 704;
+export const GIGA_BOARD_HEIGHT = 730;
 
 /** Where assets/board/giga-mars.jpg sits on the board. */
 export const GIGA_MARS_LEFT = 67;

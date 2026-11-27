@@ -68,9 +68,11 @@ export function calculateVictoryPoints(player: IPlayer) {
 
     // Victory points for greenery tiles adjacent to cities
     if (Board.isCitySpace(space) && Board.spaceOwnedBy(space, player)) {
+      // Mercury vs Mars' Shared City scores, for each of its owners, only the greeneries that aren't their own.
+      const shared = space.tile?.card === CardName.SHARED_CITY;
       const adjacent = player.game.board.getAdjacentSpaces(space);
       for (const adj of adjacent) {
-        if (Board.isGreenerySpace(adj)) {
+        if (Board.isGreenerySpace(adj) && !(shared && Board.spaceOwnedBy(adj, player))) {
           builder.setVictoryPoints('city', 1);
         }
       }

@@ -72,7 +72,7 @@ describe('Mercury vs Mars', () => {
     const cards = new GameCards({...DEFAULT_GAME_OPTIONS, mercuryExpansion: true, venusNextExtension: true});
     const acts = cards.getActCards();
     expect(acts).to.have.length(55 - HELD_OUT_ACTS.size);
-    expect(acts.filter((c) => c.kind === 'treaty')).to.have.length(32 - 2);
+    expect(acts.filter((c) => c.kind === 'treaty')).to.have.length(32 - 1);
     expect(acts.filter((c) => c.kind === 'rivalry')).to.have.length(23 - 1);
     expect(cards.getProjectCards().some((c) => c.type === CardType.ACT)).is.false;
     expect(cards.getProjectCards().filter((c) => c.name === CardName.SHADY_DEAL)).to.have.length(1);

@@ -25,16 +25,13 @@ export class Aquatix extends CorporationCard implements ICorporationCard {
         renderData: CardRenderer.builder((b) => {
           b.br.br;
           b.megacredits(45).oceans(1);
-          b.corpBox('effect', (ce) => {
-            ce.vSpace(Size.SMALL);
-            ce.effect(undefined, (eb) => {
-              eb.oceans(1, {size: Size.SMALL}).startEffect.text('anywhere', {size: Size.SMALL}).asterix();
-            });
-            ce.vSpace(Size.SMALL);
-            ce.effect('*You may place your oceans on any area, except next to 2 or more cities. Your ocean requirements are +/-2 steps.', (eb) => {
-              eb.empty().startEffect.oceans(1, {size: Size.SMALL}).text('req +/-2', {size: Size.SMALL});
-            });
-          });
+          b.br;
+          b.effect(undefined, (eb) => {
+            eb.oceans(1, {size: Size.SMALL}).startEffect.text('anywhere', {size: Size.SMALL}).asterix();
+          }).br;
+          b.effect('*You may place your oceans on any area, except next to 2 or more cities. Your ocean requirements are +/-2 steps.', (eb) => {
+            eb.empty().startEffect.oceans(1, {size: Size.SMALL}).text('req +/-2', {size: Size.SMALL});
+          }).br;
         }),
       },
     });

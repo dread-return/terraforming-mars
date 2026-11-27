@@ -21,16 +21,13 @@ export class S2AModular extends CorporationCard {
         description: 'You start with 32 M€, 1 titanium production and 3 energy production.',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(32).production((pb) => pb.titanium(1).energy(3, {digit}));
-          b.corpBox('effect', (ce) => {
-            ce.vSpace(Size.SMALL);
-            ce.effect(undefined, (eb) => {
-              eb.city({size: Size.SMALL}).city({size: Size.SMALL}).asterix().startEffect.text('OK', {size: Size.SMALL});
-            });
-            ce.vSpace(Size.TINY);
-            ce.effect('*Your cities may go next to your own other cities, but not next to opponents\' cities. You can use titanium and energy to pay for the city standard project.', (eb) => {
-              eb.plate('City').startEffect.titanium(1).energy(1);
-            });
-          });
+          b.br;
+          b.effect(undefined, (eb) => {
+            eb.city({size: Size.SMALL}).city({size: Size.SMALL}).asterix().startEffect.text('OK', {size: Size.SMALL});
+          }).br;
+          b.effect('*Your cities may go next to your own other cities, but not next to opponents\' cities. You can use titanium and energy to pay for the city standard project.', (eb) => {
+            eb.plate('City').startEffect.titanium(1).energy(1);
+          }).br;
         }),
       },
     });

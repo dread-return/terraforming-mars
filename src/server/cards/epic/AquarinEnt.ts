@@ -25,15 +25,13 @@ export class AquarinEnt extends CorporationCard implements ICorporationCard {
         renderData: CardRenderer.builder((b) => {
           b.br.br;
           b.megacredits(40);
-          b.corpBox('effect', (ce) => {
-            ce.vSpace(Size.MEDIUM);
-            ce.effect(undefined, (eb) => {
-              eb.oceans(1, {size: Size.SMALL, all}).slash().cards(1, {secondaryTag: AltSecondaryTag.REQ, size: Size.SMALL}).startEffect.production((pb) => pb.megacredits(1));
-            });
-            ce.effect('Any ocean, or your card that requires oceans: +1 M€ production. *You may place oceans past the maximum (no TR).', (eb) => {
-              eb.text('max', {size: Size.SMALL}).oceans(1, {size: Size.SMALL}).startEffect.oceans(1, {size: Size.SMALL}).asterix();
-            });
-          });
+          b.br;
+          b.effect(undefined, (eb) => {
+            eb.oceans(1, {size: Size.SMALL, all}).slash().cards(1, {secondaryTag: AltSecondaryTag.REQ, size: Size.SMALL}).startEffect.production((pb) => pb.megacredits(1));
+          }).br;
+          b.effect('Any ocean, or your card that requires oceans: +1 M€ production. *You may place oceans past the maximum (no TR).', (eb) => {
+            eb.text('max', {size: Size.SMALL}).oceans(1, {size: Size.SMALL}).startEffect.oceans(1, {size: Size.SMALL}).asterix();
+          }).br;
         }),
       },
     });

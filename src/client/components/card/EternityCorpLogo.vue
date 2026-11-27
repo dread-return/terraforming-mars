@@ -18,6 +18,8 @@ type EternityLogo = {slug: string, lines: ReadonlyArray<string>};
 export const ETERNITY_LOGOS: Partial<Record<CardName, EternityLogo>> = {
   // Epic Corporations use the same mechanism (styles in src/styles/epic.less).
   ...EPIC_LOGOS,
+  // Mercury vs Mars: Hephaestus Works' default title ran up into its tags (style in src/styles/epic.less).
+  [CardName.HEPHAESTUS_WORKS]: {slug: 'mm-hephaestus', lines: ['HEPHAESTUS', 'WORKS']},
   // High Orbit corporations use the same mechanism (styles in src/styles/highorbit.less).
   [CardName.LAGRANGE_COLLECTIVE]: {slug: 'ho-lagrange', lines: ['Lagrange', 'Collective']},
   [CardName.PLANETARY_ENGINEERING_CORPS]: {slug: 'ho-pec', lines: ['Planetary', 'Engineering Corps']},

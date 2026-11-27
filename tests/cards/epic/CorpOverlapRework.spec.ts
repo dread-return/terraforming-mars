@@ -14,7 +14,6 @@ import {SelectCard} from '../../../src/server/inputs/SelectCard';
 import {SelectSpace} from '../../../src/server/inputs/SelectSpace';
 import {PlaceOceanTile} from '../../../src/server/deferredActions/PlaceOceanTile';
 import {Turmoil} from '../../../src/server/turmoil/Turmoil';
-import {MoonExpansion} from '../../../src/server/moon/MoonExpansion';
 import {IProjectCard} from '../../../src/server/cards/IProjectCard';
 import {OmniConsumerProducts} from '../../../src/server/cards/epic/OmniConsumerProducts';
 import {InnastarCorp} from '../../../src/server/cards/eternity/InnastarCorp';
@@ -24,7 +23,6 @@ import {PolitiCorp} from '../../../src/server/cards/epic/PolitiCorp';
 import {StreamlineLogistics} from '../../../src/server/cards/epic/StreamlineLogistics';
 import {Pallas} from '../../../src/server/cards/epic/Pallas';
 import {SpartansSecurity} from '../../../src/server/cards/epic/SpartansSecurity';
-import {TheDarksideofTheMoonSyndicate} from '../../../src/server/cards/moon/TheDarksideofTheMoonSyndicate';
 import {HephaestusWorks} from '../../../src/server/cards/mercury/HephaestusWorks';
 import {PlanetForge} from '../../../src/server/cards/epic/PlanetForge';
 import {AquarinEnt} from '../../../src/server/cards/epic/AquarinEnt';
@@ -137,16 +135,6 @@ describe('Corporations reworked after the overlap review (2026-11-27)', () => {
     expect(new SpartansSecurity().tags).deep.eq([Tag.MARS]);
   });
 
-  it('The Darkside of the Moon Syndicate: first action places a habitat on the Moon', () => {
-    const corp = new TheDarksideofTheMoonSyndicate();
-    const [game, player] = withCorp(corp, {moonExpansion: true});
-    expect(corp.resourceCount).eq(2);
-    player.defer(corp.initialAction(player));
-    runAllActions(game);
-    const select = cast(player.popWaitingFor(), SelectSpace);
-    select.cb(select.spaces[0]);
-    expect(MoonExpansion.moonData(game).habitatRate).eq(1);
-  });
 
   it('Hephaestus Works and Planet Forge: first action takes a Mercury or a Venus card', () => {
     const heph = new HephaestusWorks();

@@ -34,16 +34,13 @@ export class SpartansSecurity extends CorporationCard implements ICorporationCar
         renderData: CardRenderer.builder((b) => {
           b.br.br;
           b.megacredits(40).steel(1).city();
-          b.corpBox('effect', (ce) => {
-            ce.vSpace(Size.SMALL);
-            ce.effect(undefined, (eb) => {
-              eb.emptyTile('normal', {size: Size.SMALL, all}).asterix().startEffect.text('steal', {size: Size.SMALL}).megacredits(2);
-            });
-            ce.vSpace(Size.SMALL);
-            ce.effect('On Mars only: opponent\'s tile next to yours: steal 2 M€ from them. Your tile next to theirs: steal 1 M€ from each. Not oceans.', (eb) => {
-              eb.emptyTile('normal', {size: Size.SMALL}).asterix().startEffect.text('steal', {size: Size.SMALL}).megacredits(1);
-            });
-          });
+          b.br;
+          b.effect(undefined, (eb) => {
+            eb.emptyTile('normal', {size: Size.SMALL, all}).asterix().startEffect.text('steal', {size: Size.SMALL}).megacredits(2);
+          }).br;
+          b.effect('On Mars only: opponent\'s tile next to yours: steal 2 M€ from them. Your tile next to theirs: steal 1 M€ from each. Not oceans.', (eb) => {
+            eb.emptyTile('normal', {size: Size.SMALL}).asterix().startEffect.text('steal', {size: Size.SMALL}).megacredits(1);
+          }).br;
         }),
       },
     });

@@ -3,7 +3,6 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
-import {Size} from '../../../common/cards/render/Size';
 
 export class Vanguard extends ActiveCorporationCard implements ICorporationCard {
   constructor() {
@@ -27,15 +26,13 @@ export class Vanguard extends ActiveCorporationCard implements ICorporationCard 
         renderData: CardRenderer.builder((b) => {
           b.br;
           b.megacredits(53).production((pb) => pb.steel(1));
-          b.corpBox('effect-action', (ce) => {
-            ce.effect('Steel may pay for Venus cards.', (eb) => {
-              eb.tag(Tag.VENUS).startEffect.steel(1);
-            });
-            ce.vSpace(Size.SMALL);
-            ce.action('3 steel: reveal cards until a Venus tag; take it.', (eb) => {
-              eb.steel(3).startAction.cards(1, {secondaryTag: Tag.VENUS});
-            });
-          });
+          b.br;
+          b.effect('Steel may pay for Venus cards.', (eb) => {
+            eb.tag(Tag.VENUS).startEffect.steel(1);
+          }).br;
+          b.action('3 steel: reveal cards until a Venus tag; take it.', (eb) => {
+            eb.steel(3).startAction.cards(1, {secondaryTag: Tag.VENUS});
+          }).br;
         }),
       },
     });

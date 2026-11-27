@@ -808,9 +808,16 @@
     font-family: 'EtFjalla', sans-serif; font-size: 15px; color: #111; line-height: 1;
     .et-line-1 { font-size: 19px; color: #c0281e; }
   }
+  // Narrow enough to clear its two tags (Venus, building).
   &.et-logo-ep-vanguard {
-    font-family: 'EpRusso', sans-serif; font-size: 26px; color: #222; line-height: 1; letter-spacing: 3px;
-    .et-line-1 { .ep-sub(); font-size: 8px; letter-spacing: 1px; color: #444; }
+    font-family: 'EpRusso', sans-serif; font-size: 21px; color: #222; line-height: 1; letter-spacing: 1px;
+    .et-line-1 { .ep-sub(); font-size: 7px; letter-spacing: 0.5px; color: #444; }
+  }
+  // Mercury vs Mars: Hephaestus Works (Greek forge god): bronze capitals.
+  &.et-logo-mm-hephaestus {
+    font-family: 'EpCinzel', serif; font-weight: 700; font-size: 16px; color: #7a3b12; line-height: 1; letter-spacing: 0;
+    text-shadow: 1px 1px 0 #e8b27a;
+    .et-line-1 { font-size: 12px; letter-spacing: 6px; color: #3a2a20; text-shadow: none; }
   }
   &.et-logo-ep-wind-meyer {
     font-family: 'EtPlayfair', serif; font-size: 26px; color: #2a2a2a; line-height: 0.9; letter-spacing: 2px;
@@ -1415,4 +1422,10 @@
   z-index: 2;
   .card-gulag-counter-number { color: #222; display: inline-block; min-width: 9px; }
   .card-epic-marker--gulag { width: 22px; height: 22px; background-size: 22px 22px; }
+}
+
+// PolitiCorp: a taller, roomier box for its effect and action.
+.card-container.card-politicorp .card-corporation-box {
+  min-height: 150px;
+  padding: 4px 8px;
 }

@@ -27,7 +27,6 @@ export class PolitiCorp extends ActiveCorporationCard implements ICorporationCar
         cardNumber: 'EP-POL',
         description: 'You start with 40 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.br;
           b.megacredits(40);
           b.corpBox('effect-action', (ce) => {
             ce.vSpace(Size.SMALL);

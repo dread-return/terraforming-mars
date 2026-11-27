@@ -3,8 +3,8 @@
     <div @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
       <template v-if="isGiga">
         <span v-if="showPartyBadge" :class="partyBadgeClass" v-i18n></span>
-        <GigaPolicy v-if="drawnPolicy" :id="id" />
-        <img v-else :class="gigaIconClass" :src="gigaIconSrc" :alt="resolvedDescription">
+        <GigaPolicy v-if="!isBonus" :id="id" />
+        <img v-else class="giga-agenda-bonus" :src="gigaIconSrc" :alt="resolvedDescription">
       </template>
       <template v-else-if="id === 'mb01'">
         <div class="resource megacredits party-resource">1</div> /
@@ -207,13 +207,7 @@
 import {getAgendaOrThrow} from '@/client/turmoil/ClientAgendaManifest';
 import {BonusId, isGigaAgendaId, PolicyId} from '@/common/turmoil/Types';
 import {defineComponent} from 'vue';
-import GigaPolicy, {GIGA_POLICY_LAYOUTS} from '@/client/components/turmoil/GigaPolicy.vue';
-
-/**
- * Draw the Giga Turmoil policies from the game's own icons (GigaPolicy.vue). Set to false to show the rulebook
- * token cut-outs (assets/parties/giga/policies) instead.
- */
-export const DRAW_GIGA_POLICIES = true;
+import GigaPolicy from '@/client/components/turmoil/GigaPolicy.vue';
 
 export default defineComponent({
   name: 'TurmoilAgenda',
@@ -238,9 +232,6 @@ export default defineComponent({
     GigaPolicy,
   },
   computed: {
-    drawnPolicy(): boolean {
-      return DRAW_GIGA_POLICIES && !this.isBonus && GIGA_POLICY_LAYOUTS.has(this.id);
-    },
     /** The party this agenda belongs to, as used in css classes and file names. */
     partySlug(): string {
       // Giga Turmoil ids use a capital letter for the party, the rest use lowercase letters. Both name the same party.
@@ -270,16 +261,9 @@ export default defineComponent({
     isBonus(): boolean {
       return this.id[1] === 'b';
     },
-    /**
-     * e.g. Ob01 is assets/parties/giga/agendas/spome-b1.png. Policies come from assets/parties/giga/policies, the
-     * rulebook's round tokens cut out of their discs, so they sit on the board like the official parties' policies.
-     */
+    /** A bonus is the strip from the Epic rulebook, e.g. Ob01 is assets/parties/giga/agendas/spome-b1.png. Policies are drawn by GigaPolicy.vue. */
     gigaIconSrc(): string {
-      const folder = this.isBonus ? 'agendas' : 'policies';
-      return `assets/parties/giga/${folder}/${this.partySlug}-${this.id[1]}${Number(this.id.slice(2))}.png`;
-    },
-    gigaIconClass(): string {
-      return this.isBonus ? 'giga-agenda-bonus' : 'giga-agenda-policy';
+      return `assets/parties/giga/agendas/${this.partySlug}-b${Number(this.id.slice(2))}.png`;
     },
     resolvedDescription(): string {
       return getAgendaOrThrow(this.id).description;

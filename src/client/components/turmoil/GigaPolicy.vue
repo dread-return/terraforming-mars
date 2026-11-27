@@ -1,7 +1,7 @@
 <!--
   Giga Turmoil policies, drawn from the game's own card icons (M€, cards, tags, tiles, production boxes, arrows)
   the way the official parties' policies are, instead of the rulebook's token images. Each layout follows the
-  printed token. A policy without a layout here falls back to its image (TurmoilAgenda.vue).
+  printed token.
 -->
 <template>
   <div class="card-container giga-policy" :data-policy="id">

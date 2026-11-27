@@ -1356,6 +1356,15 @@
     }
   }
 
+  // Content zoomed out to fit the card face (src/client/utils/fitCardContent.ts); the box gets wider and taller in
+  // its own pixels so it still covers the same area.
+  .card-content.card-content--fit {
+    zoom: var(--card-fit);
+    width: calc(var(--card-fit-w) / var(--card-fit));
+    height: calc(var(--card-fit-h) / var(--card-fit));
+    padding: calc(var(--card-fit-pad) / var(--card-fit)) calc(10px / var(--card-fit)) 0;
+  }
+
   &.card-hover-tall:hover .card-content:not(.global-event-card-content),
   &.card-auto-tall .card-content:not(.global-event-card-content) {
     height: auto;

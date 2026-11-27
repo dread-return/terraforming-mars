@@ -3,6 +3,7 @@ import {CardType} from '../../../common/cards/CardType';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
 import {Card} from '../Card';
+import {digit} from '../Options';
 import {IProjectCard} from '../IProjectCard';
 import {IPlayer} from '../../IPlayer';
 import {MercuryColonies} from '../../mercury/MercuryColonies';
@@ -20,10 +21,10 @@ export class MigrationToMercury extends Card implements IProjectCard {
       metadata: {
         cardNumber: 'MM18',
         renderData: CardRenderer.builder((b) => {
-          b.tr(2).or().tr(4).asterix().br;
+          b.tr(2, {digit}).or().tr(4, {digit}).asterix().br;
           b.trade().asterix();
         }),
-        description: 'Requires an unused trade fleet. Raise your TR 2 steps. If you have at least 4 Mercury tags (including this), raise your TR 4 steps instead. Trade with Mercury for free (even if someone is there already).',
+        description: 'Requires an unused trade fleet. Raise your TR 2 steps, or 4 with 4+ Mercury tags (incl. this). Trade with Mercury for free, even if it is taken.',
       },
     });
   }

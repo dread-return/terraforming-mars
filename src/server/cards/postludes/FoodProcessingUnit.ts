@@ -26,9 +26,11 @@ export class FoodProcessingUnit extends PostludeCard implements IActionCard {
       metadata: {
         cardNumber: 'L05',
         renderData: CardRenderer.builder((b) => {
-          b.action('Spend a plant and an animal to add a food to this card, OR remove a food from this card to get 4 M€ for each adjacent tile and 1 TR.', (ab) => ab.plants(1).resource(CardResource.ANIMAL).startAction.resource(CardResource.FOOD).or().resource(CardResource.FOOD).colon().megacredits(4).slash().emptyTile('normal', {size: Size.SMALL}).tr(1));
+          b.action(undefined, (ab) => ab.plants(1).resource(CardResource.ANIMAL).startAction.resource(CardResource.FOOD)).br;
+          b.or().br;
+          b.action('Spend a plant and an animal to add a food here, OR remove a food here for 4 M€ per tile next to the Food Unit, and 1 TR.', (ab) => ab.resource(CardResource.FOOD).startAction.megacredits(4).slash().emptyTile('normal', {size: Size.SMALL}).tr(1));
         }),
-        description: 'Place the Food Unit tile on top of one of your cities. Action: spend a plant and an animal to add a food resource on this card, OR remove a food resource from this card to get 4 M\u20ac for each adjacent tile to the Food Unit and 1 TR.',
+        description: 'Place the Food Unit tile on one of your cities.',
       },
     });
   }

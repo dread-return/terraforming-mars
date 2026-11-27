@@ -26,13 +26,13 @@ export class Parranda extends ActionCard implements IProjectCard {
       metadata: {
         cardNumber: 'E98',
         renderData: CardRenderer.builder((b) => {
-          b.effect('After producing resources, you must pay M€ equal to the current generation or discard this card.', (eb) => {
+          b.effect('After production, pay M€ equal to the generation or discard this.', (eb) => {
             eb.text('PROD').startEffect.megacredits(0, {text: '-X'}).text('/GEN, OR DISCARD', {size: Size.SMALL});
           }).br;
           b.action('Draw a card and gain 2 heat.', (eb) => eb.empty().startAction.cards(1).heat(2)).br;
           b.city().asterix();
         }),
-        description: 'Requires that a city tile is in play. Place a city tile next to at least one other city, ignoring normal placement restrictions.',
+        description: 'Requires a city. Place a city next to another, ignoring placement rules.',
       },
     });
   }

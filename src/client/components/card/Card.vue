@@ -49,6 +49,7 @@ import {ClientCard} from '@/common/cards/ClientCard';
 import {Color} from '@/common/Color';
 import {CardRequirementDescriptor} from '@/common/cards/CardRequirementDescriptor';
 import {GameModule} from '@/common/cards/GameModule';
+import {fitCardContentWhenVisible} from '@/client/utils/fitCardContent';
 
 
 export default defineComponent({
@@ -101,6 +102,22 @@ export default defineComponent({
     return {
       hovering: false,
     };
+  },
+  mounted() {
+    this.fitContent();
+  },
+  watch: {
+    'card.name'() {
+      this.$nextTick(() => this.fitContent());
+    },
+  },
+  methods: {
+    // Zoom the content out if it doesn't fit the card face (corporations are left as they are).
+    fitContent(): void {
+      if (!this.isCorporationCard && this.$el instanceof HTMLElement) {
+        fitCardContentWhenVisible(this.$el);
+      }
+    },
   },
   computed: {
     cardInstance(): ClientCard {

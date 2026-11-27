@@ -19,15 +19,14 @@ const NAMES: Readonly<Record<IndustryKind, string>> = {
 };
 
 function describe(kind: IndustryKind): string {
-  const cost = INDUSTRY_COST[kind];
   const count = INDUSTRY_RESOURCES[kind];
+  // Kept short to fit the card: the cost is printed on it.
   const placement = kind === 'random' ?
-    'Place 1 resource of any type on an area next to the tile.' :
-    `Distribute ${count} ${NAMES[kind]} over two areas next to the tile (at least 1 on each).`;
+    'Put 1 resource of any type next to it' :
+    `Put ${count} ${NAMES[kind]} on 2 areas next to it (1+ each)`;
   const production = kind === 'random' ? 'any production' : `your ${NAMES[kind]} production`;
-  return `Spend ${cost} M€ to place an industry tile on an area and raise ${production} 1 step. ${placement} ` +
-    'The owner of a tile there collects them; otherwise the next tile placed there does. ' +
-    'You need more power tags than industries you own.';
+  return `Place an industry tile and raise ${production} 1 step. ${placement}, for whoever owns or next fills that area. ` +
+    'Needs more power tags than your industries.';
 }
 
 function industryMetadata(kind: IndustryKind): CardMetadata {

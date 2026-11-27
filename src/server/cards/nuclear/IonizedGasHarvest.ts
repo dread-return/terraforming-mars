@@ -31,11 +31,11 @@ export class IonizedGasHarvest extends ActionCard implements IProjectCard {
       metadata: {
         cardNumber: 'N10',
         renderData: CardRenderer.builder((b) => {
-          b.action('Spend 1 titanium to add 2 radiation to ANY card.', (eb) => {
+          b.action('Spend 1 titanium: add 2 radiation to ANY card.', (eb) => {
             eb.titanium(1).startAction.resource(CardResource.RADIATION, 2).asterix();
           }).br;
           b.or().br;
-          b.action('Remove 1 radiation here to gain 1 energy and 1 steel.', (eb) => {
+          b.action('Remove 1 radiation here: gain 1 energy and 1 steel.', (eb) => {
             eb.resource(CardResource.RADIATION).startAction.energy(1).steel(1);
           }).br;
           b.cards(2);

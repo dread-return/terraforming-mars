@@ -25,15 +25,14 @@ export class IntuitiveProbe extends Card implements IProjectCard, IActionCard {
       metadata: {
         cardNumber: 'N37',
         renderData: CardRenderer.builder((b) => {
-          b.action('Spend 1 energy to reveal the top card of the deck. If it has a space or building tag, add a radiation to ANY card. ' +
-            'If it has a radioactive or power tag, gain 2 heat. Discard it.', (eb) => {
+          b.action('Spend 1 energy: reveal and discard the top card. Space/building tag: 1 radiation to ANY card. ' +
+            'Radioactive/power tag: 2 heat.', (eb) => {
             eb.energy(1).startAction.cards(1).asterix();
           }).br;
           b.tag(Tag.SPACE).slash().tag(Tag.BUILDING).colon().resource(CardResource.RADIATION).asterix().br;
-          b.tag(Tag.RADIOACTIVE).slash().tag(Tag.POWER).colon().heat(2).br;
-          b.cards(1);
+          b.tag(Tag.RADIOACTIVE).slash().tag(Tag.POWER).colon().heat(2).nbsp.nbsp.nbsp.cards(1);
         }),
-        description: 'Requires 3 radioactive tags. Draw a card. 1 VP for every 4 radiation on this card.',
+        description: 'Requires 3 radioactive tags. Draw a card. 1 VP per 4 radiation here.',
       },
     });
   }

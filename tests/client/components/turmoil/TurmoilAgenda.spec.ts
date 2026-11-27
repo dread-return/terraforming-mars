@@ -1,4 +1,4 @@
-import {shallowMount} from '@vue/test-utils';
+import {mount, shallowMount} from '@vue/test-utils';
 import {expect} from 'chai';
 import {globalConfig} from '../getLocalVue';
 import TurmoilAgenda from '@/client/components/turmoil/TurmoilAgenda.vue';
@@ -25,17 +25,18 @@ describe('TurmoilAgenda', () => {
     expect(wrapper.exists()).to.be.true;
   });
 
-  it('shows a Giga Turmoil policy with its icon from the Epic rulebook', () => {
-    const wrapper = shallowMount(TurmoilAgenda, {
+  it('draws a Giga Turmoil policy from the game\'s icons', () => {
+    const wrapper = mount(TurmoilAgenda, {
       ...globalConfig,
       props: {
         id: 'Ep01',
       },
     });
-    const img = wrapper.find('img');
-    expect(img.attributes('src')).eq('assets/parties/giga/policies/empower-p1.png');
-    expect(img.classes()).includes('giga-agenda-policy');
-    expect(img.attributes('alt')).is.not.empty;
+    expect(wrapper.find('img').exists()).is.false;
+    const policy = wrapper.find('.giga-policy');
+    expect(policy.attributes('data-policy')).eq('Ep01');
+    expect(policy.find('.card-resource-energy').exists()).is.true;
+    expect(policy.find('.card-resource-money').text()).eq('2');
   });
 
   it('shows a Giga Turmoil bonus with its strip from the Epic rulebook', () => {

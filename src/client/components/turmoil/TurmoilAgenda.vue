@@ -3,7 +3,8 @@
     <div @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
       <template v-if="isGiga">
         <span v-if="showPartyBadge" :class="partyBadgeClass" v-i18n></span>
-        <img :class="gigaIconClass" :src="gigaIconSrc" :alt="resolvedDescription">
+        <GigaPolicy v-if="drawnPolicy" :id="id" />
+        <img v-else :class="gigaIconClass" :src="gigaIconSrc" :alt="resolvedDescription">
       </template>
       <template v-else-if="id === 'mb01'">
         <div class="resource megacredits party-resource">1</div> /
@@ -206,6 +207,13 @@
 import {getAgendaOrThrow} from '@/client/turmoil/ClientAgendaManifest';
 import {BonusId, isGigaAgendaId, PolicyId} from '@/common/turmoil/Types';
 import {defineComponent} from 'vue';
+import GigaPolicy, {GIGA_POLICY_LAYOUTS} from '@/client/components/turmoil/GigaPolicy.vue';
+
+/**
+ * Draw the Giga Turmoil policies from the game's own icons (GigaPolicy.vue). Set to false to show the rulebook
+ * token cut-outs (assets/parties/giga/policies) instead.
+ */
+export const DRAW_GIGA_POLICIES = true;
 
 export default defineComponent({
   name: 'TurmoilAgenda',
@@ -226,7 +234,13 @@ export default defineComponent({
       tooltipLeft: 0,
     };
   },
+  components: {
+    GigaPolicy,
+  },
   computed: {
+    drawnPolicy(): boolean {
+      return DRAW_GIGA_POLICIES && !this.isBonus && GIGA_POLICY_LAYOUTS.has(this.id);
+    },
     /** The party this agenda belongs to, as used in css classes and file names. */
     partySlug(): string {
       // Giga Turmoil ids use a capital letter for the party, the rest use lowercase letters. Both name the same party.

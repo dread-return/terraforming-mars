@@ -18,12 +18,28 @@ describe('gigaOffMars', () => {
     expect(keys.size).eq(ALL.length);
   });
 
-  it('puts Sideralis under Luna Metropolis without Maxwell Base, and bottom left with it', () => {
-    const without = offMarsSlots([SpaceName.DAWN_CITY, SpaceName.LUNA_METROPOLIS, SpaceName.SIDERALIS]);
-    expect(without.get(SpaceName.SIDERALIS)!.left).greaterThan(1000);
-    const withMaxwell = offMarsSlots([SpaceName.MAXWELL_BASE, SpaceName.SIDERALIS]);
-    expect(withMaxwell.get(SpaceName.SIDERALIS)!.left).lessThan(300);
-    expect(withMaxwell.get(SpaceName.SIDERALIS)!.top).greaterThan(500);
+  it('puts Sideralis top right while there is room, else bottom left', () => {
+    const roomy = offMarsSlots([SpaceName.DAWN_CITY, SpaceName.LUNA_METROPOLIS, SpaceName.SIDERALIS]);
+    expect(roomy.get(SpaceName.SIDERALIS)!.left).greaterThan(1000);
+    const full = offMarsSlots([SpaceName.VENERA_BASE, SpaceName.STRATOPOLIS, SpaceName.DAWN_CITY, SpaceName.LUNA_METROPOLIS, SpaceName.SIDERALIS]);
+    expect(full.get(SpaceName.SIDERALIS)!.left).lessThan(300);
+    expect(full.get(SpaceName.SIDERALIS)!.top).greaterThan(500);
+  });
+
+  it('puts Venera Base on the orbit next to the end of the Venus track', () => {
+    const all = offMarsSlots(ALL);
+    expect(all.get(SpaceName.VENERA_BASE)).deep.eq({left: 919, top: 33});
+    // With everything in play, the top right is full and Maxwell Base spills to the bottom right.
+    expect(all.get(SpaceName.MAXWELL_BASE)!.top).greaterThan(600);
+  });
+
+  it('closes up when Venus Phase 2 takes its cities onto the Venus map', () => {
+    const venusMap = new Set<string>([SpaceName.STRATOPOLIS, SpaceName.MAXWELL_BASE, SpaceName.DYSON_SCREENS, SpaceName.VENERA_BASE]);
+    const slots = offMarsSlots(ALL.filter((id) => !venusMap.has(id)));
+    expect(slots.size).eq(ALL.length - 4);
+    expect(slots.get(SpaceName.DAWN_CITY)).deep.eq({left: 919, top: 33});
+    expect(slots.get(SpaceName.LUNAR_EMBASSY)!.left).eq(926);
+    expect(slots.get(SpaceName.CERES_SPACEPORT)!.left).eq(1023);
   });
 
   it('fills an arc from the end nearest the middle', () => {

@@ -48,7 +48,9 @@ export class ChooseCards extends DeferredAction {
     let msg: string | Message = message('Select ${0} card(s) to keep', (b) => b.number(max));
     if (options.paying) {
       const spendableMegacredits = this.player.spendableMegacredits();
-      const affordableCards = Math.floor(spendableMegacredits / this.player.cardCost) + (options.freeCards ?? 0);
+      // NOJO (Epic) buys Jovian cards for free; the exact total is checked once cards are picked.
+      const freeToBuy = cards.filter((c) => EpicHooks.cardBuyCost(player, c) === 0).length;
+      const affordableCards = Math.floor(spendableMegacredits / this.player.cardCost) + (options.freeCards ?? 0) + freeToBuy;
       max = Math.min(max, affordableCards);
       if (max === 0) {
         msg = 'You cannot afford any cards';
@@ -87,9 +89,11 @@ export class ChooseCards extends DeferredAction {
             keep(player, selected, unselected, logType);
           }
         };
-        const paidCount = Math.max(0, selected.length - (options.freeCards ?? 0));
-        if (options.paying && paidCount > 0) {
-          const cost = paidCount * player.cardCost;
+        const cost = options.paying ? EpicHooks.cardBuyTotal(player, selected, options.freeCards ?? 0) : 0;
+        if (cost > player.spendableMegacredits()) {
+          throw new Error('You cannot afford these cards');
+        }
+        if (options.paying && cost > 0) {
           player.game.defer(
             new SelectPaymentDeferred(
               player,

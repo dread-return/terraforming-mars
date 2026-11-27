@@ -17,7 +17,6 @@ import {ResourceGarrison} from '../../../src/server/cards/eternity/ResourceGarri
 import {ProjectWhammy} from '../../../src/server/cards/eternity/ProjectWhammy';
 import {EarthsLastCityRebuilt} from '../../../src/server/cards/eternity/EarthsLastCityRebuilt';
 import {PatentValuationAdjustment} from '../../../src/server/cards/eternity/PatentValuationAdjustment';
-import {NewThorgate} from '../../../src/server/cards/eternity/NewThorgate';
 import {InterstellaProject} from '../../../src/server/cards/eternity/InterstellaProject';
 import {TransactionNetwork} from '../../../src/server/cards/eternity/TransactionNetwork';
 import {Dolphins} from '../../../src/server/cards/eternity/Dolphins';
@@ -134,15 +133,6 @@ describe('Eternity', () => {
     const sp = new SellPatentsStandardProject();
     cast(sp.action(player), SelectCard).cb([...player.cardsInHand]);
     expect(player.megaCredits).eq(4);
-  });
-
-  it('New Thorgate: 2 M€ whenever anyone increases energy production', () => {
-    player.playCorporationCard(new NewThorgate());
-    player.megaCredits = 0;
-    other.production.add(Resource.ENERGY, 2);
-    expect(player.megaCredits).eq(2);
-    other.production.add(Resource.HEAT, 1);
-    expect(player.megaCredits).eq(2);
   });
 
   it('Interstella ignores TR loss', () => {

@@ -9,15 +9,12 @@ import {Barsoom} from './Barsoom';
 import {BarsoomianAtmospherics} from './BarsoomianAtmospherics';
 import {Biome} from './Biome';
 import {BradburyBradburyAndAnderson} from './BradburyBradburyAndAnderson';
-import {BuyNLarge} from './BuyNLarge';
 import {CapitalFundingInitiative} from './CapitalFundingInitiative';
 import {Catnip} from './Catnip';
-import {CollinsRubinAndHaytham} from './CollinsRubinAndHaytham';
 import {CoreConductionSystems} from './CoreConductionSystems';
 import {CriticalHitEnterprises} from './CriticalHitEnterprises';
 import {Cultured} from './Cultured';
 import {ExternalRevenueService} from './ExternalRevenueService';
-import {ExtrasolarColonizationAdministration} from './ExtrasolarColonizationAdministration';
 import {EyeInTheSky} from './EyeInTheSky';
 import {Feastfair} from './Feastfair';
 import {Forj} from './Forj';
@@ -41,7 +38,6 @@ import {MarsActiveResources} from './MarsActiveResources';
 import {MarsIncorporated} from './MarsIncorporated';
 import {MicroMassSystems} from './MicroMassSystems';
 import {O2} from './O2';
-import {OlympicGalacticCorporation} from './OlympicGalacticCorporation';
 import {OmniConsumerProducts} from './OmniConsumerProducts';
 import {OphirPlanumNurseryGardens} from './OphirPlanumNurseryGardens';
 import {PRG} from './PRG';
@@ -258,15 +254,12 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.BARSOOMIAN_ATMOSPHERICS]: {Factory: BarsoomianAtmospherics},
     [CardName.BIOME]: {Factory: Biome},
     [CardName.BRADBURY_BRADBURY_AND_ANDERSON]: {Factory: BradburyBradburyAndAnderson, compatibility: 'pathfinders'},
-    [CardName.BUY_N_LARGE]: {Factory: BuyNLarge},
     [CardName.CAPITAL_FUNDING_INITIATIVE]: {Factory: CapitalFundingInitiative},
     [CardName.CATNIP]: {Factory: Catnip},
-    [CardName.COLLINS_RUBIN_AND_HAYTHAM]: {Factory: CollinsRubinAndHaytham},
     [CardName.CORE_CONDUCTION_SYSTEMS]: {Factory: CoreConductionSystems},
     [CardName.CRITICAL_HIT_ENTERPRISES]: {Factory: CriticalHitEnterprises},
     [CardName.CULTURED]: {Factory: Cultured},
     [CardName.EXTERNAL_REVENUE_SERVICE]: {Factory: ExternalRevenueService},
-    [CardName.EXTRASOLAR_COLONIZATION_ADMINISTRATION]: {Factory: ExtrasolarColonizationAdministration},
     [CardName.EYE_IN_THE_SKY]: {Factory: EyeInTheSky},
     [CardName.FEASTFAIR]: {Factory: Feastfair},
     [CardName.FORJ]: {Factory: Forj},
@@ -290,7 +283,6 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.MICROMASS_SYSTEMS]: {Factory: MicroMassSystems},
     [CardName.MMBIO]: {Factory: MMBio},
     [CardName.O2]: {Factory: O2},
-    [CardName.OLYMPIC_GALACTIC_CORPORATION]: {Factory: OlympicGalacticCorporation},
     [CardName.OMNI_CONSUMER_PRODUCTS]: {Factory: OmniConsumerProducts},
     [CardName.OPHIR_PLANUM_NURSERY_GARDENS]: {Factory: OphirPlanumNurseryGardens},
     [CardName.PALLAS]: {Factory: Pallas},

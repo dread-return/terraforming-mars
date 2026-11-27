@@ -137,14 +137,12 @@ import {MicroorganismMutation} from './MicroorganismMutation';
 import {MiningConversionTechnology} from './MiningConversionTechnology';
 import {MiningSponsors} from './MiningSponsors';
 import {MiningTouristAttraction} from './MiningTouristAttraction';
-import {MiserVision} from './MiserVision';
 import {MoholeDiscovery} from './MoholeDiscovery';
 import {MoholeDrill} from './MoholeDrill';
 import {MultifunctionalDome} from './MultifunctionalDome';
 import {Naturalists} from './Naturalists';
 import {NebulaEnergyFieldPortal} from './NebulaEnergyFieldPortal';
 import {NewHorizon} from './NewHorizon';
-import {NewThorgate} from './NewThorgate';
 import {NuclearPoweredExcavation} from './NuclearPoweredExcavation';
 import {OIS} from './OIS';
 import {OmegaMeteorShower} from './OmegaMeteorShower';
@@ -465,8 +463,6 @@ export const ETERNITY_CARD_MANIFEST = new ModuleManifest({
     [CardName.JOVICORP]: {Factory: Jovicorp},
     [CardName.MADNESS]: {Factory: MadNess},
     [CardName.MARS_CONSERVATIONISTS]: {Factory: MarsConservationists},
-    [CardName.MISERVISION]: {Factory: MiserVision},
-    [CardName.NEW_THORGATE]: {Factory: NewThorgate},
     [CardName.OIS]: {Factory: OIS},
     [CardName.POWERHOUSE]: {Factory: Powerhouse},
     [CardName.SHELL_CORPORATION]: {Factory: ShellCorporation},

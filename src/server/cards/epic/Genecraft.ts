@@ -4,10 +4,7 @@ import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
 import {Size} from '../../../common/cards/render/Size';
-import {IPlayer} from '../../IPlayer';
-import {ICard} from '../ICard';
-import {Resource} from '../../../common/Resource';
-import {all} from '../Options';
+import {CardResource} from '../../../common/CardResource';
 
 export class Genecraft extends CorporationCard implements ICorporationCard {
   constructor() {
@@ -31,10 +28,10 @@ export class Genecraft extends CorporationCard implements ICorporationCard {
           b.corpBox('effect', (ce) => {
             ce.vSpace(Size.SMALL);
             ce.effect(undefined, (eb) => {
-              eb.tag(Tag.MICROBE, {all}).startEffect.production((pb) => pb.megacredits(1));
+              eb.resource(CardResource.MICROBE).asterix().startEffect.plus().resource(CardResource.MICROBE);
             });
             ce.vSpace(Size.SMALL);
-            ce.effect('When anyone plays a microbe tag, +1 M€ production. Your microbe cards cost 2 M€ less.', (eb) => {
+            ce.effect('When you add microbes to a card, add 1 more microbe there (not with this effect). Your microbe cards cost 2 M€ less.', (eb) => {
               eb.tag(Tag.MICROBE).startEffect.megacredits(-2);
             });
           });
@@ -42,14 +39,5 @@ export class Genecraft extends CorporationCard implements ICorporationCard {
       },
     });
   }
-
-  public onCardPlayedByAnyPlayer(thisCardOwner: IPlayer, card: ICard) {
-    if (card === this) {
-      return;
-    }
-    const count = thisCardOwner.tags.cardTagCount(card, Tag.MICROBE);
-    if (count > 0) {
-      thisCardOwner.production.add(Resource.MEGACREDITS, count, {log: true, from: {card: this}});
-    }
-  }
+  // The extra microbe is in Player.addResourceTo.
 }

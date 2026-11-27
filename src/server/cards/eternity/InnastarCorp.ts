@@ -5,13 +5,14 @@ import {ICorporationCard} from '../corporation/ICorporationCard';
 import {IPlayer} from '../../IPlayer';
 import {IStandardProjectCard} from '../IStandardProjectCard';
 import {Resource} from '../../../common/Resource';
+import {Tag} from '../../../common/cards/Tag';
 import {SelectStandardProjectToPlay} from '../../inputs/SelectStandardProjectToPlay';
 
 export class InnastarCorp extends CorporationCard implements ICorporationCard {
   constructor() {
     super({
       name: CardName.INNASTAR_CORP,
-      tags: [],
+      tags: [Tag.BUILDING],
       startingMegaCredits: 31,
       behavior: {
         production: {megacredits: 2},

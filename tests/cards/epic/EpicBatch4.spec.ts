@@ -47,7 +47,7 @@ function withCorp(corp: ICorporationCard, options = {}): [IGame, TestPlayer, Tes
 }
 
 describe('Epic Corporations batch 4', () => {
-  it('Aerospace Alloys: titanium waits on the card until 10, then moves to stock', () => {
+  it('Aerospace Alloys: titanium waits on the card until 10, then moves to stock, and the card fills up again', () => {
     const card = new AerospaceAlloys();
     const [, player] = withCorp(card);
     expect(player.getTitaniumValue()).eq(4);
@@ -55,10 +55,14 @@ describe('Epic Corporations batch 4', () => {
     expect(player.titanium).eq(0);
     expect(card.resourceCount).eq(6);
     player.stock.add(Resource.TITANIUM, 5);
-    expect(card.resourceCount).eq(0);
-    expect(player.titanium).eq(11);
+    expect(player.titanium).eq(10);
+    expect(card.resourceCount).eq(1);
     player.stock.add(Resource.TITANIUM, 1);
-    expect(player.titanium).eq(12);
+    expect(player.titanium).eq(10);
+    expect(card.resourceCount).eq(2);
+    player.stock.add(Resource.TITANIUM, 18);
+    expect(player.titanium).eq(30);
+    expect(card.resourceCount).eq(0);
   });
 
   it('Amityville: plants removed from others can be gained', () => {
@@ -137,13 +141,15 @@ describe('Epic Corporations batch 4', () => {
     expect(mimix.resourceCount).eq(1);
   });
 
-  it('New Grounds and Steel Ridge: cities next to cities', () => {
-    for (const corp of [new NewGrounds(), new SteelRidgeConstructions()]) {
+  it('New Grounds: cities next to cities; Steel Ridge: normal city rules and 4 steel', () => {
+    for (const [corp, allowed] of [[new NewGrounds(), true], [new SteelRidgeConstructions(), false]] as const) {
       const [game, player] = withCorp(corp);
       const city = addCity(player);
       const next = game.board.getAdjacentSpaces(city).find((s) => s.spaceType === SpaceType.LAND && s.tile === undefined)!;
-      expect(game.board.getAvailableSpacesForCity(player)).includes(next);
+      expect(game.board.getAvailableSpacesForCity(player).includes(next)).eq(allowed);
     }
+    const [, player] = withCorp(new SteelRidgeConstructions());
+    expect(player.steel).eq(4);
   });
 
   it('Steel Ridge: city cards and the city project cost 3 less', () => {

@@ -840,6 +840,12 @@ export class Game implements IGame, Logger {
       this.overrideFirstPlayer(kept);
       return;
     }
+    // Eternity: DGT Mars Crew's action makes its owner first player the generation after.
+    const dgtOwner = this.getCardPlayerOrUndefined(CardName.DGT_MARS_CREW);
+    if (dgtOwner?.tableau.get(CardName.DGT_MARS_CREW)?.generationUsed === this.generation - 1) {
+      this.overrideFirstPlayer(dgtOwner);
+      return;
+    }
     const spaceWargamesOwner = this.getCardPlayerOrUndefined(CardName.SPACE_WARGAMES);
     if (spaceWargamesOwner) {
       const spaceWargames = spaceWargamesOwner.tableau.get(CardName.SPACE_WARGAMES);
@@ -1831,6 +1837,10 @@ export class Game implements IGame, Logger {
 
   public addOcean(player: IPlayer, space: Space): void {
     if (this.canAddOcean() === false) {
+      // Epic Corporations: Aquarin Ent. may keep placing oceans, with no global parameter or TR gain.
+      if (EpicHooks.oceansPastMax(player)) {
+        this.addTile(player, space, {tileType: TileType.OCEAN});
+      }
       return;
     }
 

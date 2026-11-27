@@ -44,14 +44,16 @@ function nextToCity(game: IGame, owner: TestPlayer) {
 }
 
 describe('Epic Corporations batch 11', () => {
-  it('S2A Modular: cities next to cities; titanium and energy pay for the city project', () => {
+  it('S2A Modular: cities next to your own cities, not opponents\'; titanium and energy pay for the city project', () => {
     const corp = new S2AModular();
     const [game, player, other] = withCorp(corp);
     expect(player.production.titanium).eq(1);
     expect(player.production.energy).eq(3);
-    const {next} = nextToCity(game, other);
-    expect(game.board.getAvailableSpacesForCity(player)).contains(next);
-    expect(game.board.getAvailableSpacesForCity(other)).not.contains(next);
+    const own = nextToCity(game, player);
+    expect(game.board.getAvailableSpacesForCity(player)).contains(own.next);
+    expect(game.board.getAvailableSpacesForCity(other)).not.contains(own.next);
+    const theirs = nextToCity(game, other);
+    expect(game.board.getAvailableSpacesForCity(player)).not.contains(theirs.next);
     const city = new CityStandardProject();
     const rules = new SelectStandardProjectToPlay(player, [city]).paymentRulesFor(city).canPayWith;
     expect(rules.titanium).is.true;

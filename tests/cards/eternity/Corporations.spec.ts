@@ -2,6 +2,7 @@ import {expect} from 'chai';
 import {testGame} from '../../TestGame';
 import {cast} from '../../../src/common/utils/utils';
 import {runAllActions} from '../../TestingUtils';
+import {Tag} from '../../../src/common/cards/Tag';
 import {TestPlayer} from '../../TestPlayer';
 import {IGame} from '../../../src/server/IGame';
 import {Resource} from '../../../src/common/Resource';
@@ -36,8 +37,9 @@ describe('Eternity corporations', () => {
     [game, player, other] = testGame(2, {eternityExpansion: true});
   });
 
-  it('DGT Mars Crew: passing only ends the turn while others still play; +2 actions', () => {
+  it('DGT Mars Crew: passing only ends the turn while others still play; 8 M€ to be first player next generation', () => {
     player.playCorporationCard(new DGTMarsCrew());
+    expect(player.tags.count(Tag.MARS)).eq(1);
     game.phase = Phase.ACTION;
     player.pass();
     expect(game.hasPassedThisActionPhase(player)).is.false;
@@ -45,8 +47,18 @@ describe('Eternity corporations', () => {
     player.pass();
     expect(game.hasPassedThisActionPhase(player)).is.true;
     const corp = player.playedCards.corporations()[0] as DGTMarsCrew;
+    player.megaCredits = 7;
+    expect(corp.canAct(player)).is.false;
+    player.megaCredits = 8;
+    expect(corp.canAct(player)).is.true;
     corp.action(player);
-    expect(player.availableActionsThisRound).eq(4);
+    runAllActions(game);
+    expect(player.megaCredits).eq(0);
+    expect(corp.generationUsed).eq(game.generation);
+    game.overrideFirstPlayer(other);
+    game.generation++;
+    (game as unknown as {setNextFirstPlayer(): void}).setNextFirstPlayer();
+    expect(game.first).eq(player);
   });
 
   it('Generalist Terraforma: must keep exactly 5 cards, free; steel and titanium pay for City', () => {

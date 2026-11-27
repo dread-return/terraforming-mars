@@ -200,7 +200,7 @@ export class MarsBoard extends Board {
   private citySpaces(player: IPlayer, canAffordOptions?: CanAffordOptions, spaces?: ReadonlyArray<Space>): ReadonlyArray<Space> {
     const spacesOnLand = spaces ?? super.getAvailableSpacesOnLand(player, canAffordOptions);
     // Gordon CEO can ignore placement restrictions for Cities+Greenery
-    // Epic Corporations: New Grounds and Steel Ridge Constructions too.
+    // Epic Corporations: New Grounds and Cosmos Casinos too.
     if (player.tableau.has(CardName.GORDON) || EpicHooks.ignoresCityPlacement(player)) {
       return spacesOnLand;
     }
@@ -212,6 +212,11 @@ export class MarsBoard extends Board {
           (adj) => (adj.tile !== undefined && adj.player === player || adj.excavator?.id === player.id)));
 
       return (spacesNextToMySpaces.length > 0) ? spacesNextToMySpaces : spacesOnLand;
+    }
+    // Epic Corporations: S2A Modular's cities may go next to its own cities, but not anyone else's.
+    if (EpicHooks.citiesNextToOwnCities(player)) {
+      return spacesOnLand.filter(
+        (space) => this.getAdjacentSpaces(space).every((adj) => !Board.isCitySpace(adj) || adj.player === player));
     }
     // A city cannot be adjacent to another city
     const available = spacesOnLand.filter(
@@ -331,6 +336,13 @@ export class MarsBoard extends Board {
   public getAvailableSpacesForOcean(player: IPlayer): ReadonlyArray<Space> {
     const spaces = this.getSpaces(SpaceType.OCEAN)
       .filter((space) => space.tile === undefined && (space.player === undefined || space.player === player));
+    // Epic Corporations: Aquatix may place oceans on land too, except next to 2 or more cities.
+    if (EpicHooks.oceansOnLand(player)) {
+      // Oceans aren't subject to Ares hazard adjacency costs.
+      const land = super.getAvailableSpacesOnLand(player, undefined, false)
+        .filter((space) => this.getAdjacentSpaces(space).filter((adj) => Board.isCitySpace(adj)).length < 2);
+      return EpicHooks.sovietAdjacency(player, this, [...spaces, ...land]);
+    }
     return EpicHooks.sovietAdjacency(player, this, spaces);
   }
 

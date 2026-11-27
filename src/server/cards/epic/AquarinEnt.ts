@@ -10,8 +10,6 @@ import {ICard} from '../ICard';
 import {Space} from '../../boards/Space';
 import {Board} from '../../boards/Board';
 import {Resource} from '../../../common/Resource';
-import {OrOptions} from '../../inputs/OrOptions';
-import {SelectOption} from '../../inputs/SelectOption';
 import {all} from '../Options';
 
 export class AquarinEnt extends CorporationCard implements ICorporationCard {
@@ -29,8 +27,11 @@ export class AquarinEnt extends CorporationCard implements ICorporationCard {
           b.megacredits(40);
           b.corpBox('effect', (ce) => {
             ce.vSpace(Size.MEDIUM);
-            ce.effect('When any ocean is placed, or you play a card that requires oceans, +1 energy or M€ production.', (eb) => {
-              eb.oceans(1, {size: Size.SMALL, all}).slash().cards(1, {secondaryTag: AltSecondaryTag.REQ, size: Size.SMALL}).startEffect.production((pb) => pb.energy(1).or().megacredits(1));
+            ce.effect(undefined, (eb) => {
+              eb.oceans(1, {size: Size.SMALL, all}).slash().cards(1, {secondaryTag: AltSecondaryTag.REQ, size: Size.SMALL}).startEffect.production((pb) => pb.megacredits(1));
+            });
+            ce.effect('Any ocean, or your card that requires oceans: +1 M€ production. *You may place oceans past the maximum (no TR).', (eb) => {
+              eb.text('max', {size: Size.SMALL}).oceans(1, {size: Size.SMALL}).startEffect.oceans(1, {size: Size.SMALL}).asterix();
             });
           });
         }),
@@ -39,17 +40,9 @@ export class AquarinEnt extends CorporationCard implements ICorporationCard {
   }
 
   private gainProduction(player: IPlayer) {
-    player.defer(new OrOptions(
-      new SelectOption('Increase your energy production 1 step').andThen(() => {
-        player.production.add(Resource.ENERGY, 1, {log: true, from: {card: this}});
-        return undefined;
-      }),
-      new SelectOption('Increase your M€ production 1 step').andThen(() => {
-        player.production.add(Resource.MEGACREDITS, 1, {log: true, from: {card: this}});
-        return undefined;
-      }),
-    ).setTitle('Aquarin Ent.: choose a production to increase'));
+    player.production.add(Resource.MEGACREDITS, 1, {log: true, from: {card: this}});
   }
+  // Oceans past the maximum are in PlaceOceanTile and Game.addOcean (EpicHooks.oceansPastMax).
 
   public onTilePlaced(cardOwner: IPlayer, _activePlayer: IPlayer, space: Space) {
     if (Board.isUncoveredOceanSpace(space)) {

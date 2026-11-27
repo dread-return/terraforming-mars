@@ -92,13 +92,14 @@ describe('Tags', () => {
   // cardTagCount()
   // multipleCount
 
+  // Spartans Security (Epic Corporations, part of Corporate Era here) brings the Mars tag into every game.
   const tagsInGameRuns: ReadonlyArray<{options: Partial<GameOptions>, expected: number}> = [
-    {options: {}, expected: 10},
-    {options: {venusNextExtension: true}, expected: 11},
-    {options: {coloniesExtension: true}, expected: 10},
+    {options: {}, expected: 11},
+    {options: {venusNextExtension: true}, expected: 12},
+    {options: {coloniesExtension: true}, expected: 11},
     {options: {pathfindersExpansion: true}, expected: 11},
     {options: {venusNextExtension: true, pathfindersExpansion: true}, expected: 12},
-    {options: {moonExpansion: true}, expected: 11},
+    {options: {moonExpansion: true}, expected: 12},
   ] as const;
   for (const run of tagsInGameRuns) {
     it('tagsInGame ' + JSON.stringify(run), () => {

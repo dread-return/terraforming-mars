@@ -188,18 +188,6 @@ export class Eternity {
     }
   }
 
-  /** New Thorgate: gain 2 M€ each time ANY player increases energy production. */
-  public static onProductionGain(player: IPlayer, resource: Resource, amount: number): void {
-    if (resource !== Resource.ENERGY || amount <= 0 || player.game === undefined) {
-      return;
-    }
-    for (const p of player.game.players) {
-      if (p.tableau.has(CardName.NEW_THORGATE)) {
-        p.stock.add(Resource.MEGACREDITS, 2, {log: true});
-      }
-    }
-  }
-
   /** Exoplanet Builders' action: for the rest of the generation, all players gain 1 steel per tag they play. */
   public static onCardPlayed(player: IPlayer, card: ICard): void {
     if (!player.game.gameOptions.eternityExpansion) {

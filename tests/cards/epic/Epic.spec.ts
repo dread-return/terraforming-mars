@@ -17,9 +17,7 @@ import {isIActionCard} from '../../../src/server/cards/ICard';
 import {autoRespond} from './autoRespond';
 import {Biome} from '../../../src/server/cards/epic/Biome';
 import {Aquatix} from '../../../src/server/cards/epic/Aquatix';
-import {CollinsRubinAndHaytham} from '../../../src/server/cards/epic/CollinsRubinAndHaytham';
 import {CoreConductionSystems} from '../../../src/server/cards/epic/CoreConductionSystems';
-import {ExtrasolarColonizationAdministration} from '../../../src/server/cards/epic/ExtrasolarColonizationAdministration';
 import {EyeInTheSky} from '../../../src/server/cards/epic/EyeInTheSky';
 import {Genecraft} from '../../../src/server/cards/epic/Genecraft';
 import {Hydrodynamics} from '../../../src/server/cards/epic/Hydrodynamics';
@@ -38,6 +36,10 @@ import {SelectAmount} from '../../../src/server/inputs/SelectAmount';
 import {SelectPlayer} from '../../../src/server/inputs/SelectPlayer';
 import {IStandardProjectCard} from '../../../src/server/cards/IStandardProjectCard';
 import {GlobalParameter} from '../../../src/common/GlobalParameter';
+import {SpaceType} from '../../../src/common/boards/SpaceType';
+import {TileType} from '../../../src/common/TileType';
+import {Tardigrades} from '../../../src/server/cards/base/Tardigrades';
+import {Birds} from '../../../src/server/cards/base/Birds';
 
 function corpNames(options: Partial<GameOptions>): Array<CardName> {
   return new GameCards({...DEFAULT_GAME_OPTIONS, ...options}).getCorporationCards().map((c) => c.name);
@@ -80,39 +82,34 @@ describe('Epic Corporations', () => {
     expect(player.megaCredits - mc).eq(4);
   });
 
-  it('Aquatix: oceans by anyone raise M€ production; ocean requirements ±2', () => {
-    const [/* game */, player, other] = testGame(2);
+  it('Aquatix: oceans on land too, except next to 2 or more cities; ocean requirements ±2', () => {
+    const [game, player, other] = testGame(2);
     const aquatix = new Aquatix();
     playCorp(player, aquatix);
     addOcean(other);
-    expect(player.production.megacredits).eq(1);
+    expect(player.production.megacredits).eq(0);
+    const board = game.board;
+    const land = board.getAvailableSpacesOnLand(player).find((s) =>
+      board.getAdjacentSpaces(s).filter((a) => a.spaceType === SpaceType.LAND && a.tile === undefined).length >= 2)!;
+    expect(board.getAvailableSpacesForOcean(player)).contains(land);
+    expect(board.getAvailableSpacesForOcean(other)).not.contains(land);
+    const [a, b] = board.getAdjacentSpaces(land).filter((s) => s.spaceType === SpaceType.LAND && s.tile === undefined);
+    game.simpleAddTile(other, a, {tileType: TileType.CITY});
+    expect(board.getAvailableSpacesForOcean(player)).contains(land);
+    game.simpleAddTile(other, b, {tileType: TileType.CITY});
+    expect(board.getAvailableSpacesForOcean(player)).not.contains(land);
     expect(aquatix.getGlobalParameterRequirementBonus(player, GlobalParameter.OCEANS)).eq(2);
     expect(aquatix.getGlobalParameterRequirementBonus(player, GlobalParameter.OXYGEN)).eq(0);
   });
 
-  it('Collins, Rubin & Haytham: cards cost 2 to buy', () => {
-    const [/* game */, player] = testGame(2);
-    playCorp(player, new CollinsRubinAndHaytham());
-    expect(player.cardCost).eq(2);
-  });
-
-  it('Core Conduction Systems: production gains also give resources', () => {
+  it('Core Conduction Systems: heat and energy production gains also give twice that many resources', () => {
     const [/* game */, player] = testGame(2);
     playCorp(player, new CoreConductionSystems());
-    expect(player.heat).eq(2);
+    expect(player.heat).eq(4);
     player.production.add(Resource.ENERGY, 3);
-    expect(player.energy).eq(3);
-  });
-
-  it('Extrasolar Colonization Administration: 3 M€ after a standard project except selling patents', () => {
-    const [/* game */, player] = testGame(2);
-    const eca = new ExtrasolarColonizationAdministration();
-    playCorp(player, eca);
-    const mc = player.megaCredits;
-    eca.onStandardProject(player, {name: CardName.SELL_PATENTS_STANDARD_PROJECT} as IStandardProjectCard);
-    expect(player.megaCredits).eq(mc);
-    eca.onStandardProject(player, {name: CardName.POWER_PLANT_STANDARD_PROJECT} as IStandardProjectCard);
-    expect(player.megaCredits).eq(mc + 3);
+    expect(player.energy).eq(6);
+    player.production.add(Resource.STEEL, 1);
+    expect(player.steel).eq(0);
   });
 
   it('Eye in the Sky: 3 M€ per planetary tag and VP per full set', () => {
@@ -125,11 +122,21 @@ describe('Epic Corporations', () => {
     expect(eye.getVictoryPoints(player)).eq(1);
   });
 
-  it('Genecraft: any player\'s microbe tag raises M€ production', () => {
+  it('Genecraft: adding microbes to a card adds 1 more; no production from microbe tags', () => {
     const [/* game */, player, other] = testGame(2);
     playCorp(player, new Genecraft());
     other.playCard(fakeCard({tags: [Tag.MICROBE]}));
-    expect(player.production.megacredits).eq(1);
+    expect(player.production.megacredits).eq(0);
+    const tardigrades = new Tardigrades();
+    player.playedCards.push(tardigrades);
+    player.addResourceTo(tardigrades, 1);
+    expect(tardigrades.resourceCount).eq(2);
+    player.addResourceTo(tardigrades, 3);
+    expect(tardigrades.resourceCount).eq(6);
+    const birds = new Birds();
+    player.playedCards.push(birds);
+    player.addResourceTo(birds, 1);
+    expect(birds.resourceCount).eq(1);
   });
 
   it('Hydrodynamics: ocean adjacency bonus is 4 M€', () => {

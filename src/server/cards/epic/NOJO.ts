@@ -26,11 +26,11 @@ export class NOJO extends CorporationCard implements ICorporationCard {
           b.corpBox('effect', (ce) => {
             ce.vSpace(Size.SMALL);
             ce.effect(undefined, (eb) => {
-              eb.tag(Tag.JOVIAN, {all}).asterix().startEffect.text('they pay you', {size: Size.SMALL}).megacredits(2);
+              eb.tag(Tag.JOVIAN, {all}).asterix().startEffect.megacredits(2);
             });
             ce.vSpace(Size.SMALL);
-            ce.effect('Opponents pay you 2 M€ per Jovian tag they play (they need it to play the card). Your Jovian tags: +2 M€.', (eb) => {
-              eb.tag(Tag.JOVIAN).startEffect.megacredits(2);
+            ce.effect('*Any Jovian tag gives you 2 M€; opponents pay it on top of the card cost. You buy Jovian cards for free.', (eb) => {
+              eb.text('buy', {size: Size.SMALL}).cards(1, {secondaryTag: Tag.JOVIAN}).startEffect.text('free', {size: Size.SMALL});
             });
           });
         }),

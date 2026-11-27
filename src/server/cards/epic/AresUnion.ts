@@ -8,6 +8,7 @@ import {IPlayer} from '../../IPlayer';
 import {Resource} from '../../../common/Resource';
 import {OrOptions} from '../../inputs/OrOptions';
 import {SelectOption} from '../../inputs/SelectOption';
+import {digit} from '../Options';
 
 export class AresUnion extends ActiveCorporationCard implements ICorporationCard {
   constructor() {
@@ -15,14 +16,17 @@ export class AresUnion extends ActiveCorporationCard implements ICorporationCard
       name: CardName.ARES_UNION,
       tags: [Tag.BUILDING],
       startingMegaCredits: 32,
+      behavior: {
+        stock: {steel: 4},
+      },
       action: {},
 
       metadata: {
         cardNumber: 'EP-AUN',
-        description: 'You start with 32 M€.',
+        description: 'You start with 32 M€ and 4 steel.',
         renderData: CardRenderer.builder((b) => {
           b.br.br;
-          b.megacredits(32);
+          b.megacredits(32).steel(4, {digit});
           b.corpBox('action', (ce) => {
             ce.vSpace(Size.MEDIUM);
             ce.action('Raise 1 step a production you have already raised this generation.', (eb) => {

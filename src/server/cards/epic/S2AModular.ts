@@ -24,10 +24,10 @@ export class S2AModular extends CorporationCard {
           b.corpBox('effect', (ce) => {
             ce.vSpace(Size.SMALL);
             ce.effect(undefined, (eb) => {
-              eb.city({size: Size.SMALL}).city({size: Size.SMALL}).startEffect.text('OK', {size: Size.SMALL});
+              eb.city({size: Size.SMALL}).city({size: Size.SMALL}).asterix().startEffect.text('OK', {size: Size.SMALL});
             });
             ce.vSpace(Size.TINY);
-            ce.effect('Your cities may go next to other cities. Titanium and energy pay for the city standard project.', (eb) => {
+            ce.effect('*Your cities may go next to your own other cities, but not next to opponents\' cities. You can use titanium and energy to pay for the city standard project.', (eb) => {
               eb.plate('City').startEffect.titanium(1).energy(1);
             });
           });

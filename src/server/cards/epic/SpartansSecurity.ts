@@ -1,6 +1,7 @@
 import {CorporationCard} from '../corporation/CorporationCard';
 import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
+import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
 import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
@@ -15,6 +16,7 @@ export class SpartansSecurity extends CorporationCard implements ICorporationCar
   constructor() {
     super({
       name: CardName.SPARTANS_SECURITY,
+      tags: [Tag.MARS],
       startingMegaCredits: 40,
 
       behavior: {
@@ -38,7 +40,7 @@ export class SpartansSecurity extends CorporationCard implements ICorporationCar
               eb.emptyTile('normal', {size: Size.SMALL, all}).asterix().startEffect.text('steal', {size: Size.SMALL}).megacredits(2);
             });
             ce.vSpace(Size.SMALL);
-            ce.effect('Opponent\'s tile next to yours: steal 2 M€ from them. Your tile next to theirs: steal 1 M€ from each. Not oceans.', (eb) => {
+            ce.effect('On Mars only: opponent\'s tile next to yours: steal 2 M€ from them. Your tile next to theirs: steal 1 M€ from each. Not oceans.', (eb) => {
               eb.emptyTile('normal', {size: Size.SMALL}).asterix().startEffect.text('steal', {size: Size.SMALL}).megacredits(1);
             });
           });

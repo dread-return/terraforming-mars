@@ -1,5 +1,6 @@
 import {IPlayer} from '../IPlayer';
 import {SelectSpace} from '../inputs/SelectSpace';
+import {EpicHooks} from '../cards/epic/EpicHooks';
 import {DeferredAction} from './DeferredAction';
 import {Priority} from './Priority';
 import {PlacementType} from '../boards/PlacementType';
@@ -25,7 +26,10 @@ export class PlaceOceanTile extends DeferredAction<Space | undefined> {
   }
 
   public execute() {
-    if (!this.player.game.canAddOcean()) {
+    // Epic Corporations: Aquarin Ent. may keep placing oceans after the maximum.
+    const pastMax = !this.player.game.canAddOcean() && EpicHooks.oceansPastMax(this.creditedPlayer) &&
+      this.player.game.board.getAvailableSpacesForOcean(this.player).length > 0;
+    if (!this.player.game.canAddOcean() && !pastMax) {
       const whales = this.creditedPlayer.tableau.get(CardName.WHALES);
       if (whales !== undefined) {
         this.player.addResourceTo(whales, {qty: 1, log: true});

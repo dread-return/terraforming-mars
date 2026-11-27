@@ -85,7 +85,6 @@ export class Production extends BaseStock {
     for (const card of this.player.tableau) {
       card.onProductionGain?.(this.player, resource, amount);
     }
-    Eternity.onProductionGain(this.player, resource, amount);
     Eternity.onProductionIncrease(this.player, resource, amount);
     HighOrbit.onProductionIncrease(this.player, resource, amount);
     EpicHooks.onProductionChange(this.player, resource, delta, options?.from);

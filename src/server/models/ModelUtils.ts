@@ -45,6 +45,11 @@ export function cardsToModel(
       discount = [{amount: card.resourceCount + 4 * gulag}];
     }
 
+    // Epic Corporations: PolitiCorp's 1 M€ off every card while its owner is chairman.
+    if (card.name === CardName.POLITICORP) {
+      discount = player.game.turmoil?.chairman === player ? [{amount: 1}] : undefined;
+    }
+
     let calculatedCost = card.cost;
     if (options.showCalculatedCost) {
       if (isIStandardProjectCard(card)) {

@@ -34,7 +34,7 @@ export class AerospaceAlloys extends CorporationCard implements ICorporationCard
               eb.titanium(1).startEffect.text('stored x10').asterix();
             });
             ce.vSpace(Size.TINY);
-            ce.effect('*Gained titanium is stored here until 10, then all go to your stock. Titanium worth +1 M€.', (eb) => {
+            ce.effect('*Titanium you gain is stored here, unusable. At 10, all go to your stock and storing starts over. Titanium worth +1 M€.', (eb) => {
               eb.titanium(1).startEffect.plus().megacredits(1);
             });
           });
@@ -42,8 +42,6 @@ export class AerospaceAlloys extends CorporationCard implements ICorporationCard
       },
     });
   }
-
-  public data: {released?: boolean} = {};
 
   public override bespokePlay(player: IPlayer) {
     player.increaseTitaniumValue();

@@ -1,6 +1,7 @@
-import {ActiveCorporationCard} from '../corporation/CorporationCard';
+import {CorporationCard} from '../corporation/CorporationCard';
 import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
+import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
 import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
@@ -9,23 +10,25 @@ import {OrOptions} from '../../inputs/OrOptions';
 import {SelectOption} from '../../inputs/SelectOption';
 import {SelectPaymentDeferred} from '../../deferredActions/SelectPaymentDeferred';
 
-export class Toyitsu extends ActiveCorporationCard implements ICorporationCard {
+export class Toyitsu extends CorporationCard implements ICorporationCard {
+  public static readonly COST = 5;
+
   constructor() {
     super({
       name: CardName.TOYITSU,
-      startingMegaCredits: 47,
-      action: {},
+      tags: [Tag.BUILDING],
+      startingMegaCredits: 30,
 
       metadata: {
         cardNumber: 'EP-TOY',
-        description: 'You start with 47 M€.',
+        description: 'You start with 30 M€.',
         renderData: CardRenderer.builder((b) => {
           b.br.br;
-          b.megacredits(47);
-          b.corpBox('action', (ce) => {
+          b.megacredits(30);
+          b.corpBox('effect', (ce) => {
             ce.vSpace(Size.MEDIUM);
-            ce.action('Spend 4 M€ to raise 1 step a production you have raised this generation.', (eb) => {
-              eb.megacredits(4).startAction.production((pb) => pb.wild(1)).asterix();
+            ce.effect('Whenever you raise a basic production, you may pay 5 M€ to raise it 1 step further.', (eb) => {
+              eb.production((pb) => pb.wild(1)).startEffect.megacredits(5).colon().production((pb) => pb.wild(1)).asterix();
             });
           });
         }),
@@ -33,24 +36,31 @@ export class Toyitsu extends ActiveCorporationCard implements ICorporationCard {
     });
   }
 
-  public data: {generation?: number, raised?: Array<Resource>} = {};
+  /** Set while Toyitsu's own extra step is being added, so it doesn't trigger itself. */
+  private raising = false;
 
-  private raisedThisGeneration(player: IPlayer): ReadonlyArray<Resource> {
-    return this.data.generation === player.game.generation ? (this.data.raised ?? []) : [];
-  }
-
-  public override bespokeCanAct(player: IPlayer) {
-    return this.raisedThisGeneration(player).length > 0 && player.canAfford(4);
-  }
-
-  public override bespokeAction(player: IPlayer) {
-    const options = this.raisedThisGeneration(player).map((resource) =>
-      new SelectOption(`Raise ${resource} production 1 step`).andThen(() => {
-        player.game.defer(new SelectPaymentDeferred(player, 4).andThen(() => {
-          player.production.add(resource, 1, {log: true});
-        }));
+  public onProductionGain(player: IPlayer, resource: Resource, amount: number) {
+    if (this.raising || amount <= 0) {
+      return;
+    }
+    player.defer(() => {
+      if (!player.canAfford(Toyitsu.COST)) {
         return undefined;
-      }));
-    return options.length === 1 ? options[0].cb(undefined) : new OrOptions(...options);
+      }
+      return new OrOptions(
+        new SelectOption(`Pay ${Toyitsu.COST} M€ to raise your ${resource} production 1 more step`).andThen(() => {
+          player.game.defer(new SelectPaymentDeferred(player, Toyitsu.COST, {title: 'Toyitsu: select how to pay'}).andThen(() => {
+            this.raising = true;
+            try {
+              player.production.add(resource, 1, {log: true, from: {card: this}});
+            } finally {
+              this.raising = false;
+            }
+          }));
+          return undefined;
+        }),
+        new SelectOption('Don\'t raise it').andThen(() => undefined),
+      ).setTitle(`Toyitsu: raise your ${resource} production 1 more step?`);
+    });
   }
 }

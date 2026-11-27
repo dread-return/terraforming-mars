@@ -44,18 +44,26 @@ function withCorp(corp: ICorporationCard, options = {}): [IGame, TestPlayer, Tes
 }
 
 describe('Epic Corporations batch 5', () => {
-  it('Vanguard: steel is worth 3 for Venus cards, and the client is told', () => {
-    const [, player] = withCorp(new Vanguard());
+  it('Vanguard: steel pays its usual 2 M€ for Venus cards; spend 3 steel to draw a Venus card', () => {
+    const vanguard = new Vanguard();
+    const [game, player] = withCorp(vanguard, {venusNextExtension: true});
+    expect(player.tags.count(Tag.BUILDING)).eq(1);
     const venus = fakeCard({name: 'v' as CardName, tags: [Tag.VENUS], cost: 9});
     const options = player.paymentOptionsForCard(venus);
     expect(options.steel).is.true;
-    expect(player.payingAmount(Payment.of({steel: 3}), options)).eq(9);
-    player.megaCredits = 0;
-    player.steel = 3;
-    player.cardsInHand.push(venus);
-    expect(player.canPlay(venus)).is.true;
+    expect(player.payingAmount(Payment.of({steel: 3}), options)).eq(6);
     const model = new SelectProjectCardToPlay(player, [venus]).toModel(player);
-    expect(model.cards[0].paymentOverrides).deep.eq({steel: true, steelValue: 3});
+    expect(model.cards[0].paymentOverrides).deep.eq({steel: true});
+    player.steel = 2;
+    expect(vanguard.canAct(player)).is.false;
+    player.steel = 3;
+    expect(vanguard.canAct(player)).is.true;
+    const hand = player.cardsInHand.length;
+    vanguard.action(player);
+    runAllActions(game);
+    expect(player.steel).eq(0);
+    expect(player.cardsInHand.length).eq(hand + 1);
+    expect(player.cardsInHand[player.cardsInHand.length - 1].tags).contains(Tag.VENUS);
   });
 
   it('Planet Forge: the client sees steel and titanium for Venus cards', () => {
@@ -65,17 +73,21 @@ describe('Epic Corporations batch 5', () => {
     expect(model.cards[0].paymentOverrides).deep.eq({steel: true, titanium: true});
   });
 
-  it('Carbon Nanosystems (Epic): graphene worth 5 for building cards', () => {
+  it('Carbon Nanosystems (Epic): a graphene per science tag, including its own; worth 4 for space and city cards', () => {
     const carbon = new CarbonNanosystemsEpic();
     const [, player] = withCorp(carbon);
-    expect(carbon.resourceCount).eq(2);
+    expect(carbon.resourceCount).eq(1);
+    player.playCard(fakeCard({name: 's' as CardName, tags: [Tag.SCIENCE, Tag.SCIENCE]}));
+    expect(carbon.resourceCount).eq(3);
     const building = fakeCard({name: 'b' as CardName, tags: [Tag.BUILDING], cost: 10});
-    const options = player.paymentOptionsForCard(building);
+    expect(player.paymentOptionsForCard(building).graphene).is.false;
+    const city = fakeCard({name: 'c' as CardName, tags: [Tag.CITY], cost: 10});
+    const options = player.paymentOptionsForCard(city);
     expect(options.graphene).is.true;
-    expect(player.getSpendable('graphene')).eq(2);
-    expect(player.payingAmount(Payment.of({graphene: 2}), options)).eq(10);
+    expect(player.getSpendable('graphene')).eq(3);
+    expect(player.payingAmount(Payment.of({graphene: 2}), options)).eq(8);
     player.pay(Payment.of({graphene: 2}));
-    expect(carbon.resourceCount).eq(0);
+    expect(carbon.resourceCount).eq(1);
   });
 
   it('Castle Queen Mary: places a city for no one and takes the bonus', () => {

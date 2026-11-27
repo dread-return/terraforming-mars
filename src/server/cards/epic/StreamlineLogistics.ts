@@ -28,8 +28,8 @@ export class StreamlineLogistics extends WildResourceCorporation {
               eb.cards(1, {secondaryTag: Tag.EVENT}).startEffect.resource(CardResource.WILD_RESOURCE).text('=').wild(1);
             });
             ce.vSpace(Size.TINY);
-            ce.action('Spend 1 wild: 2 extra actions this turn.', (eb) => {
-              eb.resource(CardResource.WILD_RESOURCE).startAction.text('+2 actions', {size: Size.SMALL});
+            ce.action('Spend 1 wild: 2 extra actions this turn. You may use this action up to 3 times per generation.', (eb) => {
+              eb.resource(CardResource.WILD_RESOURCE).startAction.text('+2 actions', {size: Size.SMALL}).text('(max 3/gen)', {size: Size.TINY});
             });
           });
         }),
@@ -51,7 +51,22 @@ export class StreamlineLogistics extends WildResourceCorporation {
     return this.resourceCount > 0;
   }
 
+  public static readonly USES_PER_GENERATION = 3;
+  public data: {generation?: number, uses?: number} = {};
+
   public override bespokeAction(player: IPlayer) {
+    // The action can be used up to 3 times a generation.
+    const data = this.data;
+    if (data.generation !== player.game.generation) {
+      data.generation = player.game.generation;
+      data.uses = 0;
+    }
+    data.uses = (data.uses ?? 0) + 1;
+    if (data.uses < StreamlineLogistics.USES_PER_GENERATION) {
+      player.defer(() => {
+        player.actionsThisGeneration.delete(this.name);
+      });
+    }
     player.removeResourceFrom(this, 1, {log: true});
     player.availableActionsThisRound += 2;
     player.game.log('${0} may take 2 extra actions this turn', (b) => b.player(player));

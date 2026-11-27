@@ -16,12 +16,17 @@ export class PlanetForge extends CorporationCard implements ICorporationCard {
         production: {steel: 2},
       },
 
+      firstAction: {
+        text: 'Reveal cards until you reveal one with a Venus tag, and take it',
+        drawCard: {count: 1, tag: Tag.VENUS},
+      },
+
       metadata: {
         cardNumber: 'EP-PFG',
-        description: 'You start with 41 M€ and 2 steel production.',
+        description: 'You start with 41 M€ and 2 steel production. First action: reveal cards until a Venus tag, and take it.',
         renderData: CardRenderer.builder((b) => {
           b.br.br;
-          b.megacredits(41).production((pb) => pb.steel(2));
+          b.megacredits(41).production((pb) => pb.steel(2)).cards(1, {secondaryTag: Tag.VENUS});
           b.corpBox('effect', (ce) => {
             ce.vSpace(Size.MEDIUM);
             ce.effect('You may use steel and titanium to pay for cards with a Venus tag.', (eb) => {

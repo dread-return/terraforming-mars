@@ -113,22 +113,35 @@ describe('Epic Corporations batch 2', () => {
     expect(player.heat).eq(1);
   });
 
-  it('Toyitsu and Ares Union: raise a production already raised this generation', () => {
+  it('Toyitsu: pay 5 M€ to raise a production 1 more step; Ares Union: raise a production already raised this generation', () => {
     const toyitsu = new Toyitsu();
     const [game, player] = withCorp(toyitsu);
+    expect(player.megaCredits).eq(30);
+    expect(player.tags.count(Tag.BUILDING)).eq(1);
     player.megaCredits = 10;
-    expect(toyitsu.canAct(player)).is.false;
     player.production.add(Resource.PLANTS, 1);
-    expect(toyitsu.canAct(player)).is.true;
-    toyitsu.action(player);
+    runAllActions(game);
+    cast(player.popWaitingFor(), OrOptions).options[0].cb();
     runAllActions(game);
     expect(player.production.plants).eq(2);
-    expect(player.megaCredits).eq(6);
-    game.generation++;
-    expect(toyitsu.canAct(player)).is.false;
+    expect(player.megaCredits).eq(5);
+    // Its own extra step doesn't trigger it again.
+    expect(player.popWaitingFor()).is.undefined;
+    player.production.add(Resource.HEAT, 2);
+    runAllActions(game);
+    cast(player.popWaitingFor(), OrOptions).options[1].cb();
+    runAllActions(game);
+    expect(player.production.heat).eq(2);
+    expect(player.megaCredits).eq(5);
+    // Can't afford it: no question.
+    player.megaCredits = 4;
+    player.production.add(Resource.STEEL, 1);
+    runAllActions(game);
+    expect(player.popWaitingFor()).is.undefined;
 
     const union = new AresUnion();
     const [, p2] = withCorp(union);
+    expect(p2.steel).eq(4);
     p2.production.add(Resource.HEAT, 1);
     p2.production.add(Resource.ENERGY, 1);
     const options = cast(union.action(p2), OrOptions);

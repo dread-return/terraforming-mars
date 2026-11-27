@@ -8,35 +8,28 @@ import {IPlayer} from '../../IPlayer';
 import {CardResource} from '../../../common/CardResource';
 import {SelectCard} from '../../inputs/SelectCard';
 import {AddResourcesToCard} from '../../deferredActions/AddResourcesToCard';
+import {keep, LogType} from '../../deferredActions/ChooseCards';
 
 export class EvoAcademies extends ActiveCorporationCard implements ICorporationCard {
   constructor() {
     super({
       name: CardName.EVO_ACADEMIES,
-      tags: [Tag.MICROBE, Tag.SCIENCE],
+      tags: [Tag.MICROBE, Tag.ANIMAL, Tag.SCIENCE],
       startingMegaCredits: 40,
       resourceType: CardResource.ANIMAL,
       victoryPoints: {resourcesHere: {}, per: 2},
-      cardDiscount: {tag: Tag.MICROBE, per: 'card', amount: 2},
       action: {},
 
-      firstAction: {
-        text: 'Reveal cards until you reveal one with a microbe tag, and take it',
-        drawCard: {count: 1, tag: Tag.MICROBE},
-      },
+      initialActionText: 'Reveal cards until you reveal one with a microbe tag, and take it; then do the same for an animal tag',
 
       metadata: {
         cardNumber: 'EP-EVO',
-        description: 'You start with 40 M€. First action: reveal cards until a microbe tag; take it.',
+        description: 'You start with 40 M€. First action: reveal cards until a microbe tag and take it, then until an animal tag and take it.',
         renderData: CardRenderer.builder((b) => {
           b.br;
-          b.megacredits(40).cards(1, {secondaryTag: Tag.MICROBE});
-          b.corpBox('effect-action', (ce) => {
-            ce.vSpace(Size.SMALL);
-            ce.effect('Microbe cards cost 2 M€ less.', (eb) => {
-              eb.tag(Tag.MICROBE).startEffect.megacredits(-2);
-            });
-            ce.vSpace(Size.SMALL);
+          b.megacredits(40).cards(1, {secondaryTag: Tag.MICROBE}).cards(1, {secondaryTag: Tag.ANIMAL});
+          b.corpBox('action', (ce) => {
+            ce.vSpace(Size.MEDIUM);
             ce.action('Move 2 of your microbes onto an animal card (they count as animals).', (eb) => {
               eb.text('2x').resource(CardResource.MICROBE).startAction.resource(CardResource.ANIMAL, 2).asterix();
             });
@@ -44,6 +37,16 @@ export class EvoAcademies extends ActiveCorporationCard implements ICorporationC
         }),
       },
     });
+  }
+
+  public override initialAction(player: IPlayer) {
+    const game = player.game;
+    const cards = [
+      ...game.projectDeck.drawByConditionOrThrow(game, 1, (c) => c.tags.includes(Tag.MICROBE)),
+      ...game.projectDeck.drawByConditionOrThrow(game, 1, (c) => c.tags.includes(Tag.ANIMAL)),
+    ];
+    keep(player, cards, [], LogType.DREW);
+    return undefined;
   }
 
   private microbes(player: IPlayer): number {

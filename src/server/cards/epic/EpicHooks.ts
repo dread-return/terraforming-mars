@@ -523,8 +523,8 @@ export class EpicHooks {
 
     // The player's own corporations.
     if (delta > 0) {
-      // Toyitsu and Ares Union: remember which productions were raised this generation.
-      for (const name of [CardName.TOYITSU, CardName.ARES_UNION]) {
+      // Ares Union: remember which productions were raised this generation.
+      for (const name of [CardName.ARES_UNION]) {
         const card = player.tableau.get(name);
         if (card !== undefined) {
           const data = dataOf<RaisedData>(card);
@@ -666,24 +666,30 @@ export class EpicHooks {
     }
   }
 
-  /** Aerospace Alloys: move newly gained titanium onto the card until 10 are there, then release them. */
+  /**
+   * Aerospace Alloys: move newly gained titanium onto the card. Titanium there can't be spent. When the card
+   * holds 10, all 10 go to the player's stock and the card starts filling up again.
+   */
   public static storeAerospaceTitanium(player: IPlayer, amount: number): void {
     const card = player.tableau.get(CardName.AEROSPACE_ALLOYS);
-    if (card === undefined || dataOf<{released?: boolean}>(card).released === true || amount <= 0) {
+    if (card === undefined || amount <= 0) {
       return;
     }
-    const moved = Math.min(amount, 10 - card.resourceCount, player.titanium);
-    if (moved <= 0) {
-      return;
-    }
-    player.titanium -= moved;
-    card.resourceCount += moved;
-    player.game.log('${0} stored ${1} titanium on ${2}', (b) => b.player(player).number(moved).card(card));
-    if (card.resourceCount >= 10) {
-      dataOf<{released?: boolean}>(card).released = true;
-      player.titanium += card.resourceCount;
-      player.game.log('${0} moved the ${1} titanium from ${2} to their stock', (b) => b.player(player).number(card.resourceCount).card(card));
-      card.resourceCount = 0;
+    // The titanium being stored is the newest titanium, so it never exceeds what's in stock.
+    let left = Math.min(amount, player.titanium);
+    while (left > 0) {
+      const moved = Math.min(left, 10 - card.resourceCount);
+      left -= moved;
+      player.titanium -= moved;
+      card.resourceCount += moved;
+      player.game.log('${0} stored ${1} titanium on ${2}', (b) => b.player(player).number(moved).card(card));
+      if (card.resourceCount >= 10) {
+        const released = card.resourceCount;
+        player.titanium += released;
+        card.resourceCount = 0;
+        player.game.log('${0} moved the ${1} titanium from ${2} to their stock', (b) => b.player(player).number(released).card(card));
+        // The 10 released titanium mustn't be stored again: they're already counted in `amount`.
+      }
     }
   }
 
@@ -1292,19 +1298,21 @@ export class EpicHooks {
       (player.tableau.has(CardName.PLUTONIC_PROTOTYPING) && card.tags.includes(Tag.BUILDING));
   }
 
-  /** Vanguard: steel is worth 3 M€ for cards with a Venus tag. Undefined means the usual value. */
-  public static steelValueForCard(player: IPlayer, card: IProjectCard): number | undefined {
-    if (player.tableau.has(CardName.VANGUARD) && card.tags.includes(Tag.VENUS)) {
-      return Math.max(3, player.getSteelValue());
-    }
+  /** Steel's value for `card` when it differs from the usual. Undefined means the usual value. */
+  public static steelValueForCard(_player: IPlayer, _card: IProjectCard): number | undefined {
     return undefined;
   }
 
-  /** New Grounds and Steel Ridge Constructions place cities ignoring the normal rules. */
+  /** New Grounds places cities ignoring the normal rules. */
   public static ignoresCityPlacement(player: IPlayer): boolean {
-    return player.tableau.has(CardName.NEW_GROUNDS) || player.tableau.has(CardName.STEEL_RIDGE_CONSTRUCTIONS) ||
-      // S2A Modular and Cosmos Casinos: cities may go next to other cities.
-      player.tableau.has(CardName.S2A_MODULAR) || player.tableau.has(CardName.COSMOS_CASINOS);
+    return player.tableau.has(CardName.NEW_GROUNDS) ||
+      // Cosmos Casinos: cities may go next to other cities.
+      player.tableau.has(CardName.COSMOS_CASINOS);
+  }
+
+  /** S2A Modular: your cities may go next to your own cities, but not next to anyone else's. */
+  public static citiesNextToOwnCities(player: IPlayer): boolean {
+    return player.tableau.has(CardName.S2A_MODULAR);
   }
 
   /** Cosmos Casinos: the award it funded scores double. */
@@ -1341,6 +1349,16 @@ export class EpicHooks {
     }
   }
 
+  /** Aquatix: oceans may go on land areas too, except next to 2 or more cities. */
+  public static oceansOnLand(player: IPlayer): boolean {
+    return player.tableau.has(CardName.AQUATIX);
+  }
+
+  /** Aquarin Ent.: may keep placing oceans after the ocean maximum is reached (no TR for those). */
+  public static oceansPastMax(player: IPlayer): boolean {
+    return player.tableau.has(CardName.AQUARIN_ENT);
+  }
+
   /** New Grounds places greeneries ignoring the normal rules. */
   public static ignoresGreeneryPlacement(player: IPlayer): boolean {
     return player.tableau.has(CardName.NEW_GROUNDS);
@@ -1349,6 +1367,20 @@ export class EpicHooks {
   /** Space Guild: its events stay face up, so their tags count. */
   public static eventsFaceUp(player: IPlayer): boolean {
     return player.tableau.has(CardName.SPACE_GUILD);
+  }
+
+  /** What `player` pays to buy `card` (research, setup, card-buying actions). NOJO buys Jovian cards for free. */
+  public static cardBuyCost(player: IPlayer, card: IProjectCard): number {
+    if (player.tableau.has(CardName.NOJO) && card.tags.includes(Tag.JOVIAN)) {
+      return 0;
+    }
+    return player.cardCost;
+  }
+
+  /** The total cost of buying `cards`, with the `freeCount` most expensive of them free. */
+  public static cardBuyTotal(player: IPlayer, cards: ReadonlyArray<IProjectCard>, freeCount: number = 0): number {
+    const costs = cards.map((c) => EpicHooks.cardBuyCost(player, c)).sort((a, b) => b - a);
+    return costs.slice(freeCount).reduce((sum, c) => sum + c, 0);
   }
 
   /** First Wave: the first 4 cards kept during setup are free. */
@@ -1397,12 +1429,12 @@ export class EpicHooks {
 
   /** Carbon Nanosystems (Epic): graphene pays for space and building cards. */
   public static canUseGraphene(player: IPlayer, card: IProjectCard): boolean {
-    return player.tableau.has(CardName.CARBON_NANOSYSTEMS_EPIC) && (card.tags.includes(Tag.SPACE) || card.tags.includes(Tag.BUILDING));
+    return player.tableau.has(CardName.CARBON_NANOSYSTEMS_EPIC) && (card.tags.includes(Tag.SPACE) || card.tags.includes(Tag.CITY));
   }
 
-  /** Carbon Nanosystems (Epic): graphene is worth 5 M€. Undefined means the usual value. */
-  public static grapheneValue(player: IPlayer): number | undefined {
-    return player.tableau.has(CardName.CARBON_NANOSYSTEMS_EPIC) ? 5 : undefined;
+  /** Graphene's value when it differs from the usual 4 M€. Undefined means the usual value. */
+  public static grapheneValue(_player: IPlayer): number | undefined {
+    return undefined;
   }
 
   /** Darwin Evolution: animal tags also count as science tags. */

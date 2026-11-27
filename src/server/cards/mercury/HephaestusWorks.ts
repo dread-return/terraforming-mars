@@ -11,16 +11,20 @@ export class HephaestusWorks extends CorporationCard implements ICorporationCard
       tags: [Tag.BUILDING, Tag.MERCURY],
       startingMegaCredits: 45,
       behavior: {
-        production: {steel: 3},
+        production: {steel: 2},
+      },
+      firstAction: {
+        text: 'Reveal cards until you reveal one with a Mercury tag, and take it',
+        drawCard: {count: 1, tag: Tag.MERCURY},
       },
       metadata: {
         cardNumber: 'MMC01',
-        description: 'You start with 45 M€. Increase your steel production 3 steps.',
+        description: 'You start with 45 M€ and 2 steel production. First action: reveal cards until a Mercury tag; take it.',
         renderData: CardRenderer.builder((b) => {
           b.br.br;
-          b.megacredits(45).production((pb) => pb.steel(3));
+          b.megacredits(45).production((pb) => pb.steel(2)).cards(1, {secondaryTag: Tag.MERCURY});
           b.corpBox('effect', (ce) => {
-            ce.effect('You can use your steel (2 M€ each) to pay for cards with a Mercury tag, events with a space tag, and ANY action that places a colony.', (eb) => {
+            ce.effect('Steel (2 M€ each) pays for Mercury cards, space events and ANY action that places a colony.', (eb) => {
               eb.tag(Tag.MERCURY).slash().tag(Tag.SPACE).asterix().slash().colonies(1).startEffect.steel(1).equals().megacredits(2);
             });
           });

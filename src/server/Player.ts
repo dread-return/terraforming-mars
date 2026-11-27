@@ -621,6 +621,10 @@ export class Player implements IPlayer {
     if (count > 0 && card.resourceType === CardResource.MICROBE && this.tableau.has(CardName.BIOREACTORS)) {
       count++;
     }
+    // Genecraft (Epic): the same, once per addition.
+    if (count > 0 && card.resourceType === CardResource.MICROBE && this.tableau.has(CardName.GENECRAFT)) {
+      count++;
+    }
 
     if (card.resourceCount !== undefined) {
       card.resourceCount += count;
@@ -915,7 +919,7 @@ export class Player implements IPlayer {
       propellantOre: HighOrbit.canPayWithPropellantOre(card),
       shipyardOre: false,
       hephaestusAsteroids: card.tags.includes(Tag.MARS) || card.tags.includes(Tag.VENUS),
-      // Epic Corporations: Vanguard's steel is worth more for Venus cards; Carbon Nanosystems' graphene is worth 5.
+      // Epic Corporations: hooks for card-specific steel and graphene values (none at the moment).
       steelValue,
       grapheneValue: EpicHooks.grapheneValue(this),
       // The best of the plant values that apply. Epic plant payments always send theirs, so the client shows plants
@@ -1231,7 +1235,8 @@ export class Player implements IPlayer {
     let deferredCardCost = 0;
     if (additionalCorp === false && corporationCard.name !== CardName.BEGINNER_CORPORATION) {
       // Epic Corporations: First Wave keeps its first 4 setup cards for free.
-      const diff = Math.max(0, this.cardsInHand.length - EpicHooks.freeSetupCards(corporationCard)) * this.cardCost;
+      // Epic Corporations: NOJO's Jovian cards are free.
+      const diff = EpicHooks.cardBuyTotal(this, this.cardsInHand, EpicHooks.freeSetupCards(corporationCard));
       if (corporationCard.name === CardName.LUNA_TRADE_FEDERATION) {
         deferredCardCost = diff;
       } else {

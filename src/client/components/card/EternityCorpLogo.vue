@@ -38,8 +38,6 @@ export const ETERNITY_LOGOS: Partial<Record<CardName, EternityLogo>> = {
   [CardName.JOVICORP]: {slug: 'jovicorp', lines: ['Jovicorp']},
   [CardName.MADNESS]: {slug: 'madness', lines: ['M@dN3$s?!']},
   [CardName.MARS_CONSERVATIONISTS]: {slug: 'conservationists', lines: ['MARS', 'CONSERVATIONISTS']},
-  [CardName.MISERVISION]: {slug: 'miservision', lines: ['MiserVision']},
-  [CardName.NEW_THORGATE]: {slug: 'new-thorgate', lines: ['NEW THORGATE']},
   [CardName.OIS]: {slug: 'ois', lines: ['O.I.S.', 'Open Intelligence Systems']},
   [CardName.POWERHOUSE]: {slug: 'powerhouse', lines: ['POWERHOUSE', 'international innovative technology']},
   [CardName.SHELL_CORPORATION]: {slug: 'shell', lines: ['SHELL', 'CORPORATION']},

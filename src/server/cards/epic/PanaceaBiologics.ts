@@ -4,7 +4,6 @@ import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardResource} from '../../../common/CardResource';
 import {CardRenderer} from '../render/CardRenderer';
-import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
 import {ICard} from '../ICard';
 import {all} from '../Options';
@@ -46,14 +45,17 @@ export class PanaceaBiologics extends ActiveCorporationCard implements ICorporat
 
       metadata: {
         cardNumber: 'EP-PAN',
-        description: 'You start with 40 M€. First action: 1 disease on each opponent\'s corporation.',
+        description: 'You start with 40 M€. First action: 1 disease on each opponent.',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(40).nbsp.resource(CardResource.DISEASE).asterix().br;
           b.effect('Any microbe tag: you may put a disease on an opponent\'s corporation (max 3 each).', (eb) => {
             eb.tag(Tag.MICROBE, {all}).startEffect.resource(CardResource.DISEASE).asterix();
           }).br;
-          b.effect('Each disease: that player\'s cards cost 1 M€ more. They may pay you 3 M€ (+1 per 2 of your science tags, max 6) to cure one: +1 patent here.', (eb) => {
-            eb.resource(CardResource.DISEASE).startEffect.megacredits(1).text('/card', {size: Size.SMALL}).slash().resource(CardResource.PATENT);
+          b.effect(undefined, (eb) => {
+            eb.resource(CardResource.DISEASE, {all}).startEffect.cards(1, {all}).megacredits(1, {text: '+1'});
+          }).br;
+          b.effect('Each disease on a player\'s corporation: their cards cost 1 M€ more. *They may pay you 3 M€ (+1 per 2 of your science tags, max 6) to cure one: add a patent here.', (eb) => {
+            eb.megacredits(3, {all}).asterix().startEffect.megacredits(3).resource(CardResource.PATENT);
           }).br;
           b.action('Remove 1 microbe from any of your cards: spread a disease.', (eb) => {
             eb.resource(CardResource.MICROBE).startAction.resource(CardResource.DISEASE).asterix();

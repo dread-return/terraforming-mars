@@ -213,12 +213,12 @@ describe('Epic Corporations', () => {
     expect(player.megaCredits).eq(mc + 2);
   });
 
-  it('Leviathan: looks at 5 research cards', () => {
+  it('Leviathan: the usual 4 research cards (its effect is now free space cards; see CorpOverlapRework.spec.ts)', () => {
     const [/* game */, player] = testGame(2);
     playCorp(player, new Leviathan());
     player.runResearchPhase();
     const input = player.popWaitingFor();
-    expect(JSON.stringify(input?.toModel(player))).to.include('"max":5');
+    expect(JSON.stringify(input?.toModel(player))).to.include('"max":4');
   });
 
   it('Red Ship: 2 M€ per city or special tile next to an ocean', () => {

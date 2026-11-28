@@ -16,7 +16,8 @@ export class OmniConsumerProducts extends ActiveCorporationCard implements ICorp
       },
 
       action: {
-        drawCard: {count: 1, pay: true},
+        spend: {megacredits: 8},
+        drawCard: 2,
       },
 
       metadata: {
@@ -27,8 +28,8 @@ export class OmniConsumerProducts extends ActiveCorporationCard implements ICorp
           b.megacredits(40).production((pb) => pb.megacredits(2));
           b.corpBox('action', (ce) => {
             ce.vSpace(Size.MEDIUM);
-            ce.action('Look at the top card of the deck and either buy it or discard it.', (eb) => {
-              eb.empty().startAction.cards(1).asterix();
+            ce.action('Spend 8 M€ to draw 2 cards.', (eb) => {
+              eb.megacredits(8).startAction.cards(2);
             });
           });
         }),

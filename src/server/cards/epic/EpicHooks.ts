@@ -267,9 +267,6 @@ export class EpicHooks {
   /** Extra cards to look at during the research phase (Leviathan, Logos Research & Development). */
   public static extraResearchCards(player: IPlayer): number {
     let extra = 0;
-    if (player.tableau.has(CardName.LEVIATHAN)) {
-      extra++;
-    }
     if (player.tableau.has(CardName.LOGOS_RESEARCH_AND_DEVELOPMENT)) {
       extra++;
     }
@@ -627,6 +624,11 @@ export class EpicHooks {
     const game = player.game;
     if (game === undefined) {
       return;
+    }
+    // Union Aerospace: spending energy gives 1 titanium (not energy taken by others or turned into heat at production).
+    if (resource === Resource.ENERGY && delta < 0 && from === undefined && game.phase !== Phase.PRODUCTION &&
+      player.tableau.has(CardName.UNION_AEROSPACE)) {
+      player.stock.add(Resource.TITANIUM, 1, {log: true});
     }
     // Marsanto: gaining plants also gains that many M€.
     if (resource === Resource.PLANTS && delta > 0 && player.tableau.has(CardName.MARSANTO)) {
@@ -1412,6 +1414,10 @@ export class EpicHooks {
     if (player.tableau.has(CardName.NOJO) && card.tags.includes(Tag.JOVIAN)) {
       return 0;
     }
+    // Leviathan: space cards are free during research (the first generation's starting hand included).
+    if (player.tableau.has(CardName.LEVIATHAN) && card.tags.includes(Tag.SPACE) && player.game.phase === Phase.RESEARCH) {
+      return 0;
+    }
     return player.cardCost;
   }
 
@@ -1546,6 +1552,12 @@ export class EpicHooks {
 
   /** Xenos Zoological: after its action, the chosen non-Venus animal card ignores all requirements. */
   public static ignoresAllRequirements(player: IPlayer, card: ICard): boolean {
+    // Solar Voyager: its action plays a Venus, Mercury or Jovian card ignoring requirements.
+    const voyager = player.tableau?.get(CardName.SOLAR_VOYAGER);
+    if (voyager !== undefined && dataOf<{pending?: boolean}>(voyager).pending === true &&
+      [Tag.VENUS, Tag.MERCURY, Tag.JOVIAN].some((tag) => card.tags.includes(tag))) {
+      return true;
+    }
     const xenos = player.tableau?.get(CardName.XENOS_ZOOLOGICAL);
     if (xenos === undefined || dataOf<{pending?: boolean}>(xenos).pending !== true) {
       return false;

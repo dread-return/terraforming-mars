@@ -26,6 +26,13 @@ import {SpartansSecurity} from '../../../src/server/cards/epic/SpartansSecurity'
 import {HephaestusWorks} from '../../../src/server/cards/mercury/HephaestusWorks';
 import {PlanetForge} from '../../../src/server/cards/epic/PlanetForge';
 import {AquarinEnt} from '../../../src/server/cards/epic/AquarinEnt';
+import {PurNKleen} from '../../../src/server/cards/epic/PurNKleen';
+import {SolarVoyager} from '../../../src/server/cards/epic/SolarVoyager';
+import {UnionAerospace} from '../../../src/server/cards/epic/UnionAerospace';
+import {Leviathan} from '../../../src/server/cards/epic/Leviathan';
+import {SulphurEatingBacteria} from '../../../src/server/cards/venusNext/SulphurEatingBacteria';
+import {SelectProjectCardToPlay} from '../../../src/server/inputs/SelectProjectCardToPlay';
+import {Resource} from '../../../src/common/Resource';
 import {PanaceaBiologics} from '../../../src/server/cards/epic/PanaceaBiologics';
 import {EpicHooks} from '../../../src/server/cards/epic/EpicHooks';
 import {SelectOption} from '../../../src/server/inputs/SelectOption';
@@ -53,21 +60,12 @@ function withCorp(corp: ICorporationCard, options = {}): [IGame, TestPlayer, Tes
 }
 
 describe('Corporations reworked after the overlap review (2026-11-27)', () => {
-  it('Omni Consumer Products: Earth tag, usual card price, action to buy or discard the top card', () => {
+  it('Omni Consumer Products: Earth tag, usual card price (its action changed again in the Tier 2 round, tested there)', () => {
     const corp = new OmniConsumerProducts();
-    const [game, player] = withCorp(corp);
+    const [, player] = withCorp(corp);
     expect(corp.tags).deep.eq([Tag.EARTH]);
     expect(player.cardCost).eq(3);
     expect(player.production.megacredits).eq(2);
-    player.megaCredits = 3;
-    corp.action(player);
-    runAllActions(game);
-    const select = cast(player.popWaitingFor(), SelectCard<IProjectCard>);
-    expect(select.cards).has.length(1);
-    select.cb([select.cards[0]]);
-    runAllActions(game);
-    expect(player.cardsInHand).has.length(1);
-    expect(player.megaCredits).eq(0);
   });
 
   it('Innastar Corp: building tag', () => {
@@ -356,5 +354,87 @@ describe('Corporations reworked after the overlap review (2026-11-27)', () => {
     expect(dealt).not.to.include.any.members(retired);
     const custom = new GameCards({...options, customCorporationsList: [CardName.QUASH, CardName.TOYITSU]}).getCorporationCards().map((c) => c.name);
     expect(custom).deep.eq([CardName.TOYITSU]);
+  });
+
+  // Tier 2 round (2026-11-28).
+  describe('Tier 2 changes', () => {
+    it('Pur\'n\'Kleen: your oceans raise your TR 1 extra step; no VP for oceans by cities', () => {
+      const corp = new PurNKleen();
+      const [game, player, other] = withCorp(corp);
+      expect(corp.victoryPoints).is.undefined;
+      const tr = player.terraformRating;
+      const [first, second] = game.board.getAvailableSpacesForOcean(player);
+      game.addOcean(player, first);
+      expect(player.terraformRating).eq(tr + 2);
+      game.addOcean(other, second);
+      expect(player.terraformRating).eq(tr + 2);
+    });
+
+    it('Solar Voyager: action plays a Venus, Mercury or Jovian card ignoring its requirements', () => {
+      const corp = new SolarVoyager();
+      const [game, player] = withCorp(corp, {venusNextExtension: true});
+      const bacteria = new SulphurEatingBacteria();
+      player.cardsInHand.push(bacteria);
+      player.megaCredits = 20;
+      expect(player.canPlay(bacteria)).is.false;
+      expect(corp.canAct(player)).is.true;
+      const input = cast(corp.action(player), SelectProjectCardToPlay);
+      expect(input.cards).deep.eq([bacteria]);
+      input.payAndPlay(bacteria, Payment.of({megacredits: bacteria.cost}));
+      input.cb(bacteria);
+      runAllActions(game);
+      expect(player.playedCards.has(CardName.SULPHUR_EATING_BACTERIA)).is.true;
+      expect(corp.data.pending).is.false;
+      expect(player.canPlay(fakeCard({tags: [Tag.VENUS], requirements: [{venus: 30}]}))).is.false;
+    });
+
+    it('Union Aerospace: 38 M€; spending energy gives 1 titanium; 4 energy for 1 TR', () => {
+      const corp = new UnionAerospace();
+      const [game, player, other] = withCorp(corp);
+      expect(player.megaCredits).eq(38);
+      player.energy = 10;
+      player.titanium = 0;
+      player.stock.deduct(Resource.ENERGY, 2);
+      expect(player.titanium).eq(1);
+      // Not when someone else takes it.
+      player.stock.deduct(Resource.ENERGY, 1, {from: {player: other}});
+      expect(player.titanium).eq(1);
+      const tr = player.terraformRating;
+      expect(corp.canAct(player)).is.true;
+      corp.action(player);
+      runAllActions(game);
+      expect(player.energy).eq(3);
+      expect(player.terraformRating).eq(tr + 1);
+      expect(player.titanium).eq(2);
+      player.energy = 3;
+      expect(corp.canAct(player)).is.false;
+    });
+
+    it('Omni Consumer Products: 8 M€ for 2 cards', () => {
+      const corp = new OmniConsumerProducts();
+      const [game, player] = withCorp(corp);
+      player.megaCredits = 7;
+      expect(corp.canAct(player)).is.false;
+      player.megaCredits = 8;
+      corp.action(player);
+      runAllActions(game);
+      expect(player.megaCredits).eq(0);
+      expect(player.cardsInHand).has.length(2);
+    });
+
+    it('Leviathan: 40 M€ and 1 titanium production; space cards are free to buy during research only', () => {
+      const corp = new Leviathan();
+      const [game, player] = withCorp(corp);
+      expect(player.megaCredits).eq(40);
+      expect(player.production.titanium).eq(1);
+      const space = fakeCard({name: 's' as CardName, tags: [Tag.SPACE]});
+      const plain = fakeCard({name: 'p' as CardName, tags: [Tag.BUILDING]});
+      game.phase = Phase.RESEARCH;
+      expect(EpicHooks.cardBuyCost(player, space)).eq(0);
+      expect(EpicHooks.cardBuyCost(player, plain)).eq(3);
+      expect(EpicHooks.extraResearchCards(player)).eq(0);
+      game.phase = Phase.ACTION;
+      expect(EpicHooks.cardBuyCost(player, space)).eq(3);
+    });
   });
 });

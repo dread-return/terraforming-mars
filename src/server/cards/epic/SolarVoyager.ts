@@ -1,14 +1,16 @@
-import {CorporationCard} from '../corporation/CorporationCard';
+import {ActiveCorporationCard} from '../corporation/CorporationCard';
 import {ICorporationCard} from '../corporation/ICorporationCard';
 import {CardName} from '../../../common/cards/CardName';
 import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
-import {Size} from '../../../common/cards/render/Size';
 import {IPlayer} from '../../IPlayer';
-import {ICard} from '../ICard';
-import {Resource} from '../../../common/Resource';
+import {IProjectCard} from '../IProjectCard';
+import {SelectProjectCardToPlay} from '../../inputs/SelectProjectCardToPlay';
 
-export class SolarVoyager extends CorporationCard implements ICorporationCard {
+/** Its action plays a Venus, Mercury or Jovian card ignoring requirements (EpicHooks.ignoresAllRequirements). */
+export class SolarVoyager extends ActiveCorporationCard implements ICorporationCard {
+  public static readonly TAGS: ReadonlyArray<Tag> = [Tag.VENUS, Tag.MERCURY, Tag.JOVIAN];
+
   constructor() {
     super({
       name: CardName.SOLAR_VOYAGER,
@@ -17,28 +19,50 @@ export class SolarVoyager extends CorporationCard implements ICorporationCard {
       behavior: {
         production: {megacredits: 2},
       },
+      action: {},
 
       metadata: {
         cardNumber: 'EP-SOV',
         description: 'You start with 43 M€ and 2 M€ production.',
         renderData: CardRenderer.builder((b) => {
-          b.br.br;
+          b.br;
           b.megacredits(43).production((pb) => pb.megacredits(2));
-          b.corpBox('effect', (ce) => {
-            ce.vSpace(Size.MEDIUM);
-            ce.effect('When you play a Venus, Mercury or Jovian tag, including these, gain 2 M€.', (eb) => {
-              eb.tag(Tag.VENUS).tag(Tag.MERCURY).tag(Tag.JOVIAN).startEffect.megacredits(2);
-            });
-          });
+          b.br;
+          b.action('Play a card with a Venus, Mercury or Jovian tag, ignoring its requirements.', (eb) => {
+            eb.empty().startAction.tag(Tag.VENUS).slash().tag(Tag.MERCURY).slash().tag(Tag.JOVIAN).asterix();
+          }).br;
         }),
       },
     });
   }
 
-  public onCardPlayed(player: IPlayer, card: ICard) {
-    const count = player.tags.cardTagCount(card, [Tag.VENUS, Tag.MERCURY, Tag.JOVIAN]);
-    if (count > 0) {
-      player.stock.add(Resource.MEGACREDITS, 2 * count, {log: true, from: {card: this}});
+  /** Set while its action plays a card, so the card's requirements are ignored. */
+  public data: {pending?: boolean} = {};
+
+  public static fits(card: {tags: ReadonlyArray<Tag>}): boolean {
+    return SolarVoyager.TAGS.some((tag) => card.tags.includes(tag));
+  }
+
+  private playable(player: IPlayer): Array<IProjectCard> {
+    const previous = this.data.pending;
+    this.data.pending = true;
+    try {
+      return player.getPlayableCards().filter((c) => SolarVoyager.fits(c));
+    } finally {
+      this.data.pending = previous;
     }
+  }
+
+  public override bespokeCanAct(player: IPlayer) {
+    return this.playable(player).length > 0;
+  }
+
+  public override bespokeAction(player: IPlayer) {
+    const cards = this.playable(player);
+    this.data.pending = true;
+    return new SelectProjectCardToPlay(player, cards).andThen(() => {
+      this.data.pending = false;
+      return undefined;
+    });
   }
 }

@@ -5,24 +5,27 @@ import {Tag} from '../../../common/cards/Tag';
 import {CardRenderer} from '../render/CardRenderer';
 import {Size} from '../../../common/cards/render/Size';
 
-/** The extra research card is in Draft.ts (EpicHooks.extraResearchCards). */
+/** Free space cards in research: EpicHooks.cardBuyCost. */
 export class Leviathan extends CorporationCard implements ICorporationCard {
   constructor() {
     super({
       name: CardName.LEVIATHAN,
       tags: [Tag.SPACE],
-      startingMegaCredits: 60,
+      startingMegaCredits: 40,
+      behavior: {
+        production: {titanium: 1},
+      },
 
       metadata: {
         cardNumber: 'EP-LEV',
-        description: 'You start with 60 M€.',
+        description: 'You start with 40 M€ and 1 titanium production.',
         renderData: CardRenderer.builder((b) => {
           b.br.br;
-          b.megacredits(60);
+          b.megacredits(40).production((pb) => pb.titanium(1));
           b.corpBox('effect', (ce) => {
             ce.vSpace(Size.MEDIUM);
-            ce.effect('During the research phase, you look at and may buy one more card.', (eb) => {
-              eb.plate('Research').startEffect.plus().cards(1);
+            ce.effect('During research, you buy cards with a space tag for free.', (eb) => {
+              eb.plate('Research').cards(1, {secondaryTag: Tag.SPACE}).startEffect.text('free', {size: Size.SMALL});
             });
           });
         }),

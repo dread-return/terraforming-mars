@@ -68,6 +68,8 @@ export type GameOptions = {
   /** High Orbit (Epic rules): infrastructure (silver) cards bought from six stacks, and five corporations. */
   highOrbitExpansion: boolean;
   mercuryExpansion: boolean;
+  /** Epic Corporations (fan set; was part of Corporate Era in this fork until 2026-11-27). */
+  epicCorporations: boolean;
 
   expansions: Record<Expansion, boolean>,
 
@@ -164,6 +166,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
     postludes: false,
     highorbit: false,
     mercury: false,
+    epic: false,
   },
   fastModeOption: false,
   includeFanMA: false,
@@ -211,6 +214,7 @@ export const DEFAULT_GAME_OPTIONS: GameOptions = {
   postludesExpansion: false,
   highOrbitExpansion: false,
   mercuryExpansion: false,
+  epicCorporations: false,
   automa: false,
   undoOption: false,
   venusNextExtension: false,

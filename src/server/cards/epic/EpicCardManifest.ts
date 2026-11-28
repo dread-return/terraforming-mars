@@ -235,15 +235,15 @@ import {SovietMars} from './SovietMars';
 import {TyrellCorporation} from './TyrellCorporation';
 
 /**
- * Epic Corporations. They belong to Corporate Era: the manifest uses the corpera module,
- * so they join the corporation deck whenever Corporate Era is on and are listed under it.
+ * Epic Corporations: their own fan expansion (module `epic`, the "Epic Corporations" toggle).
+ * Until 2026-11-27 they were part of Corporate Era in this fork.
  *
  * `compatibility` keeps a corp out unless the expansions it needs are on. That includes
  * corps whose tags belong to an expansion (Mars tag: Pathfinders, Venus tag: Venus Next, ...),
  * so those tags don't appear in games without that expansion.
  */
 export const EPIC_CARD_MANIFEST = new ModuleManifest({
-  module: 'corpera',
+  module: 'epic',
   corporationCards: {
     [CardName.AQUARIN_ENT]: {Factory: AquarinEnt},
     [CardName.AQUATIX]: {Factory: Aquatix},
@@ -291,7 +291,7 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.PLANETARY_HOMEOSTASIS_BUREAU]: {Factory: PlanetaryHomeostasisBureau},
     [CardName.PRG]: {Factory: PRG},
     [CardName.PROTOGEN]: {Factory: Protogen},
-    [CardName.PSI_CORPS]: {Factory: PsiCorps},
+    [CardName.PSI_CORPS]: {Factory: PsiCorps, compatibility: 'prelude'},
     [CardName.PUR_N_KLEEN]: {Factory: PurNKleen},
     [CardName.RED_LIFE_PROJECT]: {Factory: RedLifeProject},
     [CardName.RED_SHIP]: {Factory: RedShip},
@@ -344,7 +344,7 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.POLITICORP]: {Factory: PolitiCorp, compatibility: 'turmoil'},
     [CardName.PRINCESS_LTD]: {Factory: PrincessLtd},
     [CardName.SOLAR_ENTERPRISES]: {Factory: SolarEnterprises, compatibility: 'colonies'},
-    [CardName.SPARTANS_SECURITY]: {Factory: SpartansSecurity},
+    [CardName.SPARTANS_SECURITY]: {Factory: SpartansSecurity, compatibility: 'pathfinders'},
     [CardName.TEO]: {Factory: TEO},
     [CardName.THERMEX]: {Factory: Thermex},
     [CardName.TOYITSU]: {Factory: Toyitsu},
@@ -456,7 +456,7 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     // Batch 11
     [CardName.S2A_MODULAR]: {Factory: S2AModular},
     [CardName.COSMOS_CASINOS]: {Factory: CosmosCasinos},
-    [CardName.SCAVENGER]: {Factory: Scavenger},
+    [CardName.SCAVENGER]: {Factory: Scavenger, compatibility: 'prelude'},
     [CardName.MARS_ARCHIVES]: {Factory: MarsArchives},
     // Batch 12: action rules
     [CardName.KONG_INC]: {Factory: KongInc},

@@ -36,6 +36,7 @@ import {SelectAmount} from '../../../src/server/inputs/SelectAmount';
 import {SelectPlayer} from '../../../src/server/inputs/SelectPlayer';
 import {IStandardProjectCard} from '../../../src/server/cards/IStandardProjectCard';
 import {GlobalParameter} from '../../../src/common/GlobalParameter';
+import {EPIC_CORPORATIONS_NEEDS} from '../../../src/common/cards/GameModule';
 import {SpaceType} from '../../../src/common/boards/SpaceType';
 import {TileType} from '../../../src/common/TileType';
 import {Tardigrades} from '../../../src/server/cards/base/Tardigrades';
@@ -51,25 +52,44 @@ function playCorp(player: TestPlayer, corp: ICorporationCard) {
 }
 
 describe('Epic Corporations', () => {
-  describe('Corporate Era gating', () => {
-    it('are in the deck with Corporate Era, and not without it', () => {
-      expect(corpNames({corporateEra: true})).to.include(CardName.BIOME);
-      expect(corpNames({corporateEra: false})).to.not.include(CardName.BIOME);
+  describe('Epic Corporations expansion gating', () => {
+    it('are in the deck with Epic Corporations, and not with Corporate Era alone', () => {
+      expect(corpNames({epicCorporations: true})).to.include(CardName.BIOME);
+      expect(corpNames({corporateEra: true})).to.not.include(CardName.BIOME);
+      // Corporate Era is back to its own corporations.
+      expect(corpNames({corporateEra: true})).to.include(CardName.CREDICOR);
     });
 
     it('corps that need another expansion only join with it', () => {
-      const plain = corpNames({corporateEra: true});
+      const plain = corpNames({epicCorporations: true});
       expect(plain).to.not.include(CardName.HARBINGER);
       expect(plain).to.not.include(CardName.LOBOS_DEL_CIELO);
       expect(plain).to.not.include(CardName.TEPCO);
       expect(plain).to.not.include(CardName.GALACTICER);
+      expect(plain).to.not.include(CardName.SPARTANS_SECURITY);
+      expect(plain).to.not.include(CardName.PSI_CORPS);
 
-      const full = corpNames({corporateEra: true, coloniesExtension: true, venusNextExtension: true, nuclearExpansion: true, solarisExpansion: true});
-      expect(full).to.include.members([CardName.HARBINGER, CardName.LOBOS_DEL_CIELO, CardName.TEPCO, CardName.GALACTICER]);
+      const full = corpNames({epicCorporations: true, coloniesExtension: true, venusNextExtension: true, nuclearExpansion: true,
+        solarisExpansion: true, pathfindersExpansion: true, preludeExtension: true});
+      expect(full).to.include.members([CardName.HARBINGER, CardName.LOBOS_DEL_CIELO, CardName.TEPCO, CardName.GALACTICER,
+        CardName.SPARTANS_SECURITY, CardName.PSI_CORPS]);
     });
 
-    it('every Epic corp is listed under the Corporate Era module', () => {
-      expect(EPIC_CARD_MANIFEST.module).eq('corpera');
+    it('every Epic corp is listed under the Epic Corporations module', () => {
+      expect(EPIC_CARD_MANIFEST.module).eq('epic');
+    });
+
+    it('the expansions ticked with Epic Corporations cover every official expansion its corps need', () => {
+      const official: ReadonlyArray<string> = ['prelude', 'prelude2', 'venus', 'colonies', 'turmoil', 'pathfinders', 'moon', 'ares', 'promo', 'community'];
+      const needed = new Set<string>();
+      for (const spec of Object.values(EPIC_CARD_MANIFEST.corporationCards)) {
+        for (const e of [spec.compatibility ?? []].flat()) {
+          if (official.includes(e)) {
+            needed.add(e);
+          }
+        }
+      }
+      expect([...EPIC_CORPORATIONS_NEEDS]).to.have.members([...needed]);
     });
   });
 

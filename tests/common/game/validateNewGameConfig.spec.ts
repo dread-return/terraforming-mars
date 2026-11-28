@@ -47,6 +47,7 @@ function newGameConfig(overrides: Partial<NewGameConfig> = {}): NewGameConfig {
       postludes: false,
       highorbit: false,
       mercury: false,
+      epic: false,
       industries: false,
       eternity: false,
     },

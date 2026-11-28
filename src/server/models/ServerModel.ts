@@ -570,6 +570,7 @@ export class Server {
         postludes: options.postludesExpansion,
         highorbit: options.highOrbitExpansion,
         mercury: options.mercuryExpansion,
+        epic: options.epicCorporations,
       },
       fastModeOption: options.fastModeOption,
       includedCards: options.includedCards,

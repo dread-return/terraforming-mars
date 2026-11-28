@@ -61,9 +61,6 @@ export class GameCards {
     this.gameOptions = gameOptions;
 
     const manifests: Array<[boolean, ModuleManifest]> = [
-      // Epic Corporations are part of Corporate Era in this fork. They're listed first so that
-      // unshuffled decks (tests) still deal the official corporations first.
-      [gameOptions.corporateEra, EPIC_CARD_MANIFEST],
       [true, BASE_CARD_MANIFEST],
       [gameOptions.corporateEra, CORP_ERA_CARD_MANIFEST],
       [gameOptions.preludeExtension, PRELUDE_CARD_MANIFEST],
@@ -91,6 +88,8 @@ export class GameCards {
       [gameOptions.postludesExpansion, POSTLUDES_CARD_MANIFEST],
       [gameOptions.highOrbitExpansion, HIGH_ORBIT_CARD_MANIFEST],
       [gameOptions.mercuryExpansion, MERCURY_CARD_MANIFEST],
+      // Epic Corporations (fan set). Corporations that need another expansion say so in their compatibility.
+      [gameOptions.epicCorporations, EPIC_CARD_MANIFEST],
     ];
 
     this.moduleManifests = manifests

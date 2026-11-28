@@ -25,6 +25,7 @@ export const EXPANSIONS = [
   'postludes',
   'highorbit',
   'mercury',
+  'epic',
 ] as const;
 
 export const GAME_MODULES = [
@@ -63,6 +64,7 @@ export const MODULE_NAMES = {
   postludes: 'Postludes',
   highorbit: 'High Orbit',
   mercury: 'Mercury vs Mars',
+  epic: 'Epic Corporations',
 } satisfies Record<GameModule, string>;
 
 export const DEFAULT_EXPANSIONS = {
@@ -92,4 +94,13 @@ export const DEFAULT_EXPANSIONS = {
   postludes: false,
   highorbit: false,
   mercury: false,
+  epic: false,
 } satisfies Record<Expansion, boolean>;
+
+/**
+ * Epic Corporations (fan set): the official expansions its corporations rely on. The create-game form ticks
+ * them along with it. Unticking one later only leaves out the corporations that need it (see each corporation's
+ * `compatibility` in EpicCardManifest.ts); Epic Corporations stays ticked. The few corporations that need a fan
+ * expansion (Mercury vs Mars, Nuclear, Solaris) join only when that expansion is ticked.
+ */
+export const EPIC_CORPORATIONS_NEEDS: ReadonlyArray<Expansion> = ['prelude', 'venus', 'colonies', 'turmoil', 'pathfinders'];

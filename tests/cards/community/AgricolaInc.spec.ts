@@ -26,12 +26,11 @@ describe('AgricolaInc', () => {
     expect(player.production.plants).to.eq(1);
   });
 
-  // Spartans Security (Epic Corporations, part of Corporate Era here) brings the Mars tag into every game.
   it('Scores endgame VP correctly', () => {
-    expect(card.getVictoryPoints(player)).to.eq(-20);
+    expect(card.getVictoryPoints(player)).to.eq(-18);
 
     player.playedCards.push(new SolarWindPower(), new Research(), new CoronaExtractor());
-    expect(card.getVictoryPoints(player)).to.eq(-13);
+    expect(card.getVictoryPoints(player)).to.eq(-11);
   });
 
   it('Scores endgame VP correctly, with Venus', () => {
@@ -39,19 +38,19 @@ describe('AgricolaInc', () => {
     card.play(player);
     player.playedCards.push(card);
 
-    expect(card.getVictoryPoints(player)).to.eq(-22);
+    expect(card.getVictoryPoints(player)).to.eq(-20);
 
     // Science, Space, Power
     player.playedCards.push(new SolarWindPower());
-    expect(card.getVictoryPoints(player)).to.eq(-16);
+    expect(card.getVictoryPoints(player)).to.eq(-14);
     // Science, Science
     player.playedCards.push(new Research());
-    expect(card.getVictoryPoints(player)).to.eq(-15);
+    expect(card.getVictoryPoints(player)).to.eq(-13);
     // Space, Power
     player.playedCards.push(new CoronaExtractor());
-    expect(card.getVictoryPoints(player)).to.eq(-15);
+    expect(card.getVictoryPoints(player)).to.eq(-13);
     // Venus, Animal, Science
     player.playedCards.push(new VenusianAnimals());
-    expect(card.getVictoryPoints(player)).to.eq(-11);
+    expect(card.getVictoryPoints(player)).to.eq(-9);
   });
 });

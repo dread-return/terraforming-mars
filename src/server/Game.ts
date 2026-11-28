@@ -329,6 +329,7 @@ export class Game implements IGame, Logger {
         postludes: partialOptions.postludesExpansion ?? false,
         highorbit: partialOptions.highOrbitExpansion ?? false,
         mercury: partialOptions.mercuryExpansion ?? false,
+        epic: partialOptions.epicCorporations ?? false,
       };
     }
     const gameOptions = {...DEFAULT_GAME_OPTIONS, ...partialOptions};

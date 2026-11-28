@@ -116,6 +116,12 @@
                 <span v-i18n>All</span>
               </label>
 
+              <input type="checkbox" name="epicCorporations" id="epicCorporations-checkbox" v-model="expansions.epic">
+              <label for="epicCorporations-checkbox" class="expansion-button">
+                <div class="create-game-expansion-icon expansion-icon-epic"></div>
+                <span v-i18n>Epic Corporations</span>&nbsp;<span class="tooltip" v-i18n data-tooltip="Fan set: over 200 extra corporations. Ticks Prelude, Venus Next, Colonies, Turmoil and Pathfinders, which some of them need. Untick any of those and only the corporations that need it are left out.">&#9432;</span>
+              </label>
+
               <input type="checkbox" name="ares" id="ares-checkbox" v-model="expansions.ares">
               <label for="ares-checkbox" class="expansion-button">
                 <div class="create-game-expansion-icon expansion-icon-ares"></div>
@@ -712,7 +718,7 @@ import {getCard} from '@/client/cards/ClientCardManifest';
 import {BOT_DIFFICULTIES, BotDifficulty, NewGameConfig, NewPlayerModel} from '@/common/game/NewGameConfig';
 import {vueRoot} from '@/client/components/vueRoot';
 import {CreateGameModel} from './CreateGameModel';
-import {Expansion} from '@/common/cards/GameModule';
+import {EPIC_CORPORATIONS_NEEDS, Expansion} from '@/common/cards/GameModule';
 import {paths} from '@/common/app/paths';
 import {JSONProcessor} from './JSONProcessor';
 import {defaultCreateGameModel} from './defaultCreateGameModel';
@@ -748,7 +754,7 @@ const MIN_EXPANSION_ROWS = 6;
 // The fan-made expansions in the Expansions list, which their "All" ticks and unticks.
 // (Industries, Postludes and High Orbit live in the Options column.)
 const FAN_EXPANSIONS: ReadonlyArray<Expansion> = [
-  'ares', 'community', 'moon', 'pathfinders', 'ceo', 'starwars', 'underworld', 'deltaProject', 'betterments',
+  'epic', 'ares', 'community', 'moon', 'pathfinders', 'ceo', 'starwars', 'underworld', 'deltaProject', 'betterments',
   'robantilles', 'solaris', 'idesofmars', 'nuclear', 'venusphase2', 'eternity', 'mercury',
 ];
 /** Enough rows for every expansion, so the list is one column. */
@@ -828,6 +834,15 @@ export default defineComponent({
       if (value === false) {
         this.expansions.mercury = false;
         this.coloniesTradeFleetProject = false;
+      }
+    },
+    'expansions.epic': function(value: boolean) {
+      // Epic Corporations: tick the expansions its corporations rely on. Unticking one of them later
+      // leaves Epic Corporations ticked; the server just leaves out the corporations that need it.
+      if (value === true && this.uploading === false) {
+        for (const module of EPIC_CORPORATIONS_NEEDS) {
+          this.expansions[module] = true;
+        }
       }
     },
     'expansions.mercury': function(value: boolean) {

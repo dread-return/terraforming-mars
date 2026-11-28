@@ -27,6 +27,7 @@
         <a v-if="gameOptions.expansions.industries" :href="rulebookUrls.industries" class="tooltip" data-tooltip="Industries rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-industries"></div></a>
         <a v-if="gameOptions.expansions.postludes" :href="rulebookUrls.postludes" class="tooltip" data-tooltip="Postludes rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-postludes"></div></a>
         <a v-if="gameOptions.expansions.highorbit" :href="rulebookUrls.highorbit" class="tooltip" data-tooltip="High Orbit rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-highorbit"></div></a>
+        <a v-if="gameOptions.expansions.epic" :href="rulebookUrls.epic" class="tooltip" data-tooltip="Epic Corporations" target="_blank"><div class="create-game-expansion-icon expansion-icon-epic"></div></a>
         <a v-if="gameOptions.expansions.mercury" :href="rulebookUrls.mercury" class="tooltip" data-tooltip="Mercury vs Mars rules" target="_blank"><div class="create-game-expansion-icon expansion-icon-mercury"></div></a>
       </li>
 

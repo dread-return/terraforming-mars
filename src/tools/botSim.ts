@@ -23,7 +23,7 @@
 import {fork} from 'node:child_process';
 import * as fs from 'node:fs';
 import {BoardName} from '../common/boards/BoardName';
-import {DEFAULT_EXPANSIONS, Expansion} from '../common/cards/GameModule';
+import {DEFAULT_EXPANSIONS, EPIC_CORPORATIONS_NEEDS, Expansion} from '../common/cards/GameModule';
 import {BOT_DIFFICULTIES, BotDifficulty, NewGameConfig} from '../common/game/NewGameConfig';
 import {RandomMAOptionType} from '../common/ma/RandomMAOptionType';
 import {Phase} from '../common/Phase';
@@ -75,6 +75,7 @@ const EXPANSION_LIST = Object.keys(DEFAULT_EXPANSIONS) as Array<Expansion>;
 const NEEDS: Partial<Record<Expansion, Array<Expansion>>> = {
   venusphase2: ['venus'],
   mercury: ['colonies', 'turmoil'],
+  epic: [...EPIC_CORPORATIONS_NEEDS],
 };
 
 function withExpansions(config: NewGameConfig, ...list: Array<Expansion>): NewGameConfig {

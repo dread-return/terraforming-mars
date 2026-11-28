@@ -90,6 +90,7 @@ export class GlobalEventDealer {
       postludes: gameOptions.postludesExpansion,
       highorbit: gameOptions.highOrbitExpansion,
       mercury: gameOptions.mercuryExpansion,
+      epic: gameOptions.epicCorporations,
     };
 
     for (const manifest of ALL_MODULE_MANIFESTS) {

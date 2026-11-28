@@ -26,7 +26,7 @@ describe('InterplanetaryTrade', () => {
     expect(player.production.megacredits).to.eq(4);
   });
 
-  it('Should only count wild tags up to the max amount of tag types existing (11 at base, with the Mars tag from Spartans Security)', () => {
+  it('Should only count wild tags up to the max amount of tag types existing (10 at base)', () => {
     const card = new InterplanetaryTrade();
     const [/* game */, player] = testGame(1);
 
@@ -39,10 +39,10 @@ describe('InterplanetaryTrade', () => {
     player.playedCards.push(new LunarBeam());
     player.playedCards.push(new ColonizerTrainingCamp());
     card.play(player);
-    expect(player.production.megacredits).to.eq(11);
+    expect(player.production.megacredits).to.eq(10);
   });
 
-  it('Should only count wild tags up to the max amount of tag types existing (12 with venus)', () => {
+  it('Should only count wild tags up to the max amount of tag types existing (11 with venus)', () => {
     const card = new InterplanetaryTrade();
     const [/* game */, player] = testGame(1, {venusNextExtension: true});
     player.playedCards.push(new AdvancedAlloys());
@@ -54,7 +54,7 @@ describe('InterplanetaryTrade', () => {
     player.playedCards.push(new LunarBeam());
     player.playedCards.push(new ColonizerTrainingCamp());
     card.play(player);
-    expect(player.production.megacredits).to.eq(12);
+    expect(player.production.megacredits).to.eq(11);
   });
 
   it('Should only count wild tags up to the max amount of tag types existing (12 with venus and moon)', () => {

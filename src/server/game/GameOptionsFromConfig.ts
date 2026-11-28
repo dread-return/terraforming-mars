@@ -87,6 +87,7 @@ export function gameOptionsFromConfig(gameReq: NewGameConfig, boardName: BoardNa
     postludesExpansion: gameReq.expansions.postludes ?? false,
     highOrbitExpansion: gameReq.expansions.highorbit ?? false,
     mercuryExpansion: gameReq.expansions.mercury ?? false,
+    epicCorporations: gameReq.expansions.epic ?? false,
     undoOption: gameReq.undoOption,
     venusNextExtension: gameReq.expansions.venus,
   };

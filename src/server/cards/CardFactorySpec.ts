@@ -79,6 +79,8 @@ export function isCompatibleWith(cf: CardFactorySpec<any>, gameOptions: GameOpti
       return gameOptions.highOrbitExpansion;
     case 'mercury':
       return gameOptions.mercuryExpansion;
+    case 'epic':
+      return gameOptions.epicCorporations;
     }
     throw new Error(`Unhandled expansion type ${expansion}`);
   });

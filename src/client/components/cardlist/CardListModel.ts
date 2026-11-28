@@ -51,6 +51,7 @@ const MODULE_ABBREVIATIONS = {
   postludes: 'Po',
   highorbit: 'Ho',
   mercury: 'M',
+  epic: 'Ep',
 } satisfies Record<GameModule, string>;
 
 const TYPE_ABBREVIATIONS = {
@@ -128,6 +129,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       postludes: true,
       highorbit: true,
       mercury: true,
+      epic: true,
     },
     types: {
       event: true,

@@ -45,6 +45,7 @@ function newGameConfigForTest(): NewGameConfig {
       postludes: false,
       highorbit: false,
       mercury: false,
+      epic: false,
       industries: false,
       eternity: false,
     },

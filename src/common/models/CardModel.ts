@@ -18,6 +18,7 @@ export interface CardModel {
     bonusResource?: Array<Resource>; // Used with the Mining cards and Robotic Workforce
     cloneTag?: Tag; // Used with Pathfinders
     gulag?: number; // Epic Corporations: communes in Soviet Mars's gulag
+    diseases?: number; // Epic Corporations: Panacea Biologics' diseases on this (infected player's) corporation
     standardProjectCanPayWith?: StandardProjectCanPayWith; // Set for standard projects; undefined for regular project cards
     /** Steel/titanium allowed (or steel worth more) for this card beyond its tags, e.g. from an Epic corporation. */
     paymentOverrides?: {

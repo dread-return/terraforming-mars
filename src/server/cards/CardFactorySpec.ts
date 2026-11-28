@@ -14,6 +14,11 @@ export type CardFactorySpec<T> = {
   compatibility?: OneOrArray<Expansion>;
   // False when the card should not be instantiated. It's reserved for fake and proxy cards.
   instantiate?: boolean;
+  /**
+   * True for a card taken out of the game (in this fork) that saved games may still hold. It can still be
+   * recreated by name when a game loads, but it's never dealt, chosen in a custom list or shown in the card list.
+   */
+  retired?: boolean;
   // Used for Turmoil's global events. When true, classified as a "negative" global event.
   negative?: boolean;
   // True for cards that need one of the six GIGA fan parties: they are only in games with Giga Turmoil.

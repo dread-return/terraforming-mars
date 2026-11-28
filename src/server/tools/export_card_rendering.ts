@@ -63,6 +63,10 @@ class CardProcessor {
 
   private static processDeck(module: GameModule, cardManifest: CardManifest<ICard>) {
     for (const factory of CardManifest.values(cardManifest)) {
+      // Retired cards only exist so that saved games still load.
+      if (factory.retired === true) {
+        continue;
+      }
       CardProcessor.processCard(module, new factory.Factory(), factory.compatibility);
     }
   }

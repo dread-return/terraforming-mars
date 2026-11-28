@@ -47,6 +47,8 @@ const NOT_DISPLAYED: ReadonlyArray<CardName> = [
   // Eternity: only this generation, only right after the prelude, or depends on the card played.
   CardName.CRYPTO_PONZI_SCHEME,
   CardName.MARS_ROVER_EXPLORING_MISSION,
+  // Retired (kept so saved games load): C.A.S.H. Co.
+  CardName.CASH_CO,
   // Eternity: Greeting Card's discount only applies to the card it revealed, this generation.
   CardName.GREETING_CARD,
   // Mercury vs Mars: one discount for several tags (or for placing a colony), not per tag.

@@ -7,6 +7,9 @@
       <span class="card-gulag-counter-number">{{ card.gulag }}</span>
       <span class="card-epic-marker card-epic-marker--gulag"></span>
     </div>
+    <div v-if="card.diseases" class="card-disease-badges" :title="$t('Diseases from Panacea Biologics')">
+      <span v-for="n in card.diseases" :key="n" class="card-resource card-resource-disease card-disease-badge"></span>
+    </div>
   </div>
 </template>
 

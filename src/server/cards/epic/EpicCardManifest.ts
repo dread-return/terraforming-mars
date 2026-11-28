@@ -1,6 +1,11 @@
 import {CardName} from '../../../common/cards/CardName';
 import {ModuleManifest} from '../ModuleManifest';
 import {AquarinEnt} from './AquarinEnt';
+import {PanaceaBiologics} from './PanaceaBiologics';
+import {BuyNLarge} from './BuyNLarge';
+import {CollinsRubinAndHaytham} from './CollinsRubinAndHaytham';
+import {ExtrasolarColonizationAdministration} from './ExtrasolarColonizationAdministration';
+import {OlympicGalacticCorporation} from './OlympicGalacticCorporation';
 import {Aquatix} from './Aquatix';
 import {ArtemisClub} from './ArtemisClub';
 import {ArtographersCollective} from './ArtographersCollective';
@@ -245,6 +250,11 @@ import {TyrellCorporation} from './TyrellCorporation';
 export const EPIC_CARD_MANIFEST = new ModuleManifest({
   module: 'epic',
   corporationCards: {
+    // Retired by the corporation overlap review (2026-11-27/28): kept only so saved games still load.
+    [CardName.BUY_N_LARGE]: {Factory: BuyNLarge, retired: true},
+    [CardName.COLLINS_RUBIN_AND_HAYTHAM]: {Factory: CollinsRubinAndHaytham, retired: true},
+    [CardName.EXTRASOLAR_COLONIZATION_ADMINISTRATION]: {Factory: ExtrasolarColonizationAdministration, retired: true},
+    [CardName.OLYMPIC_GALACTIC_CORPORATION]: {Factory: OlympicGalacticCorporation, retired: true},
     [CardName.AQUARIN_ENT]: {Factory: AquarinEnt},
     [CardName.AQUATIX]: {Factory: Aquatix},
     [CardName.ARTEMIS_CLUB]: {Factory: ArtemisClub},
@@ -369,7 +379,9 @@ export const EPIC_CARD_MANIFEST = new ModuleManifest({
     [CardName.OMEGA_CORPORATION]: {Factory: OmegaCorporation},
     [CardName.PAX_UTOPIA]: {Factory: PaxUtopia},
     [CardName.POLY_PLANTAE]: {Factory: PolyPlantae},
-    [CardName.QUASH]: {Factory: Quash},
+    [CardName.QUASH]: {Factory: Quash, retired: true},
+    // Replaces Quash (2026-11-28). Not dealt in solo games (EpicHooks.NOT_IN_SOLO).
+    [CardName.PANACEA_BIOLOGICS]: {Factory: PanaceaBiologics},
     [CardName.REDUX]: {Factory: Redux},
     [CardName.RESOURCEFUL_COLLECTIVE]: {Factory: ResourcefulCollective},
     [CardName.STORYTELLER_INC]: {Factory: StorytellerInc},

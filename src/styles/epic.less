@@ -629,6 +629,24 @@
     font-family: 'EtArchivoBlack', sans-serif; font-size: 22px; color: #f5e11b;
     background: #7a2a9a; padding: 4px 12px; border-radius: 40% 60% 50% 45%; text-shadow: 1px 1px 0 #111;
   }
+  // Panacea Biologics: clean pharmaceutical branding, teal wordmark with a green medical cross.
+  &.et-logo-ep-panacea {
+    font-family: 'EpComfortaa', sans-serif; font-weight: 700; font-size: 21px; line-height: 1; letter-spacing: 1px;
+    color: #0b7f86; text-shadow: 1px 1px 0 #ffffff, 0 0 4px rgba(11, 127, 134, 0.25);
+    .et-line-0::before {
+      content: "";
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin-right: 4px;
+      vertical-align: -1px;
+      background:
+        linear-gradient(#2fbf71, #2fbf71) center / 5px 15px no-repeat,
+        linear-gradient(#2fbf71, #2fbf71) center / 15px 5px no-repeat;
+      border-radius: 2px;
+    }
+    .et-line-1 { .ep-sub(); font-size: 9px; letter-spacing: 4.5px; color: #123c48; margin-left: 20px; }
+  }
   &.et-logo-ep-redux {
     font-family: 'EpAudiowide', sans-serif; font-size: 24px; color: #fff; letter-spacing: 2px;
     background: #1d3a7a; padding: 2px 12px; border-radius: 50%; border: 2px solid #5ab0e8;
@@ -1428,4 +1446,30 @@
 .card-container.card-politicorp .card-corporation-box {
   min-height: 150px;
   padding: 4px 8px;
+}
+
+
+// Panacea Biologics: 1 to 3 disease badges along the bottom of an infected player's corporation.
+.card-disease-badges {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 3px;
+  z-index: 2;
+}
+.card-disease-badge {
+  width: 22px;
+  height: 22px;
+  background-size: 22px 22px;
+  border-radius: 4px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+}
+
+// Panacea Biologics: three effects and an action without the box.
+.card-container.card-panacea-biologics .card-content-wrapper {
+  overflow-y: auto;
+  .card-row:has(.card-effect-box) { zoom: 0.74; }
+  .card-description { zoom: 0.85; }
 }

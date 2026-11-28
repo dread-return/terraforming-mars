@@ -739,7 +739,8 @@ export class EpicHooks {
    * owner is in that corporation's getCardDiscount).
    */
   public static cardCostAdjustment(player: IPlayer, card: IProjectCard): number {
-    let adjustment = 0;
+    // Panacea Biologics: 1 M€ more per disease on this player's corporation.
+    let adjustment = EpicHooks.diseasesOn(player);
     const game = player.game;
     for (const p of game.players) {
       if (p.id === player.id) {
@@ -1153,6 +1154,14 @@ export class EpicHooks {
         }));
       }
     }
+    // Panacea Biologics: an infected player may buy a cure.
+    for (const owner of player.game.players) {
+      const panacea = owner.tableau.get(CardName.PANACEA_BIOLOGICS) as unknown as {cureOption(o: IPlayer, p: IPlayer): SelectOption | undefined} | undefined;
+      const cure = panacea?.cureOption(owner, player);
+      if (cure !== undefined) {
+        options.push(cure);
+      }
+    }
     // Amazonis: any player may buy basic resources for 3 M€ each; Amazonis gets 2 M€ per resource an opponent buys.
     const amazonis = player.game.players.find((p) => p.tableau.has(CardName.AMAZONIS));
     if (amazonis !== undefined && player.canAfford(3)) {
@@ -1361,6 +1370,21 @@ export class EpicHooks {
     if (archives !== undefined && cards.length > 0) {
       (archives as unknown as {offerArchive(p: IPlayer, c: ReadonlyArray<IProjectCard>): void}).offerArchive(player, cards);
     }
+  }
+
+  /** Corporations that are never dealt in solo games. */
+  public static readonly NOT_IN_SOLO: ReadonlySet<CardName> = new Set([CardName.PANACEA_BIOLOGICS]);
+
+  /** Panacea Biologics: diseases on `player`'s corporation (from any other player's Panacea Biologics). */
+  public static diseasesOn(player: IPlayer): number {
+    let total = 0;
+    for (const p of player.game.players) {
+      const panacea = p === player ? undefined : p.tableau.get(CardName.PANACEA_BIOLOGICS);
+      if (panacea !== undefined) {
+        total += dataOf<{diseases?: Record<string, number>}>(panacea).diseases?.[player.id] ?? 0;
+      }
+    }
+    return total;
   }
 
   /** Aquatix: oceans may go on land areas too, except next to 2 or more cities. */

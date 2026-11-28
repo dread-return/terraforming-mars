@@ -12,7 +12,8 @@ import {CEO_CARD_MANIFEST} from './cards/ceos/CeoCardManifest';
 import {CardManifest, ModuleManifest} from './cards/ModuleManifest';
 import {CardName} from '../common/cards/CardName';
 import {ICard} from './cards/ICard';
-import {isCompatibleWith} from './cards/CardFactorySpec';
+import {CardFactorySpec, isCompatibleWith} from './cards/CardFactorySpec';
+import {ALL_MODULE_MANIFESTS} from './cards/AllManifests';
 import {GameOptions} from './game/GameOptions';
 import {ICorporationCard} from './cards/corporation/ICorporationCard';
 import {isIProjectCard, IProjectCard} from './cards/IProjectCard';
@@ -53,6 +54,13 @@ import {HELD_OUT_POSTLUDES, HIGH_ORBIT_POSTLUDES, isPostludeName} from '../commo
  * ... and one other place. When trying to determine the available standard
  * projects for a game.
  */
+/** Cards taken out of the game (see CardFactorySpec.retired). They stay loadable for saved games. */
+function isRetired(name: CardName): boolean {
+  return ALL_MODULE_MANIFESTS.some((manifest) =>
+    (['corporationCards', 'projectCards', 'preludeCards', 'ceoCards'] as const).some((key) =>
+      (manifest[key] as Partial<Record<CardName, CardFactorySpec<ICard>>> | undefined)?.[name]?.retired === true));
+}
+
 export class GameCards {
   private readonly gameOptions: GameOptions;
   private readonly moduleManifests: Array<ModuleManifest>;
@@ -100,6 +108,7 @@ export class GameCards {
   private instantiate<T extends ICard>(manifest: CardManifest<T>): Array<T> {
     return CardManifest.values(manifest)
       .filter((factory) => factory.instantiate !== false)
+      .filter((factory) => factory.retired !== true)
       .filter((factory) => isCompatibleWith(factory, this.gameOptions))
       .map((factory) => new factory.Factory());
   }
@@ -190,7 +199,7 @@ export class GameCards {
     if (customCards.length === 0) {
       return undefined;
     }
-    const names = new Set(customCards.map(resolveCardName));
+    const names = new Set(customCards.map(resolveCardName).filter((name) => !isRetired(name)));
     return Array.from(names, (name) => <T> newCard(name));
   }
 

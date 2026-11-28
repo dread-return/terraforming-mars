@@ -85,4 +85,5 @@ export enum CardResource {
   ADMINISTRATION = 'Administration',
   VENUS_FUND = 'Venus fund',
   COMMUNE = 'Commune',
+  PATENT = 'Patent',
 }

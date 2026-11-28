@@ -229,6 +229,7 @@ export function hashToModel(windowLocationHash: string): CardListModel {
       [CardResource.ADMINISTRATION]: true,
       [CardResource.VENUS_FUND]: true,
       [CardResource.COMMUNE]: true,
+      [CardResource.PATENT]: true,
     },
     searchIndex: SearchIndex.create(),
     namesOnly: true,

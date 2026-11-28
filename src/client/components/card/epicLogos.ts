@@ -130,6 +130,7 @@ export const EPIC_LOGOS: Partial<Record<CardName, {slug: string, lines: Readonly
   [CardName.PAX_UTOPIA]: {slug: 'ep-pax', lines: ['Pax Utopia Ltd.']},
   [CardName.POLY_PLANTAE]: {slug: 'ep-poly', lines: ['Poly Plantae']},
   [CardName.QUASH]: {slug: 'ep-quash', lines: ['QUASH']},
+  [CardName.PANACEA_BIOLOGICS]: {slug: 'ep-panacea', lines: ['PANACEA', 'BIOLOGICS']},
   [CardName.REDUX]: {slug: 'ep-redux', lines: ['REDUX']},
   [CardName.RESOURCEFUL_COLLECTIVE]: {slug: 'ep-resourceful', lines: ['RESOURCEFUL', 'COLLECTIVE']},
   [CardName.STORYTELLER_INC]: {slug: 'ep-storyteller', lines: ['StoryTeller', 'Inc.']},

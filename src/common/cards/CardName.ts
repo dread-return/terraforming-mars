@@ -2132,6 +2132,7 @@ export enum CardName {
   POLY_PLANTAE = 'Poly Plantae',
   PREFAB_U_HAUS = 'Prefab-U-Haus',
   QUASH = 'Quash',
+  PANACEA_BIOLOGICS = 'Panacea Biologics',
   REDUX = 'Redux',
   RESOURCEFUL_COLLECTIVE = 'Resourceful Collective',
   ROD_ASSOCIATION = 'ROD Association',

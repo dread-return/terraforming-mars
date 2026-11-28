@@ -17,6 +17,9 @@ import {AsteroidFromTheInnerSolarSystem} from './AsteroidFromTheInnerSolarSystem
 import {AsteroidFullOfRNA} from './AsteroidFullOfRNA';
 import {AstralBog} from './AstralBog';
 import {AstroSoils} from './AstroSoils';
+import {CASHCo} from './CASHCo';
+import {MiserVision} from './MiserVision';
+import {NewThorgate} from './NewThorgate';
 import {AtmosphericViabilityTesting} from './AtmosphericViabilityTesting';
 import {AwardFunding} from './AwardFunding';
 import {BamBooBuildings} from './BamBooBuildings';
@@ -449,6 +452,10 @@ export const ETERNITY_CARD_MANIFEST = new ModuleManifest({
   },
   corporationCards: {
     [CardName.ASTRO_SOILS]: {Factory: AstroSoils},
+    // Retired by the corporation overlap review (2026-11-27/28): kept only so saved games still load.
+    [CardName.CASH_CO]: {Factory: CASHCo, retired: true},
+    [CardName.MISERVISION]: {Factory: MiserVision, retired: true},
+    [CardName.NEW_THORGATE]: {Factory: NewThorgate, retired: true},
     [CardName.BAMBOO_BUILDINGS]: {Factory: BamBooBuildings},
     [CardName.DGT_MARS_CREW]: {Factory: DGTMarsCrew},
     [CardName.EXOPLANET_BUILDERS]: {Factory: ExoplanetBuilders},

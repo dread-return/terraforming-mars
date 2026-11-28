@@ -50,6 +50,13 @@ export function cardsToModel(
       discount = player.game.turmoil?.chairman === player ? [{amount: 1}] : undefined;
     }
 
+    // Epic Corporations: Panacea Biologics' diseases are shown on the infected player's (first) corporation.
+    let diseases: number | undefined;
+    if (card === player.playedCards.corporations()[0]) {
+      const count = EpicHooks.diseasesOn(player);
+      diseases = count > 0 ? count : undefined;
+    }
+
     let calculatedCost = card.cost;
     if (options.showCalculatedCost) {
       if (isIStandardProjectCard(card)) {
@@ -66,6 +73,7 @@ export function cardsToModel(
       bonusResource: isIProjectCard(card) ? card.bonusResource : undefined,
       discount: discount,
       ...(gulag !== undefined ? {gulag} : {}),
+      ...(diseases !== undefined ? {diseases} : {}),
       cloneTag: isICloneTagCard(card) ? card.cloneTag : undefined,
     };
     if (isIStandardProjectCard(card)) {

@@ -361,7 +361,9 @@ export class Game implements IGame, Logger {
     const projectDeck = new ProjectDeck(gameCards.getProjectCards(), [], rng);
     projectDeck.shuffle();
 
-    const corporationDeck = new CorporationDeck(gameCards.getCorporationCards(), [], rng);
+    // Some fan corporations (EpicHooks.NOT_IN_SOLO) need opponents, so they're left out of solo games.
+    const corporationCards = gameCards.getCorporationCards().filter((card) => players.length > 1 || !EpicHooks.NOT_IN_SOLO.has(card.name));
+    const corporationDeck = new CorporationDeck(corporationCards, [], rng);
     corporationDeck.shuffle();
 
     const preludeDeck = new PreludeDeck(gameCards.getPreludeCards(), [], rng);

@@ -26,6 +26,15 @@ import {SpartansSecurity} from '../../../src/server/cards/epic/SpartansSecurity'
 import {HephaestusWorks} from '../../../src/server/cards/mercury/HephaestusWorks';
 import {PlanetForge} from '../../../src/server/cards/epic/PlanetForge';
 import {AquarinEnt} from '../../../src/server/cards/epic/AquarinEnt';
+import {PanaceaBiologics} from '../../../src/server/cards/epic/PanaceaBiologics';
+import {EpicHooks} from '../../../src/server/cards/epic/EpicHooks';
+import {SelectOption} from '../../../src/server/inputs/SelectOption';
+import {PlayerInput} from '../../../src/server/PlayerInput';
+import {Tardigrades} from '../../../src/server/cards/base/Tardigrades';
+import {cardsToModel} from '../../../src/server/models/ModelUtils';
+import {GameCards} from '../../../src/server/GameCards';
+import {newCard} from '../../../src/server/createCard';
+import {DEFAULT_GAME_OPTIONS} from '../../../src/server/game/GameOptions';
 import {TEO} from '../../../src/server/cards/epic/TEO';
 import {GenetiCorp} from '../../../src/server/cards/eternity/GenetiCorp';
 import {BamBooBuildings} from '../../../src/server/cards/eternity/BamBooBuildings';
@@ -230,5 +239,122 @@ describe('Corporations reworked after the overlap review (2026-11-27)', () => {
     expect(player.plants).eq(3);
     // Not for a non-space removal afterwards.
     expect(game.deferredActions.length).eq(0);
+  });
+
+  describe('Panacea Biologics (replaces Quash)', () => {
+    function cureOption(player: TestPlayer): SelectOption | undefined {
+      const free: PlayerInput | undefined = EpicHooks.freeActionOption(player);
+      const options = free === undefined ? [] : free instanceof OrOptions ? free.options : [free];
+      return options.find((o) => JSON.stringify(o.title).includes('cure')) as SelectOption | undefined;
+    }
+
+    it('Patient Zero puts a disease on each opponent; each disease costs them 1 M€ per card, shown on their corporation', () => {
+      const corp = new PanaceaBiologics();
+      const [game, player, other, third] = testGame(3, {epicCorporations: true});
+      player.playCorporationCard(corp);
+      runAllActions(game);
+      corp.initialAction(player);
+      expect(EpicHooks.diseasesOn(other)).eq(1);
+      expect(EpicHooks.diseasesOn(third)).eq(1);
+      expect(EpicHooks.diseasesOn(player)).eq(0);
+      const card = fakeCard({cost: 10});
+      expect(other.getCardCost(card)).eq(11);
+      expect(player.getCardCost(card)).eq(10);
+      // The badge count travels on the infected player's corporation.
+      const otherCorp = other.playedCards.corporations()[0];
+      if (otherCorp !== undefined) {
+        expect(cardsToModel(other, [otherCorp])[0].diseases).eq(1);
+      }
+      expect(cardsToModel(player, [corp])[0].diseases).is.undefined;
+    });
+
+    it('Outbreak: any microbe tag lets the owner pick who gets sick (max 3 each), or skip', () => {
+      const corp = new PanaceaBiologics();
+      const [game, player, other] = withCorp(corp);
+      other.playCard(fakeCard({tags: [Tag.MICROBE, Tag.MICROBE]}));
+      runAllActions(game);
+      // One question per microbe tag; with one opponent the choice is that opponent or skip.
+      cast(player.popWaitingFor(), OrOptions).options[0].cb();
+      runAllActions(game);
+      cast(player.popWaitingFor(), OrOptions).options[1].cb();
+      runAllActions(game);
+      expect(EpicHooks.diseasesOn(other)).eq(1);
+      // Its own microbe tags count too.
+      for (let i = 0; i < 4; i++) {
+        player.playCard(fakeCard({tags: [Tag.MICROBE]}));
+        runAllActions(game);
+        const input = player.popWaitingFor();
+        if (input instanceof OrOptions) {
+          input.options[0].cb();
+        }
+        runAllActions(game);
+      }
+      expect(EpicHooks.diseasesOn(other)).eq(PanaceaBiologics.MAX_DISEASES);
+    });
+
+    it('Cure: a free action for the infected player; the price rises with the owner\'s science tags; adds a patent', () => {
+      const corp = new PanaceaBiologics();
+      const [game, player, other] = withCorp(corp);
+      corp.initialAction(player);
+      expect(PanaceaBiologics.curePrice(player)).eq(3); // its own science tag: 1
+      player.playedCards.push(fakeCard({tags: [Tag.SCIENCE, Tag.SCIENCE, Tag.SCIENCE]}));
+      expect(PanaceaBiologics.curePrice(player)).eq(5); // 4 science tags
+      expect(cureOption(player)).is.undefined;
+      other.megaCredits = 4;
+      expect(cureOption(other)).is.undefined; // can't afford 5
+      other.megaCredits = 10;
+      player.megaCredits = 0;
+      cureOption(other)!.cb(undefined);
+      runAllActions(game);
+      expect(other.megaCredits).eq(5);
+      expect(player.megaCredits).eq(5);
+      expect(corp.resourceCount).eq(1);
+      expect(EpicHooks.diseasesOn(other)).eq(0);
+      expect(cureOption(other)).is.undefined;
+      corp.resourceCount = 4;
+      expect(corp.getVictoryPoints(player)).eq(2);
+      for (let i = 0; i < 20; i++) {
+        player.playedCards.push(fakeCard({tags: [Tag.SCIENCE]}));
+      }
+      expect(PanaceaBiologics.curePrice(player)).eq(PanaceaBiologics.MAX_CURE_PRICE);
+    });
+
+    it('Field trial: 1 microbe from one of your cards spreads a disease', () => {
+      const corp = new PanaceaBiologics();
+      const [game, player, other] = withCorp(corp);
+      expect(corp.canAct(player)).is.false;
+      const tardigrades = new Tardigrades();
+      player.playedCards.push(tardigrades);
+      tardigrades.resourceCount = 2;
+      expect(corp.canAct(player)).is.true;
+      corp.action(player);
+      runAllActions(game);
+      const input = player.popWaitingFor();
+      if (input instanceof SelectOption) {
+        input.cb(undefined);
+      }
+      expect(tardigrades.resourceCount).eq(1);
+      expect(EpicHooks.diseasesOn(other)).eq(1);
+    });
+
+    it('is never dealt in solo games', () => {
+      const [solo] = testGame(1, {epicCorporations: true});
+      expect(solo.corporationDeck.drawPile.map((c) => c.name)).not.contains(CardName.PANACEA_BIOLOGICS);
+      const [duo] = testGame(2, {epicCorporations: true});
+      expect(duo.corporationDeck.drawPile.map((c) => c.name)).contains(CardName.PANACEA_BIOLOGICS);
+    });
+  });
+
+  it('Retired corporations still load from saved games, but are never dealt or picked from a custom list', () => {
+    const retired = [CardName.QUASH, CardName.COLLINS_RUBIN_AND_HAYTHAM, CardName.BUY_N_LARGE, CardName.EXTRASOLAR_COLONIZATION_ADMINISTRATION,
+      CardName.OLYMPIC_GALACTIC_CORPORATION, CardName.MISERVISION, CardName.NEW_THORGATE, CardName.CASH_CO];
+    for (const name of retired) {
+      expect(newCard(name).name).eq(name);
+    }
+    const options = {...DEFAULT_GAME_OPTIONS, epicCorporations: true, eternityExpansion: true};
+    const dealt = new GameCards(options).getCorporationCards().map((c) => c.name);
+    expect(dealt).not.to.include.any.members(retired);
+    const custom = new GameCards({...options, customCorporationsList: [CardName.QUASH, CardName.TOYITSU]}).getCorporationCards().map((c) => c.name);
+    expect(custom).deep.eq([CardName.TOYITSU]);
   });
 });

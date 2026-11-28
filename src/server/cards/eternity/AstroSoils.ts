@@ -11,6 +11,8 @@ import {OrOptions} from '../../inputs/OrOptions';
 import {Resource} from '../../../common/Resource';
 import {SelectOption} from '../../inputs/SelectOption';
 import {Tag} from '../../../common/cards/Tag';
+import {SimpleDeferredAction} from '../../deferredActions/DeferredAction';
+import {Priority} from '../../deferredActions/Priority';
 
 export class AstroSoils extends CorporationCard implements ICorporationCard {
   constructor() {
@@ -56,10 +58,27 @@ export class AstroSoils extends CorporationCard implements ICorporationCard {
       return undefined;
     }));
   }
+  /** Set while one of your space events resolves: the plants it removes come to you (see RemoveAnyPlants). */
+  public data: {stealsPlants?: boolean} = {};
+
   public onCardPlayed(player: IPlayer, card: ICard) {
     if (card.type === CardType.EVENT) {
       player.stock.add(Resource.MEGACREDITS, 1, {log: true});
+      if (card.tags.includes(Tag.SPACE)) {
+        this.data.stealsPlants = true;
+        // The card's plant removal is deferred ahead of this, so this ends the effect once the card has resolved.
+        player.game.defer(new SimpleDeferredAction(player, () => {
+          this.data.stealsPlants = false;
+          return undefined;
+        }, Priority.BACK_OF_THE_LINE));
+      }
     }
     return undefined;
+  }
+
+  /** Whether plants that `player` removes right now should go to them. */
+  public static stealsPlants(player: IPlayer): boolean {
+    const card = player.tableau.get(CardName.ASTRO_SOILS) as AstroSoils | undefined;
+    return card?.data.stealsPlants === true;
   }
 }

@@ -26,6 +26,14 @@ import {SpartansSecurity} from '../../../src/server/cards/epic/SpartansSecurity'
 import {HephaestusWorks} from '../../../src/server/cards/mercury/HephaestusWorks';
 import {PlanetForge} from '../../../src/server/cards/epic/PlanetForge';
 import {AquarinEnt} from '../../../src/server/cards/epic/AquarinEnt';
+import {TEO} from '../../../src/server/cards/epic/TEO';
+import {GenetiCorp} from '../../../src/server/cards/eternity/GenetiCorp';
+import {BamBooBuildings} from '../../../src/server/cards/eternity/BamBooBuildings';
+import {AstroSoils} from '../../../src/server/cards/eternity/AstroSoils';
+import {Comet} from '../../../src/server/cards/base/Comet';
+import {KelpFarming} from '../../../src/server/cards/base/KelpFarming';
+import {Payment} from '../../../src/common/inputs/Payment';
+import {OrOptions} from '../../../src/server/inputs/OrOptions';
 
 function withCorp(corp: ICorporationCard, options = {}): [IGame, TestPlayer, TestPlayer] {
   const [game, player, other] = testGame(2, options);
@@ -170,5 +178,57 @@ describe('Corporations reworked after the overlap review (2026-11-27)', () => {
     game.defer(new PlaceOceanTile(other));
     runAllActions(game);
     expect(other.popWaitingFor()).is.undefined;
+  });
+
+  // Round 2 (groups 21-25), 2026-11-28.
+  it('TEO: draws 5 research cards, like Luna Project Office; no science discount', () => {
+    const [, player] = withCorp(new TEO());
+    expect(player.getCardCost(fakeCard({tags: [Tag.SCIENCE], cost: 10}))).eq(10);
+    player.runResearchPhase();
+    expect(JSON.stringify(player.popWaitingFor()?.toModel(player))).to.include('"max":5');
+  });
+
+  it('GenetiCorp: animal cards cost 2 less, science cards don\'t', () => {
+    const [, player] = withCorp(new GenetiCorp());
+    expect(player.getCardCost(fakeCard({tags: [Tag.ANIMAL], cost: 10}))).eq(8);
+    expect(player.getCardCost(fakeCard({tags: [Tag.SCIENCE], cost: 10}))).eq(10);
+  });
+
+  it('BamBooBuildings: 2 plant production; plants pay 3 M€ for plant cards only; no steel or plant bonus', () => {
+    const [, player] = withCorp(new BamBooBuildings());
+    expect(player.production.plants).eq(2);
+    expect(player.production.steel).eq(1);
+    const kelp = new KelpFarming();
+    const options = player.paymentOptionsForCard(kelp);
+    expect(options.plants).is.true;
+    expect(options.steel).is.false;
+    expect(player.payingAmount(Payment.of({plants: 2}), options)).eq(6);
+    const building = fakeCard({tags: [Tag.BUILDING], cost: 10});
+    expect(player.paymentOptionsForCard(building).plants).is.false;
+    player.plants = 0;
+    player.playCard(building);
+    expect(player.plants).eq(0);
+  });
+
+  it('AstroSoils: plants removed by your space events come to you', () => {
+    const [game, player, other] = withCorp(new AstroSoils());
+    other.plants = 5;
+    player.plants = 0;
+    player.playCard(new Comet());
+    runAllActions(game);
+    // Comet: raise temperature, place an ocean, remove up to 3 plants from any player.
+    for (let input = player.popWaitingFor(); input !== undefined; input = player.popWaitingFor()) {
+      if (input instanceof SelectSpace) {
+        input.cb(input.spaces[0]);
+      } else if (input instanceof OrOptions) {
+        const steal = input.options.findIndex((o) => JSON.stringify(o.toModel(player)).includes(other.color));
+        input.options[steal >= 0 ? steal : 0].cb();
+      }
+      runAllActions(game);
+    }
+    expect(other.plants).eq(2);
+    expect(player.plants).eq(3);
+    // Not for a non-space removal afterwards.
+    expect(game.deferredActions.length).eq(0);
   });
 });

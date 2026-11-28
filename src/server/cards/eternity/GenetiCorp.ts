@@ -13,7 +13,7 @@ export class GenetiCorp extends ActiveCorporationCard implements ICorporationCar
       tags: [Tag.ANIMAL, Tag.SCIENCE],
       startingMegaCredits: 48,
       initialActionText: 'Draw an animal or science card',
-      cardDiscount: {tag: Tag.SCIENCE, amount: 2},
+      cardDiscount: {tag: Tag.ANIMAL, amount: 2},
       behavior: {
         production: {plants: 1},
       },
@@ -25,7 +25,7 @@ export class GenetiCorp extends ActiveCorporationCard implements ICorporationCar
         cardNumber: 'EC12',
         renderData: CardRenderer.builder((b) => {
           b.megacredits(48).production((pb) => pb.plants(1)).cards(1).asterix().br;
-          b.effect('When you play a science tag, you pay 2 M€ less for it.', (eb) => eb.tag(Tag.SCIENCE).startEffect.megacredits(-2)).br;
+          b.effect('When you play an animal tag, you pay 2 M€ less for it.', (eb) => eb.tag(Tag.ANIMAL).startEffect.megacredits(-2)).br;
           b.action('Spend 1 plant to add 1 animal to any card.', (eb) => eb.plants(1).startAction.resource(CardResource.ANIMAL).asterix());
         }),
         description: 'You start with 48 M\u20ac and 1 plant production. First action: draw an animal or science card.',

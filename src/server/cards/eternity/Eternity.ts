@@ -66,10 +66,6 @@ export class Eternity {
     return 0;
   }
 
-  public static canUseSteel(player: IPlayer, card: IProjectCard): boolean {
-    return card.tags.includes(Tag.PLANT) && player.tableau.has(CardName.BAMBOO_BUILDINGS);
-  }
-
   public static canUseTitanium(player: IPlayer, card: IProjectCard): boolean {
     return card.tags.includes(Tag.SCIENCE) && player.tableau.has(CardName.SCIENCE_MISSION);
   }

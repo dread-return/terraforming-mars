@@ -273,6 +273,10 @@ export class EpicHooks {
     if (player.tableau.has(CardName.LOGOS_RESEARCH_AND_DEVELOPMENT)) {
       extra++;
     }
+    // TEO: like Luna Project Office (5 cards, keep 2 from the first draft pick), every research phase.
+    if (player.tableau.has(CardName.TEO)) {
+      extra++;
+    }
     return extra;
   }
 
@@ -932,9 +936,19 @@ export class EpicHooks {
     }
   }
 
-  /** OmniDrone Labs: plants pay 2 M€ each for cards with a science tag. */
+  /**
+   * Plants that pay for a card, and what each is worth: OmniDrone Labs (Epic), 2 M€ for cards with a science tag;
+   * BamBooBuildings (Eternity), 3 M€ for cards with a plant tag. The best value that applies.
+   */
   public static plantsValueFor(player: IPlayer, card: ICard): number | undefined {
-    return player.tableau.has(CardName.OMNIDRONE_LABS) && card.tags.includes(Tag.SCIENCE) ? 2 : undefined;
+    const values: Array<number> = [];
+    if (player.tableau.has(CardName.OMNIDRONE_LABS) && card.tags.includes(Tag.SCIENCE)) {
+      values.push(2);
+    }
+    if (player.tableau.has(CardName.BAMBOO_BUILDINGS) && card.tags.includes(Tag.PLANT)) {
+      values.push(3);
+    }
+    return values.length > 0 ? Math.max(...values) : undefined;
   }
 
   /** Milky Skyway: energy pays 2 M€ each for cards with a city tag and the city standard project. */

@@ -64,9 +64,11 @@ describe('CorporationsFilter', () => {
       });
       return findModuleItemFilter(wrapper).props('selected') as Array<string>;
     };
-    expect(select({})).to.include(CardName.BIOME);
-    expect(select({})).not.to.include(CardName.HARBINGER);
-    expect(select({colonies: true})).to.include(CardName.HARBINGER);
+    // Epic Corporations is its own expansion now, not part of Corporate Era.
+    expect(select({})).not.to.include(CardName.BIOME);
+    expect(select({epic: true})).to.include(CardName.BIOME);
+    expect(select({epic: true})).not.to.include(CardName.HARBINGER);
+    expect(select({epic: true, colonies: true})).to.include(CardName.HARBINGER);
   });
 
   it('emits corporation-list-changed when ModuleItemFilter emits update:selected', async () => {

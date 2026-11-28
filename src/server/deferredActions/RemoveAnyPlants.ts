@@ -5,6 +5,7 @@ import {SelectOption} from '../inputs/SelectOption';
 import {DeferredAction} from './DeferredAction';
 import {Priority} from './Priority';
 import {CardName} from '../../common/cards/CardName';
+import {AstroSoils} from '../cards/eternity/AstroSoils';
 import {MessageBuilder, message} from '../logs/MessageBuilder';
 import {Message} from '../../common/logs/Message';
 export class RemoveAnyPlants extends DeferredAction {
@@ -81,7 +82,13 @@ export class RemoveAnyPlants extends DeferredAction {
         'Remove plants',
         (target === player) ? ['removeOwnPlants'] : undefined)
         .andThen(() => {
+          const before = target.plants;
           target.attack(player, Resource.PLANTS, qtyToRemove, {log: true});
+          // Eternity: AstroSoils' space events give it the plants they remove.
+          const removed = before - target.plants;
+          if (removed > 0 && target !== player && AstroSoils.stealsPlants(player)) {
+            player.stock.add(Resource.PLANTS, removed, {log: true, from: {player: target}, stealing: true});
+          }
           return undefined;
         });
     }));

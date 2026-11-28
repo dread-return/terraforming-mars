@@ -24,7 +24,6 @@ import {BigCheats} from './BigCheats';
 import {BioProductTestingLaboratory} from './BioProductTestingLaboratory';
 import {BlackHoleProbe} from './BlackHoleProbe';
 import {BraggingRights} from './BraggingRights';
-import {CASHCo} from './CASHCo';
 import {CalculatedAI} from './CalculatedAI';
 import {CallTheFixer} from './CallTheFixer';
 import {ChromatinWaterGenerator} from './ChromatinWaterGenerator';
@@ -451,7 +450,6 @@ export const ETERNITY_CARD_MANIFEST = new ModuleManifest({
   corporationCards: {
     [CardName.ASTRO_SOILS]: {Factory: AstroSoils},
     [CardName.BAMBOO_BUILDINGS]: {Factory: BamBooBuildings},
-    [CardName.CASH_CO]: {Factory: CASHCo},
     [CardName.DGT_MARS_CREW]: {Factory: DGTMarsCrew},
     [CardName.EXOPLANET_BUILDERS]: {Factory: ExoplanetBuilders},
     [CardName.FARMS_OF_THE_FUTURE]: {Factory: FarmsOfTheFuture},

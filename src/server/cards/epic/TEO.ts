@@ -17,31 +17,29 @@ export class TEO extends ActiveCorporationCard implements ICorporationCard {
       name: CardName.TEO,
       tags: [Tag.SCIENCE],
       startingMegaCredits: 30,
-      cardDiscount: {tag: Tag.SCIENCE, per: 'card', amount: 2},
       action: {},
 
       metadata: {
         cardNumber: 'EP-TEO',
         description: 'You start with 30 M€.',
         renderData: CardRenderer.builder((b) => {
-          b.br.br;
+          b.br;
           b.megacredits(30);
-          b.corpBox('effect-action', (ce) => {
-            ce.vSpace(Size.SMALL);
-            ce.effect('Science cards cost 2 M€ less.', (eb) => {
-              eb.tag(Tag.SCIENCE).startEffect.megacredits(-2);
-            });
-            ce.vSpace(Size.SMALL);
-            ce.action('Play a non-event card for 5 M€ less, face down as an event (no tags or lasting effects).', (eb) => {
-              eb.cards(1).megacredits(-5).startAction.cards(1, {secondaryTag: Tag.EVENT}).asterix();
-            });
-          });
+          b.br;
+          b.effect('Research: draw 5 cards instead of 4 (drafting: keep 2 from your first pick).', (eb) => {
+            eb.text('research', {size: Size.SMALL}).startEffect.cards(1).text('+1', {size: Size.SMALL});
+          }).br;
+          b.action('Play a non-event card for 5 M€ less, face down as an event (no tags or lasting effects).', (eb) => {
+            eb.cards(1).megacredits(-5).startAction.cards(1, {secondaryTag: Tag.EVENT}).asterix();
+          }).br;
         }),
       },
     });
   }
 
   public data: {pending?: boolean} = {};
+
+  // The extra research card is in Draft.ts (EpicHooks.extraResearchCards), like Luna Project Office.
 
   public override getCardDiscount(player: IPlayer, card: IProjectCard) {
     return super.getCardDiscount(player, card) + (this.data.pending === true ? 5 : 0);

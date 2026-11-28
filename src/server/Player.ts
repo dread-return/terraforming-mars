@@ -891,12 +891,12 @@ export class Player implements IPlayer {
   }
 
   public paymentOptionsForCard(card: IProjectCard): PaymentOptions & ExtraPaymentValues {
-    // Epic Corporations: plants (OmniDrone Labs), energy (Milky Skyway) and corporation resources for some cards.
+    // Epic Corporations: plants (OmniDrone Labs; also Eternity's BamBooBuildings), energy (Milky Skyway) and corporation resources for some cards.
     const omniDronePlants = EpicHooks.plantsValueFor(this, card);
     const milkyEnergy = EpicHooks.energyValueFor(this, card);
     const epic = EpicHooks.epicPayment(this, card);
     const martianLumber = card.tags.includes(Tag.BUILDING) && this.playedCards.has(CardName.MARTIAN_LUMBER_CORP);
-    const steel = this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card) || Eternity.canUseSteel(this, card) || mercuryCanUseSteel(this, card) || EpicHooks.canUseSteel(this, card);
+    const steel = this.lastCardPlayed === CardName.LAST_RESORT_INGENUITY || card.tags.includes(Tag.BUILDING) || Nuclear.canUseSteel(this, card) || mercuryCanUseSteel(this, card) || EpicHooks.canUseSteel(this, card);
     const steelValue = EpicHooks.steelValueForCard(this, card);
     // Epic Corporations (Martian Lumber): plants pay as if they were steel.
     const lumberPlants = steel && this.tableau.has(CardName.MARTIAN_LUMBER) ? steelValue ?? this.getSteelValue() : undefined;

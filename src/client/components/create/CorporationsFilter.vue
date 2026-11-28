@@ -66,6 +66,8 @@ export default defineComponent({
       ...this.expansions.moon ? corpCardNames('moon') : [],
       ...this.expansions.pathfinders ? corpCardNames('pathfinders') : [],
       ...this.expansions.underworld ? corpCardNames('underworld') : [],
+      // Epic Corporations (fan set; part of Corporate Era until 2026-11-27).
+      ...this.expansions.epic ? corpCardNames('epic') : [],
     ].filter(compatible);
     return {initialSelected};
   },

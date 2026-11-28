@@ -28,7 +28,6 @@ export const ETERNITY_LOGOS: Partial<Record<CardName, EternityLogo>> = {
   [CardName.JUDGES_OF_CHANGE]: {slug: 'ho-judges', lines: ['JUDGES OF CHANGE']},
   [CardName.ASTRO_SOILS]: {slug: 'astro-soils', lines: ['Astro Soils']},
   [CardName.BAMBOO_BUILDINGS]: {slug: 'bamboo', lines: ['BamBoo', 'Buildings']},
-  [CardName.CASH_CO]: {slug: 'cash-co', lines: ['C.A.S.H. CO']},
   [CardName.DGT_MARS_CREW]: {slug: 'dgt', lines: ['DGT MARS CREW']},
   [CardName.EXOPLANET_BUILDERS]: {slug: 'exoplanet', lines: ['Exoplanet', 'Builders, Inc.']},
   [CardName.FARMS_OF_THE_FUTURE]: {slug: 'farms', lines: ['FARMS OF', 'THE FUTURE']},

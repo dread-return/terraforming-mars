@@ -194,9 +194,9 @@ describe('Corporations reworked after the overlap review (2026-11-27)', () => {
     expect(player.getCardCost(fakeCard({tags: [Tag.SCIENCE], cost: 10}))).eq(10);
   });
 
-  it('BamBooBuildings: 2 plant production; plants pay 3 M€ for plant cards only; no steel or plant bonus', () => {
+  it('BamBooBuildings: 1 plant production; plants pay 3 M€ for plant cards only; no steel or plant bonus', () => {
     const [, player] = withCorp(new BamBooBuildings());
-    expect(player.production.plants).eq(2);
+    expect(player.production.plants).eq(1);
     expect(player.production.steel).eq(1);
     const kelp = new KelpFarming();
     const options = player.paymentOptionsForCard(kelp);

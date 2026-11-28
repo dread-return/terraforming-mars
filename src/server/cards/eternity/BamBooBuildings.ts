@@ -14,17 +14,17 @@ export class BamBooBuildings extends CorporationCard implements ICorporationCard
       tags: [Tag.PLANT, Tag.BUILDING],
       startingMegaCredits: 32,
       behavior: {
-        production: {steel: 1, plants: 2},
+        production: {steel: 1, plants: 1},
       },
       firstAction: {
-        text: 'Draw a building card',
-        drawCard: {count: 1, tag: Tag.BUILDING},
+        text: 'Draw a plant card',
+        drawCard: {count: 1, tag: Tag.PLANT},
       },
       metadata: {
         cardNumber: 'EC08',
         renderData: CardRenderer.builder((b) => {
-          b.megacredits(32).production((pb) => pb.steel(1).plants(2)).cards(1, {secondaryTag: Tag.BUILDING}).br;
-          b.plainText('You start with 32 M€, 2 plant production and 1 steel production. As your first action, draw a card with a building tag.').br;
+          b.megacredits(32).production((pb) => pb.steel(1).plants(1)).cards(1, {secondaryTag: Tag.PLANT}).br;
+          b.plainText('You start with 32 M€, 1 plant production and 1 steel production. As your first action, draw a card with a plant tag.').br;
           b.action('All players gain one plant.', (eb) => eb.empty().startAction.plants(1, {all})).br;
           b.effect('You may use plants to pay for cards with a plant tag, at 3 M€ each.', (eb) => eb.tag(Tag.PLANT).startEffect.plants(1).equals().megacredits(3));
         }),
